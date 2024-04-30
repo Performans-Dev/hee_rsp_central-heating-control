@@ -107,6 +107,7 @@
 
 ## Models
 - `Account`: heethins user, email,pass
+- `AccountSubscriptionType`: free, paid
 - `SigninRequest`
 - `CreateAccountRequest`
 - `ValidateAccountRequest`
@@ -125,10 +126,15 @@
 - `ZoneDefinition`
 - `HeaterDevice`
 - `SensorDevice`
+- `HeaterDeviceType`: heater level, connection
+- `SensorDeviceType`: contains min-max
+- `ConnectionType`: relay, eth
 - `WeeklyPlanItem`
 - `HardwareButton`
+- `RelayDefinition`
+
 
 ## Enums
 - `HardwareButtonLocation`: l0,l1,l2,l3,r0,r1,r2,r3
 - `ConnectionState`: connected, notConnected
-- `RequestState`: idle, requested, success, error
+- `JobState`: idle, requested, success, error
