@@ -81,6 +81,8 @@
 - WeeklyPlanItemWidget
 - ColorPickerWidget
 - IconPickerWidget
+- OnOffLevelToggleWidget
+- CelciusPickerWidget
 
 ## Controllers
 - `AppController`: flags, app settings, hardware settings, language, locale, theme, logs
