@@ -140,3 +140,27 @@
 - `HardwareButtonLocation`: l0,l1,l2,l3,r0,r1,r2,r3
 - `ConnectionState`: connected, notConnected
 - `JobState`: idle, requested, success, error
+
+
+---
+
+
+## Api
+- account
+    - signin
+    - create
+    - forgot-password
+    - validate-otp
+- settings
+    - languages
+    - timezones
+    - get-mqtt-info
+    - get-hardware-config
+    - register-hardware
+    - get-version-info
+- logs 
+    - add
+- device
+    - get-device-types
+    - get-sensor-types
+    - activate
