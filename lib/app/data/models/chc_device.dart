@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class PlatformDefinition {
+class ChcDevice {
   String? id;
   String manufacturer;
   String model;
@@ -15,7 +15,7 @@ class PlatformDefinition {
   String appVersion;
   String appBuild;
   String installationId;
-  PlatformDefinition({
+  ChcDevice({
     this.id,
     required this.manufacturer,
     required this.model,
@@ -82,8 +82,7 @@ class PlatformDefinition {
           'installation_id': installationId,
         };
 
-  factory PlatformDefinition.fromMap(Map<String, dynamic> map) =>
-      PlatformDefinition(
+  factory ChcDevice.fromMap(Map<String, dynamic> map) => ChcDevice(
         id: map['id'],
         manufacturer: map['manufacturer'] ?? '',
         model: map['model'] ?? '',
@@ -104,6 +103,6 @@ class PlatformDefinition {
 
   String toJson() => json.encode(toMap());
 
-  factory PlatformDefinition.fromJson(String source) =>
-      PlatformDefinition.fromMap(json.decode(source));
+  factory ChcDevice.fromJson(String source) =>
+      ChcDevice.fromMap(json.decode(source));
 }

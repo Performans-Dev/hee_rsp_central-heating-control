@@ -1,12 +1,12 @@
 import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/data/models/platform_definition.dart';
+import 'package:central_heating_control/app/data/models/chc_device.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class DeviceUtils {
-  static Future<PlatformDefinition> createDeviceInfo() async {
+  static Future<ChcDevice> createDeviceInfo() async {
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     var deviceData = <String, dynamic>{};
     try {
@@ -42,7 +42,7 @@ class DeviceUtils {
     deviceData['appVersion'] = packageInfo.version;
     deviceData['appBuild'] = packageInfo.buildNumber;
     deviceData['installationId'] = Box.deviceId;
-    return PlatformDefinition(
+    return ChcDevice(
       manufacturer: deviceData['manufacturer'],
       model: deviceData['model'],
       board: deviceData['board'] is List

@@ -1,7 +1,9 @@
+import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/constants/strings.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/theme/dark.dart';
 import 'package:central_heating_control/app/core/theme/light.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
@@ -34,5 +36,8 @@ class MainApp extends StatelessWidget {
   void onReady() async {
     await LocalizationService().applySavedLocale();
     FlutterNativeSplash.remove();
+    Get.changeThemeMode(
+      Box.getBool(key: Keys.isDarkMode) ? ThemeMode.dark : ThemeMode.light,
+    );
   }
 }
