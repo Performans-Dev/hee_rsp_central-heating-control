@@ -18,11 +18,27 @@ class AppUser {
     };
   }
 
+  Map<String, dynamic> toSQL() {
+    return {
+      'username': username,
+      'pin': pin,
+      'isAdmin': isAdmin ? 1 : 0,
+    };
+  }
+
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
       username: map['username'] ?? '',
       pin: map['pin'] ?? '',
       isAdmin: map['isAdmin'] ?? false,
+    );
+  }
+
+  factory AppUser.fromSQL(Map<String, dynamic> map) {
+    return AppUser(
+      username: map['username'] ?? '',
+      pin: map['pin'] ?? '',
+      isAdmin: map['isAdmin'] == 1,
     );
   }
 

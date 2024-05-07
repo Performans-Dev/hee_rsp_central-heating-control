@@ -13,7 +13,7 @@ class ChcDevice {
   String appName;
   String packageName;
   String appVersion;
-  String appBuild;
+  int appBuild;
   String installationId;
   ChcDevice({
     this.id,
@@ -32,22 +32,38 @@ class ChcDevice {
     required this.installationId,
   });
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'manufacturer': manufacturer,
-        'model': model,
-        'board': board,
-        'brand': brand,
-        'os': os,
-        'os_version': osVersion,
-        'os_version_sdk': osVersionSdk,
-        'serial_number': serialNumber,
-        'app_name': appName,
-        'package_name': packageName,
-        'app_version': appVersion,
-        'app_build': appBuild,
-        'installation_id': installationId,
-      };
+  Map<String, dynamic> toMap() => id == null
+      ? {
+          'manufacturer': manufacturer,
+          'model': model,
+          'board': board,
+          'brand': brand,
+          'os': os,
+          'os_version': osVersion,
+          'os_version_sdk': osVersionSdk,
+          'serial_number': serialNumber,
+          'app_name': appName,
+          'package_name': packageName,
+          'app_version': appVersion,
+          'app_build': appBuild,
+          'installation_id': installationId,
+        }
+      : {
+          'id': id,
+          'manufacturer': manufacturer,
+          'model': model,
+          'board': board,
+          'brand': brand,
+          'os': os,
+          'os_version': osVersion,
+          'os_version_sdk': osVersionSdk,
+          'serial_number': serialNumber,
+          'app_name': appName,
+          'package_name': packageName,
+          'app_version': appVersion,
+          'app_build': appBuild,
+          'installation_id': installationId,
+        };
 
   Map<String, dynamic> toPostgres() => id == null
       ? {
@@ -97,7 +113,7 @@ class ChcDevice {
         appName: map['app_name'] ?? '',
         packageName: map['package_name'] ?? '',
         appVersion: map['app_version'] ?? '',
-        appBuild: map['app_build'] ?? '',
+        appBuild: map['app_build'] ?? 0,
         installationId: map['installation_id'] ?? '',
       );
 

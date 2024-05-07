@@ -1,10 +1,8 @@
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_bottom_left.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_bottom_right.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_top_left.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_top_right.dart';
+import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,6 +17,7 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
   final AppController appController = Get.find();
   late final ScrollController scrollController;
   int selectedIndex = 0;
+  final NavController nav = Get.find();
 
   @override
   void initState() {
@@ -27,10 +26,10 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
     selectedIndex =
         appController.timezones.map((e) => e.name).toList().indexOf('Istanbul');
 
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       scrollController.animateTo(
         selectedIndex * 64,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
     });
@@ -50,7 +49,7 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
           children: [
             Center(
               child: Container(
-                constraints: BoxConstraints(maxWidth: 480),
+                constraints: const BoxConstraints(maxWidth: 480),
                 height: 300,
                 alignment: Alignment.center,
                 child: Column(
@@ -62,7 +61,7 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
                       textAlign: TextAlign.left,
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
-                    Divider(),
+                    const Divider(),
                     Expanded(
                       child: ListView.builder(
                         controller: scrollController,
@@ -93,16 +92,17 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
                 ),
               ),
             ),
-            StackTopLeftWidget(child: LogoWidget(size: 180)),
-            StackTopRightWidget(child: Text('Initial Setup 2 / 4')),
+            const StackTopLeftWidget(child: LogoWidget(size: 180)),
+            const StackTopRightWidget(child: Text('Initial Setup 2 / 4')),
             StackBottomRightWidget(
               child: ElevatedButton.icon(
                 onPressed: () async {
                   await app.onTimezoneSelected(selectedIndex);
-                  Get.offAllNamed(Routes.home);
+
+                  nav.toHome();
                 },
-                label: Text('NEXT'),
-                icon: Icon(Icons.keyboard_arrow_right),
+                label: const Text('NEXT'),
+                icon: const Icon(Icons.keyboard_arrow_right),
               ),
             ),
             StackBottomLeftWidget(
@@ -110,8 +110,8 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
                 onPressed: () {
                   Get.offAllNamed(Routes.setupLanguage);
                 },
-                icon: Icon(Icons.keyboard_arrow_left),
-                label: Text('PREVIOUS'),
+                icon: const Icon(Icons.keyboard_arrow_left),
+                label: const Text('PREVIOUS'),
               ),
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,14 +8,14 @@ class LogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String asset =
-        'assets/images/heethings_logo_${Get.isDarkMode ? 'dark' : 'light'}.png';
-    return SizedBox(
-      width: size,
-      child: Image.asset(
-        asset,
-        fit: BoxFit.contain,
-      ),
-    );
+    return GetBuilder<AppController>(builder: (app) {
+      return SizedBox(
+        width: size,
+        child: Image.asset(
+          'assets/images/heethings_logo_${app.isDarkMode ? 'dark' : 'light'}.png',
+          fit: BoxFit.contain,
+        ),
+      );
+    });
   }
 }

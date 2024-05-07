@@ -22,6 +22,7 @@ class DbProvider {
     final io.Directory appDocumentsDir =
         await getApplicationDocumentsDirectory();
     String dbPath = p.join(appDocumentsDir.path, "databases", "chcDb.db");
+    print(dbPath);
     return await dbFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
@@ -64,7 +65,7 @@ class DbProvider {
     try {
       int id = await db.insert(
         'users',
-        user.toMap(),
+        user.toSQL(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       return id;
@@ -120,7 +121,7 @@ class DbProvider {
       final result = await db.query('users');
       if (result.isNotEmpty) {
         for (final item in result) {
-          final user = AppUser.fromMap(item);
+          final user = AppUser.fromSQL(item);
           users.add(user);
         }
       }
@@ -145,7 +146,7 @@ class DbProvider {
       );
       if (result.isNotEmpty) {
         for (final item in result) {
-          final user = AppUser.fromMap(item);
+          final user = AppUser.fromSQL(item);
           users.add(user);
         }
       }
@@ -171,7 +172,7 @@ class DbProvider {
         whereArgs: [username, pin],
       );
       if (result.isNotEmpty) {
-        final user = AppUser.fromMap(result.first);
+        final user = AppUser.fromSQL(result.first);
         return user;
       }
       return null;

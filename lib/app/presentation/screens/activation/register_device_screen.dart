@@ -1,18 +1,21 @@
+import 'package:central_heating_control/app/core/utils/device.dart';
+import 'package:central_heating_control/app/data/models/chc_device.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ActivationScreen extends StatefulWidget {
-  const ActivationScreen({super.key});
+class RegisterDeviceScreen extends StatefulWidget {
+  const RegisterDeviceScreen({super.key});
 
   @override
-  State<ActivationScreen> createState() => _ActivationScreenState();
+  State<RegisterDeviceScreen> createState() => _RegisterDeviceScreenState();
 }
 
-class _ActivationScreenState extends State<ActivationScreen> {
+class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
   final NavController nav = Get.find();
   final AppController appController = Get.find();
   bool isBusy = false;
@@ -20,7 +23,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
   @override
   void initState() {
     super.initState();
-    triggerActivate();
+    registerDevice();
   }
 
   @override
@@ -39,65 +42,46 @@ class _ActivationScreenState extends State<ActivationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Activate '.tr,
+                      'Registering Hardware'.tr,
                       textAlign: TextAlign.left,
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     const Divider(),
                     Expanded(
-                      child: Center(
-                        child: isBusy
-                            ? const CircularProgressIndicator()
-                            : app.activationId == null
-                                ? const Text('error')
-                                : const Text('Please wait'),
-                      ),
-                    ),
+                        child: Center(
+                      child: isBusy
+                          ? const CircularProgressIndicator()
+                          : app.chcDeviceId == null
+                              ? const Text('error')
+                              : const Text('Please wait'),
+                    ))
                   ],
                 ),
               ),
             ),
             const StackTopLeftWidget(child: LogoWidget(size: 180)),
             const StackTopRightWidget(child: Text('Initial Setup 4 / 4')),
-            StackBottomLeftWidget(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Terms of Use'),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Privacy Policy'),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       );
     });
   }
 
-  Future<void> triggerActivate() async {
+  Future<void> registerDevice() async {
     setState(() {
       isBusy = true;
     });
-    final activationId = await appController.checkActivation();
-    if (activationId != null) {
-      setState(() {
-        isBusy = false;
-      });
-      nav.toHome();
+
+    ChcDevice device = await DeviceUtils.createDeviceInfo();
+    final response = await appController.registerDevice(device);
+    setState(() {
+      isBusy = false;
+    });
+
+    if (response == null) {
+      logger.d('error');
     } else {
-      final activationResult = await appController.activateChcDevice();
-      setState(() {
-        isBusy = false;
-      });
-      if (activationResult != null) {
-        nav.toHome();
-      }
+      nav.toHome();
     }
   }
 }

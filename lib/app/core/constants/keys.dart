@@ -10,6 +10,8 @@ class Keys {
 
   static const String sessionKey = 'sessionKey';
   static const String deviceId = 'deviceId';
+  static const String accountId = 'accountId';
+  static const String activationId = 'activationId';
 
   static const String wifiCredentials = 'wifiCredentials';
   static const String userList = 'userList';

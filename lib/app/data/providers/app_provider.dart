@@ -1,5 +1,8 @@
 import 'package:central_heating_control/app/core/constants/api.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
+import 'package:central_heating_control/app/data/models/activation_request.dart';
+import 'package:central_heating_control/app/data/models/activation_result.dart';
+import 'package:central_heating_control/app/data/models/chc_device.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/language_definition.dart';
 import 'package:central_heating_control/app/data/models/signin_request.dart';
@@ -12,13 +15,44 @@ class AppProvider {
 
   fetchHardwareSettings() {}
 
-  Future registerChcDevice() async {}
+  static Future<GenericResponse<ChcDevice?>> registerChcDevice(
+      {required ChcDevice request}) async {
+    final response = await BaseNetworkProvider.post(
+      Api.deviceRegister,
+      data: request.toMap(),
+    );
+    if (response.success) {
+      final d = ChcDevice.fromMap(response.data);
+      return GenericResponse.success(d);
+    }
+    return GenericResponse.error();
+  }
 
-  Future checkActivation() async {}
+  static Future<GenericResponse<ActivationResult?>> checkActivation(
+      {required ActivationRequest request}) async {
+    final response = await BaseNetworkProvider.post(
+      Api.checkActivation,
+      data: request.toMap(),
+    );
+    if (response.success) {
+      final ar = ActivationResult.fromMap(response.data);
+      return GenericResponse.success(ar);
+    }
+    return GenericResponse.error();
+  }
 
-  Future activateHardware() async {}
-
-  checkHardware() {}
+  static Future<GenericResponse<ActivationResult?>> activateDevice(
+      {required ActivationRequest request}) async {
+    final response = await BaseNetworkProvider.post(
+      Api.activateDevice,
+      data: request.toMap(),
+    );
+    if (response.success) {
+      final ar = ActivationResult.fromMap(response.data);
+      return GenericResponse.success(ar);
+    }
+    return GenericResponse.error();
+  }
 
   static Future<GenericResponse<Account?>> userSignin(
       {required SigninRequest request}) async {

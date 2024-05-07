@@ -27,6 +27,10 @@ class SetupMiddleware extends GetMiddleware {
       return const RouteSettings(name: Routes.activation);
     }
 
+    if (!appController.hasAdminUser) {
+      return const RouteSettings(name: Routes.setupAdminUser);
+    }
+
     return null;
   }
 }

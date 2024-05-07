@@ -56,7 +56,7 @@ class DeviceUtils {
       appName: deviceData['appName'],
       packageName: deviceData['packageName'],
       appVersion: deviceData['appVersion'],
-      appBuild: deviceData['appBuild'],
+      appBuild: int.parse(deviceData['appBuild'] ?? '0'),
       installationId: deviceData['installationId'],
     );
   }

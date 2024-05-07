@@ -1,11 +1,8 @@
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_bottom_right.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_top_left.dart';
-import 'package:central_heating_control/app/presentation/widgets/stack_top_right.dart';
+import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SetupLanguageScreen extends StatefulWidget {
@@ -17,6 +14,7 @@ class SetupLanguageScreen extends StatefulWidget {
 
 class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
   int selectedIndex = 0;
+  final NavController nav = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,8 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
             children: [
               Center(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 480, maxHeight: 300),
+                  constraints:
+                      const BoxConstraints(maxWidth: 480, maxHeight: 300),
                   alignment: Alignment.center,
                   child: SingleChildScrollView(
                     child: Column(
@@ -39,7 +38,7 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
-                        Divider(),
+                        const Divider(),
                         for (int i = 0; i < app.languages.length; i++)
                           ListTile(
                             shape: RoundedRectangleBorder(
@@ -66,16 +65,17 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
                   ),
                 ),
               ),
-              StackTopLeftWidget(child: LogoWidget(size: 180)),
-              StackTopRightWidget(child: Text('Initial Setup 1 / 4')),
+              const StackTopLeftWidget(child: LogoWidget(size: 180)),
+              const StackTopRightWidget(child: Text('Initial Setup 1 / 4')),
               StackBottomRightWidget(
                 child: ElevatedButton.icon(
                   onPressed: () async {
                     await app.onLanguageSelected(selectedIndex);
-                    Get.offAllNamed(Routes.home);
+
+                    nav.toHome();
                   },
-                  label: Text('NEXT'),
-                  icon: Icon(Icons.arrow_right_alt),
+                  label: const Text('NEXT'),
+                  icon: const Icon(Icons.arrow_right_alt),
                 ),
               ),
             ],

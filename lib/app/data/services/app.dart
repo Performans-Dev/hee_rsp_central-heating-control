@@ -4,14 +4,17 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
+import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/models/chc_device.dart';
 import 'package:central_heating_control/app/data/models/language_definition.dart';
 import 'package:central_heating_control/app/data/models/signin_request.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
 
@@ -69,7 +72,7 @@ class AppController extends GetxController {
   final RxBool _hasAdminUser = false.obs;
   bool get hasAdminUser => _hasAdminUser.value;
 
-  void checkFlags() async {
+  Future<void> checkFlags() async {
     _didLanguageSelected.value = Box.getBool(key: Keys.didLanguageSelected);
     _didTimezoneSelected.value = Box.getBool(key: Keys.didTimezoneSelected);
     _didActivated.value = Box.getBool(key: Keys.didActivated);
@@ -140,7 +143,8 @@ class AppController extends GetxController {
     await populateTimezones();
     _didSettingsFetched.value = true;
     update();
-    Get.offAllNamed(Routes.home);
+    final NavController nav = Get.find();
+    nav.toHome();
   }
   //#endregion
 
@@ -157,8 +161,8 @@ class AppController extends GetxController {
 
   Future<void> onLanguageSelected(int index) async {
     final selectedLang = languages[index];
-    //TODO: remove this comment
-    // await Box.setBool(key: Keys.didLanguageSelected, value: true);
+
+    await Box.setBool(key: Keys.didLanguageSelected, value: true);
     await LocalizationService().changeLocale(selectedLang.languageCode);
     _didLanguageSelected.value = true;
     update();
@@ -178,11 +182,11 @@ class AppController extends GetxController {
 
   Future<void> onTimezoneSelected(int index) async {
     final selectedTimezone = timezones[index];
-    // TODO: remove this comment
-    // await Box.setString(
-    //   key: Keys.selectedTimezone,
-    //   value: selectedTimezone.toJson(),
-    // );
+    await Box.setString(
+      key: Keys.selectedTimezone,
+      value: selectedTimezone.toJson(),
+    );
+    await Box.setBool(key: Keys.didTimezoneSelected, value: true);
     _didTimezoneSelected.value = true;
     update();
 
@@ -206,7 +210,81 @@ class AppController extends GetxController {
     );
     _account.value = response.data;
     update();
+    await Box.setString(key: Keys.accountId, value: account?.id ?? '');
     return account;
+  }
+  //#endregion
+
+  //#region CHC-DEVICE
+  final Rxn<String> _chcDeviceId = Rxn();
+  String? get chcDeviceId => _chcDeviceId.value;
+
+  Future<String?> registerDevice(ChcDevice device) async {
+    final response = await AppProvider.registerChcDevice(request: device);
+    _chcDeviceId.value = response.data?.id;
+    update();
+    await Box.setString(key: Keys.deviceId, value: chcDeviceId ?? '');
+    return chcDeviceId;
+  }
+
+  //#endregion
+
+  //#region ACTIVATION
+  final Rxn<String> _activationId = Rxn();
+  String? get activationId => _activationId.value;
+
+  Future<String?> checkActivation() async {
+    final response = await AppProvider.checkActivation(
+      request: ActivationRequest(
+        userId: account!.id,
+        chcDeviceId: chcDeviceId ?? '',
+      ),
+    );
+
+    _activationId.value = response.data?.id;
+    update();
+
+    await Box.setString(key: Keys.activationId, value: activationId ?? '');
+    if (activationId != null) {
+      _didActivated.value = true;
+      update();
+      await Box.setBool(key: Keys.didActivated, value: true);
+    }
+
+    return activationId;
+  }
+
+  Future<String?> activateChcDevice() async {
+    final response = await AppProvider.activateDevice(
+      request: ActivationRequest(
+        userId: account!.id,
+        chcDeviceId: chcDeviceId ?? '',
+      ),
+    );
+
+    _activationId.value = response.data?.id;
+    update();
+
+    await Box.setString(key: Keys.activationId, value: activationId ?? '');
+    if (activationId != null) {
+      _didActivated.value = true;
+      update();
+      await Box.setBool(key: Keys.didActivated, value: true);
+    }
+
+    return activationId;
+  }
+  //#endregion
+
+  //#region DARK MODE
+  final RxBool _isDarkMode = Get.isDarkMode.obs;
+  bool get isDarkMode => _isDarkMode.value;
+
+  void toggleDarkMode() async {
+    _isDarkMode.value = !isDarkMode;
+    update();
+    Get.changeThemeMode(isDarkMode ? ThemeMode.dark : ThemeMode.light);
+    await Box.setBool(key: Keys.isDarkMode, value: isDarkMode);
   }
   //#endregion
 }
