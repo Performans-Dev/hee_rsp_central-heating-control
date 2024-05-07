@@ -99,9 +99,10 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   await app.onTimezoneSelected(selectedIndex);
+                  Get.offAllNamed(Routes.home);
                 },
                 label: Text('NEXT'),
-                icon: Icon(Icons.keyboard_arrow_right),                   
+                icon: Icon(Icons.keyboard_arrow_right),
               ),
             ),
             StackBottomLeftWidget(

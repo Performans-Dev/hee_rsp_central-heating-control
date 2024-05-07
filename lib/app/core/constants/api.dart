@@ -3,4 +3,6 @@ class Api {
 
   static const String settingsLanguages = 'settings/languages';
   static const String settingsTimezones = 'settings/timezones';
+
+  static const String signin = 'account/signin';
 }

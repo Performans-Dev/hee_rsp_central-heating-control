@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/data/middlewares/setup.dart';
 import 'package:central_heating_control/app/data/middlewares/user.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/presentation/screens/activation/activation_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
@@ -23,6 +24,10 @@ final List<GetPage> getPages = [
       SetupMiddleware(),
       UserMiddleware(),
     ],
+  ),
+  GetPage(
+    name: Routes.activation,
+    page: () => ActivationScreen(),
   ),
   GetPage(
     name: Routes.splash,

@@ -1,6 +1,8 @@
 import 'package:central_heating_control/app/core/constants/api.dart';
+import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/language_definition.dart';
+import 'package:central_heating_control/app/data/models/signin_request.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/base.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
@@ -18,7 +20,18 @@ class AppProvider {
 
   checkHardware() {}
 
-  Future userSignin() async {}
+  static Future<GenericResponse<Account?>> userSignin(
+      {required SigninRequest request}) async {
+    final response = await BaseNetworkProvider.post(
+      Api.signin,
+      data: request.toMap(),
+    );
+    if (response.success) {
+      final account = Account.fromMap(response.data);
+      return GenericResponse.success(account);
+    }
+    return GenericResponse.error();
+  }
 
   userForgetPassword() {}
 

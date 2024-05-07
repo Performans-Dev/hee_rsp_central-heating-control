@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/language_definition.dart';
+import 'package:central_heating_control/app/data/models/signin_request.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
@@ -185,6 +187,26 @@ class AppController extends GetxController {
     update();
 
     //TODO: inform OS to selected timezone
+  }
+  //#endregion
+
+  //#region ACCOUNT
+  final Rxn<Account> _account = Rxn();
+  Account? get account => _account.value;
+
+  Future<Account?> signin({
+    required String email,
+    required String password,
+  }) async {
+    final response = await AppProvider.userSignin(
+      request: SigninRequest(
+        email: email,
+        password: password,
+      ),
+    );
+    _account.value = response.data;
+    update();
+    return account;
   }
   //#endregion
 }
