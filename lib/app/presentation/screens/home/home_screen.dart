@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/presentation/components/hardware_buttons.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:central_heating_control/app/presentation/widgets/hardware_buttons.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,7 @@ class HomeScreen extends StatelessWidget {
             Center(
               child: Text('zones'),
             ),
-            HwButton(
-              location: HardwareButtonLocation.l0,
-              child: Icon(Icons.power_settings_new),
-              callback: () {},
-              enabled: true,
-              visible: true,
-            ),
+            HwBtnPowerToggle(),
             HwButton(
               location: HardwareButtonLocation.l1,
               child: Icon(Icons.alarm),

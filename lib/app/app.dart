@@ -21,7 +21,8 @@ class MainApp extends StatelessWidget {
       title: UiStrings.appName,
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
+      themeMode:
+          Box.getBool(key: Keys.isDarkMode) ? ThemeMode.dark : ThemeMode.light,
       defaultTransition: Transition.fadeIn,
       getPages: getPages,
       initialRoute: Routes.home,

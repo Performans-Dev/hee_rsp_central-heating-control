@@ -97,8 +97,18 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                               logger.d('add user error');
                               return;
                             }
-
+                            await app.populateUserList();
                             await app.checkFlags();
+                            final loginResult = await app.loginUser(
+                              username: appUser.username,
+                              pin: appUser.pin,
+                            );
+                            if (loginResult) {
+                              nav.toHome();
+                            } else {
+                              //TODO: raise alert
+                              logger.d('some error');
+                            }
                           },
                           child: const Text('Create User'),
                         ),
