@@ -143,8 +143,7 @@ class AppController extends GetxController {
     await populateTimezones();
     _didSettingsFetched.value = true;
     update();
-    final NavController nav = Get.find();
-    nav.toHome();
+    NavController.toHome();
   }
   //#endregion
 

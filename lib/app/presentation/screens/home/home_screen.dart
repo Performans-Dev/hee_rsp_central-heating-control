@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             HwBtnUpArrow(),
             HwBtnDownArrow(),
             HwBtnCheck(),
-            HwBtnCancel(),
+            HwBtnAbort(),
           ],
         ),
       );

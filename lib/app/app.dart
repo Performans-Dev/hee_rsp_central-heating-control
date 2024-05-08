@@ -23,7 +23,7 @@ class MainApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode:
           Box.getBool(key: Keys.isDarkMode) ? ThemeMode.dark : ThemeMode.light,
-      defaultTransition: Transition.fadeIn,
+      defaultTransition: Transition.circularReveal,
       getPages: getPages,
       initialRoute: Routes.home,
       initialBinding: AppBindings(),

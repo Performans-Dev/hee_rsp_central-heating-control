@@ -16,7 +16,6 @@ class SetupAdminUserScreen extends StatefulWidget {
 }
 
 class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
-  final NavController nav = Get.find();
   late final TextEditingController nameController;
   late final TextEditingController pinController;
 
@@ -104,7 +103,7 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                               pin: appUser.pin,
                             );
                             if (loginResult) {
-                              nav.toHome();
+                              NavController.toHome();
                             } else {
                               //TODO: raise alert
                               logger.d('some error');
@@ -123,7 +122,7 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                 child: ElevatedButton.icon(
                   onPressed: app.hasAdminUser
                       ? () {
-                          nav.toHome();
+                          NavController.toHome();
                         }
                       : null,
                   label: const Text('FINISH'),

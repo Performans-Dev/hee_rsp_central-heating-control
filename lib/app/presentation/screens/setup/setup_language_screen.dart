@@ -14,8 +14,6 @@ class SetupLanguageScreen extends StatefulWidget {
 
 class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
   int selectedIndex = 0;
-  final NavController nav = Get.find();
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -72,7 +70,7 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
                   onPressed: () async {
                     await app.onLanguageSelected(selectedIndex);
 
-                    nav.toHome();
+                    NavController.toHome();
                   },
                   label: const Text('NEXT'),
                   icon: const Icon(Icons.arrow_right_alt),

@@ -16,7 +16,6 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   late final TextEditingController usernameController;
   late final TextEditingController passwordController;
-  final NavController nav = Get.find();
 
   @override
   void initState() {
@@ -82,7 +81,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               //raise error
                               logger.d('EEEEEEE');
                             } else {
-                              nav.toHome();
+                              NavController.toHome();
                             }
                           },
                           child: const Text('Sign in'),

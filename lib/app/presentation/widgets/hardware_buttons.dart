@@ -10,12 +10,14 @@ class HwButton extends StatelessWidget {
     this.callback,
     this.enabled = true,
     this.visible = false,
+    this.isPrimary = false,
   });
   final HardwareButtonLocation location;
   final Widget? child;
   final GestureTapCallback? callback;
   final bool visible;
   final bool enabled;
+  final bool isPrimary;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,17 @@ class HwButton extends StatelessWidget {
         break;
     }
 
+    List<Color> colors = [
+      Theme.of(context).focusColor,
+      Theme.of(context).focusColor.withOpacity(0.1),
+    ];
+    if (isPrimary) {
+      colors = [
+        Theme.of(context).primaryColor,
+        Theme.of(context).primaryColor.withOpacity(0.7),
+      ];
+    }
+
     return !visible
         ? Container()
         : Positioned(
@@ -67,10 +80,7 @@ class HwButton extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: radius,
                     gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).focusColor,
-                        Theme.of(context).focusColor.withOpacity(0.1),
-                      ],
+                      colors: colors,
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),

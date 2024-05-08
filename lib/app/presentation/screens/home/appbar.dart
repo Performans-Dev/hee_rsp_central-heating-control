@@ -3,7 +3,8 @@ import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key});
+  const HomeAppBar({super.key, this.title});
+  final String? title;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -12,7 +13,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: const LogoWidget(size: 140),
+      title: title != null
+          ? Text(
+              title!,
+              style: Theme.of(context).textTheme.headlineMedium,
+            )
+          : const LogoWidget(size: 140),
       actions: const [
         Icon(Icons.warning),
         SizedBox(width: 4),

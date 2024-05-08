@@ -17,7 +17,6 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
   final AppController appController = Get.find();
   late final ScrollController scrollController;
   int selectedIndex = 0;
-  final NavController nav = Get.find();
 
   @override
   void initState() {
@@ -99,7 +98,7 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
                 onPressed: () async {
                   await app.onTimezoneSelected(selectedIndex);
 
-                  nav.toHome();
+                  NavController.toHome();
                 },
                 label: const Text('NEXT'),
                 icon: const Icon(Icons.keyboard_arrow_right),

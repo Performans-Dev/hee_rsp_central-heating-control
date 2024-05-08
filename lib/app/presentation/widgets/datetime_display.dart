@@ -14,15 +14,22 @@ class _DateTextWidgetState extends State<DateTextWidget> {
   // late String _currentDateTime;
   String formattedDate = '';
   String formattedTime = '';
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     _updateDateTime();
     // Update date and time every second
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _updateDateTime();
     });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   void _updateDateTime() {

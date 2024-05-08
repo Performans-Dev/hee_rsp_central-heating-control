@@ -13,7 +13,6 @@ class ActivationScreen extends StatefulWidget {
 }
 
 class _ActivationScreenState extends State<ActivationScreen> {
-  final NavController nav = Get.find();
   final AppController appController = Get.find();
   bool isBusy = false;
 
@@ -89,14 +88,14 @@ class _ActivationScreenState extends State<ActivationScreen> {
       setState(() {
         isBusy = false;
       });
-      nav.toHome();
+      NavController.toHome();
     } else {
       final activationResult = await appController.activateChcDevice();
       setState(() {
         isBusy = false;
       });
       if (activationResult != null) {
-        nav.toHome();
+        NavController.toHome();
       }
     }
   }

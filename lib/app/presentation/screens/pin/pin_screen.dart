@@ -35,8 +35,7 @@ class PinScreen extends StatelessWidget {
                           final loginResult = await app.loginUser(
                               username: app.userList[index].username, pin: pin);
                           if (loginResult) {
-                            final NavController nav = Get.find();
-                            nav.toHome();
+                            NavController.toHome();
                           } else {
                             const snackBar = SnackBar(
                               content: Text('Incorrect PIN code.'),

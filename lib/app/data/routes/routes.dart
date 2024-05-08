@@ -15,4 +15,9 @@ class Routes {
   static const String signin = '/signin';
   static const String registerDevice = '/register-device';
   //#endregion
+
+  static const String settings = '/settings';
+  static const String settingsUserList = '/settings-user-list';
+  static const String settingsUserAdd = '/settings-add-user';
+  static const String settingsUserEdit = '/settings-edit-user';
 }

@@ -2,20 +2,41 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:get/get.dart';
 
-class NavController extends GetxController {
+class NavController {
   //
-  void onTermsOfUseTapped() async {
+  static void onTermsOfUseTapped() async {
     logger.d('terms of use');
   }
 
-  void onPrivacyPolicyTapped() async {
+  static void onPrivacyPolicyTapped() async {
     logger.d('privacy policy');
   }
 
-  void toHome() async {
+  static void toHome() async {
     Future.delayed(
       Duration.zero,
       () => Get.offAllNamed(Routes.home),
+    );
+  }
+
+  static void toSettings() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settings),
+    );
+  }
+
+  static void toSettingsUserList() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsUserList),
+    );
+  }
+
+  static void toSettingsAddUser() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsUserAdd),
     );
   }
 }

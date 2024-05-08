@@ -16,7 +16,6 @@ class RegisterDeviceScreen extends StatefulWidget {
 }
 
 class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
-  final NavController nav = Get.find();
   final AppController appController = Get.find();
   bool isBusy = false;
 
@@ -81,7 +80,7 @@ class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
     if (response == null) {
       logger.d('error');
     } else {
-      nav.toHome();
+      NavController.toHome();
     }
   }
 }
