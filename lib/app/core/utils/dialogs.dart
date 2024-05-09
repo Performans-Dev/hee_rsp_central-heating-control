@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/presentation/widgets/keypad.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,42 @@ class DialogUtils {
 
   alertDialog() {}
 
-  snackbar() {}
+  static void snackbar({
+    required BuildContext context,
+    required String message,
+    SnackbarType type = SnackbarType.info,
+    SnackBarAction? action,
+  }) {
+    Color? backgroundColor;
+    bool? showCloseIcon;
+    int seconds = 2;
+    switch (type) {
+      case SnackbarType.success:
+        backgroundColor = Colors.green;
+        break;
+      case SnackbarType.info:
+        backgroundColor = null;
+        break;
+      case SnackbarType.warning:
+        backgroundColor = Colors.orange;
+        showCloseIcon = true;
+        break;
+      case SnackbarType.error:
+        backgroundColor = Colors.red;
+        showCloseIcon = true;
+        break;
+    }
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 2),
+      backgroundColor: backgroundColor,
+      action: action,
+      showCloseIcon: showCloseIcon,
+    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
 
   progressDialog() {}
 

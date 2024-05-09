@@ -20,3 +20,10 @@ enum JobState {
   success,
   error,
 }
+
+enum SnackbarType {
+  info,
+  success,
+  warning,
+  error,
+}

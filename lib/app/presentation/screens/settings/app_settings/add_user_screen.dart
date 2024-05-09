@@ -1,3 +1,7 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/content.dart';
 import 'package:central_heating_control/app/presentation/components/hardware_buttons.dart';
@@ -13,7 +17,24 @@ class SettingsAddUserScreen extends StatefulWidget {
 }
 
 class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
+  late final TextEditingController nameController;
+  late final TextEditingController pinController;
   bool isAdminChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController();
+    pinController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    pinController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -30,19 +51,25 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          labelText: 'Name Surname'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        labelText: 'Name Surname',
+                      ),
+                      keyboardType: TextInputType.name,
                     ),
                     SizedBox(height: 8),
                     TextField(
+                      controller: pinController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          labelText: 'Pin Code'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        labelText: 'Pin Code',
+                      ),
+                      keyboardType: TextInputType.number,
                     ),
                     SizedBox(height: 8),
                     SwitchListTile(
@@ -65,7 +92,33 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
             ),
             HwBtnCancel(),
             HwBtnSave(
-              callback: () {},
+              callback: () async {
+                final AppUser appUser = AppUser(
+                  username: nameController.text,
+                  pin: pinController.text,
+                  isAdmin: isAdminChecked,
+                );
+                if (appUser.username.isEmpty) {
+                  DialogUtils.snackbar(
+                    context: context,
+                    message: 'Name Surname required.',
+                    type: SnackbarType.warning,
+                  );
+                  return;
+                }
+                if (appUser.pin.length != 6) {
+                  print('pin required');
+                  return;
+                }
+
+                final result = await DbProvider.db.addUser(appUser);
+                if (result > 0) {
+                  //success
+                  print('user added');
+                } else {
+                  print('db error');
+                }
+              },
             ),
           ],
         ),
