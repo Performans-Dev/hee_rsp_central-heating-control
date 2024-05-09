@@ -62,7 +62,7 @@ class DialogUtils {
             return Material(
               type: MaterialType.transparency,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -81,7 +81,7 @@ class DialogUtils {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20),
-                                  margin: const EdgeInsets.only(top: 20),
+                                  margin: const EdgeInsets.only(top: 16),
                                   child: RichText(
                                     text: TextSpan(
                                       children: [
@@ -120,14 +120,14 @@ class DialogUtils {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               for (final item in pc.digits)
                                 Container(
                                   width: 35,
-                                  height: 50,
+                                  height: 46,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(10),
@@ -144,7 +144,7 @@ class DialogUtils {
                                 ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

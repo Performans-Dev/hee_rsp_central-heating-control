@@ -45,9 +45,10 @@ class DeviceUtils {
     return ChcDevice(
       manufacturer: deviceData['manufacturer'],
       model: deviceData['model'],
-      board: deviceData['board'] is List
-          ? deviceData['board'].first
-          : deviceData['board'],
+      board: (deviceData['board'] is List
+              ? deviceData['board']?.first
+              : deviceData['board']) ??
+          '',
       brand: deviceData['brand'],
       os: deviceData['os'],
       osVersion: deviceData['osVersion'],

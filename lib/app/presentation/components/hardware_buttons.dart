@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/hardware_buttons.dart';
@@ -68,7 +69,9 @@ class HwBtnWeeklyPlan extends StatelessWidget {
   Widget build(BuildContext context) {
     return HwButton(
       location: HardwareButtonLocation.l1,
-      callback: () {},
+      callback: () {
+        Get.toNamed(Routes.developer);
+      },
       enabled: true,
       visible: true,
       child: const Icon(Icons.alarm),

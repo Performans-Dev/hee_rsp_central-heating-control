@@ -15,7 +15,7 @@ class KeypadWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       onTap: callback,
       child: Container(
-        margin: const EdgeInsets.all(12),
+        margin: const EdgeInsets.all(8),
         child: IconButton(
           onPressed: callback,
           icon: value == 'x'

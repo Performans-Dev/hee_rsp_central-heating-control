@@ -10,6 +10,7 @@ import 'package:central_heating_control/app/presentation/screens/auth/signin/sig
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/add_user_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/developer_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
@@ -19,6 +20,10 @@ import 'package:central_heating_control/app/presentation/screens/splash/splash_s
 import 'package:get/get.dart';
 
 final List<GetPage> getPages = [
+  GetPage(
+    name: Routes.developer,
+    page: () => const DeveloperScreen(),
+  ),
   GetPage(
     name: Routes.pin,
     page: () => const PinScreen(),
