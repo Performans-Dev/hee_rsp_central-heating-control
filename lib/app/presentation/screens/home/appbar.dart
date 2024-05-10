@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key, this.title});
@@ -18,7 +19,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               title!,
               style: Theme.of(context).textTheme.headlineMedium,
             )
-          : const LogoWidget(size: 140),
+          : InkWell(
+              onDoubleTap: () async {
+                await windowManager.minimize();
+              },
+              child: LogoWidget(size: 140),
+            ),
       actions: const [
         Icon(Icons.warning),
         SizedBox(width: 4),
