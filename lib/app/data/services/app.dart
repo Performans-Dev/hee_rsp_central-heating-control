@@ -191,6 +191,7 @@ class AppController extends GetxController {
 
     //TODO: inform OS to selected timezone
   }
+
   //#endregion
 
   //#region ACCOUNT

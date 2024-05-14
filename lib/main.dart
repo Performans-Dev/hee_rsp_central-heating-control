@@ -25,6 +25,7 @@ Future<void> main() async {
   // apply window options
   await windowManager.ensureInitialized();
 
+
   WindowOptions windowOptions = WindowOptions(
     size: GetPlatform.isMacOS ? const Size(800, 480) : null,
     backgroundColor: Colors.black,

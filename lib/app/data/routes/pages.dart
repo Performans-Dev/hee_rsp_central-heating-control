@@ -11,11 +11,14 @@ import 'package:central_heating_control/app/presentation/screens/home/home_scree
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/add_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/developer_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/language_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/splash/setup_timezone_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/setup_timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_screen.dart';
 import 'package:get/get.dart';
 
@@ -91,6 +94,35 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.settingsUserAdd,
     page: () => const SettingsAddUserScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPreferences,
+    page: () => SettingsPreferences(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsLanguage,
+    page: () => LanguageScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+
+  GetPage(
+    name: Routes.settingsTimezone,
+    page: () => TimezoneScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsWifiCredentials,
+    page: () => SettingsPreferences(),
     middlewares: [
       AdminMiddleware(),
     ],

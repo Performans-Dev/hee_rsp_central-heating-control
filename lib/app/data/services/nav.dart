@@ -42,6 +42,11 @@ class NavController {
     );
   }
 
+  static void toSettingsPreferences() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsPreferences),
+    );
   static void lock() {
     AppController appController = Get.find();
     appController.logoutUser();
