@@ -1,96 +1,94 @@
-import 'package:central_heating_control/app/core/localization/localization_service.dart';
+import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TimezoneScreen extends StatefulWidget {
-  TimezoneScreen({super.key});
+  const TimezoneScreen({super.key});
 
   @override
   State<TimezoneScreen> createState() => _TimezoneScreenState();
 }
 
 class _TimezoneScreenState extends State<TimezoneScreen> {
-  String? _selectedTimezone;
-
+  late TimezoneDefinition _selectedTimezone;
+  bool ready = true;
   AppController app = Get.find();
-  String timezoneName = '';
-  int timezoneOffset = 0;
+  List<TimezoneDefinition> timezones = [];
+  late ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
-    timezoneOffset = DateTime.now().toLocal().timeZoneOffset.inHours;
-    timezoneName = DateTime.now().toLocal().timeZoneName;
-    app.populateTimezones();
-    setState(() {
-      TimezoneDefinition? t = app.timezones
-          .firstWhereOrNull((element) => element.name == timezoneName);
-      _selectedTimezone = t?.name;
-    });
-    //print(timezoneName);
-/*     TimezoneDefinition? t = app.timezones
-        .firstWhereOrNull((element) => element.name == timezoneName);
-    if (t != null) {
-      setState(() {
-        _selectedTimezone = t.name;
-      });
-    } */
-    // _proceed();
+    _selectedTimezone =
+        TimezoneDefinition.fromJson(Box.getString(key: Keys.selectedTimezone));
+    init();
+    scrollController = ScrollController();
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(builder: (ac) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Timezone"),
-        ),
-        body: Stack(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                  child: TextField(
-                    focusNode: FocusNode(),
-                    decoration: InputDecoration(
-                        hintText: "Search...".tr,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20))),
-                    onChanged: (value) {},
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (_, index) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CheckboxListTile(
-                        dense: true,
-                        value: _selectedTimezone == app.timezones[index].name,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _selectedTimezone =
-                                value! ? app.timezones[index].name : null;
-                          });
-                        },
-                        title: Text(app.timezones[index].name),
-                        subtitle: Text(app.timezones[index].zone),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
+      return AppScaffold(
+        title: 'Timezone',
+        selectedIndex: 3,
+        body: ready
+            ? Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    // color: Theme.of(context).focusColor,
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.all(20),
+                    child: Text(
+                      'Select Timezone',
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
-                    itemCount: app.timezones.length,
                   ),
-                ),
-              ],
-            ),
-            actionButton,
-          ],
-        ),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: scrollController,
+                      shrinkWrap: false,
+                      itemBuilder: (_, index) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: CheckboxListTile(
+                          dense: false,
+                          selected:
+                              _selectedTimezone.name == timezones[index].name,
+                          value:
+                              _selectedTimezone.name == timezones[index].name,
+                          onChanged: (bool? value) async {
+                            if (value == true) {
+                              setState(() {
+                                _selectedTimezone = timezones[index];
+                              });
+                            }
+                          },
+                          title: Text(timezones[index].name),
+                          subtitle: Text(timezones[index].zone),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          secondary: Text(
+                            timezones[index]
+                                .gmt
+                                .replaceAll('(', '')
+                                .replaceAll(')', '')
+                                .replaceAll('GMT', ''),
+                          ),
+                        ),
+                      ),
+                      itemCount: timezones.length,
+                    ),
+                  ),
+                  actionButton,
+                ],
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       );
     });
   }
@@ -108,17 +106,38 @@ class _TimezoneScreenState extends State<TimezoneScreen> {
                 child: const Text("Cancel")),
             const SizedBox(width: 10),
             ElevatedButton(
-                onPressed: _selectedTimezone != null
-                    ? () async {
-                        await app.onTimezoneSelected(app.timezones.indexWhere(
-                            (element) => element.name == _selectedTimezone));
-
-                        print("$_selectedTimezone seçildi. Kaydediliyor...");
-                        Get.back();
-                      }
-                    : null,
-                child: const Text("Confirm")),
+              onPressed: () async {
+                await Box.setString(
+                  key: Keys.selectedTimezone,
+                  value: _selectedTimezone.toJson(),
+                );
+                //TODO: inform OS, update OS timezone
+                Get.back();
+              },
+              child: const Text("Save"),
+            ),
           ],
         ),
       );
+
+  Future<void> init() async {
+    if (app.timezones.isEmpty) {
+      setState(() => ready = false);
+      await app.populateTimezones();
+      setState(() => ready = true);
+    }
+    setState(() {
+      timezones.assignAll(app.timezones);
+    });
+    int selectedIndex =
+        timezones.map((e) => e.name).toList().indexOf(_selectedTimezone.name);
+
+    Future.delayed(const Duration(milliseconds: 200), () {
+      scrollController.animateTo(
+        selectedIndex * 64,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
 }

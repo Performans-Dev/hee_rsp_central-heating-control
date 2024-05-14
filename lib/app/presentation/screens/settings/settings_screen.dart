@@ -1,8 +1,10 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/hardware_buttons.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -11,20 +13,20 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
-      builder: (app) => Scaffold(
-        appBar: HomeAppBar(
-          title: 'Settings',
-        ),
-        body: Stack(
+      builder: (app) => AppScaffold(
+        title: 'Settings',
+        selectedIndex: 3,
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 480),
-                alignment: Alignment.center,
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 8),
                     ListTile(
                       title: Text('Zone, Device, Sensor Management'),
                       subtitle:
@@ -86,7 +88,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            HwBtnBack(),
           ],
         ),
       ),

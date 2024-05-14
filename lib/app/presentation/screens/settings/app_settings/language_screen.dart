@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/data/models/language_definition.dart
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,38 +29,43 @@ class _LanguageScreenState extends State<LanguageScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(builder: (ac) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Language"),
-        ),
-        body: Stack(
+      return AppScaffold(
+        title: 'Language',
+        selectedIndex: 3,
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (_, index) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CheckboxListTile(
-                        dense: true,
-                        value: _selectedLanguage == app.languages[index].name,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _selectedLanguage =
-                                value! ? app.languages[index].name : null;
-                          });
-                        },
-                        title: Text(app.languages[index].name),
-                        subtitle: Text(app.languages[index].countryCode),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ),
-                    itemCount: app.languages.length,
+            // Container(
+            //   width: double.infinity,
+            //   // color: Theme.of(context).focusColor,
+            //   alignment: Alignment.centerLeft,
+            //   padding: EdgeInsets.all(20),
+            //   child: Text(
+            //     'Settings / Preferences / Select Language',
+            //     style: Theme.of(context).textTheme.titleSmall,
+            //   ),
+            // ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (_, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CheckboxListTile(
+                    dense: true,
+                    value: _selectedLanguage == app.languages[index].name,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _selectedLanguage =
+                            value! ? app.languages[index].name : null;
+                      });
+                    },
+                    title: Text(app.languages[index].name),
+                    subtitle: Text(app.languages[index].countryCode),
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
                 ),
-              ],
+                itemCount: app.languages.length,
+              ),
             ),
             actionButton,
           ],
@@ -69,6 +75,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget get actionButton => Container(
+        // color: Theme.of(context).focusColor,
         padding: EdgeInsets.all(16),
         alignment: Alignment.bottomCenter,
         child: Row(

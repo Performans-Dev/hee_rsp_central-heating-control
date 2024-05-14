@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
+import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,18 +10,20 @@ class AppScaffold extends StatelessWidget {
     super.key,
     required this.body,
     this.selectedIndex = 0,
-    this.backButton = false,
+    // this.backButton = false,
+    this.title,
   });
   final Widget body;
   final int selectedIndex;
-  final bool backButton;
+  // final bool backButton;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       builder: (app) {
         return Scaffold(
-          appBar: const HomeAppBar(),
+          //appBar: const HomeAppBar(),
           body: Row(
             children: [
               NavigationRail(
@@ -49,12 +52,14 @@ class AppScaffold extends StatelessWidget {
                 selectedIndex: selectedIndex,
                 labelType: NavigationRailLabelType.all,
                 extended: false,
-                leading: backButton
-                    ? IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Get.back(),
-                      )
-                    : null,
+                leading: SizedBox(
+                  width: 56,
+                  height: 56,
+                  child: Center(
+                    // child: Image.asset('assets/images/app_icon.png'),
+                    child: FlutterLogo(),
+                  ),
+                ),
                 onDestinationSelected: (value) async {
                   switch (value) {
                     case 0:
@@ -82,7 +87,15 @@ class AppScaffold extends StatelessWidget {
               ),
               const VerticalDivider(),
               Expanded(
-                child: body,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    HomeAppBar(title: title),
+                    Expanded(
+                      child: body,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

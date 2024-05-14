@@ -13,38 +13,26 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          InkWell(
-            onDoubleTap: () async {
-              await windowManager.minimize();
-            },
-            child: LogoWidget(size: 140),
-          ),
-          Container(
-            height: kToolbarHeight,
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.only(left: 20),
-            child: const DateTextWidget(),
-          ),
-          Container(
-            width: 140,
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.warning),
-                SizedBox(width: 4),
-                Icon(Icons.lan_outlined),
-                SizedBox(width: 4),
-                Icon(Icons.wifi),
-              ],
+      // automaticallyImplyLeading: false,
+      centerTitle: false,
+      actions: [
+        Icon(Icons.warning),
+        SizedBox(width: 4),
+        Icon(Icons.lan_outlined),
+        SizedBox(width: 4),
+        Icon(Icons.wifi),
+        SizedBox(width: 8),
+        DateTextWidget(),
+        SizedBox(width: 8),
+      ],
+      title: title != null
+          ? Text(title!)
+          : InkWell(
+              onDoubleTap: () async {
+                await windowManager.minimize();
+              },
+              child: LogoWidget(size: 140),
             ),
-          ),
-        ],
-      ),
 
       // title != null
       //     ? Text(
