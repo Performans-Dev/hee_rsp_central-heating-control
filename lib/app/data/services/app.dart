@@ -287,4 +287,6 @@ class AppController extends GetxController {
     await Box.setBool(key: Keys.isDarkMode, value: isDarkMode);
   }
   //#endregion
+
+  
 }
