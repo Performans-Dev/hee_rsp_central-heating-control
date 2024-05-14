@@ -52,7 +52,7 @@ class NavController {
   static void lock() {
     AppController appController = Get.find();
     appController.logoutUser();
-    toHome();
+    Get.toNamed(Routes.screenSaver);
   }
 
   static Future<bool> showFunctionsDialog(

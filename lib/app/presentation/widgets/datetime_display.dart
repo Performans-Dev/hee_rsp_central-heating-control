@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateTextWidget extends StatefulWidget {
-  const DateTextWidget({super.key});
+  const DateTextWidget({super.key, this.large = false});
+  final bool large;
 
   @override
   State<DateTextWidget> createState() => _DateTextWidgetState();
@@ -49,14 +50,37 @@ class _DateTextWidgetState extends State<DateTextWidget> {
       children: [
         Text(
           formattedDate,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(letterSpacing: 1),
+          style: widget.large
+              ? Theme.of(context).textTheme.displayLarge?.copyWith(
+                  letterSpacing: 1,
+                  shadows: [
+                    BoxShadow(
+                      color: Theme.of(context).canvasColor,
+                      blurRadius: 12,
+                      offset: Offset(1, 1),
+                      blurStyle: BlurStyle.outer,
+                    ),
+                  ],
+                )
+              : Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(letterSpacing: 1),
         ),
         Text(
           formattedTime,
-          style: Theme.of(context).textTheme.labelLarge,
+          style: widget.large
+              ? Theme.of(context).textTheme.displayLarge?.copyWith(
+                  shadows: [
+                    BoxShadow(
+                      color: Theme.of(context).canvasColor,
+                      blurRadius: 12,
+                      offset: Offset(1, 1),
+                      blurStyle: BlurStyle.outer,
+                    ),
+                  ],
+                )
+              : Theme.of(context).textTheme.labelLarge,
         ),
       ],
     );

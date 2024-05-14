@@ -5,6 +5,7 @@ class Routes {
   static const String splash = '/initializing';
 
   static const String pin = '/pin';
+  static const String screenSaver = '/screen-saver';
 
   //#region INITIAL SETUP
   static const String setupLanguage = '/setup-language';
