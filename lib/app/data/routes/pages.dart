@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/presentation/screens/activation/regi
 import 'package:central_heating_control/app/presentation/screens/auth/signin/signin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/screen_saver/screen_saver.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/add_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/developer_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/language_screen.dart';
@@ -129,4 +130,11 @@ final List<GetPage> getPages = [
   ),
 
   //#endregion
+
+  GetPage(
+    name: Routes.screenSaver,
+    page: () => ScreenSaverScreen(),
+    transitionDuration: Duration(milliseconds: 1000),
+    transition: Transition.zoom,
+  ),
 ];
