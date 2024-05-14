@@ -11,6 +11,7 @@ import 'package:central_heating_control/app/presentation/screens/home/home_scree
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/add_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/developer_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/edit_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
@@ -94,6 +95,13 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.settingsUserAdd,
     page: () => const SettingsAddUserScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+    GetPage(
+    name: Routes.settingsUserEdit,
+    page: () => const SettingsEditUserScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
