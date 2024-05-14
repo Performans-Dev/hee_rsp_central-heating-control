@@ -47,6 +47,8 @@ class NavController {
       Duration.zero,
       () => Get.toNamed(Routes.settingsPreferences),
     );
+  }
+
   static void lock() {
     AppController appController = Get.find();
     appController.logoutUser();
