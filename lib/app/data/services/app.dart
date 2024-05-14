@@ -191,6 +191,7 @@ class AppController extends GetxController {
 
     //TODO: inform OS to selected timezone
   }
+
   //#endregion
 
   //#region ACCOUNT
@@ -286,4 +287,6 @@ class AppController extends GetxController {
     await Box.setBool(key: Keys.isDarkMode, value: isDarkMode);
   }
   //#endregion
+
+  
 }

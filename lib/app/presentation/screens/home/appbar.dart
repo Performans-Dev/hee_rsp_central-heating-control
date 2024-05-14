@@ -13,33 +13,53 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
+      // automaticallyImplyLeading: false,
+      centerTitle: false,
+      actions: [
+        Icon(Icons.warning),
+        SizedBox(width: 4),
+        Icon(Icons.lan_outlined),
+        SizedBox(width: 4),
+        Icon(Icons.wifi),
+        SizedBox(width: 8),
+        DateTextWidget(),
+        SizedBox(width: 8),
+      ],
       title: title != null
-          ? Text(
-              title!,
-              style: Theme.of(context).textTheme.headlineMedium,
-            )
+          ? Text(title!)
           : InkWell(
               onDoubleTap: () async {
                 await windowManager.minimize();
               },
               child: LogoWidget(size: 140),
             ),
-      actions: const [
-        Icon(Icons.warning),
-        SizedBox(width: 4),
-        Icon(Icons.lan_outlined),
-        SizedBox(width: 4),
-        Icon(Icons.wifi),
-        SizedBox(width: 16),
-      ],
-      leading: Container(
-        height: kToolbarHeight,
-        alignment: Alignment.centerLeft,
-        margin: const EdgeInsets.only(left: 20),
-        child: const DateTextWidget(),
-      ),
-      leadingWidth: 200,
+
+      // title != null
+      //     ? Text(
+      //         title!,
+      //         style: Theme.of(context).textTheme.headlineMedium,
+      //       )
+      //     : InkWell(
+      //         onDoubleTap: () async {
+      //           await windowManager.minimize();
+      //         },
+      //         child: LogoWidget(size: 140),
+      //       ),
+      // actions: const [
+      //   Icon(Icons.warning),
+      //   SizedBox(width: 4),
+      //   Icon(Icons.lan_outlined),
+      //   SizedBox(width: 4),
+      //   Icon(Icons.wifi),
+      //   SizedBox(width: 16),
+      // ],
+      // leading: Container(
+      //   height: kToolbarHeight,
+      //   alignment: Alignment.centerLeft,
+      //   margin: const EdgeInsets.only(left: 20),
+      //   child: const DateTextWidget(),
+      // ),
+      // leadingWidth: 200,
       elevation: 16,
     );
   }

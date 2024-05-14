@@ -1,5 +1,7 @@
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/main.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NavController {
@@ -38,5 +40,23 @@ class NavController {
       Duration.zero,
       () => Get.toNamed(Routes.settingsUserAdd),
     );
+  }
+
+  static void toSettingsPreferences() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsPreferences),
+    );
+  }
+
+  static void lock() {
+    AppController appController = Get.find();
+    appController.logoutUser();
+    toHome();
+  }
+
+  static Future<bool> showFunctionsDialog(
+      {required BuildContext context}) async {
+    return false;
   }
 }

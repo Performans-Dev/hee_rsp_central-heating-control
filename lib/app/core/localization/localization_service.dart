@@ -27,7 +27,7 @@ class LocalizationService {
         'tr_TR': trTR,
       };
 
-  Future<void> applySavedLocale() async {
+  Future<Locale> applySavedLocale() async {
     String localeLang = Box.getString(key: Keys.localeLang);
     String localeCountry = Box.getString(key: Keys.localeCulture);
     Locale l;
@@ -41,6 +41,7 @@ class LocalizationService {
     await Box.setString(key: Keys.localeLang, value: l.languageCode);
     await Box.setString(
         key: Keys.localeCulture, value: locale.countryCode ?? 'TR');
+    return l;
   }
 
   Future<void> changeLocale(String lang) async {

@@ -127,7 +127,7 @@ class DialogUtils {
                               for (final item in pc.digits)
                                 Container(
                                   width: 35,
-                                  height: 46,
+                                  height: 50,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(10),
