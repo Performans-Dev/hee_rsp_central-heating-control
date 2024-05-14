@@ -5,7 +5,40 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DialogUtils {
-  confirmDialog() {}
+  static confirmDialog({
+    required BuildContext context,
+    required String title,
+    required String? description,
+    required String? positiveText,
+    required String? negativeText,
+    required Function onPositive,
+  }) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: description != null ? Text(description) : null,
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(negativeText ?? "No"),
+            ),
+            TextButton(
+              onPressed: () {
+                onPositive();
+                Navigator.of(context).pop();
+              },
+              child: Text(positiveText ?? "Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   alertDialog() {}
 

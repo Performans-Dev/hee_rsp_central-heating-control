@@ -11,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class SettingsAddUserScreen extends StatefulWidget {
-  const SettingsAddUserScreen({super.key});
+class SettingsEditUserScreen extends StatefulWidget {
+  const SettingsEditUserScreen({super.key});
 
   @override
-  State<SettingsAddUserScreen> createState() => _SettingsAddUserScreenState();
+  State<SettingsEditUserScreen> createState() => _SettingsEditUserScreenState();
 }
 
-class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
+class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
   late final TextEditingController nameController;
   late final TextEditingController pinController;
   bool isAdminChecked = false;
@@ -49,7 +49,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
               width: double.infinity,
               // color: Theme.of(context).focusColor,
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               child: Text(
                 'Settings / Add New User',
                 style: Theme.of(context).textTheme.titleSmall,
@@ -57,7 +57,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +72,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                       ),
                       keyboardType: TextInputType.name,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     TextField(
                       controller: pinController,
                       decoration: InputDecoration(
@@ -83,7 +83,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                       ),
                       keyboardType: TextInputType.number,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     SwitchListTile(
                       value: isAdminChecked,
                       onChanged: (v) {
@@ -91,8 +91,8 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                           isAdminChecked = v;
                         });
                       },
-                      title: const Text('Admin'),
-                      subtitle: const Text(
+                      title: Text('Admin'),
+                      subtitle: Text(
                           'Switch on if you want to access this user to settings screen'),
                       isThreeLine: true,
                       shape: RoundedRectangleBorder(
@@ -110,10 +110,10 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
   }
 
   Widget get saveButton => Container(
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.bottomRight,
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.bottomCenter,
         child: ElevatedButton(
-          child: const Text("Save"),
+          child: Text("Save"),
           onPressed: () async {
             final AppUser appUser = AppUser(
               username: nameController.text,
@@ -133,7 +133,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
               return;
             }
 
-            final result = await DbProvider.db.addUser(appUser);
+            final result = await DbProvider.db.updateUser(appUser);
             if (result > 0) {
               //success
               print('user added');
