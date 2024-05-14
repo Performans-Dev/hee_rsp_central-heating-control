@@ -22,4 +22,9 @@ class Routes {
   static const String settingsUserList = '/settings-user-list';
   static const String settingsUserAdd = '/settings-add-user';
   static const String settingsUserEdit = '/settings-edit-user';
+  static const String settingsPreferences = '/settings-preferences';
+  static const String settingsLanguage = '/settings-language';
+
+  static const String settingsTimezone = '/settings-timezone';
+  static const String settingsWifiCredentials = '/settings-wifi-credentials';
 }

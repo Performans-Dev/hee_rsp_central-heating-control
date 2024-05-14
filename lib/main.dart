@@ -24,7 +24,7 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
-    // size: Size(800, 480),
+    size: Size(800, 480),
     // center: true,
     backgroundColor: Colors.black,
     skipTaskbar: false,
@@ -33,7 +33,7 @@ Future<void> main() async {
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    await windowManager.setFullScreen(true);
+    //   await windowManager.setFullScreen(true);
     await windowManager.focus();
   });
 

@@ -39,4 +39,11 @@ class NavController {
       () => Get.toNamed(Routes.settingsUserAdd),
     );
   }
+
+  static void toSettingsPreferences() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsPreferences),
+    );
+  }
 }
