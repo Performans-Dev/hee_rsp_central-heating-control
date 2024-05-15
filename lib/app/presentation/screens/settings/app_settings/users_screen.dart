@@ -106,6 +106,7 @@ class SettingsUserListScreen extends StatelessWidget {
                 itemCount: app.userList.length,
               ),
             ),
+
             addNewUserButon,
           ],
         ),

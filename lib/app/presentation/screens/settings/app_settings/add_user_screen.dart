@@ -5,7 +5,6 @@ import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/content.dart';
-import 'package:central_heating_control/app/presentation/components/hardware_buttons.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -103,6 +102,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
               ),
             ),
             saveButton
+            
           ],
         ),
       ),
