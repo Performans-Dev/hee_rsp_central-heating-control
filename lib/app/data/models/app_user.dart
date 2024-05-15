@@ -6,19 +6,27 @@ class AppUser {
   String pin;
   bool isAdmin;
   AppUser({
-    this.id,
+     this.id,
     required this.username,
     required this.pin,
     required this.isAdmin,
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'username': username,
-      'pin': pin,
-      'isAdmin': isAdmin,
-    };
+    if (id! > 0) {
+      return {
+        'id': id,
+        'username': username,
+        'pin': pin,
+        'isAdmin': isAdmin,
+      };
+    } else {
+      return {
+        'username': username,
+        'pin': pin,
+        'isAdmin': isAdmin,
+      };
+    }
   }
 
   Map<String, dynamic> toSQL() {
@@ -32,7 +40,7 @@ class AppUser {
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
-      id: map['id'] != null ? map['id'] as int : null,
+      id: map['id'] ?? -1,
       username: map['username'] ?? '',
       pin: map['pin'] ?? '',
       isAdmin: map['isAdmin'] ?? false,

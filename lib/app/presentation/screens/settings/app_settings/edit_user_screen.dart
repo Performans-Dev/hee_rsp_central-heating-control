@@ -10,9 +10,14 @@ import 'package:central_heating_control/app/presentation/screens/home/appbar.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class SettingsEditUserScreen extends StatefulWidget {
-  const SettingsEditUserScreen({super.key});
+  final AppUser? user;
+  const SettingsEditUserScreen({
+    super.key,
+    this.user,
+  });
 
   @override
   State<SettingsEditUserScreen> createState() => _SettingsEditUserScreenState();
@@ -28,6 +33,11 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
     super.initState();
     nameController = TextEditingController();
     pinController = TextEditingController();
+    if (widget.user != null) {
+      nameController.text = widget.user!.username;
+      pinController.text = widget.user!.pin;
+      isAdminChecked = widget.user!.isAdmin;
+    }
   }
 
   @override
@@ -115,7 +125,9 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
         child: ElevatedButton(
           child: Text("Save"),
           onPressed: () async {
+            AppController ac = Get.find();
             final AppUser appUser = AppUser(
+              id: widget.user?.id,
               username: nameController.text,
               pin: pinController.text,
               isAdmin: isAdminChecked,
