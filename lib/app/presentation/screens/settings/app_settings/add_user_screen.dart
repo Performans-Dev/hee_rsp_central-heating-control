@@ -134,12 +134,16 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
             }
 
             final result = await DbProvider.db.addUser(appUser);
+            AppController app = Get.find();
+            app.populateUserList();
+
             if (result > 0) {
               //success
               print('user added');
             } else {
               print('db error');
             }
+            Get.back();
           },
         ),
       );

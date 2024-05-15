@@ -69,6 +69,8 @@ class SettingsUserListScreen extends StatelessWidget {
                               onPositive: () async {
                                 await DbProvider.db
                                     .deleteUser(app.userList[index]);
+
+                                app.populateUserList();
                               },
                             );
                           },
