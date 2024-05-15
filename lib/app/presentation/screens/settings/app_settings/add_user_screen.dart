@@ -114,37 +114,62 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
         alignment: Alignment.bottomRight,
         child: ElevatedButton(
           child: const Text("Save"),
-          onPressed: () async {
-            final AppUser appUser = AppUser(
-              username: nameController.text,
-              pin: pinController.text,
-              isAdmin: isAdminChecked,
-            );
-            if (appUser.username.isEmpty) {
-              DialogUtils.snackbar(
-                context: context,
-                message: 'Name Surname required.',
-                type: SnackbarType.warning,
-              );
-              return;
-            }
-            if (appUser.pin.length != 6) {
-              print('pin required');
-              return;
-            }
-
-            final result = await DbProvider.db.addUser(appUser);
-            AppController app = Get.find();
-            app.populateUserList();
-
-            if (result > 0) {
-              //success
-              print('user added');
-            } else {
-              print('db error');
-            }
-            Get.back();
-          },
+          onPressed: onSaveButonPressed,
         ),
       );
+
+  Future<void> onSaveButonPressed() async {
+    final AppUser appUser = AppUser(
+      username: nameController.text,
+      pin: pinController.text,
+      isAdmin: isAdminChecked,
+    );
+    if (appUser.username.isEmpty) {
+      DialogUtils.snackbar(
+        context: context,
+        message: 'Name Surname required.',
+        type: SnackbarType.warning,
+      );
+      return;
+    }
+    if (appUser.pin.length != 6) {
+      if (!mounted) return;
+      DialogUtils.snackbar(
+          action: SnackBarAction(
+            label: "Retry",
+            onPressed: onSaveButonPressed,
+          ),
+          context: context,
+          message: "Pin length must consist of 6 digits",
+          type: SnackbarType.error);
+      print('pin required');
+      return;
+    }
+    AppController app = Get.find();
+
+    final result = await DbProvider.db.addUser(appUser);
+    app.populateUserList();
+
+    if (result > 0) {
+      //success
+      if (!mounted) return;
+
+      DialogUtils.snackbar(
+          context: context,
+          message: "User has been registered successfully",
+          type: SnackbarType.success);
+      print('user added');
+    } else {
+      if (!mounted) return;
+      DialogUtils.snackbar(
+          action: SnackBarAction(
+            label: "Retry",
+            onPressed: onSaveButonPressed,
+          ),
+          context: context,
+          message: "There was a problem registering the user.",
+          type: SnackbarType.error);
+    }
+    Get.back();
+  }
 }

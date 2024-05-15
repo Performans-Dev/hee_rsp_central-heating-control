@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
@@ -67,10 +68,32 @@ class SettingsUserListScreen extends StatelessWidget {
                               positiveText: 'Delete',
                               negativeText: 'Cancel',
                               onPositive: () async {
-                                await DbProvider.db
+                                var result = await DbProvider.db
                                     .deleteUser(app.userList[index]);
 
                                 app.populateUserList();
+                                if (result > 0) {
+                                  DialogUtils.snackbar(
+                                      context: context,
+                                      message:
+                                          "The record has been deleted successfully",
+                                      type: SnackbarType.success);
+                                } else {
+                                  DialogUtils.snackbar(
+                                      action: SnackBarAction(
+                                        label: "Retry",
+                                        onPressed: () async {
+                                          await DbProvider.db
+                                              .deleteUser(app.userList[index]);
+
+                                          app.populateUserList();
+                                        },
+                                      ),
+                                      context: context,
+                                      message:
+                                          "There was a problem registering the user.",
+                                      type: SnackbarType.error);
+                                }
                               },
                             );
                           },
