@@ -26,4 +26,41 @@ class Keys {
   static const String error = 'error';
   static const String data = 'data';
   static const String http = 'http';
+
+  //#region DATABASE
+  static const int databaseVersion = 3;
+  static const String databasePath = 'databases';
+  static const String databaseName = 'chcDb.db';
+  static const String tableUsers = 'users';
+  static const String tableSensors = 'sensors';
+
+  static const String queryId = 'id=?';
+  static const String queryUsername = 'username=?';
+  static const String queryIsAdmin = 'isAdmin=?';
+
+  static const String dbDropUsers = '''
+    DROP TABLE IF EXISTS users
+  ''';
+  static const String dbCreateUsers = '''
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT,
+      pin TEXT,
+      isAdmin INTEGER NOT NULL DEFAULT 0
+    )
+  ''';
+  static const String dbDropSensors = '''
+    DROP TABLE IF EXISTS sensors
+  ''';
+  static const String dbCreateSensors = '''
+    CREATE TABLE IF NOT EXISTS sensors (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      minValue DOUBLE,
+      maxValue DOUBLE,
+      comportId INTEGER,
+      zoneId INTEGER
+    )
+  ''';
+  //#endregion
 }

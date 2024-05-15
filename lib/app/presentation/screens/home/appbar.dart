@@ -1,8 +1,6 @@
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:window_manager/window_manager.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -17,7 +15,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       // automaticallyImplyLeading: false,
       centerTitle: false,
-      actions: [
+      actions: const [
         Icon(Icons.warning),
         SizedBox(width: 4),
         Icon(Icons.lan_outlined),
@@ -33,7 +31,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               onDoubleTap: () async {
                 await windowManager.minimize();
               },
-              child: LogoWidget(size: 140),
+              child: const LogoWidget(size: 140),
             ),
 
       // title != null

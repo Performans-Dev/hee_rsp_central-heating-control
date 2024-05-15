@@ -286,7 +286,9 @@ class AppController extends GetxController {
     Get.changeThemeMode(isDarkMode ? ThemeMode.dark : ThemeMode.light);
     await Box.setBool(key: Keys.isDarkMode, value: isDarkMode);
   }
+
   //#endregion
+
 
   
 }

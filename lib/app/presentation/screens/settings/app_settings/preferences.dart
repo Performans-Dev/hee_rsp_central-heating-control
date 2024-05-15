@@ -33,7 +33,7 @@ class SettingsPreferences extends StatelessWidget {
             width: double.infinity,
             // color: Theme.of(context).focusColor,
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Text(
               'Settings / Preferences',
               style: Theme.of(context).textTheme.titleSmall,
@@ -41,7 +41,7 @@ class SettingsPreferences extends StatelessWidget {
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -61,7 +61,7 @@ class SettingsPreferences extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: Icon(Icons.translate),
+                    leading: const Icon(Icons.translate),
                     title: const Text('Language'),
                     subtitle: Text(
                         '${currentLocale.languageCode}-${currentLocale.countryCode}'),
@@ -76,7 +76,7 @@ class SettingsPreferences extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: Icon(Icons.language),
+                    leading: const Icon(Icons.language),
                     title: const Text('Timezone'),
                     subtitle: Text(currentTimezone.name),
                     trailing: const Icon(Icons.chevron_right),
@@ -90,7 +90,7 @@ class SettingsPreferences extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: Icon(Icons.wifi),
+                    leading: const Icon(Icons.wifi),
                     title: const Text('Wifi Credentials'),
                     subtitle: Text(wiFiCredentials.ssid.isEmpty
                         ? 'Unknown'
@@ -104,7 +104,7 @@ class SettingsPreferences extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: Icon(Icons.update),
+                    leading: const Icon(Icons.update),
                     title: const Text('Check Updates'),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,
@@ -115,7 +115,7 @@ class SettingsPreferences extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: Icon(Icons.hardware),
+                    leading: const Icon(Icons.hardware),
                     title: const Text('Hardware Config'),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,
@@ -126,7 +126,7 @@ class SettingsPreferences extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: Icon(Icons.bug_report),
+                    leading: const Icon(Icons.bug_report),
                     title: const Text('Developer Options'),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,

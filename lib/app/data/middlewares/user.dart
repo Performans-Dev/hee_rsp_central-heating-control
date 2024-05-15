@@ -11,7 +11,7 @@ class UserMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
     if (appController.appUser == null) {
-      return const RouteSettings(name: Routes.pin);
+      return const RouteSettings(name: Routes.screenSaver);
     }
 
     return null;

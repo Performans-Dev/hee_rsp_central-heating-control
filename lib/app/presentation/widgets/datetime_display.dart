@@ -57,7 +57,7 @@ class _DateTextWidgetState extends State<DateTextWidget> {
                     BoxShadow(
                       color: Theme.of(context).canvasColor,
                       blurRadius: 12,
-                      offset: Offset(1, 1),
+                      offset: const Offset(1, 1),
                       blurStyle: BlurStyle.outer,
                     ),
                   ],
@@ -75,7 +75,7 @@ class _DateTextWidgetState extends State<DateTextWidget> {
                     BoxShadow(
                       color: Theme.of(context).canvasColor,
                       blurRadius: 12,
-                      offset: Offset(1, 1),
+                      offset: const Offset(1, 1),
                       blurStyle: BlurStyle.outer,
                     ),
                   ],

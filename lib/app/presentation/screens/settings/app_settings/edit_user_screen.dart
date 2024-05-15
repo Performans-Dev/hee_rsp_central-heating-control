@@ -4,15 +4,13 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/content.dart';
-import 'package:central_heating_control/app/presentation/components/hardware_buttons.dart';
-import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SettingsEditUserScreen extends StatefulWidget {
-  const SettingsEditUserScreen({super.key});
+  const SettingsEditUserScreen({
+    super.key,
+  });
 
   @override
   State<SettingsEditUserScreen> createState() => _SettingsEditUserScreenState();
@@ -21,13 +19,22 @@ class SettingsEditUserScreen extends StatefulWidget {
 class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
   late final TextEditingController nameController;
   late final TextEditingController pinController;
-  bool isAdminChecked = false;
+  late AppUser? user;
+  bool busy = false;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController();
-    pinController = TextEditingController();
+    user = Get.arguments?[0];
+
+    nameController = TextEditingController(text: user?.username)
+      ..addListener(() {
+        user?.username = nameController.text;
+      });
+    pinController = TextEditingController(text: user?.pin)
+      ..addListener(() {
+        user?.pin = pinController.text;
+      });
   }
 
   @override
@@ -39,6 +46,9 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (user == null) {
+      Future.delayed(Duration.zero, () => Get.back());
+    }
     return GetBuilder<AppController>(
       builder: (app) => AppScaffold(
         title: 'Settings - Add New User',
@@ -49,7 +59,7 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
               width: double.infinity,
               // color: Theme.of(context).focusColor,
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 'Settings / Add New User',
                 style: Theme.of(context).textTheme.titleSmall,
@@ -57,7 +67,7 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +82,7 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
                       ),
                       keyboardType: TextInputType.name,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     TextField(
                       controller: pinController,
                       decoration: InputDecoration(
@@ -83,16 +93,16 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
                       ),
                       keyboardType: TextInputType.number,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     SwitchListTile(
-                      value: isAdminChecked,
+                      value: user!.isAdmin,
                       onChanged: (v) {
                         setState(() {
-                          isAdminChecked = v;
+                          user!.isAdmin = v;
                         });
                       },
-                      title: Text('Admin'),
-                      subtitle: Text(
+                      title: const Text('Admin'),
+                      subtitle: const Text(
                           'Switch on if you want to access this user to settings screen'),
                       isThreeLine: true,
                       shape: RoundedRectangleBorder(
@@ -102,45 +112,72 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
                 ),
               ),
             ),
-            saveButton
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [cancelButton, const SizedBox(width: 12), saveButton],
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget get saveButton => Container(
-        padding: EdgeInsets.all(16),
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton(
-          child: Text("Save"),
-          onPressed: () async {
-            final AppUser appUser = AppUser(
-              username: nameController.text,
-              pin: pinController.text,
-              isAdmin: isAdminChecked,
-            );
-            if (appUser.username.isEmpty) {
-              DialogUtils.snackbar(
-                context: context,
-                message: 'Name Surname required.',
-                type: SnackbarType.warning,
-              );
-              return;
-            }
-            if (appUser.pin.length != 6) {
-              print('pin required');
-              return;
-            }
-
-            final result = await DbProvider.db.updateUser(appUser);
-            if (result > 0) {
-              //success
-              print('user added');
-            } else {
-              print('db error');
-            }
-          },
-        ),
+  Widget get saveButton => ElevatedButton(
+        onPressed: busy ? null : onSaveButonPressed,
+        child: Text(busy ? 'Saving...' : "Save"),
       );
+  Widget get cancelButton => ElevatedButton(
+        onPressed: () => Get.back(),
+        child: const Text("Cancel"),
+      );
+
+  Future<void> onSaveButonPressed() async {
+    BuildContext ctx = context;
+    if (user!.username.isEmpty) {
+      DialogUtils.snackbar(
+        context: context,
+        message: 'Name Surname required.',
+        type: SnackbarType.warning,
+      );
+      return;
+    }
+    if (user!.pin.length != 6) {
+      DialogUtils.snackbar(
+        context: context,
+        message: 'Pin code must be 6 chars',
+        type: SnackbarType.warning,
+      );
+      return;
+    }
+
+    setState(() => busy = true);
+
+    final result = await DbProvider.db.updateUser(user!);
+    final AppController app = Get.find();
+    await app.populateUserList();
+    setState(() => busy = false);
+    if (ctx.mounted) {
+      if (result > 0) {
+        DialogUtils.snackbar(
+          context: ctx,
+          message: 'User updated.',
+          type: SnackbarType.success,
+        );
+        Get.back();
+      } else {
+        DialogUtils.snackbar(
+          context: ctx,
+          action: SnackBarAction(
+            label: "Retry",
+            onPressed: onSaveButonPressed,
+          ),
+          message: 'Unexpected error occured',
+          type: SnackbarType.error,
+        );
+      }
+    }
+  }
 }
