@@ -7,13 +7,15 @@ class SensorDevice {
   String name;
   double minValue;
   double maxValue;
-  ComPort? comPort;
+  int? comportId;
+  int? zoneId;
   SensorDevice({
     required this.id,
     required this.name,
     required this.minValue,
     required this.maxValue,
-    this.comPort,
+    this.comportId,
+    this.zoneId,
   });
 
   Map<String, dynamic> toMap() => id > 0
@@ -22,13 +24,15 @@ class SensorDevice {
           'name': name,
           'minValue': minValue,
           'maxValue': maxValue,
-          'comPort': comPort?.toMap(),
+          'comportId': comportId,
+          'zoneId': zoneId,
         }
       : {
           'name': name,
           'minValue': minValue,
           'maxValue': maxValue,
-          'comPort': comPort?.toMap(),
+          'comportId': comportId,
+          'zoneId': zoneId,
         };
 
   factory SensorDevice.fromMap(Map<String, dynamic> map) {
@@ -37,7 +41,8 @@ class SensorDevice {
       name: map['name'] ?? '',
       minValue: map['minValue']?.toDouble() ?? 0.0,
       maxValue: map['maxValue']?.toDouble() ?? 0.0,
-      comPort: map['comPort'] != null ? ComPort.fromMap(map['comPort']) : null,
+      comportId: map['comportId']?.toInt(),
+      zoneId: map['zoneId']?.toInt(),
     );
   }
 

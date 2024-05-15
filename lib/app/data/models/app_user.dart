@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class AppUser {
+  
   String username;
   String pin;
   bool isAdmin;
