@@ -67,6 +67,7 @@ class DbProvider {
         user.toSQL(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+
       return id;
     } on Exception catch (err) {
       log(err.toString());
