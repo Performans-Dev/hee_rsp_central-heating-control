@@ -4,7 +4,6 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/content.dart';
-import 'package:central_heating_control/app/presentation/components/hardware_buttons.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -90,36 +89,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                 ),
               ),
             ),
-            HwBtnCancel(),
-            HwBtnSave(
-              callback: () async {
-                final AppUser appUser = AppUser(
-                  username: nameController.text,
-                  pin: pinController.text,
-                  isAdmin: isAdminChecked,
-                );
-                if (appUser.username.isEmpty) {
-                  DialogUtils.snackbar(
-                    context: context,
-                    message: 'Name Surname required.',
-                    type: SnackbarType.warning,
-                  );
-                  return;
-                }
-                if (appUser.pin.length != 6) {
-                  print('pin required');
-                  return;
-                }
-
-                final result = await DbProvider.db.addUser(appUser);
-                if (result > 0) {
-                  //success
-                  print('user added');
-                } else {
-                  print('db error');
-                }
-              },
-            ),
+            
           ],
         ),
       ),

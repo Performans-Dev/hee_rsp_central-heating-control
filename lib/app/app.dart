@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/core/theme/light.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -35,10 +36,18 @@ class MainApp extends StatelessWidget {
   }
 
   void onReady() async {
+    // apply saved language and locale
     await LocalizationService().applySavedLocale();
+
+    // remove splash screen
     FlutterNativeSplash.remove();
-    Get.changeThemeMode(
-      Box.getBool(key: Keys.isDarkMode) ? ThemeMode.dark : ThemeMode.light,
-    );
+
+    // apply theme from disk
+    final AppController appController = Get.find();
+    bool isDarkModeOnDisk = Box.getBool(key: Keys.isDarkMode);
+    bool isDarkModeOnApp = appController.isDarkMode;
+    if (isDarkModeOnApp != isDarkModeOnDisk) {
+      appController.toggleDarkMode();
+    }
   }
 }
