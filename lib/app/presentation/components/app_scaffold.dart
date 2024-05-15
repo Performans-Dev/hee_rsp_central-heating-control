@@ -1,7 +1,6 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
-import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,7 +51,7 @@ class AppScaffold extends StatelessWidget {
                 selectedIndex: selectedIndex,
                 labelType: NavigationRailLabelType.all,
                 extended: false,
-                leading: SizedBox(
+                leading: const SizedBox(
                   width: 56,
                   height: 56,
                   child: Center(

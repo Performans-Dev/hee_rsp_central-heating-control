@@ -3,7 +3,6 @@ import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 
 
-import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,63 +21,63 @@ class SettingsScreen extends StatelessWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ListTile(
-                      title: Text('Zone, Device, Sensor Management'),
+                      title: const Text('Zone, Device, Sensor Management'),
                       subtitle:
-                          Text('Add/Modify/Remove zones, devices and sensors'),
-                      trailing: Icon(Icons.chevron_right),
+                          const Text('Add/Modify/Remove zones, devices and sensors'),
+                      trailing: const Icon(Icons.chevron_right),
                       tileColor: Theme.of(context).highlightColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       onTap: () {},
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ListTile(
-                      title: Text('Functions'),
-                      subtitle: Text('Define custom functions and triggers'),
-                      trailing: Icon(Icons.chevron_right),
+                      title: const Text('Functions'),
+                      subtitle: const Text('Define custom functions and triggers'),
+                      trailing: const Icon(Icons.chevron_right),
                       tileColor: Theme.of(context).highlightColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       onTap: () {},
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ListTile(
-                      title: Text('Weekly Plan Settings'),
+                      title: const Text('Weekly Plan Settings'),
                       subtitle:
-                          Text('Define rules that runs on weekly schedule'),
-                      trailing: Icon(Icons.chevron_right),
+                          const Text('Define rules that runs on weekly schedule'),
+                      trailing: const Icon(Icons.chevron_right),
                       tileColor: Theme.of(context).highlightColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       onTap: () {},
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ListTile(
-                      title: Text('User Management'),
-                      subtitle: Text('Add/Remove/Modify users and admins'),
-                      trailing: Icon(Icons.chevron_right),
+                      title: const Text('User Management'),
+                      subtitle: const Text('Add/Remove/Modify users and admins'),
+                      trailing: const Icon(Icons.chevron_right),
                       tileColor: Theme.of(context).highlightColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       onTap: () => NavController.toSettingsUserList(),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ListTile(
-                      title: Text('Preferences'),
-                      subtitle: Text(
+                      title: const Text('Preferences'),
+                      subtitle: const Text(
                           'Themes, localizations, extension modules, updates'),
-                      trailing: Icon(Icons.chevron_right),
+                      trailing: const Icon(Icons.chevron_right),
                       tileColor: Theme.of(context).highlightColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),

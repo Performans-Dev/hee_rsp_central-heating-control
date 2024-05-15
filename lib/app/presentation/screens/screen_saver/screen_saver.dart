@@ -1,11 +1,9 @@
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ScreenSaverScreen extends StatefulWidget {
@@ -38,11 +36,11 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                 width: double.infinity,
                 height: double.infinity,
                 child: Container(
-                  constraints: BoxConstraints.expand(),
+                  constraints: const BoxConstraints.expand(),
                 ),
               ),
             ),
-            Center(
+            const Center(
               child: DateTextWidget(large: true),
             ),
             Align(
@@ -52,11 +50,11 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                 height: showUserList ? (64 * app.userList.length) + 32 : 0,
                 decoration: BoxDecoration(
                   borderRadius:
-                      BorderRadius.only(topRight: Radius.circular(20)),
+                      const BorderRadius.only(topRight: Radius.circular(20)),
                   color: Theme.of(context).focusColor.withOpacity(0.3),
                 ),
-                padding: EdgeInsets.all(16),
-                duration: Duration(milliseconds: 300),
+                padding: const EdgeInsets.all(16),
+                duration: const Duration(milliseconds: 300),
                 child: showUserList
                     ? ListView.builder(
                         shrinkWrap: false,

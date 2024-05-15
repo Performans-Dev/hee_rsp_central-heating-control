@@ -100,9 +100,9 @@ class DbProvider {
     try {
       int updateCount = await db.update(
         Keys.tableUsers,
-        user.toMap(),
-        where: Keys.queryUsername,
-        whereArgs: [user.username],
+        user.toSQL(),
+        where: Keys.queryId,
+        whereArgs: [user.id],
       );
       return updateCount;
     } on Exception catch (err) {

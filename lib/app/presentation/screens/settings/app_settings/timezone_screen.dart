@@ -43,7 +43,7 @@ class _TimezoneScreenState extends State<TimezoneScreen> {
                     width: double.infinity,
                     // color: Theme.of(context).focusColor,
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Text(
                       'Select Timezone',
                       style: Theme.of(context).textTheme.titleSmall,
@@ -86,7 +86,7 @@ class _TimezoneScreenState extends State<TimezoneScreen> {
                   actionButton,
                 ],
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
       );

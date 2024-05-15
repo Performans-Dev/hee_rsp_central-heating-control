@@ -50,12 +50,12 @@ class HomeScreen extends StatelessWidget {
           child: Container(
             width: 210,
             height: 160,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Zone A'),
+                const Text('Zone A'),
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                (i % 3 == 0) ? Text('23.${i % 2} °C') : Icon(Icons.warning),
+                (i % 3 == 0) ? Text('23.${i % 2} °C') : const Icon(Icons.warning),
               ],
             ),
           ),

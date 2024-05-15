@@ -86,6 +86,7 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                             }
 
                             AppUser appUser = AppUser(
+                              id: -1,
                               username: nameController.text,
                               pin: pinController.text,
                               isAdmin: true,

@@ -1,14 +1,13 @@
+import 'dart:developer';
+
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
-import 'package:central_heating_control/app/data/models/language_definition.dart';
-import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LanguageScreen extends StatefulWidget {
-  LanguageScreen({super.key});
+  const LanguageScreen({super.key});
 
   @override
   State<LanguageScreen> createState() => _LanguageScreenState();
@@ -76,7 +75,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
   Widget get actionButton => Container(
         // color: Theme.of(context).focusColor,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -85,8 +84,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 onPressed: () {
                   Get.back();
                 },
-                child: Text("Cancel")),
-            SizedBox(width: 10),
+                child: const Text("Cancel")),
+            const SizedBox(width: 10),
             ElevatedButton(
                 onPressed: _selectedLanguage != null
                     ? () async {
@@ -94,10 +93,10 @@ class _LanguageScreenState extends State<LanguageScreen> {
                             (element) => element.name == _selectedLanguage));
                         Get.back();
 
-                        print("$_selectedLanguage seçildi. Kaydediliyor...");
+                        log("TODO: $_selectedLanguage seçildi. Kaydediliyor...");
                       }
                     : null,
-                child: Text("Confirm")),
+                child: const Text("Confirm")),
           ],
         ),
       );

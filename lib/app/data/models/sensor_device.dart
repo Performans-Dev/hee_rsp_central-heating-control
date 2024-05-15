@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:central_heating_control/app/data/models/com_port.dart';
 
 class SensorDevice {
   int id;

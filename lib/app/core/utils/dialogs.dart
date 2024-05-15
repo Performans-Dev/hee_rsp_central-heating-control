@@ -11,7 +11,8 @@ class DialogUtils {
     required String? description,
     required String? positiveText,
     required String? negativeText,
-    required Function onPositive,
+    GestureTapCallback? positiveCallback,
+    GestureTapCallback? negativeCallback,
   }) async {
     return showDialog<void>(
       context: context,
@@ -23,14 +24,21 @@ class DialogUtils {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Get.back();
+                if (negativeCallback != null) {
+                  negativeCallback();
+                }
               },
               child: Text(negativeText ?? "No"),
             ),
             TextButton(
               onPressed: () {
-                onPositive();
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Get.back();
+                if (positiveCallback != null) {
+                  positiveCallback();
+                }
               },
               child: Text(positiveText ?? "Yes"),
             ),
@@ -69,7 +77,7 @@ class DialogUtils {
     }
     final snackBar = SnackBar(
       content: Text(message),
-      duration: const Duration(seconds: 2),
+      duration: Duration(seconds: seconds),
       backgroundColor: backgroundColor,
       action: action,
       showCloseIcon: showCloseIcon,

@@ -116,7 +116,7 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.settingsLanguage,
-    page: () => LanguageScreen(),
+    page: () => const LanguageScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
@@ -124,7 +124,7 @@ final List<GetPage> getPages = [
 
   GetPage(
     name: Routes.settingsTimezone,
-    page: () => TimezoneScreen(),
+    page: () => const TimezoneScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
@@ -141,8 +141,8 @@ final List<GetPage> getPages = [
 
   GetPage(
     name: Routes.screenSaver,
-    page: () => ScreenSaverScreen(),
-    transitionDuration: Duration(milliseconds: 1000),
+    page: () => const ScreenSaverScreen(),
+    transitionDuration: const Duration(milliseconds: 1000),
     transition: Transition.zoom,
   ),
 ];

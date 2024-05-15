@@ -4,10 +4,7 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/content.dart';
-import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SettingsAddUserScreen extends StatefulWidget {
@@ -101,25 +98,31 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                 ),
               ),
             ),
-            saveButton
-            
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [cancelButton, const SizedBox(width: 12), saveButton],
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget get saveButton => Container(
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.bottomRight,
-        child: ElevatedButton(
-          child: const Text("Save"),
-          onPressed: onSaveButonPressed,
-        ),
+  Widget get saveButton => ElevatedButton(
+        onPressed: onSaveButonPressed,
+        child: const Text("Save"),
+      );
+  Widget get cancelButton => ElevatedButton(
+        onPressed: () => Get.back(),
+        child: const Text("Cancel"),
       );
 
   Future<void> onSaveButonPressed() async {
     final AppUser appUser = AppUser(
+      id: -1,
       username: nameController.text,
       pin: pinController.text,
       isAdmin: isAdminChecked,
@@ -135,14 +138,14 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
     if (appUser.pin.length != 6) {
       if (!mounted) return;
       DialogUtils.snackbar(
-          action: SnackBarAction(
-            label: "Retry",
-            onPressed: onSaveButonPressed,
-          ),
-          context: context,
-          message: "Pin length must consist of 6 digits",
-          type: SnackbarType.error);
-      print('pin required');
+        action: SnackBarAction(
+          label: "Retry",
+          onPressed: onSaveButonPressed,
+        ),
+        context: context,
+        message: "Pin code must be 6 chars",
+        type: SnackbarType.warning,
+      );
       return;
     }
     AppController app = Get.find();
@@ -155,20 +158,21 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
       if (!mounted) return;
 
       DialogUtils.snackbar(
-          context: context,
-          message: "User has been registered successfully",
-          type: SnackbarType.success);
-      print('user added');
+        context: context,
+        message: "User has been registered successfully",
+        type: SnackbarType.success,
+      );
     } else {
       if (!mounted) return;
       DialogUtils.snackbar(
-          action: SnackBarAction(
-            label: "Retry",
-            onPressed: onSaveButonPressed,
-          ),
-          context: context,
-          message: "There was a problem registering the user.",
-          type: SnackbarType.error);
+        action: SnackBarAction(
+          label: "Retry",
+          onPressed: onSaveButonPressed,
+        ),
+        context: context,
+        message: "There was a problem registering the user.",
+        type: SnackbarType.error,
+      );
     }
     Get.back();
   }
