@@ -48,6 +48,13 @@ class DataController extends GetxController {
     _zoneList.assignAll(data);
     update();
   }
+
+  Future<void> addZone(ZoneDefinition zone) async {
+    final result = await DbProvider.db.addZone(zone);
+    if (result > 0) {
+      await getZoneListFromDb();
+    }
+  }
   //#endregion
 
   //#region HEATERS
@@ -58,6 +65,13 @@ class DataController extends GetxController {
     _heaterList.assignAll(data);
     update();
   }
+
+  Future<void> addHeater(HeaterDevice heater) async {
+    final result = await DbProvider.db.addHeater(heater);
+    if (result > 0) {
+      await getHeaterListFromDb();
+    }
+  }
   //#endregion
 
   //#region SENSORS
@@ -67,6 +81,13 @@ class DataController extends GetxController {
     final data = await DbProvider.db.getSensors();
     _sensorList.assignAll(data);
     update();
+  }
+
+  Future<void> addSensor(SensorDevice sensor) async {
+    final result = await DbProvider.db.addSensor(sensor);
+    if (result > 0) {
+      await getSensorListFromDb();
+    }
   }
   //#endregion
 
