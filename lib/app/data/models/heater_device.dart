@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
+import 'package:get/get.dart';
 
 class HeaterDevice {
   int id;
@@ -49,13 +51,13 @@ class HeaterDevice {
           'type': type.index,
           'connectionType': connectionType.index,
           'ipAddress': ipAddress,
-          'level1Relay': level1Relay?.toMap(),
+          'level1Relay': level1Relay?.id,
           'level1ConsumptionAmount': level1ConsumptionAmount,
           'level1ConsumptionUnit': level1ConsumptionUnit,
-          'level2Relay': level2Relay?.toMap(),
+          'level2Relay': level2Relay?.id,
           'level2ConsumptionAmount': level2ConsumptionAmount,
           'level2ConsumptionUnit': level2ConsumptionUnit,
-          'errorChannel': errorChannel?.toMap(),
+          'errorChannel': errorChannel?.id,
           'errorChannelType': errorChannelType?.index,
           'state': state,
         }
@@ -66,13 +68,13 @@ class HeaterDevice {
           'type': type.index,
           'connectionType': connectionType.index,
           'ipAddress': ipAddress,
-          'level1Relay': level1Relay?.toMap(),
+          'level1Relay': level1Relay?.id,
           'level1ConsumptionAmount': level1ConsumptionAmount,
           'level1ConsumptionUnit': level1ConsumptionUnit,
-          'level2Relay': level2Relay?.toMap(),
+          'level2Relay': level2Relay?.id,
           'level2ConsumptionAmount': level2ConsumptionAmount,
           'level2ConsumptionUnit': level2ConsumptionUnit,
-          'errorChannel': errorChannel?.toMap(),
+          'errorChannel': errorChannel?.id,
           'errorChannelType': errorChannelType?.index,
           'state': state,
         };
@@ -88,17 +90,20 @@ class HeaterDevice {
           .values[map['connectionType']?.toInt() ?? 0],
       ipAddress: map['ipAddress'],
       level1Relay: map['level1Relay'] != null
-          ? ComPort.fromMap(map['level1Relay'])
+          ? UiData.ports
+              .firstWhereOrNull((element) => element.id == map['level1Relay'])
           : null,
       level1ConsumptionAmount: map['level1ConsumptionAmount']?.toDouble(),
       level1ConsumptionUnit: map['level1ConsumptionUnit'],
       level2Relay: map['level2Relay'] != null
-          ? ComPort.fromMap(map['level2Relay'])
+          ? UiData.ports
+              .firstWhereOrNull((element) => element.id == map['level2Relay'])
           : null,
       level2ConsumptionAmount: map['level2ConsumptionAmount']?.toDouble(),
       level2ConsumptionUnit: map['level2ConsumptionUnit'],
       errorChannel: map['errorChannel'] != null
-          ? ComPort.fromMap(map['errorChannel'])
+          ? UiData.ports
+              .firstWhereOrNull((element) => element.id == map['errorChannel'])
           : null,
       errorChannelType: map['errorChannelType'] != null
           ? ErrorChannelType.values[map['errorChannelType']?.toInt ?? 0]
