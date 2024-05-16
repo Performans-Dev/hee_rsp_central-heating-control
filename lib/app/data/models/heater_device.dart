@@ -20,6 +20,7 @@ class HeaterDevice {
   ComPort? errorChannel;
   ErrorChannelType? errorChannelType;
   int state;
+  int? zoneId;
   HeaterDevice({
     required this.id,
     required this.name,
