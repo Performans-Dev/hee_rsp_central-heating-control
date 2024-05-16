@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/text_input.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/main.dart';
@@ -56,20 +57,14 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         const Divider(),
-                        TextField(
+                        TextInputWidget(
+                          labelText: "Name Surname",
                           controller: nameController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: 'Name Surname'.tr,
-                          ),
                         ),
                         const SizedBox(height: 12),
-                        TextField(
+                        TextInputWidget(
+                          labelText: "PIN",
                           controller: pinController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: 'PIN'.tr,
-                          ),
                           obscureText: true,
                           obscuringCharacter: '*',
                         ),

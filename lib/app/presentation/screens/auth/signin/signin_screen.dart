@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/text_input.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/main.dart';
@@ -52,20 +53,17 @@ class _SigninScreenState extends State<SigninScreen> {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     const Divider(),
-                    TextField(
+                    const Divider(),
+                    TextInputWidget(
                       controller: usernameController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
-                      ),
+                      labelText: "Email",
+                      radius: 0,
                     ),
                     const SizedBox(height: 12),
-                    TextField(
+                    TextInputWidget(
                       controller: passwordController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                      ),
+                      labelText: "Password",
+                      radius: 0,
                     ),
                     const SizedBox(height: 12),
                     Row(
