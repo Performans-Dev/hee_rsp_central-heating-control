@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,28 +11,51 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       builder: (app) {
-        return AppScaffold(
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        for (int i = 0; i < 17; i++) zonePlaceholder(i),
-                      ],
+        return GetBuilder<DataController>(builder: (dc) {
+          return AppScaffold(
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Zones'),
+                          for (final item in dc.zoneList)
+                            Text('${item.name} ${item.id}'),
+                          Divider(),
+                          Text('Heaters'),
+                          for (final item in dc.heaterList)
+                            Text('${item.name} ${item.id}'),
+                          Divider(),
+                          Text('Sensors'),
+                          for (final item in dc.sensorList)
+                            Text('${item.name} ${item.id}'),
+                          Divider(),
+                          Text('Ports'),
+                          for (final item in dc.comportList)
+                            Text('${item.id} ${item.title}'),
+                          Divider(),
+                        ],
+                      ),
+                      // Wrap(
+                      //   spacing: 12,
+                      //   runSpacing: 12,
+                      //   crossAxisAlignment: WrapCrossAlignment.center,
+                      //   alignment: WrapAlignment.center,
+                      //   children: [
+                      //     for (int i = 0; i < 17; i++) zonePlaceholder(i),
+                      //   ],
+                      // ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
+              ],
+            ),
+          );
+        });
       },
     );
   }
@@ -65,7 +89,9 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                (i % 3 == 0) ? Text('23.${i % 2} °C') : const Icon(Icons.warning),
+                (i % 3 == 0)
+                    ? Text('23.${i % 2} °C')
+                    : const Icon(Icons.warning),
               ],
             ),
           ),

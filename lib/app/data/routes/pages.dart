@@ -17,9 +17,9 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_se
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/add_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/edit_settings_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/sensor_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_device_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
@@ -148,14 +148,14 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.sensorSettings,
-    page: () => SensorSettingsScreen(),
+    page: () => SettingsSensorListScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsAddSensor,
-    page: () => SettingsAddSensorScreen(),
+    page: () => SettingsSensorAddScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
