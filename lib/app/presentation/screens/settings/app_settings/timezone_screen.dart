@@ -43,16 +43,6 @@ class _TimezoneScreenState extends State<TimezoneScreen> {
                   const BreakCrumbWidget(
                     title: 'Select Timezone',
                   ),
-                  Container(
-                    width: double.infinity,
-                    // color: Theme.of(context).focusColor,
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.all(20),
-                    child: Text(
-                      'Select Timezone',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                  ),
                   Expanded(
                     child: ListView.builder(
                       controller: scrollController,

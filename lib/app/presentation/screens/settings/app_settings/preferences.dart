@@ -33,16 +33,6 @@ class SettingsPreferences extends StatelessWidget {
           const BreakCrumbWidget(
             title: 'Settings / Preferences',
           ),
-          Container(
-            width: double.infinity,
-            // color: Theme.of(context).focusColor,
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              'Settings / Preferences',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
