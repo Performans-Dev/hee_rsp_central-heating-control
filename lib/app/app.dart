@@ -32,6 +32,7 @@ class MainApp extends StatelessWidget {
       fallbackLocale: LocalizationService.fallbackLocale,
       translationsKeys: LocalizationService.keys,
       onReady: onReady,
+      
     );
   }
 

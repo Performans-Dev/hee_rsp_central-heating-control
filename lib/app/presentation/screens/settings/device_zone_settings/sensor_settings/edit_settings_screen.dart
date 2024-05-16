@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
-class SettingsAddSensorScreen extends StatelessWidget {
-  SettingsAddSensorScreen({super.key});
+class SettingsEditSensorScreen extends StatelessWidget {
+  SettingsEditSensorScreen({super.key});
 
   String dropdownValue = list.first;
   @override
@@ -22,7 +22,7 @@ class SettingsAddSensorScreen extends StatelessWidget {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(20),
             child: Text(
-              'Settings / Sensor Settings/ Add New Sensor',
+              'Settings / Sensor Settings/ Edit Sensor',
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),

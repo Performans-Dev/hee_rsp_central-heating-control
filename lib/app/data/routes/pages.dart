@@ -17,6 +17,10 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_se
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/add_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/edit_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/sensor_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_device_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
@@ -85,7 +89,13 @@ final List<GetPage> getPages = [
       AdminMiddleware(),
     ],
   ),
-
+  GetPage(
+    name: Routes.settingstZoneDeviceSensorManagement,
+    page: () => const SettingsZoneDeviceSensorManagementScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
   GetPage(
     name: Routes.settingsUserList,
     page: () => const SettingsUserListScreen(),
@@ -100,7 +110,7 @@ final List<GetPage> getPages = [
       AdminMiddleware(),
     ],
   ),
-    GetPage(
+  GetPage(
     name: Routes.settingsUserEdit,
     page: () => const SettingsEditUserScreen(),
     middlewares: [
@@ -136,7 +146,27 @@ final List<GetPage> getPages = [
       AdminMiddleware(),
     ],
   ),
-
+  GetPage(
+    name: Routes.sensorSettings,
+    page: () => SensorSettingsScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsAddSensor,
+    page: () => SettingsAddSensorScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsEditSensor,
+    page: () => SettingsEditSensorScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
   //#endregion
 
   GetPage(

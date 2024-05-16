@@ -28,4 +28,13 @@ class Routes {
 
   static const String settingsTimezone = '/settings-timezone';
   static const String settingsWifiCredentials = '/settings-wifi-credentials';
+  static const String settingstZoneDeviceSensorManagement =
+      '/settings-zone-device-sensor';
+
+  static const String sensorSettings = '/settings-sensor';
+  static const String zoneSettings = '/settings-zone';
+  static const String deviceSettings = '/settings-device';
+
+  static const String settingsAddSensor = '/settings-add-sensor';
+  static const String settingsEditSensor = '/settings-edit-sensor';
 }

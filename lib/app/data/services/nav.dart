@@ -28,6 +28,13 @@ class NavController {
     );
   }
 
+  static void toZoneDeviceSensorManagement() async {
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingstZoneDeviceSensorManagement),
+    );
+  }
+
   static void toSettingsUserList() async {
     Future.delayed(
       Duration.zero,
