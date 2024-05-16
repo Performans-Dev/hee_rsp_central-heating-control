@@ -28,7 +28,7 @@ class TextInputWidget extends StatelessWidget {
       ),
       keyboardType: keyboardType,
       obscureText: obscureText,
-      obscuringCharacter: obscuringCharacter ?? "",
+      obscuringCharacter: obscuringCharacter ?? " ",
     );
   }
 }

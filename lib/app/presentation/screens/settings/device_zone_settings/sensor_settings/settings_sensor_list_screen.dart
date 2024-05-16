@@ -34,7 +34,7 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
             ),
             Expanded(
               child: dc.sensorList.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text('No sensor found'),
                     )
                   : ListView.builder(

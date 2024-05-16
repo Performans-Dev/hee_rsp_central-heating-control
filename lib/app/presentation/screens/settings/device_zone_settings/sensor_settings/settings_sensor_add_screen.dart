@@ -1,5 +1,9 @@
+import 'package:central_heating_control/app/data/models/com_port.dart';
+import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/widgets/dropdown.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,8 +22,8 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
   late final TextEditingController nameController;
   late final TextEditingController minValueController;
   late final TextEditingController maxValueController;
-  int? selectedZone;
-  String? selectedPort;
+  ZoneDefinition? selectedZone;
+  ComPort? selectedPort;
 
   @override
   void initState() {
@@ -61,90 +65,36 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        labelText: 'Name',
-                      ),
+                    TextInputWidget(
                       keyboardType: TextInputType.name,
+                      labelText: 'Name',
                     ),
                     const SizedBox(height: 8),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        labelText: 'MinValue',
-                      ),
+                    const TextInputWidget(
                       keyboardType: TextInputType.number,
+                      labelText: 'MinValue',
                     ),
                     const SizedBox(height: 8),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        labelText: 'MaxValue',
-                      ),
+                    const TextInputWidget(
                       keyboardType: TextInputType.number,
+                      labelText: 'MaxValue',
                     ),
                     const SizedBox(height: 12),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: DropdownButton<String?>(
-                        underline: Container(
-                          color: Colors.transparent,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        isExpanded: true,
-                        value: selectedPort,
-                        items: dc.comportList
-                            .map((e) => DropdownMenuItem<String>(
-                                  child: Text(e.title),
-                                  value: e.id,
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPort = value;
-                          });
-                        },
-                      ),
+                    DropdownWidget<ComPort?>(
+                      data: dc.comportList,
+                      labelText: "Comport",
+                      hintText: "Select Comport",
+                      onSelected: (p0) {},
+                      selectedValue: selectedPort,
                     ),
                     const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: dc.zoneList.isEmpty
-                          ? Text('No zone available')
-                          : DropdownButton<int?>(
-                              underline: Container(
-                                color: Colors.transparent,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              isExpanded: true,
-                              value: selectedZone,
-                              items: dc.zoneList
-                                  .map((e) => DropdownMenuItem<int>(
-                                        child: Text(e.name),
-                                        value: e.id,
-                                      ))
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedZone = value;
-                                });
-                              },
-                            ),
+                    DropdownWidget<ZoneDefinition?>(
+                      data: dc.zoneList,
+                      labelText: "Zone",
+                      onSelected: (p0) {},
+                      selectedValue: selectedZone,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 200,
                     )
                   ],

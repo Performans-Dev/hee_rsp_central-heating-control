@@ -1,6 +1,6 @@
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/widgets/breadcrumb.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/widgets/text_input.dart';
+import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
