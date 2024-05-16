@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,15 +56,8 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              width: double.infinity,
-              // color: Theme.of(context).focusColor,
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                'Settings / Add New User',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+            const BreakCrumbWidget(
+              title: 'Settings / Add New User',
             ),
             Expanded(
               child: SingleChildScrollView(

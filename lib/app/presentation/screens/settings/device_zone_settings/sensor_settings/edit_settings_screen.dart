@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/breadcrumb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,15 +17,8 @@ class SettingsEditSensorScreen extends StatelessWidget {
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Container(
-            width: double.infinity,
-            // color: Theme.of(context).focusColor,
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              'Settings / Sensor Settings/ Edit Sensor',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+          BreakCrumbWidget(
+            title: 'Settings / Sensor Settings/ Edit Sensor',
           ),
           Expanded(
             child: SingleChildScrollView(

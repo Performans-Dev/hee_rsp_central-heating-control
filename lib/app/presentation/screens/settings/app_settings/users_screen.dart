@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,15 +22,8 @@ class SettingsUserListScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              width: double.infinity,
-              // color: Theme.of(context).focusColor,
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                'User Management/ Users',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+            BreakCrumbWidget(
+              title: 'User Management/ Users',
             ),
             Expanded(
               child: ListView.builder(

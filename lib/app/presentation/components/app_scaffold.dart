@@ -1,7 +1,9 @@
+import 'package:central_heating_control/app/core/constants/assets.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class AppScaffold extends StatelessWidget {
@@ -51,12 +53,13 @@ class AppScaffold extends StatelessWidget {
                 selectedIndex: selectedIndex,
                 labelType: NavigationRailLabelType.all,
                 extended: false,
-                leading: const SizedBox(
-                  width: 56,
-                  height: 56,
+                leading: SizedBox(
+                  width: 40,
+                  height: 40,
                   child: Center(
-                    // child: Image.asset('assets/images/app_icon.png'),
-                    child: FlutterLogo(),
+                    child: SvgPicture.asset(app.isDarkMode
+                        ? UiAssets.appIconDark
+                        : UiAssets.appIconLight),
                   ),
                 ),
                 onDestinationSelected: (value) async {
