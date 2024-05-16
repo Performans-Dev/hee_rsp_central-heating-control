@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/widgets/breadcrumb.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -27,33 +28,18 @@ class SettingsAddSensorScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      labelText: 'Name',
-                    ),
+                  const TextInputWidget(
+                    labelText: "Name",
                     keyboardType: TextInputType.name,
                   ),
                   const SizedBox(height: 8),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      labelText: 'MinValue',
-                    ),
+                   TextInputWidget(
+                    labelText: "MinValue",
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 8),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      labelText: 'MaxValue',
-                    ),
+                  const TextInputWidget(
+                    labelText: "MaxValue",
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 12),

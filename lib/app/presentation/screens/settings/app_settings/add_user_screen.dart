@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/widgets/breadcrumb.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,26 +53,14 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(
+                    TextInputWidget(
+                      labelText: "Name Surname",
                       controller: nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        labelText: 'Name Surname',
-                      ),
-                      keyboardType: TextInputType.name,
                     ),
                     const SizedBox(height: 8),
-                    TextField(
+                    TextInputWidget(
+                      labelText: "'Pin Code'",
                       controller: pinController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        labelText: 'Pin Code',
-                      ),
-                      keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 8),
                     SwitchListTile(
