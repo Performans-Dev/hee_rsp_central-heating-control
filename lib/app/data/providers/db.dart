@@ -2,7 +2,9 @@ import 'dart:developer';
 import 'dart:io' as io;
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -52,6 +54,14 @@ class DbProvider {
     await db.execute(Keys.dbCreateUsers);
     await db.execute(Keys.dbDropSensors);
     await db.execute(Keys.dbCreateSensors);
+    await db.execute(Keys.dbDropHeaters);
+    await db.execute(Keys.dbCreateHeaters);
+    await db.execute(Keys.dbDropZoneUsers);
+    await db.execute(Keys.dbCreateZoneUsers);
+    await db.execute(Keys.dbDropZoneSensors);
+    await db.execute(Keys.dbCreateZoneSensors);
+    await db.execute(Keys.dbDropZoneHeaters);
+    await db.execute(Keys.dbCreateZoneHeaters);
   }
   //#endregion
 
@@ -62,13 +72,11 @@ class DbProvider {
     final db = await database;
     if (db == null) return -1;
     try {
-      int id = await db.insert(
+      return await db.insert(
         Keys.tableUsers,
         user.toSQL(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-
-      return id;
     } on Exception catch (err) {
       log(err.toString());
       return -1;
@@ -98,13 +106,12 @@ class DbProvider {
     final db = await database;
     if (db == null) return -1;
     try {
-      int updateCount = await db.update(
+      return await db.update(
         Keys.tableUsers,
         user.toSQL(),
         where: Keys.queryId,
         whereArgs: [user.id],
       );
-      return updateCount;
     } on Exception catch (err) {
       log(err.toString());
       return -1;
@@ -121,8 +128,31 @@ class DbProvider {
       final result = await db.query(Keys.tableUsers);
       if (result.isNotEmpty) {
         for (final item in result) {
-          final user = AppUser.fromSQL(item);
-          users.add(user);
+          users.add(AppUser.fromSQL(item));
+        }
+      }
+    } on Exception catch (err) {
+      log(err.toString());
+      return users;
+    }
+    return users;
+  }
+  //#endregion
+
+  //#region USER SELECT BY ZONE
+  Future<List<AppUser>> getUsersByZone() async {
+    final users = <AppUser>[];
+    final db = await database;
+    if (db == null) return users;
+    try {
+      final result = await db.query(
+        Keys.tableUsers,
+        where: Keys.queryIdIn,
+        whereArgs: [],
+      );
+      if (result.isNotEmpty) {
+        for (final item in result) {
+          users.add(AppUser.fromSQL(item));
         }
       }
     } on Exception catch (err) {
@@ -146,8 +176,7 @@ class DbProvider {
       );
       if (result.isNotEmpty) {
         for (final item in result) {
-          final user = AppUser.fromSQL(item);
-          users.add(user);
+          users.add(AppUser.fromSQL(item));
         }
       }
     } on Exception catch (err) {
@@ -172,8 +201,7 @@ class DbProvider {
         whereArgs: [username, pin],
       );
       if (result.isNotEmpty) {
-        final user = AppUser.fromSQL(result.first);
-        return user;
+        return AppUser.fromSQL(result.first);
       }
       return null;
     } on Exception catch (err) {
@@ -190,12 +218,11 @@ class DbProvider {
     final db = await database;
     if (db == null) return -1;
     try {
-      final int id = await db.insert(
+      return await db.insert(
         Keys.tableSensors,
         sensor.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      return id;
     } on Exception catch (err) {
       log(err.toString());
       return -1;
@@ -225,13 +252,12 @@ class DbProvider {
     final db = await database;
     if (db == null) return -1;
     try {
-      final int updateCount = await db.update(
+      return await db.update(
         Keys.tableSensors,
         sensor.toMap(),
         where: Keys.queryId,
         whereArgs: [sensor.id],
       );
-      return updateCount;
     } on Exception catch (err) {
       log(err.toString());
       return -1;
@@ -260,7 +286,7 @@ class DbProvider {
   //#endregion
 
   //#region SENSORS SELECT ONE
-  Future<SensorDevice?> getSensor({required String id}) async {
+  Future<SensorDevice?> getSensor({required int id}) async {
     final db = await database;
     if (db == null) return null;
     try {
@@ -276,6 +302,346 @@ class DbProvider {
     } on Exception catch (err) {
       log(err.toString());
       return null;
+    }
+  }
+  //#endregion
+
+  //MARK: HEATER
+
+  //#region HEATER INSERT
+  Future<int> addHeater(HeaterDevice heater) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.insert(
+        Keys.tableHeaters,
+        heater.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } on Exception catch (err) {
+      log(err.toString());
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region HEATER DELETE
+  Future<int> deleteHeater(HeaterDevice heater) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.delete(
+        Keys.tableHeaters,
+        where: Keys.queryId,
+        whereArgs: [heater.id],
+      );
+    } on Exception catch (err) {
+      log(err.toString());
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region HEATER UPDATE
+  Future<int> updateHeater(HeaterDevice heater) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.update(
+        Keys.tableHeaters,
+        heater.toMap(),
+        where: Keys.queryId,
+        whereArgs: [heater.id],
+      );
+    } on Exception catch (err) {
+      log(err.toString());
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region HEATER SELECT ALL
+  Future<List<HeaterDevice>> getHeaters() async {
+    final heaters = <HeaterDevice>[];
+    final db = await database;
+    if (db == null) return heaters;
+    try {
+      final result = await db.query(Keys.tableHeaters);
+      if (result.isNotEmpty) {
+        for (final map in result) {
+          heaters.add(HeaterDevice.fromMap(map));
+        }
+      }
+    } on Exception catch (err) {
+      log(err.toString());
+      return heaters;
+    }
+    return heaters;
+  }
+  //#endregion
+
+  //#region HEATERS SELECT ONE
+  Future<HeaterDevice?> getHeater({required int id}) async {
+    final db = await database;
+    if (db == null) return null;
+    try {
+      final result = await db.query(
+        Keys.tableHeaters,
+        where: Keys.queryId,
+        whereArgs: [id],
+      );
+      if (result.isNotEmpty) {
+        return HeaterDevice.fromMap(result.first);
+      }
+      return null;
+    } on Exception catch (err) {
+      log(err.toString());
+      return null;
+    }
+  }
+  //#endregion
+
+  //MARK: ZONE
+
+  //#region ZONE INSERT
+  Future<int> addZone(ZoneDefinition zone) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      final zoneUsers = zone.users;
+      final zoneSensors = zone.sensors;
+      final zoneDevices = zone.devices;
+      final zoneMap = {
+        'name': zone.name,
+        'color': zone.color,
+        'state': zone.state,
+      };
+      final int id = await db.insert(Keys.tableZones, zoneMap);
+      for (final user in zoneUsers) {
+        await db.insert(Keys.tableZoneUsers, {'zoneId': id, 'userId': user.id});
+      }
+      for (final sensor in zoneSensors) {
+        await db.insert(
+            Keys.tableZoneSensors, {'zoneId': id, 'sensorId': sensor.id});
+      }
+      for (final device in zoneDevices) {
+        await db.insert(
+            Keys.tableZoneHeaters, {'zoneId': id, 'heaterId': device.id});
+      }
+      return id;
+    } on Exception catch (err) {
+      log(err.toString());
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region ZONE DELETE
+  Future<int> deleteZone(ZoneDefinition zone) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      final int zoneUsersToDelete = await db.delete(Keys.tableZoneUsers,
+          where: Keys.queryZoneId, whereArgs: [zone.id]);
+      final int zoneSensorsToDelete = await db.delete(Keys.tableZoneSensors,
+          where: Keys.queryZoneId, whereArgs: [zone.id]);
+      final int zoneHeatersToDelete = await db.delete(Keys.tableZoneHeaters,
+          where: Keys.queryZoneId, whereArgs: [zone.id]);
+      final int result = await db.delete(
+        Keys.tableZones,
+        where: Keys.queryId,
+        whereArgs: [zone.id],
+      );
+      log('Deleting zone #${zone.id}, with $zoneUsersToDelete users, $zoneSensorsToDelete sensors, $zoneHeatersToDelete heaters with result $result');
+      return result;
+    } on Exception catch (err) {
+      log(err.toString());
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region ZONE UPDATE
+  Future<int> updateZone(ZoneDefinition zone) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      final zoneUsers = zone.users;
+      final zoneSensors = zone.sensors;
+      final zoneDevices = zone.devices;
+      final zoneMap = {
+        'id': zone.id,
+        'name': zone.name,
+        'color': zone.color,
+        'state': zone.state,
+      };
+      final int updateResult = await db.update(
+        Keys.tableZones,
+        zoneMap,
+        where: Keys.queryId,
+        whereArgs: [zone.id],
+      );
+      final int zoneUsersToDelete = await db.delete(Keys.tableZoneUsers,
+          where: Keys.queryZoneId, whereArgs: [zone.id]);
+
+      for (final user in zoneUsers) {
+        await db.insert(
+            Keys.tableZoneUsers, {'zoneId': zone.id, 'userId': user.id});
+      }
+      final int zoneSensorsToDelete = await db.delete(Keys.tableZoneSensors,
+          where: Keys.queryZoneId, whereArgs: [zone.id]);
+      for (final sensor in zoneSensors) {
+        await db.insert(
+            Keys.tableZoneSensors, {'zoneId': zone.id, 'sensorId': sensor.id});
+      }
+      final int zoneHeatersToDelete = await db.delete(Keys.tableZoneHeaters,
+          where: Keys.queryZoneId, whereArgs: [zone.id]);
+      for (final device in zoneDevices) {
+        await db.insert(
+            Keys.tableZoneHeaters, {'zoneId': zone.id, 'heaterId': device.id});
+      }
+      return updateResult +
+          zoneUsersToDelete +
+          zoneSensorsToDelete +
+          zoneHeatersToDelete;
+    } on Exception catch (err) {
+      log(err.toString());
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region ZONE SELECT ONE
+  Future<ZoneDefinition?> getZone({required int id}) async {
+    final db = await database;
+    if (db == null) return null;
+    try {
+      final result = await db.query(
+        Keys.tableZones,
+        where: Keys.queryId,
+        whereArgs: [id],
+      );
+      if (result.isNotEmpty) {
+        var zone = ZoneDefinition.fromMap(result.first);
+
+        zone.users = await getZoneUsers(zoneId: id);
+        zone.sensors = await getZoneSensors(zoneId: id);
+        zone.devices = await getZoneHeaters(zoneId: id);
+        //
+        return zone;
+      }
+    } on Exception catch (err) {
+      log(err.toString());
+      return null;
+    }
+    return null;
+  }
+  //#endregion
+
+  //#region ZONE SELECT ALL
+  Future<List<ZoneDefinition>> getZoneList() async {
+    final zones = <ZoneDefinition>[];
+    final db = await database;
+    if (db == null) return zones;
+    try {
+      final data = await db.query(Keys.tableZones);
+      for (final map in data) {
+        var zone = ZoneDefinition.fromMap(map);
+        zone.users = await getZoneUsers(zoneId: zone.id);
+        zone.sensors = await getZoneSensors(zoneId: zone.id);
+        zone.devices = await getZoneHeaters(zoneId: zone.id);
+        zones.add(zone);
+      }
+      return zones;
+    } on Exception catch (err) {
+      log(err.toString());
+      return zones;
+    }
+  }
+  //#endregion
+
+  //MARK: RELATIONS
+
+  //#region ZONE USERS
+  Future<List<AppUser>> getZoneUsers({required int zoneId}) async {
+    final zoneUsers = <AppUser>[];
+    final db = await database;
+    if (db == null) return zoneUsers;
+    try {
+      final userIds = await db.query(
+        Keys.tableZoneUsers,
+        where: Keys.queryZoneId,
+        whereArgs: [zoneId],
+      );
+      final result = await db.query(
+        Keys.tableUsers,
+        where: Keys.queryIdIn,
+        whereArgs: userIds.map((e) => e['userId']).toList(),
+      );
+      if (result.isNotEmpty) {
+        for (final map in result) {
+          zoneUsers.add(AppUser.fromMap(map));
+        }
+      }
+      return zoneUsers;
+    } on Exception catch (err) {
+      log(err.toString());
+      return zoneUsers;
+    }
+  }
+  //#endregion
+
+  //#region ZONE SENSORS
+  Future<List<SensorDevice>> getZoneSensors({required int zoneId}) async {
+    final zoneSensors = <SensorDevice>[];
+    final db = await database;
+    if (db == null) return zoneSensors;
+    try {
+      final sensorIds = await db.query(
+        Keys.tableZoneSensors,
+        where: Keys.queryZoneId,
+        whereArgs: [zoneId],
+      );
+      final result = await db.query(
+        Keys.tableSensors,
+        where: Keys.queryIdIn,
+        whereArgs: sensorIds.map((e) => e['sensorId']).toList(),
+      );
+      if (result.isNotEmpty) {
+        for (final map in result) {
+          zoneSensors.add(SensorDevice.fromMap(map));
+        }
+      }
+      return zoneSensors;
+    } on Exception catch (err) {
+      log(err.toString());
+      return zoneSensors;
+    }
+  }
+  //#endregion
+
+  //#region ZONE HEATERS
+  Future<List<HeaterDevice>> getZoneHeaters({required int zoneId}) async {
+    final zoneHeaters = <HeaterDevice>[];
+    final db = await database;
+    if (db == null) return zoneHeaters;
+    try {
+      final heaterIds = await db.query(Keys.tableZoneHeaters,
+          where: Keys.queryZoneId, whereArgs: [zoneId], columns: ['heaterId']);
+      final result = await db.query(
+        Keys.tableHeaters,
+        where: Keys.queryIdIn,
+        whereArgs: heaterIds.map((e) => e['heaterId']).toList(),
+      );
+      if (result.isNotEmpty) {
+        for (final map in result) {
+          zoneHeaters.add(HeaterDevice.fromMap(map));
+        }
+      }
+      return zoneHeaters;
+    } on Exception catch (err) {
+      log(err.toString());
+      return zoneHeaters;
     }
   }
   //#endregion

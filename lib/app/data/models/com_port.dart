@@ -8,6 +8,7 @@ class ComPort {
   GpioPin pinNumber;
   GpioDirection direction;
   GpioGroup group;
+  bool? available;
   ComPort({
     required this.id,
     required this.title,
