@@ -15,7 +15,7 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          const BreakCrumbWidget(
+          const BreadcrumbWidget(
             title: 'Settings/ Zone, Heaters, Sensor Management',
           ),
           Expanded(

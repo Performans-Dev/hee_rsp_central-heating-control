@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class BreakCrumbWidget extends StatelessWidget {
+class BreadcrumbWidget extends StatelessWidget {
   final String title;
   final double padding;
   final double width;
   final Color? color;
-  const BreakCrumbWidget({
+  const BreadcrumbWidget({
     super.key,
     required this.title,
     this.padding = 20,

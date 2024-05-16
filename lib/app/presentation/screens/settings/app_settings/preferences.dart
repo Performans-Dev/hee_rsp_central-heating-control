@@ -30,7 +30,7 @@ class SettingsPreferences extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const BreakCrumbWidget(
+          const BreadcrumbWidget(
             title: 'Settings / Preferences',
           ),
           Expanded(

@@ -18,7 +18,7 @@ class SettingsEditSensorScreen extends StatelessWidget {
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          BreakCrumbWidget(
+          BreadcrumbWidget(
             title: 'Settings / Sensor Settings/ Edit Sensor',
           ),
           Expanded(

@@ -57,7 +57,7 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const BreakCrumbWidget(
+            const BreadcrumbWidget(
               title: 'Settings / Add New User',
             ),
             Expanded(

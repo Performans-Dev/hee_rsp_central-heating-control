@@ -40,7 +40,7 @@ class _TimezoneScreenState extends State<TimezoneScreen> {
             ? Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const BreakCrumbWidget(
+                  const BreadcrumbWidget(
                     title: 'Select Timezone',
                   ),
                   Expanded(
