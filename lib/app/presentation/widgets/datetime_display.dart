@@ -53,6 +53,7 @@ class _DateTextWidgetState extends State<DateTextWidget> {
           style: widget.large
               ? Theme.of(context).textTheme.displayLarge?.copyWith(
                   letterSpacing: 1,
+                  color: Colors.white.withOpacity(0.83),
                   shadows: [
                     BoxShadow(
                       color: Theme.of(context).canvasColor,
@@ -71,6 +72,7 @@ class _DateTextWidgetState extends State<DateTextWidget> {
           formattedTime,
           style: widget.large
               ? Theme.of(context).textTheme.displayLarge?.copyWith(
+                  color: Colors.white.withOpacity(0.83),
                   shadows: [
                     BoxShadow(
                       color: Theme.of(context).canvasColor,

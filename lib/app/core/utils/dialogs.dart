@@ -127,8 +127,15 @@ class DialogUtils {
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
-                                          text:
-                                              'Kullanıcı için PIN kodu girişi yapın ',
+                                          text: username,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.w500),
+                                        ),
+                                        TextSpan(
+                                          text: ' için PIN kodu girişi yapın ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge
@@ -138,14 +145,6 @@ class DialogUtils {
                                                       .bodyLarge
                                                       ?.color
                                                       ?.withOpacity(0.8)),
-                                        ),
-                                        TextSpan(
-                                          text: username,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                  fontWeight: FontWeight.w500),
                                         ),
                                       ],
                                     ),

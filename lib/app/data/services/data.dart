@@ -37,6 +37,10 @@ class DataController extends GetxController {
   //#region COMMUNICATION PORTS
   final List<ComPort> _comportList = <ComPort>[].obs;
   List<ComPort> get comportList => _comportList;
+  List<ComPort> get availableComportList {
+    var list = comportList;
+    return list;
+  }
 
   //#endregion
 

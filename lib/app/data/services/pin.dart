@@ -36,7 +36,7 @@ class PinController extends GetxController {
 
   void onDigitTapped(String digit) {
     if (digit == '>') {
-      //
+      Get.back(result: pin);
     } else if (digit == 'x') {
       deleteLast();
     } else {
@@ -58,6 +58,9 @@ class PinController extends GetxController {
       }
       _digits.assignAll(newDigits);
       update();
+      if (newDigits.last != '') {
+        Get.back(result: pin);
+      }
     }
   }
 
