@@ -4,7 +4,7 @@ import 'package:central_heating_control/app/data/middlewares/chc_device.dart';
 import 'package:central_heating_control/app/data/middlewares/setup.dart';
 import 'package:central_heating_control/app/data/middlewares/user.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/presentation/components/keyboard_screen.dart';
+import 'package:central_heating_control/app/core/utils/osk/keyboard_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/activation_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/register_device_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/auth/signin/signin_screen.dart';
