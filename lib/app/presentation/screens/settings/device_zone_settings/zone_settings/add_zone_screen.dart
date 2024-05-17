@@ -60,17 +60,8 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
                   title: Text(user.username),
                   controlAffinity: ListTileControlAffinity.leading,
                   value: zone.users.map((e) => e.id).contains(user.id),
-                  onChanged: (value) {
-                    if (value) {
-                      setState(() {
-                        zone.users.add(user);
-                      });
-                    } else {
-                      setState(() {
-                        zone.users.remove(user);
-                      });
-                    }
-                  },
+                  onChanged: (value) => setState(() =>
+                      value ? zone.users.add(user) : zone.users.remove(user)),
                 ),
 
               //

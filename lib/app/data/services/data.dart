@@ -61,6 +61,15 @@ class DataController extends GetxController {
     }
     return false;
   }
+
+  Future<bool> updateZone(ZoneDefinition zone) async {
+    final result = await DbProvider.db.updateZone(zone);
+    if (result > 0) {
+      await getZoneListFromDb();
+      return true;
+    }
+    return false;
+  }
   //#endregion
 
   //#region HEATERS
