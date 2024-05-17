@@ -15,16 +15,19 @@ class SettingsZoneListScreen extends StatelessWidget {
       return AppScaffold(
         title: 'Zones',
         selectedIndex: 3,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const BreadcrumbWidget(
-              title: 'Settings / Zones',
-            ),
-            Expanded(
-              child: ListView.builder(
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const BreadcrumbWidget(
+                title: 'Settings / Zones',
+              ),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 itemBuilder: (context, index) => ListTile(
-                  tileColor: CommonUtils.hexToColor(dc.zoneList[index].color)
+                  tileColor: CommonUtils.hexToColor(context,dc.zoneList[index].color)
                       .withOpacity(0.3),
                   title: Text(dc.zoneList[index].name),
                   subtitle: Text(dc.zoneList[index].users
@@ -33,12 +36,20 @@ class SettingsZoneListScreen extends StatelessWidget {
                       .join(', ')
                       .toString()),
                   trailing: Text('Edit button'),
+                  onTap: () {
+                    Get.toNamed(
+                      Routes.settingsZoneEdit,
+                      parameters: {
+                        'id': dc.zoneList[index].id.toString(),
+                      },
+                    );
+                  },
                 ),
                 itemCount: dc.zoneList.length,
               ),
-            ),
-            addZoneButton,
-          ],
+              addZoneButton,
+            ],
+          ),
         ),
       );
     });

@@ -42,4 +42,6 @@ class Routes {
   static const String settingsSensorsList = '/settings-sensor-list';
   static const String settingsSensorAdd = '/settings-add-sensor';
   static const String settingsSensorEdit = '/settings-edit-sensor';
+
+  static const String onScreenKeyboard = '/oskb';
 }

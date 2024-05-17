@@ -153,6 +153,7 @@ class UiData {
   ];
 
   static List<String> colorList = [
+    '',
     '#FF5733', // Orange
     '#33FF57', // Green
     '#3357FF', // Blue

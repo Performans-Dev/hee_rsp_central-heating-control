@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -47,38 +48,11 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
               ),
               SizedBox(height: 20),
               Text('LABEL: Select Zone color'),
-              SizedBox(
-                height: 120,
-                width: double.infinity,
-                child: Wrap(
-                  children: UiData.colorList
-                      .map((e) => Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(20),
-                              onTap: () {
-                                setState(() {
-                                  zone.color = e;
-                                });
-                              },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  color: CommonUtils.hexToColor(e)
-                                      .withOpacity(0.3),
-                                  padding: EdgeInsets.all(20),
-                                  child: Icon(zone.color == e
-                                      ? Icons.radio_button_checked
-                                      : Icons.radio_button_off),
-                                ),
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                ),
+              ColorPickerWidget(
+                onSelected: (v) => setState(() => zone.color = v),
+                selectedValue: zone.color,
               ),
+
               SizedBox(height: 20),
               Text('LABEL: Select USers'),
               for (final user in app.userList)
