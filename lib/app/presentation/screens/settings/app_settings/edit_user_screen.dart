@@ -72,13 +72,11 @@ class _SettingsEditUserScreenState extends State<SettingsEditUserScreen> {
                       controller: nameController,
                       keyboardType: TextInputType.name,
                     ),
-                    const SizedBox(height: 8),
                     TextInputWidget(
                       labelText: "Pin Code",
                       controller: pinController,
                       keyboardType: TextInputType.number,
                     ),
-                    const SizedBox(height: 8),
                     SwitchListTile(
                       value: user!.isAdmin,
                       onChanged: (v) {

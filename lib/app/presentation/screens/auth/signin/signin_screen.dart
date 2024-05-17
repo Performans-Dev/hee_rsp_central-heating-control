@@ -59,13 +59,11 @@ class _SigninScreenState extends State<SigninScreen> {
                       labelText: "Email",
                       radius: 0,
                     ),
-                    const SizedBox(height: 12),
                     TextInputWidget(
                       controller: passwordController,
                       labelText: "Password",
                       radius: 0,
                     ),
-                    const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

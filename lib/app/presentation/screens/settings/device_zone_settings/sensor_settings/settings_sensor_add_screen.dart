@@ -4,9 +4,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/dropdown.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SettingsSensorAddScreen extends StatefulWidget {
@@ -65,49 +63,56 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextInputWidget(
+                    const TextInputWidget(
                       keyboardType: TextInputType.name,
                       labelText: 'Name',
                     ),
-                    const SizedBox(height: 8),
                     const TextInputWidget(
                       keyboardType: TextInputType.number,
                       labelText: 'MinValue',
                     ),
-                    const SizedBox(height: 8),
                     const TextInputWidget(
                       keyboardType: TextInputType.number,
                       labelText: 'MaxValue',
                     ),
-                    const SizedBox(height: 12),
                     DropdownWidget<ComPort?>(
                       data: dc.comportList,
                       labelText: "Comport",
                       hintText: "Select Comport",
-                      onSelected: (p0) {},
+                      onSelected: (p0) {
+                        setState(() {
+                          selectedPort = p0;
+                        });
+                      },
                       selectedValue: selectedPort,
                     ),
                     const SizedBox(height: 8),
                     DropdownWidget<ZoneDefinition?>(
+                      hintText: "Select Zone",
                       data: dc.zoneList,
                       labelText: "Zone",
-                      onSelected: (p0) {},
+                      onSelected: (p0) {
+                        setState(() {
+                          selectedZone = p0;
+                        });
+                      },
                       selectedValue: selectedZone,
                     ),
-                    const SizedBox(
-                      height: 200,
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          cancelButton,
+                          const SizedBox(width: 12),
+                          saveButton
+                        ],
+                      ),
                     )
                   ],
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [cancelButton, const SizedBox(width: 12), saveButton],
-              ),
-            )
           ],
         ),
       );

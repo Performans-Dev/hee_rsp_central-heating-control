@@ -1,32 +1,91 @@
+import 'package:central_heating_control/app/data/models/dropdown.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class DropdownWidget<T> extends StatelessWidget {
-  final List<T> data;
-  final T? selectedValue;
-  final Function(T?) onSelected;
+class DropdownWidget<DropdownModel> extends StatelessWidget {
+  final List<DropdownModel> data;
+  final dynamic selectedValue;
+  final Function(dynamic) onSelected;
   final String labelText;
-  final String? hintText;
-  const DropdownWidget({
+  final String hintText;
+  DropdownWidget({
     super.key,
     required this.data,
     required this.labelText,
     required this.onSelected,
-    this.hintText,
+    required this.hintText,
     this.selectedValue,
   });
-
+  final GlobalKey _popupKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 55,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(16),
-
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
+          textAlign: TextAlign.start,
         ),
-      ),
-      
+        const SizedBox(
+          height: 2,
+        ),
+        GestureDetector(
+          onTap: () {
+            dynamic popupMenuState = _popupKey.currentState;
+            popupMenuState.showButtonMenu();
+          },
+          child: Container(
+            height: 55,
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.grey),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(selectedValue != null 
+                      ? selectedValue.toString()
+                      : hintText),
+                  Row(
+                    children: [
+                      selectedValue == null
+                          ? Container()
+                          : IconButton(
+                              onPressed: () {
+                                onSelected(null);
+                              },
+                              icon: const Icon(Icons.close)),
+                      PopupMenuButton<DropdownModel>(
+                        key: _popupKey,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        elevation: 1,
+                        initialValue: selectedValue,
+                        onSelected: onSelected,
+                        itemBuilder: (BuildContext context) {
+                          return data.isEmpty
+                              ? []
+                              : data.map((DropdownModel item) {
+                                  return PopupMenuItem<DropdownModel>(
+                                    padding: const EdgeInsets.all(16),
+                                    value: item,
+                                    child: Text(item.toString()),
+                                  );
+                                }).toList();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

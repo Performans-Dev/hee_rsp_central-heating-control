@@ -32,12 +32,10 @@ class SettingsEditSensorScreen extends StatelessWidget {
                     labelText: "Name",
                     keyboardType: TextInputType.name,
                   ),
-                  const SizedBox(height: 8),
                   const TextInputWidget(
                     labelText: "MinValue",
                     keyboardType: TextInputType.number,
                   ),
-                  const SizedBox(height: 8),
                   const TextInputWidget(
                     labelText: "MaxValue",
                     keyboardType: TextInputType.number,

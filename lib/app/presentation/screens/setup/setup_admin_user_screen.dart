@@ -61,7 +61,6 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                           labelText: "Name Surname",
                           controller: nameController,
                         ),
-                        const SizedBox(height: 12),
                         TextInputWidget(
                           labelText: "PIN",
                           controller: pinController,

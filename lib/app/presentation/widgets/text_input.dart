@@ -18,17 +18,20 @@ class TextInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radius),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          /*   border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(radius),
+          ), */
+          labelText: labelText,
         ),
-        labelText: labelText,
+        keyboardType: keyboardType,
+        obscureText: obscureText,
+        obscuringCharacter: obscuringCharacter ?? " ",
       ),
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      obscuringCharacter: obscuringCharacter ?? " ",
     );
   }
 }

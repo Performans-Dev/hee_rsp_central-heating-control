@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/models/dropdown.dart';
 
 class ComPort {
   String id;
@@ -27,6 +28,7 @@ class ComPort {
     };
   }
 
+  DropdownModel toDropdown() => DropdownModel(text: title, value: id);
   factory ComPort.fromMap(Map<String, dynamic> map) {
     return ComPort(
       id: map['id'] ?? '',

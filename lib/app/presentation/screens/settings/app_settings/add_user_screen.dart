@@ -57,12 +57,10 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                       labelText: "Name Surname",
                       controller: nameController,
                     ),
-                    const SizedBox(height: 8),
                     TextInputWidget(
                       labelText: "'Pin Code'",
                       controller: pinController,
                     ),
-                    const SizedBox(height: 8),
                     SwitchListTile(
                       value: isAdminChecked,
                       onChanged: (v) {
