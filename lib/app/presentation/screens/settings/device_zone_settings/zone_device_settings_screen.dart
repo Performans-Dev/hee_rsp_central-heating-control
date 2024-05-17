@@ -10,13 +10,13 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: 'Settings',
+      title: 'Zones, Heaters, Sensors',
       selectedIndex: 3,
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           const BreadcrumbWidget(
-            title: 'Settings/ Zone, Heaters, Sensor Management',
+            title: 'Settings / Zones, Heaters and Sensors',
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -33,7 +33,9 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.settingsZoneList);
+                    },
                   ),
                   const SizedBox(height: 8),
                   ListTile(
@@ -54,7 +56,7 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () {
-                      Get.toNamed(Routes.sensorSettings);
+                      Get.toNamed(Routes.settingsSensorsList);
                     },
                   ),
                 ],

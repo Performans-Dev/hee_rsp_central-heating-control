@@ -50,7 +50,7 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
                               children: [
                                 IconButton(
                                     onPressed: () {
-                                      Get.toNamed(Routes.settingsEditSensor);
+                                      Get.toNamed(Routes.settingsSensorEdit);
                                     },
                                     icon: const Icon(Icons.edit)),
                                 const SizedBox(
@@ -81,7 +81,7 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
         child: ElevatedButton(
-          onPressed: () => Get.toNamed(Routes.settingsAddSensor),
+          onPressed: () => Get.toNamed(Routes.settingsSensorAdd),
           child: const Text("Add New Sensor"),
         ),
       );

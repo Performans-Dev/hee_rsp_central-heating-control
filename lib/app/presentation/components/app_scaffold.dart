@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
@@ -68,9 +69,12 @@ class AppScaffold extends StatelessWidget {
                       NavController.toHome();
                       break;
                     case 1:
-                      final result = await NavController.showFunctionsDialog(
-                          context: context);
-                      print("//TODO: $result");
+                      // final result = await NavController.showFunctionsDialog(
+                      //     context: context);
+                      // print("//TODO: $result");
+                      final result = await Get.toNamed(Routes.onScreenKeyboard,
+                          parameters: {'label': 'Test'});
+                      print(result);
                       break;
                     case 2:
                       //TODO: replace this with change heating mode

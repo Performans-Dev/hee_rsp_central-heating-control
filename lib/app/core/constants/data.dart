@@ -151,4 +151,16 @@ class UiData {
       group: GpioGroup.spi,
     ),
   ];
+
+  static List<String> colorList = [
+    '',
+    '#FF5733', // Orange
+    '#33FF57', // Green
+    '#3357FF', // Blue
+    '#FF33A1', // Pink
+    '#FFDB33', // Yellow
+    '#33FFF5', // Cyan
+    '#B833FF', // Purple
+    '#A1FF33' // Lime
+  ];
 }

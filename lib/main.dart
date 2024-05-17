@@ -26,9 +26,9 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
-    size: GetPlatform.isLinux || GetPlatform.isMacOS
-        ? const Size(800, 480)
-        : null,
+    // size: GetPlatform.isLinux || GetPlatform.isMacOS
+    //     ? const Size(800, 480)
+    //     : null,
     backgroundColor: Colors.black,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.hidden,
@@ -36,10 +36,10 @@ Future<void> main() async {
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    if (GetPlatform.isLinux || GetPlatform.isMacOS) {
-    } else {
-      await windowManager.setFullScreen(true);
-    }
+    // if (GetPlatform.isLinux || GetPlatform.isMacOS) {
+    // } else {
+    await windowManager.setFullScreen(true);
+    // }
     await windowManager.focus();
   });
 

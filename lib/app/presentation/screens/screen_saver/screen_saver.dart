@@ -63,7 +63,13 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                             child: Text(
                                 app.userList[index].username.getInitials()),
                           ),
-                          title: Text(app.userList[index].username),
+                          title: Text(
+                            app.userList[index].username,
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: Colors.white.withOpacity(0.83),
+                                    ),
+                          ),
                           onTap: () async {
                             final pin = await DialogUtils.pinDialog(
                               context: context,

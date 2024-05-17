@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/middlewares/chc_device.dart';
 import 'package:central_heating_control/app/data/middlewares/setup.dart';
 import 'package:central_heating_control/app/data/middlewares/user.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/presentation/components/keyboard_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/activation_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/register_device_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/auth/signin/signin_screen.dart';
@@ -21,6 +22,9 @@ import 'package:central_heating_control/app/presentation/screens/settings/device
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/edit_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_device_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/add_zone_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_edit_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
@@ -147,22 +151,43 @@ final List<GetPage> getPages = [
     ],
   ),
   GetPage(
-    name: Routes.sensorSettings,
+    name: Routes.settingsSensorsList,
     page: () => SettingsSensorListScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
-    name: Routes.settingsAddSensor,
+    name: Routes.settingsSensorAdd,
     page: () => SettingsSensorAddScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
-    name: Routes.settingsEditSensor,
+    name: Routes.settingsSensorEdit,
     page: () => SettingsEditSensorScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsZoneList,
+    page: () => SettingsZoneListScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsZoneAdd,
+    page: () => SettingsZoneAddScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsZoneEdit,
+    page: () => SettingsZoneEditScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
@@ -174,5 +199,10 @@ final List<GetPage> getPages = [
     page: () => const ScreenSaverScreen(),
     transitionDuration: const Duration(milliseconds: 1000),
     transition: Transition.zoom,
+  ),
+
+  GetPage(
+    name: Routes.onScreenKeyboard,
+    page: () => OnScreenKeyboard(),
   ),
 ];

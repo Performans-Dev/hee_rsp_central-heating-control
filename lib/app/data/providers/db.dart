@@ -56,6 +56,8 @@ class DbProvider {
     await db.execute(Keys.dbCreateSensors);
     await db.execute(Keys.dbDropHeaters);
     await db.execute(Keys.dbCreateHeaters);
+    await db.execute(Keys.dbDropZones);
+    await db.execute(Keys.dbCreateZones);
     await db.execute(Keys.dbDropZoneUsers);
     await db.execute(Keys.dbCreateZoneUsers);
     await db.execute(Keys.dbDropZoneSensors);
@@ -410,7 +412,7 @@ class DbProvider {
     try {
       final zoneUsers = zone.users;
       final zoneSensors = zone.sensors;
-      final zoneDevices = zone.devices;
+      final zoneDevices = zone.heaters;
       final zoneMap = {
         'name': zone.name,
         'color': zone.color,
@@ -468,7 +470,7 @@ class DbProvider {
     try {
       final zoneUsers = zone.users;
       final zoneSensors = zone.sensors;
-      final zoneDevices = zone.devices;
+      final zoneDevices = zone.heaters;
       final zoneMap = {
         'id': zone.id,
         'name': zone.name,
@@ -526,7 +528,7 @@ class DbProvider {
 
         zone.users = await getZoneUsers(zoneId: id);
         zone.sensors = await getZoneSensors(zoneId: id);
-        zone.devices = await getZoneHeaters(zoneId: id);
+        zone.heaters = await getZoneHeaters(zoneId: id);
         //
         return zone;
       }
@@ -549,7 +551,7 @@ class DbProvider {
         var zone = ZoneDefinition.fromMap(map);
         zone.users = await getZoneUsers(zoneId: zone.id);
         zone.sensors = await getZoneSensors(zoneId: zone.id);
-        zone.devices = await getZoneHeaters(zoneId: zone.id);
+        zone.heaters = await getZoneHeaters(zoneId: zone.id);
         zones.add(zone);
       }
       return zones;
@@ -573,14 +575,21 @@ class DbProvider {
         where: Keys.queryZoneId,
         whereArgs: [zoneId],
       );
-      final result = await db.query(
-        Keys.tableUsers,
-        where: Keys.queryIdIn,
-        whereArgs: userIds.map((e) => e['userId']).toList(),
-      );
+      // var whereArgs =
+      //     userIds.map((e) => e['userId']).toList().join(',').toString();
+
+      // final result = await db.query(
+      //   Keys.tableUsers,
+      //   where: Keys.queryIdIn,
+      //   whereArgs: [whereArgs],
+      // );
+
+      final result = await db.rawQuery(
+          "SELECT * FROM users WHERE id IN (${userIds.map((e) => e['userId']).toList().join(',')}) LIMIT 100");
+
       if (result.isNotEmpty) {
         for (final map in result) {
-          zoneUsers.add(AppUser.fromMap(map));
+          zoneUsers.add(AppUser.fromSQL(map));
         }
       }
       return zoneUsers;
@@ -605,7 +614,9 @@ class DbProvider {
       final result = await db.query(
         Keys.tableSensors,
         where: Keys.queryIdIn,
-        whereArgs: sensorIds.map((e) => e['sensorId']).toList(),
+        whereArgs: [
+          sensorIds.map((e) => e['sensorId']).toList().join(',').toString()
+        ],
       );
       if (result.isNotEmpty) {
         for (final map in result) {
@@ -631,7 +642,9 @@ class DbProvider {
       final result = await db.query(
         Keys.tableHeaters,
         where: Keys.queryIdIn,
-        whereArgs: heaterIds.map((e) => e['heaterId']).toList(),
+        whereArgs: [
+          heaterIds.map((e) => e['heaterId']).toList().join(',').toString()
+        ],
       );
       if (result.isNotEmpty) {
         for (final map in result) {

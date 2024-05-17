@@ -31,10 +31,17 @@ class Routes {
   static const String settingstZoneDeviceSensorManagement =
       '/settings-zone-device-sensor';
 
-  static const String sensorSettings = '/settings-sensor';
-  static const String zoneSettings = '/settings-zone';
-  static const String deviceSettings = '/settings-device';
+  static const String settingsZoneList = '/settings-zone-list';
+  static const String settingsZoneAdd = '/settings-add-zone';
+  static const String settingsZoneEdit = '/settings-edit-zone';
 
-  static const String settingsAddSensor = '/settings-add-sensor';
-  static const String settingsEditSensor = '/settings-edit-sensor';
+  static const String settingsHeaterList = '/settings-heater-list';
+  static const String settingsHeaterAdd = '/settings-add-heater';
+  static const String settingsHeaterEdit = '/settings-edit-heater';
+
+  static const String settingsSensorsList = '/settings-sensor-list';
+  static const String settingsSensorAdd = '/settings-add-sensor';
+  static const String settingsSensorEdit = '/settings-edit-sensor';
+
+  static const String onScreenKeyboard = '/oskb';
 }
