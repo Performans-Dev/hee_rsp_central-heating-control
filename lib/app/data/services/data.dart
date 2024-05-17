@@ -53,11 +53,13 @@ class DataController extends GetxController {
     update();
   }
 
-  Future<void> addZone(ZoneDefinition zone) async {
+  Future<bool> addZone(ZoneDefinition zone) async {
     final result = await DbProvider.db.addZone(zone);
     if (result > 0) {
       await getZoneListFromDb();
+      return true;
     }
+    return false;
   }
   //#endregion
 

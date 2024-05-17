@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
@@ -7,7 +8,7 @@ import 'package:central_heating_control/app/data/models/sensor_device.dart';
 class ZoneDefinition {
   int id;
   String name;
-  List<HeaterDevice> devices;
+  List<HeaterDevice> heaters;
   List<SensorDevice> sensors;
   String color;
   List<AppUser> users;
@@ -15,7 +16,7 @@ class ZoneDefinition {
   ZoneDefinition({
     required this.id,
     required this.name,
-    required this.devices,
+    required this.heaters,
     required this.sensors,
     required this.color,
     required this.users,
@@ -26,7 +27,7 @@ class ZoneDefinition {
       ? {
           'id': id,
           'name': name,
-          'devices': devices.map((x) => x.toMap()).toList(),
+          'heaters': heaters.map((x) => x.toMap()).toList(),
           'sensors': sensors.map((x) => x.toMap()).toList(),
           'color': color,
           'users': users.map((x) => x.toMap()).toList(),
@@ -34,7 +35,7 @@ class ZoneDefinition {
         }
       : {
           'name': name,
-          'devices': devices.map((x) => x.toMap()).toList(),
+          'heaters': heaters.map((x) => x.toMap()).toList(),
           'sensors': sensors.map((x) => x.toMap()).toList(),
           'color': color,
           'users': users.map((x) => x.toMap()).toList(),
@@ -45,15 +46,31 @@ class ZoneDefinition {
     return ZoneDefinition(
       id: map['id']?.toInt() ?? 0,
       name: map['name'] ?? '',
-      devices: List<HeaterDevice>.from(
-          map['devices']?.map((x) => HeaterDevice.fromMap(x))),
-      sensors: List<SensorDevice>.from(
-          map['sensors']?.map((x) => SensorDevice.fromMap(x))),
+      heaters: map['heaters'] == null
+          ? []
+          : List<HeaterDevice>.from(
+              map['heaters']?.map((x) => HeaterDevice.fromMap(x))),
+      sensors: map['sensors'] == null
+          ? []
+          : List<SensorDevice>.from(
+              map['sensors']?.map((x) => SensorDevice.fromMap(x))),
       color: map['color'] ?? '',
-      users: List<AppUser>.from(map['users']?.map((x) => AppUser.fromMap(x))),
+      users: map['users'] == null
+          ? []
+          : List<AppUser>.from(map['users']?.map((x) => AppUser.fromMap(x))),
       state: map['state']?.toInt() ?? 0,
     );
   }
+
+  factory ZoneDefinition.initial() => ZoneDefinition(
+        id: -1,
+        name: '',
+        heaters: [],
+        sensors: [],
+        color: UiData.colorList.first,
+        users: [],
+        state: 0,
+      );
 
   String toJson() => json.encode(toMap());
 
