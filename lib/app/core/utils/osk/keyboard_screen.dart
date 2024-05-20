@@ -1,10 +1,9 @@
 import 'package:central_heating_control/app/core/utils/osk/osk_key.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OnScreenKeyboard extends StatefulWidget {
-  OnScreenKeyboard({super.key});
+  OnScreenKeyboard({Key? key}) : super(key: key);
 
   @override
   State<OnScreenKeyboard> createState() => _OnScreenKeyboardState();
@@ -33,69 +32,88 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
         children: [
-          Image.asset(
-            'assets/images/kb.png',
-            fit: BoxFit.contain,
-          ),
-          Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: 800,
-                height: 200,
-                color: Colors.orange,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.only(bottom: 100.0),
-                    child: Text(
-                      text,
-                      style: const TextStyle(color: Colors.black),
-                    ),
+          Expanded(
+            child: Container(
+              color: Colors.grey[300],
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    text,
+                    style: TextStyle(fontSize: 24, color: Colors.black),
                   ),
                 ),
-              )),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: OSKKeyWidget(
-              label: "q",
-              onTap: () => _onKeyPress("q"),
-            ),
-          ),
-          Align(
-              alignment: Alignment.centerRight,
-              child: OSKKeyWidget(
-                label: "<",
-                onTap: () => _onKeyPress("<"),
-              )),
-          Align(
-              alignment: Alignment.topRight,
-              child: OSKKeyWidget(
-                label: "Enter",
-                onTap: () => Get.back(result: text),
-              )),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              width: 107,
-              child: OSKKeyWidget(
-                label: "🔽",
-                onTap: () => Get.back(result: 'icindeki yazi budur'),
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              width: 400,
-              child: OSKKeyWidget(
-                label: "",
-                onTap: () => _onKeyPress(" "),
-              ),
+          Container(
+            color: Colors.grey[400],
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OSKKeyWidget(label: "Q", onTap: () => _onKeyPress("Q")),
+                    OSKKeyWidget(label: "W", onTap: () => _onKeyPress("W")),
+                    OSKKeyWidget(label: "E", onTap: () => _onKeyPress("E")),
+                    OSKKeyWidget(label: "R", onTap: () => _onKeyPress("R")),
+                    OSKKeyWidget(label: "T", onTap: () => _onKeyPress("T")),
+                    OSKKeyWidget(label: "Y", onTap: () => _onKeyPress("Y")),
+                    OSKKeyWidget(label: "U", onTap: () => _onKeyPress("U")),
+                    OSKKeyWidget(label: "I", onTap: () => _onKeyPress("I")),
+                    OSKKeyWidget(label: "O", onTap: () => _onKeyPress("O")),
+                    OSKKeyWidget(label: "P", onTap: () => _onKeyPress("P")),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OSKKeyWidget(label: "A", onTap: () => _onKeyPress("A")),
+                    OSKKeyWidget(label: "S", onTap: () => _onKeyPress("S")),
+                    OSKKeyWidget(label: "D", onTap: () => _onKeyPress("D")),
+                    OSKKeyWidget(label: "F", onTap: () => _onKeyPress("F")),
+                    OSKKeyWidget(label: "G", onTap: () => _onKeyPress("G")),
+                    OSKKeyWidget(label: "H", onTap: () => _onKeyPress("H")),
+                    OSKKeyWidget(label: "J", onTap: () => _onKeyPress("J")),
+                    OSKKeyWidget(label: "K", onTap: () => _onKeyPress("K")),
+                    OSKKeyWidget(label: "L", onTap: () => _onKeyPress("L")),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OSKKeyWidget(label: "Z", onTap: () => _onKeyPress("Z")),
+                    OSKKeyWidget(label: "X", onTap: () => _onKeyPress("X")),
+                    OSKKeyWidget(label: "C", onTap: () => _onKeyPress("C")),
+                    OSKKeyWidget(label: "V", onTap: () => _onKeyPress("V")),
+                    OSKKeyWidget(label: "B", onTap: () => _onKeyPress("B")),
+                    OSKKeyWidget(label: "N", onTap: () => _onKeyPress("N")),
+                    OSKKeyWidget(label: "M", onTap: () => _onKeyPress("M")),
+                    OSKKeyWidget(label: "<", onTap: () => _onKeyPress("<")),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OSKKeyWidget(
+                      label: "🔽",
+                      onTap: () => Get.back(result: 'icindeki yazi budur'),
+                    ),
+                    Container(
+                        width: 200,
+                        child: OSKKeyWidget(
+                            label: "Space", onTap: () => _onKeyPress(" "))),
+                    OSKKeyWidget(
+                        label: "Enter", onTap: () => Get.back(result: text)),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
