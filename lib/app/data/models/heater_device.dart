@@ -79,6 +79,16 @@ class HeaterDevice {
           'state': state,
         };
 
+  factory HeaterDevice.initial() => HeaterDevice(
+        id: -1,
+        name: '',
+        color: '',
+        icon: '',
+        type: HeaterDeviceType.none,
+        connectionType: HeaterDeviceConnectionType.none,
+        state: HeaterState.off.index,
+      );
+
   factory HeaterDevice.fromMap(Map<String, dynamic> map) {
     return HeaterDevice(
       id: map['id']?.toInt() ?? 0,

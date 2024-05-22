@@ -64,13 +64,20 @@ enum GpioPin {
 }
 
 enum HeaterDeviceConnectionType {
+  none,
   ethernet,
   relay,
 }
 
 enum HeaterDeviceType {
+  none,
   electric,
   naturalGas,
+}
+
+enum HeaterState {
+  off,
+  on,
 }
 
 enum ErrorChannelType {

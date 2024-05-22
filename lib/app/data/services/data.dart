@@ -81,11 +81,13 @@ class DataController extends GetxController {
     update();
   }
 
-  Future<void> addHeater(HeaterDevice heater) async {
+  Future<bool> addHeater(HeaterDevice heater) async {
     final result = await DbProvider.db.addHeater(heater);
     if (result > 0) {
       await getHeaterListFromDb();
+      return true;
     }
+    return false;
   }
   //#endregion
 

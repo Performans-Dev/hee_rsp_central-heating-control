@@ -18,11 +18,14 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_se
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_add_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_edit_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/edit_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_device_settings_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/add_zone_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
@@ -192,6 +195,28 @@ final List<GetPage> getPages = [
       AdminMiddleware(),
     ],
   ),
+  GetPage(
+    name: Routes.settingsHeaterList,
+    page: () => SettingsHeaterListScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsHeaterAdd,
+    page: () => SettingsHeaterAddScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsHeaterEdit,
+    page: () => SettingsHeaterEditScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+
   //#endregion
 
   GetPage(
