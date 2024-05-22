@@ -203,6 +203,7 @@ final List<GetPage> getPages = [
 
   GetPage(
     name: Routes.onScreenKeyboard,
+    transition: Transition.downToUp,
     page: () => OnScreenKeyboard(),
   ),
 ];
