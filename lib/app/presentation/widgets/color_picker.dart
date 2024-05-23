@@ -13,37 +13,33 @@ class ColorPickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 120,
-      width: double.infinity,
-      child: Wrap(
-        children: UiData.colorList
-            .map((e) => Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {
-                      onSelected(e);
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        color:
-                            CommonUtils.hexToColor(context, e).withOpacity(0.3),
-                        padding: const EdgeInsets.all(20),
-                        child: Icon(
-                          selectedValue == e
-                              ? Icons.radio_button_checked
-                              : Icons.radio_button_off,
-                        ),
+    return Wrap(
+      children: UiData.colorList
+          .map((e) => Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () {
+                    onSelected(e);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      color:
+                          CommonUtils.hexToColor(context, e).withOpacity(0.3),
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(
+                        selectedValue == e
+                            ? Icons.radio_button_checked
+                            : Icons.radio_button_off,
                       ),
                     ),
                   ),
-                ))
-            .toList(),
-      ),
+                ),
+              ))
+          .toList(),
     );
   }
 }

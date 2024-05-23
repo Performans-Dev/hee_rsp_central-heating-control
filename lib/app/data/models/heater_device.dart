@@ -40,6 +40,7 @@ class HeaterDevice {
     this.errorChannel,
     this.errorChannelType,
     required this.state,
+    this.zoneId,
   });
 
   Map<String, dynamic> toMap() => id > 0
@@ -60,6 +61,7 @@ class HeaterDevice {
           'errorChannel': errorChannel?.id,
           'errorChannelType': errorChannelType?.index,
           'state': state,
+          'zoneId': zoneId,
         }
       : {
           'name': name,
@@ -77,6 +79,7 @@ class HeaterDevice {
           'errorChannel': errorChannel?.id,
           'errorChannelType': errorChannelType?.index,
           'state': state,
+          'zoneId': zoneId,
         };
 
   factory HeaterDevice.initial() => HeaterDevice(
@@ -116,9 +119,10 @@ class HeaterDevice {
               .firstWhereOrNull((element) => element.id == map['errorChannel'])
           : null,
       errorChannelType: map['errorChannelType'] != null
-          ? ErrorChannelType.values[map['errorChannelType']?.toInt ?? 0]
+          ? ErrorChannelType.values[map['errorChannelType']]
           : null,
       state: map['state']?.toInt() ?? 0,
+      zoneId: map['zoneId'],
     );
   }
 

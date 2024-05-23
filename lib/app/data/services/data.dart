@@ -47,6 +47,9 @@ class DataController extends GetxController {
   //#region ZONES
   final List<ZoneDefinition> _zoneList = <ZoneDefinition>[].obs;
   List<ZoneDefinition> get zoneList => _zoneList;
+  List<ZoneDefinition> getZoneListForDropdown() =>
+      [ZoneDefinition.initial(), ...zoneList];
+
   Future<void> getZoneListFromDb() async {
     final data = await DbProvider.db.getZoneList();
     _zoneList.assignAll(data);
@@ -83,6 +86,15 @@ class DataController extends GetxController {
 
   Future<bool> addHeater(HeaterDevice heater) async {
     final result = await DbProvider.db.addHeater(heater);
+    if (result > 0) {
+      await getHeaterListFromDb();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateHeater(HeaterDevice heater) async {
+    final result = await DbProvider.db.updateHeater(heater);
     if (result > 0) {
       await getHeaterListFromDb();
       return true;

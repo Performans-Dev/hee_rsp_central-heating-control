@@ -21,6 +21,7 @@ enum GpioDirection {
   pinIn,
   pinOut,
   other,
+  none,
 }
 
 enum GpioGroup {
@@ -29,6 +30,7 @@ enum GpioGroup {
   buttonPin,
   uart,
   spi,
+  buzzer,
   empty,
 }
 
@@ -61,6 +63,7 @@ enum GpioPin {
   gpio25,
   gpio26,
   gpio27,
+  gpioNone,
 }
 
 enum HeaterDeviceConnectionType {
@@ -81,6 +84,14 @@ enum HeaterState {
 }
 
 enum ErrorChannelType {
-  na,
-  no,
+  nA,
+  nO,
+}
+
+enum BuzzerType {
+  none,
+  feedback,
+  success,
+  error,
+  alarm,
 }

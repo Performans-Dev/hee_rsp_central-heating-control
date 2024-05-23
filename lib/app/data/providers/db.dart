@@ -527,8 +527,8 @@ class DbProvider {
         var zone = ZoneDefinition.fromMap(result.first);
 
         zone.users = await getZoneUsers(zoneId: id);
-        zone.sensors = await getZoneSensors(zoneId: id);
-        zone.heaters = await getZoneHeaters(zoneId: id);
+        //zone.sensors = await getZoneSensors(zoneId: id);
+        //zone.heaters = await getZoneHeaters(zoneId: id);
         //
         return zone;
       }
@@ -550,8 +550,8 @@ class DbProvider {
       for (final map in data) {
         var zone = ZoneDefinition.fromMap(map);
         zone.users = await getZoneUsers(zoneId: zone.id);
-        zone.sensors = await getZoneSensors(zoneId: zone.id);
-        zone.heaters = await getZoneHeaters(zoneId: zone.id);
+        //zone.sensors = await getZoneSensors(zoneId: zone.id);
+        //zone.heaters = await getZoneHeaters(zoneId: zone.id);
         zones.add(zone);
       }
       return zones;
@@ -601,61 +601,61 @@ class DbProvider {
   //#endregion
 
   //#region ZONE SENSORS
-  Future<List<SensorDevice>> getZoneSensors({required int zoneId}) async {
-    final zoneSensors = <SensorDevice>[];
-    final db = await database;
-    if (db == null) return zoneSensors;
-    try {
-      final sensorIds = await db.query(
-        Keys.tableZoneSensors,
-        where: Keys.queryZoneId,
-        whereArgs: [zoneId],
-      );
-      final result = await db.query(
-        Keys.tableSensors,
-        where: Keys.queryIdIn,
-        whereArgs: [
-          sensorIds.map((e) => e['sensorId']).toList().join(',').toString()
-        ],
-      );
-      if (result.isNotEmpty) {
-        for (final map in result) {
-          zoneSensors.add(SensorDevice.fromMap(map));
-        }
-      }
-      return zoneSensors;
-    } on Exception catch (err) {
-      log(err.toString());
-      return zoneSensors;
-    }
-  }
+  // Future<List<SensorDevice>> getZoneSensors({required int zoneId}) async {
+  //   final zoneSensors = <SensorDevice>[];
+  //   final db = await database;
+  //   if (db == null) return zoneSensors;
+  //   try {
+  //     final sensorIds = await db.query(
+  //       Keys.tableZoneSensors,
+  //       where: Keys.queryZoneId,
+  //       whereArgs: [zoneId],
+  //     );
+  //     final result = await db.query(
+  //       Keys.tableSensors,
+  //       where: Keys.queryIdIn,
+  //       whereArgs: [
+  //         sensorIds.map((e) => e['sensorId']).toList().join(',').toString()
+  //       ],
+  //     );
+  //     if (result.isNotEmpty) {
+  //       for (final map in result) {
+  //         zoneSensors.add(SensorDevice.fromMap(map));
+  //       }
+  //     }
+  //     return zoneSensors;
+  //   } on Exception catch (err) {
+  //     log(err.toString());
+  //     return zoneSensors;
+  //   }
+  // }
   //#endregion
 
   //#region ZONE HEATERS
-  Future<List<HeaterDevice>> getZoneHeaters({required int zoneId}) async {
-    final zoneHeaters = <HeaterDevice>[];
-    final db = await database;
-    if (db == null) return zoneHeaters;
-    try {
-      final heaterIds = await db.query(Keys.tableZoneHeaters,
-          where: Keys.queryZoneId, whereArgs: [zoneId], columns: ['heaterId']);
-      final result = await db.query(
-        Keys.tableHeaters,
-        where: Keys.queryIdIn,
-        whereArgs: [
-          heaterIds.map((e) => e['heaterId']).toList().join(',').toString()
-        ],
-      );
-      if (result.isNotEmpty) {
-        for (final map in result) {
-          zoneHeaters.add(HeaterDevice.fromMap(map));
-        }
-      }
-      return zoneHeaters;
-    } on Exception catch (err) {
-      log(err.toString());
-      return zoneHeaters;
-    }
-  }
+  // Future<List<HeaterDevice>> getZoneHeaters({required int zoneId}) async {
+  //   final zoneHeaters = <HeaterDevice>[];
+  //   final db = await database;
+  //   if (db == null) return zoneHeaters;
+  //   try {
+  //     final heaterIds = await db.query(Keys.tableZoneHeaters,
+  //         where: Keys.queryZoneId, whereArgs: [zoneId], columns: ['heaterId']);
+  //     final result = await db.query(
+  //       Keys.tableHeaters,
+  //       where: Keys.queryIdIn,
+  //       whereArgs: [
+  //         heaterIds.map((e) => e['heaterId']).toList().join(',').toString()
+  //       ],
+  //     );
+  //     if (result.isNotEmpty) {
+  //       for (final map in result) {
+  //         zoneHeaters.add(HeaterDevice.fromMap(map));
+  //       }
+  //     }
+  //     return zoneHeaters;
+  //   } on Exception catch (err) {
+  //     log(err.toString());
+  //     return zoneHeaters;
+  //   }
+  // }
   //#endregion
 }

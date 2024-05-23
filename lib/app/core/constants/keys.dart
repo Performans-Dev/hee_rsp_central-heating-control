@@ -28,7 +28,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 6;
+  static const int databaseVersion = 7;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -90,7 +90,7 @@ class Keys {
       errorChannel INTEGER,
       errorChannelType INTEGER,
       state INTEGER NOT NULL DEFAULT 0,
-      zoneId INTEGER
+      zoneId INTEGER NOT NULL DEFAULT 0
     )
   ''';
   static const String dbDropZones = '''

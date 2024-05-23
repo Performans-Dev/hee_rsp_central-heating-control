@@ -60,6 +60,13 @@ class UiData {
       group: GpioGroup.uart,
     ),
     ComPort(
+      id: 'BUZZER',
+      title: 'Buzzer',
+      pinNumber: GpioPin.gpio0,
+      direction: GpioDirection.pinOut,
+      group: GpioGroup.buzzer,
+    ),
+    ComPort(
       id: 'IN0',
       title: 'In-1',
       pinNumber: GpioPin.gpio5,
@@ -152,6 +159,14 @@ class UiData {
     ),
   ];
 
+  static List<ComPort> getPortsDropdown(GpioGroup? group) {
+    return [
+      ComPort.empty(),
+      ...ports.where((element) =>
+          group != null ? element.group == group : element.id.isNotEmpty)
+    ];
+  }
+
   static List<String> colorList = [
     '',
     '#FF5733', // Orange
@@ -163,4 +178,19 @@ class UiData {
     '#B833FF', // Purple
     '#A1FF33' // Lime
   ];
+
+  static List<int> get outPins => ports
+      .where((e) => e.group == GpioGroup.outPin)
+      .map((e) => e.pinNumber.index)
+      .toList();
+
+  static List<int> get inPins => ports
+      .where((e) => e.group == GpioGroup.inPin)
+      .map((e) => e.pinNumber.index)
+      .toList();
+
+  static List<int> get btnPins => ports
+      .where((e) => e.group == GpioGroup.buttonPin)
+      .map((e) => e.pinNumber.index)
+      .toList();
 }

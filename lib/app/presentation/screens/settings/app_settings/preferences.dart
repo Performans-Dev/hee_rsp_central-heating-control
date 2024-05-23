@@ -121,13 +121,15 @@ class SettingsPreferences extends StatelessWidget {
                   const SizedBox(height: 8),
                   ListTile(
                     leading: const Icon(Icons.bug_report),
-                    title: const Text('Developer Options'),
+                    title: const Text('Diagnostics'),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.developer);
+                    },
                   ),
                   const SizedBox(height: 8),
                 ],
