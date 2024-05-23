@@ -80,7 +80,7 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
         backgroundColor: Colors.white,
         body: Stack(children: [
           Container(
-            color: Colors.white.withOpacity(0.3),
+            color: Colors.grey.withOpacity(0.1),
             /* child: Image.asset(
               'assets/images/kb.png',
               fit: BoxFit.contain,
