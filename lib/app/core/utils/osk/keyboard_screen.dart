@@ -1,10 +1,9 @@
 import 'package:central_heating_control/app/core/utils/osk/osk_key.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class OnScreenKeyboard extends StatefulWidget {
-  OnScreenKeyboard({Key? key}) : super(key: key);
+  const OnScreenKeyboard({super.key});
 
   @override
   State<OnScreenKeyboard> createState() => _OnScreenKeyboardState();
@@ -15,25 +14,37 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
   bool isShiftEnabled = false;
   bool isNumericMode = false;
   bool isSpecialSymbols = false;
+
   final List<List<String>> lowercaseKeys = [
-    ["q", "w", "e", "r", "t", "y", "u", "ı", "o", "p"],
-    ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-    ["⇧", "z", "x", "c", "v", "b", "n", "m", "⌫"],
+    ["q", "w", "e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü"],
+    ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ş", "i"],
+    ["z", "x", "c", "v", "b", "n", "m", "ö", "ç"]
   ];
 
   final List<List<String>> numericKeys = [
-    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-    ["@", "#", "\$", "*", "(", ")", "'", "⌫"],
-    ["#+=", "%", "_", "+", "=", "/", ";", ":", ",", "."],
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "?"],
+    ["@", "#", "\$", "%", "*", "(", ")", "'", "\"", "≠", "‴"],
+    ["%", "_", "+", "=", "/", ";", ":", ",", "."]
   ];
+
   final List<List<String>> numericKeys2 = [
-    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-    ["€", "£", "¥", "_", "[", "]", "{", "}"],
-    ["123", "|", "∼", "∖", "<", ">", "!", "?", "⌫"],
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "?"],
+    ["€", "£", "¥", "_", "[", "]", "{", "}", "ˎ", "≤", "≥"],
+    [".", "|", "∼", "∖", "<", ">", "!", "?"]
   ];
+
   void _toggleNumericMode() {
-    isNumericMode = !isNumericMode;
-    setState(() {});
+    setState(() {
+      isNumericMode = !isNumericMode;
+      isSpecialSymbols = false;
+    });
+  }
+
+  void _toggleSpecialSymbols() {
+    setState(() {
+      isSpecialSymbols = !isSpecialSymbols;
+      isNumericMode = false;
+    });
   }
 
   String _getCharacter(String value) {
@@ -41,16 +52,16 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
   }
 
   void _onKeyPress(String value) {
-    if (value == "⇧") {
+    if (value == "⇑") {
       isShiftEnabled = !isShiftEnabled;
     } else if (value == "⌫") {
       if (text.isNotEmpty) {
         text = text.substring(0, text.length - 1);
       }
     } else if (value == "#+=") {
-      isNumericMode = !isNumericMode;
-      isSpecialSymbols = !isSpecialSymbols;
-    } else if (value == "123") {
+      isNumericMode = false;
+      isSpecialSymbols = true;
+    } else if (value == ".?123") {
       isNumericMode = true;
       isSpecialSymbols = false;
     } else {
@@ -61,13 +72,40 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
 
   Widget _buildKeyboardRow(List<String> keys) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: keys.map((key) {
         return OSKKeyWidget(
-          label: _getCharacter(key),
+          child: Center(
+              child: Text(
+            _getCharacter(key),
+            style: const TextStyle(fontSize: 25, color: Colors.black),
+          )),
           onTap: () => _onKeyPress(key),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildThirdRowWithBackspace(List<String> keys) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: keys.map((key) {
+        return OSKKeyWidget(
+          child: Center(
+              child: Text(
+            _getCharacter(key),
+            style: const TextStyle(fontSize: 25, color: Colors.black),
+          )),
+          onTap: () => _onKeyPress(key),
+        );
+      }).followedBy([
+        OSKKeyWidget(
+          width: 190,
+          isOther: true,
+          child: const Icon(Icons.backspace_outlined),
+          onTap: () => _onKeyPress("⌫"),
+        )
+      ]).toList(),
     );
   }
 
@@ -81,10 +119,6 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
         body: Stack(children: [
           Container(
             color: Colors.grey.withOpacity(0.1),
-            /* child: Image.asset(
-              'assets/images/kb.png',
-              fit: BoxFit.contain,
-            ), */
           ),
           Column(mainAxisSize: MainAxisSize.min, children: [
             Expanded(
@@ -105,38 +139,59 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
                 color: Colors.grey.withOpacity(0.3),
                 child: Column(
                   children: [
-                    for (final row in keys) _buildKeyboardRow(row),
+                    for (final row in keys.take(2)) _buildKeyboardRow(row),
+                    _buildThirdRowWithBackspace(keys[2]),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         OSKKeyWidget(
-                          label: isNumericMode && !isSpecialSymbols
-                              ? "abc"
-                              : "123",
+                          width: 100,
+                          onTap: () {
+                            if (isSpecialSymbols) {
+                              _toggleSpecialSymbols();
+                            } else if (isNumericMode) {
+                              _toggleNumericMode();
+                            } else {
+                              _onKeyPress("⇑");
+                            }
+                          },
+                          isOther: true,
+                          child: isNumericMode
+                              ? const Center(child: Text("#+="))
+                              : isSpecialSymbols
+                                  ? const Text(".?123")
+                                  : const Icon(Icons.arrow_upward_sharp),
+                        ),
+                        OSKKeyWidget(
+                          width: 100,
                           onTap: () => _toggleNumericMode(),
                           isOther: true,
-                        ),
-                        SizedBox(
-                          width: 380,
-                          child: OSKKeyWidget(
-                            label: "︺",
-                            onTap: () => _onKeyPress(" "),
+                          child: Center(
+                            child: Text(
+                              isNumericMode
+                                  ? "abc"
+                                  : !isSpecialSymbols
+                                      ? ".?123"
+                                      : "#+=",
+                            ),
                           ),
                         ),
                         OSKKeyWidget(
-                          label: isNumericMode ? "abc" : "123",
-                          onTap: () => _toggleNumericMode(),
-                          isOther: true,
+                          width: 380,
+                          child: const Icon(Icons.space_bar),
+                          onTap: () => _onKeyPress(" "),
                         ),
                         OSKKeyWidget(
-                          label: "↩",
+                          width: 110,
                           onTap: () => Get.back(result: text),
                           isOther: true,
+                          child: const Icon(Icons.subdirectory_arrow_left),
                         ),
                         OSKKeyWidget(
-                          label: "﹀",
+                          width: 70,
                           onTap: () => Get.back(result: text),
                           isOther: true,
+                          child: const Icon(Icons.arrow_drop_down_outlined),
                         ),
                       ],
                     ),

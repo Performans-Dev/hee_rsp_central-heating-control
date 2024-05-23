@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 class OSKKeyWidget extends StatelessWidget {
-  final String label;
+  final Widget child;
   final GestureTapCallback? onTap;
   final bool isOther;
+  final double width;
 
   const OSKKeyWidget(
-      {super.key, required this.label, this.onTap, this.isOther = false});
+      {super.key,
+      required this.child,
+      this.onTap,
+      this.isOther = false,
+      this.width = 60});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 3.2, vertical: 5),
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: onTap,
@@ -23,14 +28,9 @@ class OSKKeyWidget extends StatelessWidget {
                 ? Colors.grey.withOpacity(0.7)
                 : Colors.white24.withOpacity(0.3),
           ),
-          width: 70,
-          height: 62,
-          child: Center(
-              child: Text(
-            label,
-            style: const TextStyle(
-                fontSize: 25, fontWeight: FontWeight.w500, color: Colors.black),
-          )),
+          width: width,
+          height: 60,
+          child: child,
         ),
       ),
     );
