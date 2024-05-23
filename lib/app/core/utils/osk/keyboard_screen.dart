@@ -14,20 +14,23 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
   String text = "";
   bool isShiftEnabled = false;
   bool isNumericMode = false;
-
+  bool isSpecialSymbols = false;
   final List<List<String>> lowercaseKeys = [
-    ["q", "w", "e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü"],
-    ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ş", "i"],
-    ["z", "x", "c", "v", "b", "n", "m", "ö", "ç", "<"],
+    ["q", "w", "e", "r", "t", "y", "u", "ı", "o", "p"],
+    ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+    ["⇧", "z", "x", "c", "v", "b", "n", "m", "⌫"],
   ];
 
   final List<List<String>> numericKeys = [
-    ["#", "\$", "_", "-", "1", "2", "3", "?"],
-    ["@", "(", ")", "=", "+", "4", "5", "6", "!"],
-    ["{&=", "'", ":", "%", "/", "7", "8", "9", "<"],
-    ["*", ",", "0", "."],
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+    ["@", "#", "\$", "*", "(", ")", "'", "⌫"],
+    ["#+=", "%", "_", "+", "=", "/", ";", ":", ",", "."],
   ];
-
+  final List<List<String>> numericKeys2 = [
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+    ["€", "£", "¥", "_", "[", "]", "{", "}"],
+    ["123", "|", "∼", "∖", "<", ">", "!", "?", "⌫"],
+  ];
   void _toggleNumericMode() {
     isNumericMode = !isNumericMode;
     setState(() {});
@@ -38,12 +41,18 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
   }
 
   void _onKeyPress(String value) {
-    if (value == "Shift") {
+    if (value == "⇧") {
       isShiftEnabled = !isShiftEnabled;
-    } else if (value == "<") {
+    } else if (value == "⌫") {
       if (text.isNotEmpty) {
         text = text.substring(0, text.length - 1);
       }
+    } else if (value == "#+=") {
+      isNumericMode = !isNumericMode;
+      isSpecialSymbols = !isSpecialSymbols;
+    } else if (value == "123") {
+      isNumericMode = true;
+      isSpecialSymbols = false;
     } else {
       text += _getCharacter(value);
     }
@@ -64,16 +73,18 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
 
   @override
   Widget build(BuildContext context) {
-    final List<List<String>> keys = isNumericMode ? numericKeys : lowercaseKeys;
+    final List<List<String>> keys = isSpecialSymbols
+        ? numericKeys2
+        : (isNumericMode ? numericKeys : lowercaseKeys);
     return Scaffold(
         backgroundColor: Colors.white,
         body: Stack(children: [
           Container(
             color: Colors.white.withOpacity(0.3),
-            child: Image.asset(
+            /* child: Image.asset(
               'assets/images/kb.png',
               fit: BoxFit.contain,
-            ),
+            ), */
           ),
           Column(mainAxisSize: MainAxisSize.min, children: [
             Expanded(
@@ -95,24 +106,20 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
                 child: Column(
                   children: [
                     for (final row in keys) _buildKeyboardRow(row),
-                    const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OSKKeyWidget(
-                          label: isNumericMode ? "abc" : "123",
+                          label: isNumericMode && !isSpecialSymbols
+                              ? "abc"
+                              : "123",
                           onTap: () => _toggleNumericMode(),
                           isOther: true,
                         ),
-                        OSKKeyWidget(
-                          label: "Shift",
-                          onTap: () => _onKeyPress("Shift"),
-                          isOther: true,
-                        ),
                         SizedBox(
-                          width: 400,
+                          width: 380,
                           child: OSKKeyWidget(
-                            label: "Space",
+                            label: "︺",
                             onTap: () => _onKeyPress(" "),
                           ),
                         ),
@@ -122,12 +129,12 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
                           isOther: true,
                         ),
                         OSKKeyWidget(
-                          label: "Enter",
+                          label: "↩",
                           onTap: () => Get.back(result: text),
                           isOther: true,
                         ),
                         OSKKeyWidget(
-                          label: "Back",
+                          label: "﹀",
                           onTap: () => Get.back(result: text),
                           isOther: true,
                         ),

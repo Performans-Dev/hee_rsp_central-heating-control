@@ -12,23 +12,25 @@ class OSKKeyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: onTap,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: isOther
                 ? Colors.grey.withOpacity(0.7)
                 : Colors.white24.withOpacity(0.3),
           ),
-          width: 62,
-          height: 57,
-          padding: const EdgeInsets.all(8),
-          child: Center(child: Text(label)),
+          width: 70,
+          height: 62,
+          child: Center(
+              child: Text(
+            label,
+            style: const TextStyle(
+                fontSize: 25, fontWeight: FontWeight.w500, color: Colors.black),
+          )),
         ),
       ),
     );
