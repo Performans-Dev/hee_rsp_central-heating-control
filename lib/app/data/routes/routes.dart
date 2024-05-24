@@ -44,4 +44,6 @@ class Routes {
   static const String settingsSensorEdit = '/settings-edit-sensor';
 
   static const String onScreenKeyboard = '/oskb';
+
+  static const String daySummaryScreen = '/day-summary-screen';
 }

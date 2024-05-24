@@ -29,6 +29,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/device
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/day_summary.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_timezone_screen.dart';
@@ -230,4 +231,6 @@ final List<GetPage> getPages = [
     name: Routes.onScreenKeyboard,
     page: () => OnScreenKeyboard(),
   ),
+
+  GetPage(name: Routes.daySummaryScreen, page: () => DaySummaryScreen()),
 ];

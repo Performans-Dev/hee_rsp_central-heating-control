@@ -95,3 +95,4 @@ enum BuzzerType {
   error,
   alarm,
 }
+

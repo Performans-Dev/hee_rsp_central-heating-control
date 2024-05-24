@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/data/models/com_port.dart';
+import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:get/get.dart';
 
 class HeaterDevice {
@@ -13,13 +13,13 @@ class HeaterDevice {
   HeaterDeviceType type;
   HeaterDeviceConnectionType connectionType;
   String? ipAddress;
-  ComPort? level1Relay;
+  Channel? level1Relay;
   double? level1ConsumptionAmount;
   String? level1ConsumptionUnit;
-  ComPort? level2Relay;
+  Channel? level2Relay;
   double? level2ConsumptionAmount;
   String? level2ConsumptionUnit;
-  ComPort? errorChannel;
+  Channel? errorChannel;
   ErrorChannelType? errorChannelType;
   int state;
   int? zoneId;
@@ -103,19 +103,19 @@ class HeaterDevice {
           .values[map['connectionType']?.toInt() ?? 0],
       ipAddress: map['ipAddress'],
       level1Relay: map['level1Relay'] != null
-          ? UiData.ports
+          ? UiData.channels
               .firstWhereOrNull((element) => element.id == map['level1Relay'])
           : null,
       level1ConsumptionAmount: map['level1ConsumptionAmount']?.toDouble(),
       level1ConsumptionUnit: map['level1ConsumptionUnit'],
       level2Relay: map['level2Relay'] != null
-          ? UiData.ports
+          ? UiData.channels
               .firstWhereOrNull((element) => element.id == map['level2Relay'])
           : null,
       level2ConsumptionAmount: map['level2ConsumptionAmount']?.toDouble(),
       level2ConsumptionUnit: map['level2ConsumptionUnit'],
       errorChannel: map['errorChannel'] != null
-          ? UiData.ports
+          ? UiData.channels
               .firstWhereOrNull((element) => element.id == map['errorChannel'])
           : null,
       errorChannelType: map['errorChannelType'] != null

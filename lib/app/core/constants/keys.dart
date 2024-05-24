@@ -38,6 +38,7 @@ class Keys {
   static const String tableZoneUsers = 'zoneUsers';
   static const String tableZoneHeaters = 'zoneHeaters';
   static const String tableZoneSensors = 'zoneSensors';
+  static const String tableHardwareParameters = 'hardwareParameters';
 
   static const String queryId = 'id=?';
   static const String queryUsername = 'username=?';
@@ -132,6 +133,23 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       zoneId INTEGER NOT NULL,
       heaterId INTEGER NOT NULL
+    )
+  ''';
+
+  static const String dbDropHardwareParameters = '''
+    DROP TABLE IF EXISTS hardwareParameters
+  ''';
+
+  static const String dbCreateHardwareParameters = '''
+    CREATE TABLE IF NOT EXISTS hardwareParameters (
+      id INTEGER NOT NULL DEFAULT 0,
+      name TEXT,
+      inputCount INTEGER NOT NULL DEFAULT 0,
+      outputCount INTEGER NOT NULL DEFAULT 0,
+      analogCount INTEGER NOT NULL DEFAULT 0,
+      version TEXT,
+      type TEXT,
+      isExtension INTEGER NOT NULL DEFAULT 1
     )
   ''';
 

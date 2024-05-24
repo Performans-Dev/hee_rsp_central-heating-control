@@ -4,7 +4,7 @@ import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/comport.dart';
+import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/connection_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/error_channel_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/type.dart';
@@ -122,7 +122,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 5,
                           child: FormItemComponent(
                             label: 'Level 1 Relay',
-                            child: ComPortDropdownWidget(
+                            child: ChannelDropdownWidget(
                               onChanged: (value) {
                                 setState(() {
                                   heater.level1Relay =
@@ -158,7 +158,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 5,
                           child: FormItemComponent(
                             label: 'Level 2 Relay',
-                            child: ComPortDropdownWidget(
+                            child: ChannelDropdownWidget(
                               onChanged: (value) {
                                 setState(() {
                                   heater.level2Relay =
@@ -194,7 +194,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 5,
                           child: FormItemComponent(
                               label: 'Error Channel',
-                              child: ComPortDropdownWidget(
+                              child: ChannelDropdownWidget(
                                 onChanged: (value) {
                                   setState(() {
                                     heater.errorChannel =

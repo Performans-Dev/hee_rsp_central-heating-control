@@ -64,6 +64,8 @@ class DbProvider {
     await db.execute(Keys.dbCreateZoneSensors);
     await db.execute(Keys.dbDropZoneHeaters);
     await db.execute(Keys.dbCreateZoneHeaters);
+    await db.execute(Keys.dbDropHardwareParameters);
+    await db.execute(Keys.dbCreateHardwareParameters);
   }
   //#endregion
 
@@ -658,4 +660,6 @@ class DbProvider {
   //   }
   // }
   //#endregion
+
+  //MARK: HARDWARE
 }
