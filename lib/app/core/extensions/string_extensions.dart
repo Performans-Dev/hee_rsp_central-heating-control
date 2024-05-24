@@ -12,4 +12,18 @@ extension InitialsExtension on String {
     }
     return initials;
   }
+
+  String toNameFormat() {
+    bool isPreviousSpace = false;
+    final sb = StringBuffer();
+    for (final char in this.runes) {
+      if (isPreviousSpace) {
+        sb.write(String.fromCharCode(char).toUpperCase());
+      } else {
+        sb.write(String.fromCharCode(char));
+      }
+      isPreviousSpace = char == ' '.codeUnits;
+    }
+    return sb.toString();
+  }
 }
