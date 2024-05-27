@@ -24,12 +24,24 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
   late OnScreenKeyboardInputType inputType;
   late OskKeyController oskKeyController;
   String text = "";
+  late String initialValue;
+  late String label;
+  late bool numberOnly;
   @override
   void initState() {
     super.initState();
-    inputType = OnScreenKeyboardInputType
-        .values[int.parse(Get.parameters["inputType"] ?? "0")];
-    oskKeyController = Get.put(OskKeyController(inputType: inputType));
+    String inputTypeString = Get.parameters["inputType"] ?? "";
+    inputType = OnScreenKeyboardInputType.values.firstWhere(
+        (e) => e.toString() == 'OnScreenKeyboardInputType.$inputTypeString',
+        orElse: () => OnScreenKeyboardInputType.text);
+    label = Get.parameters["label"] ?? "";
+    numberOnly = Get.parameters["numberOnly"] == "true";
+    initialValue = Get.parameters["initialValue"] ?? "";
+    oskKeyController = Get.put(OskKeyController(
+        inputType: inputType,
+        label: label,
+        initialValue: initialValue,
+        numberOnly: numberOnly));
   }
 
   @override
@@ -48,6 +60,18 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Container(
+                    width: double.infinity,
+                    color: Colors.white.withOpacity(0.8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                        label,
+                        style: const TextStyle(
+                            fontSize: 22, color: Colors.black54),
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: Container(
                       width: double.infinity,
@@ -57,7 +81,7 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
                         child: Text(
                           oskKeyController.currentText,
                           style: const TextStyle(
-                              fontSize: 28, color: Colors.black),
+                              fontSize: 32, color: Colors.black),
                         ),
                       ),
                     ),

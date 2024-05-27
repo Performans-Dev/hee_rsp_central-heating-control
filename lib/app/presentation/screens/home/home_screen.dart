@@ -1,11 +1,20 @@
+import 'package:central_heating_control/app/core/utils/osk/enum.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String userName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -22,33 +31,33 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Zones'),
-                          for (final item in dc.zoneList)
-                            Text('${item.name} ${item.id}'),
-                          Divider(),
-                          Text('Heaters'),
-                          for (final item in dc.heaterList)
-                            Text('${item.name} ${item.id}'),
-                          Divider(),
-                          Text('Sensors'),
-                          for (final item in dc.sensorList)
-                            Text('${item.name} ${item.id}'),
-                          Divider(),
-                          Text('Ports'),
-                          for (final item in dc.comportList)
-                            Text('${item.id} ${item.title}'),
-                          Divider(),
+                          const Text("Username"),
+                          InkWell(
+                            onTap: () async {
+                              final result = await Get.toNamed(
+                                  Routes.onScreenKeyboard,
+                                  parameters: {
+                                    "initialValue": userName,
+                                    "label": "Username",
+                                    "inputType":
+                                        OnScreenKeyboardInputType.name.name,
+                                  });
+                              if (result != null) {
+                                setState(() {
+                                  userName = result;
+                                });
+                              }
+                            },
+                            child: Container(
+                              color: Colors.blueAccent,
+                              width: double.infinity,
+                              child: Text(userName.isEmpty
+                                  ? "Enter Username"
+                                  : userName),
+                            ),
+                          )
                         ],
                       ),
-                      // Wrap(
-                      //   spacing: 12,
-                      //   runSpacing: 12,
-                      //   crossAxisAlignment: WrapCrossAlignment.center,
-                      //   alignment: WrapAlignment.center,
-                      //   children: [
-                      //     for (int i = 0; i < 17; i++) zonePlaceholder(i),
-                      //   ],
-                      // ),
                     ),
                   ),
                 ),
