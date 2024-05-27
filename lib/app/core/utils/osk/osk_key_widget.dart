@@ -37,13 +37,11 @@ class OskKeyWidget extends StatelessWidget {
         width = 90;
         height = 57;
         color = Colors.blueGrey.withOpacity(0.4);
-
       case KeyType.shift:
       case KeyType.alt:
         width = 90;
         height = 57;
         color = Colors.blueGrey.withOpacity(0.4);
-
         break;
       case KeyType.backspace:
         width = 185;
