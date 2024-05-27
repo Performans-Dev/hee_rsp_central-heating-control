@@ -46,7 +46,6 @@ class OskKeyController extends GetxController {
         break;
       case KeyType.hideKeyboard:
         Get.back(result: currentText);
-
         break;
       case KeyType.backspace:
         if (currentText.isNotEmpty) {
