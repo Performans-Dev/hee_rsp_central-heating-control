@@ -50,22 +50,37 @@ class DbProvider {
   }
 
   Future<void> createDatabaseStructure(Database db) async {
-    await db.execute(Keys.dbDropUsers);
-    await db.execute(Keys.dbCreateUsers);
-    await db.execute(Keys.dbDropSensors);
-    await db.execute(Keys.dbCreateSensors);
-    await db.execute(Keys.dbDropHeaters);
-    await db.execute(Keys.dbCreateHeaters);
-    await db.execute(Keys.dbDropZones);
-    await db.execute(Keys.dbCreateZones);
-    await db.execute(Keys.dbDropZoneUsers);
-    await db.execute(Keys.dbCreateZoneUsers);
-    await db.execute(Keys.dbDropZoneSensors);
-    await db.execute(Keys.dbCreateZoneSensors);
-    await db.execute(Keys.dbDropZoneHeaters);
-    await db.execute(Keys.dbCreateZoneHeaters);
-    await db.execute(Keys.dbDropHardwareParameters);
-    await db.execute(Keys.dbCreateHardwareParameters);
+    // await db.execute(Keys.dbDropUsers);
+    // await db.execute(Keys.dbCreateUsers);
+    // await db.execute(Keys.dbDropSensors);
+    // await db.execute(Keys.dbCreateSensors);
+    // await db.execute(Keys.dbDropHeaters);
+    // await db.execute(Keys.dbCreateHeaters);
+    // await db.execute(Keys.dbDropZones);
+    // await db.execute(Keys.dbCreateZones);
+    // await db.execute(Keys.dbDropZoneUsers);
+    // await db.execute(Keys.dbCreateZoneUsers);
+    // await db.execute(Keys.dbDropZoneSensors);
+    // await db.execute(Keys.dbCreateZoneSensors);
+    // await db.execute(Keys.dbDropZoneHeaters);
+    // await db.execute(Keys.dbCreateZoneHeaters);
+    // await db.execute(Keys.dbDropHardwareParameters);
+    // await db.execute(Keys.dbCreateHardwareParameters);
+    //
+    await db.execute(Keys.dbDropPlans);
+    await db.execute(Keys.dbCreatePlans);
+
+    await db.execute(Keys.dbDropPlanDetails);
+    await db.execute(Keys.dbCreatePlanDetails);
+    //add default plan
+    await db.execute(Keys.dbInsertDefaultPlan);
+    for (int h = 8; h <= 17; h++) {
+      for (int d = 0; d <= 5; d++) {
+        await db.execute(Keys.dbInsertDefaultPlanDetails
+            .replaceAll('{H}', h.toString())
+            .replaceAll('{D}', d.toString()));
+      }
+    }
   }
   //#endregion
 

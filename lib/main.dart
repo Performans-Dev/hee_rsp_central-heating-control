@@ -50,5 +50,5 @@ Future<void> main() async {
   await AppBindings().dependencies();
 
   // run app
-  runApp(const MainApp());
+  runApp(MainApp());
 }

@@ -117,4 +117,12 @@ class Box {
     return result;
   }
   //#endregion
+
+  //#region SCREEN SAVER
+  static Future<void> handleTouch() async => await setInt(
+      key: Keys.lastTouchTime, value: DateTime.now().millisecondsSinceEpoch);
+
+  static DateTime get lastTouchTime =>
+      DateTime.fromMicrosecondsSinceEpoch(getInt(key: Keys.lastTouchTime));
+  //#endregion
 }
