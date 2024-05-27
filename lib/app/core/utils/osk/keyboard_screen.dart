@@ -1,9 +1,8 @@
-import 'package:central_heating_control/app/core/utils/osk/app.dart';
+import 'package:central_heating_control/app/core/utils/osk/osk_key_controller.dart';
 import 'package:central_heating_control/app/core/utils/osk/data.dart';
 import 'package:central_heating_control/app/core/utils/osk/enum.dart';
-import 'package:central_heating_control/app/core/utils/osk/model.dart';
-import 'package:central_heating_control/app/core/utils/osk/osk_key.dart';
-import 'package:central_heating_control/app/core/utils/osk/osk_key_v2.dart';
+
+import 'package:central_heating_control/app/core/utils/osk/osk_key_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,57 +34,64 @@ class _OnScreenKeyboardState extends State<OnScreenKeyboard> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<OskKeyController>(builder: (oskKeyController) {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            Container(color: Colors.grey.withOpacity(0.1)),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: Container(
-                    color: Colors.white.withOpacity(0.8),
-                    child: Center(
+    return GetBuilder<OskKeyController>(
+      builder: (oskKeyController) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Stack(
+            children: [
+              Container(
+                color: Colors.blueGrey.withOpacity(0.2),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(0.8),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(12),
                         child: Text(
                           oskKeyController.currentText,
                           style: const TextStyle(
-                              fontSize: 24, color: Colors.black),
+                              fontSize: 28, color: Colors.black),
                         ),
                       ),
                     ),
                   ),
-                ),
-                for (int row = 0; row < 4; row++)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (int column = 0; column < 11; column++)
-                        ...oskKeyController
-                            .getKeys(
-                          row: row,
-                          column: column,
-                          layouttype: oskKeyController.layoutType,
-                        )
-                            .map((key) {
-                          return OskKeyWidgetV2(
-                            model: key,
-                            onTap: () {
-                              oskKeyController.receiveOnTap(
-                                  key.keyType, key.value ?? "");
+                  for (int row = 0; row < 4; row++)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        for (int column = 0; column <= 11; column++)
+                          ...oskKeyController
+                              .getKeys(
+                            row: row,
+                            column: column,
+                            layouttype: oskKeyController.layoutType,
+                          )
+                              .map(
+                            (key) {
+                              return OskKeyWidget(
+                                model: key,
+                                onTap: () {
+                                  oskKeyController.receiveOnTap(
+                                      key.keyType, key.value ?? "");
+                                },
+                              );
                             },
-                          );
-                        }),
-                    ],
-                  ),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+                          ),
+                      ],
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

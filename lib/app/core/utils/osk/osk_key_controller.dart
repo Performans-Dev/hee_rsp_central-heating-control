@@ -38,8 +38,15 @@ class OskKeyController extends GetxController {
       case KeyType.character:
         _currentText.value += value;
         break;
+      case KeyType.space:
+        _currentText.value += " ";
+        break;
       case KeyType.enter:
         Get.back(result: currentText);
+        break;
+      case KeyType.hideKeyboard:
+        Get.back(result: currentText);
+
         break;
       case KeyType.backspace:
         if (currentText.isNotEmpty) {
@@ -82,6 +89,7 @@ class OskKeyController extends GetxController {
       default:
         break;
     }
+
     update();
   }
 }

@@ -13,6 +13,7 @@ enum KeyType {
   hideKeyboard,
   shift,
   alt,
+  space,
 }
 
 enum OskType {
