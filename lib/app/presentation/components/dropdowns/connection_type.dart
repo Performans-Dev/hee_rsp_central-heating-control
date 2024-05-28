@@ -23,7 +23,7 @@ class ConnectionTypeDropdownWidget extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           child: DropdownButton<HeaterDeviceConnectionType>(
             underline: Container(), isExpanded: true,
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             items: HeaterDeviceConnectionType.values
                 .map((e) => DropdownMenuItem<HeaterDeviceConnectionType>(
                       value: e,

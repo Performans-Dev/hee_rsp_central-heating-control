@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,8 +18,7 @@ class DeveloperScreen extends StatelessWidget {
       return AppScaffold(
         title: 'Diagnostics',
         selectedIndex: 3,
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        body: PiScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class DeveloperScreen extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: UiDimens.formRadius,
                             child: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -113,7 +113,7 @@ class DeveloperScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(),
+              const Divider(),
               FormItemComponent(
                 label: 'Buzzer',
                 child: Row(
@@ -121,7 +121,7 @@ class DeveloperScreen extends StatelessWidget {
                   children: [
                     for (final item in BuzzerType.values)
                       Card(
-                        margin: EdgeInsets.symmetric(horizontal: 6),
+                        margin: const EdgeInsets.symmetric(horizontal: 6),
                         shape: RoundedRectangleBorder(
                           borderRadius: UiDimens.formRadius,
                         ),
@@ -131,9 +131,9 @@ class DeveloperScreen extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: UiDimens.formRadius,
                             child: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Text(
-                                  '${item.name.camelCaseToHumanReadable()}'),
+                                  item.name.camelCaseToHumanReadable()),
                             ),
                           ),
                         ),

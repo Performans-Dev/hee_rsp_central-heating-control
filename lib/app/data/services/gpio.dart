@@ -123,38 +123,38 @@ class GpioController extends GetxController {
     switch (t) {
       case BuzzerType.feedback:
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 20));
+        await Future.delayed(const Duration(milliseconds: 20));
         buzzerPin?.write(false);
         break;
       case BuzzerType.success:
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         buzzerPin?.write(false);
-        await Future.delayed(Duration(milliseconds: 50));
+        await Future.delayed(const Duration(milliseconds: 50));
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         buzzerPin?.write(false);
         break;
       case BuzzerType.error:
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
         buzzerPin?.write(false);
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
         buzzerPin?.write(false);
         break;
       case BuzzerType.alarm:
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         buzzerPin?.write(false);
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         buzzerPin?.write(false);
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         buzzerPin?.write(true);
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         buzzerPin?.write(false);
         break;
       default:

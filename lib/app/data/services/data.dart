@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
@@ -31,6 +32,8 @@ class DataController extends GetxController {
     await getZoneListFromDb();
     await getHeaterListFromDb();
     await getSensorListFromDb();
+    await getPlanListFromDb();
+    await getPlanDetailsFromDb();
   }
   //#endregion
 
@@ -120,17 +123,23 @@ class DataController extends GetxController {
   }
   //#endregion
 
-  //available port list
-  // UiData.ports al
-  // db deki kullanilanlari bul, listeden cikar
+  //#region PLANS
+  final RxList<PlanDefinition> _planList = <PlanDefinition>[].obs;
+  List<PlanDefinition> get planList => _planList;
 
-  //seensor list
-  //populate()
-  //updateSensor()
-  //deleteSensor()
-  //addSensor()
+  Future<void> getPlanListFromDb() async {
+    final data = await DbProvider.db.getPlanList();
+    _planList.assignAll(data);
+    update();
+  }
 
-  //devices list
+  final RxList<PlanDetail> _planDetails = <PlanDetail>[].obs;
+  List<PlanDetail> get planDetails => _planDetails;
 
-  //zone list
+  Future<void> getPlanDetailsFromDb() async {
+    final data = await DbProvider.db.getPlanDetail();
+    _planDetails.assignAll(data);
+    update();
+  }
+  //#endregion
 }

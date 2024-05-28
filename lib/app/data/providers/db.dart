@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:path/path.dart' as p;
@@ -50,22 +51,29 @@ class DbProvider {
   }
 
   Future<void> createDatabaseStructure(Database db) async {
-    // await db.execute(Keys.dbDropUsers);
-    // await db.execute(Keys.dbCreateUsers);
-    // await db.execute(Keys.dbDropSensors);
-    // await db.execute(Keys.dbCreateSensors);
-    // await db.execute(Keys.dbDropHeaters);
-    // await db.execute(Keys.dbCreateHeaters);
-    // await db.execute(Keys.dbDropZones);
-    // await db.execute(Keys.dbCreateZones);
-    // await db.execute(Keys.dbDropZoneUsers);
-    // await db.execute(Keys.dbCreateZoneUsers);
+    await db.execute(Keys.dbDropUsers);
+    await db.execute(Keys.dbCreateUsers);
+
+    await db.execute(Keys.dbDropSensors);
+    await db.execute(Keys.dbCreateSensors);
+
+    await db.execute(Keys.dbDropHeaters);
+    await db.execute(Keys.dbCreateHeaters);
+
+    await db.execute(Keys.dbDropZones);
+    await db.execute(Keys.dbCreateZones);
+
+    await db.execute(Keys.dbDropZoneUsers);
+    await db.execute(Keys.dbCreateZoneUsers);
+
     // await db.execute(Keys.dbDropZoneSensors);
     // await db.execute(Keys.dbCreateZoneSensors);
+
     // await db.execute(Keys.dbDropZoneHeaters);
     // await db.execute(Keys.dbCreateZoneHeaters);
-    // await db.execute(Keys.dbDropHardwareParameters);
-    // await db.execute(Keys.dbCreateHardwareParameters);
+    //
+    await db.execute(Keys.dbDropHardwareParameters);
+    await db.execute(Keys.dbCreateHardwareParameters);
     //
     await db.execute(Keys.dbDropPlans);
     await db.execute(Keys.dbCreatePlans);
@@ -677,4 +685,48 @@ class DbProvider {
   //#endregion
 
   //MARK: HARDWARE
+
+  //MARK: PLANS
+
+  //#region PLAN LIST
+  Future<List<PlanDefinition>> getPlanList() async {
+    final plans = <PlanDefinition>[];
+    final db = await database;
+    if (db == null) return plans;
+    try {
+      final data = await db.query(Keys.tablePlans);
+      for (final map in data) {
+        plans.add(PlanDefinition.fromMap(map));
+      }
+      return plans;
+    } on Exception catch (err) {
+      log(err.toString());
+      return plans;
+    }
+  }
+  //#endregion
+
+  //#region PLAN DETAILS
+  Future<List<PlanDetail>> getPlanDetail({int? planId}) async {
+    final planDetails = <PlanDetail>[];
+    final db = await database;
+    if (db == null) return planDetails;
+    try {
+      final data = planId != null
+          ? await db.query(
+              Keys.tablePlanDetails,
+              where: Keys.queryPlanId,
+              whereArgs: [planId],
+            )
+          : await db.query(Keys.tablePlanDetails);
+      for (final map in data) {
+        planDetails.add(PlanDetail.fromMap(map));
+      }
+      return planDetails;
+    } on Exception catch (err) {
+      log(err.toString());
+      return planDetails;
+    }
+  }
+  //#endregion
 }

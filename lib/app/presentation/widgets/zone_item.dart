@@ -10,7 +10,7 @@ class ZoneItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
       child: ClipRRect(
         borderRadius: UiDimens.formRadius,
@@ -18,7 +18,7 @@ class ZoneItem extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           onTap: () {},
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: CommonUtils.hexToColor(context, zone.color)
                     .withOpacity(0.3)),
@@ -45,7 +45,7 @@ class ZoneItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.warning),
+                    const Icon(Icons.warning),
                     Switch(
                       value: false,
                       onChanged: (v) {},

@@ -9,9 +9,9 @@ import 'package:central_heating_control/app/presentation/components/dropdowns/er
 import 'package:central_heating_control/app/presentation/components/dropdowns/type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/zone.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SettingsHeaterAddScreen extends StatefulWidget {
@@ -59,8 +59,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
       builder: (dc) => AppScaffold(
         title: 'Heaters',
         selectedIndex: 3,
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+        body: PiScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +161,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 3,
                           child: FormItemComponent(
@@ -175,7 +174,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 1,
                           child: FormItemComponent(
@@ -208,7 +207,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 3,
                           child: FormItemComponent(
@@ -221,7 +220,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 1,
                           child: FormItemComponent(

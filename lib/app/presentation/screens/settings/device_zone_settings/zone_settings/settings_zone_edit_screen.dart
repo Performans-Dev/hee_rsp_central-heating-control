@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,23 +36,22 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
         return AppScaffold(
           title: 'Edit Zone',
           selectedIndex: 3,
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+          body: PiScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: InputDecoration(labelText: 'Zone Name'),
+                  decoration: const InputDecoration(labelText: 'Zone Name'),
                 ),
-                SizedBox(height: 20),
-                Text('LABEL: Select Zone color'),
+                const SizedBox(height: 20),
+                const Text('LABEL: Select Zone color'),
                 ColorPickerWidget(
                   onSelected: (v) => setState(() => zone.color = v),
                   selectedValue: zone.color,
                 ),
-                SizedBox(height: 20),
-                Text('LABEL: Select USers'),
+                const SizedBox(height: 20),
+                const Text('LABEL: Select USers'),
                 for (final user in app.userList)
                   SwitchListTile(
                     title: Text(user.username),
@@ -63,7 +65,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
                             : zone.users.remove(user)),
                   ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 8),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
                   padding: const EdgeInsets.all(12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -108,9 +110,9 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
 
   Widget get deleteButton => TextButton(
       onPressed: () {
-        print('//TODO: confirm -> delete relations, delete record');
+        log('//TODO: confirm -> delete relations, delete record');
       },
-      child: Text(
+      child: const Text(
         'Delete this zone and all of its contents',
         style: TextStyle(color: Colors.red),
       ));

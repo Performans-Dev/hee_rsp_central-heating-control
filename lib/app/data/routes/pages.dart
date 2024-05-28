@@ -30,6 +30,8 @@ import 'package:central_heating_control/app/presentation/screens/settings/device
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/day_summary.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/plan_detail.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/plan_list.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_timezone_screen.dart';
@@ -156,14 +158,14 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.settingsSensorsList,
-    page: () => SettingsSensorListScreen(),
+    page: () => const SettingsSensorListScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsSensorAdd,
-    page: () => SettingsSensorAddScreen(),
+    page: () => const SettingsSensorAddScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
@@ -177,42 +179,56 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.settingsZoneList,
-    page: () => SettingsZoneListScreen(),
+    page: () => const SettingsZoneListScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsZoneAdd,
-    page: () => SettingsZoneAddScreen(),
+    page: () => const SettingsZoneAddScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsZoneEdit,
-    page: () => SettingsZoneEditScreen(),
+    page: () => const SettingsZoneEditScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsHeaterList,
-    page: () => SettingsHeaterListScreen(),
+    page: () => const SettingsHeaterListScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsHeaterAdd,
-    page: () => SettingsHeaterAddScreen(),
+    page: () => const SettingsHeaterAddScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
   ),
   GetPage(
     name: Routes.settingsHeaterEdit,
-    page: () => SettingsHeaterEditScreen(),
+    page: () => const SettingsHeaterEditScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPlanList,
+    page: () => const SettingsPlanListScreen(),
+    middlewares: [
+      AdminMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPlanDetail,
+    page: () => const SettingsPlanDetailScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
@@ -229,8 +245,8 @@ final List<GetPage> getPages = [
 
   GetPage(
     name: Routes.onScreenKeyboard,
-    page: () => OnScreenKeyboard(),
+    page: () => const OnScreenKeyboard(),
   ),
 
-  GetPage(name: Routes.daySummaryScreen, page: () => DaySummaryScreen()),
+  GetPage(name: Routes.daySummaryScreen, page: () => const DaySummaryScreen()),
 ];

@@ -17,7 +17,7 @@ class ErrorChannelTypeDropdownWidget extends StatelessWidget {
       borderRadius: UiDimens.formRadius,
       child: DropdownButton<ErrorChannelType>(
         underline: Container(), isExpanded: true,
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         items: ErrorChannelType.values
             .map((e) => DropdownMenuItem<ErrorChannelType>(
                   value: e,

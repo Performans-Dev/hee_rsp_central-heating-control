@@ -22,7 +22,7 @@ class TypeDropdownWidget extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           child: DropdownButton<HeaterDeviceType>(
             underline: Container(), isExpanded: true,
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             items: HeaterDeviceType.values
                 .map((e) => DropdownMenuItem<HeaterDeviceType>(
                       value: e,

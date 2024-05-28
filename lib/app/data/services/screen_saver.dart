@@ -1,29 +1,46 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:get/get.dart';
 
 class ScreenSaverController extends GetxController {
-  final lastTouchTime = DateTime.now().obs; // Use Rx to trigger rebuilds
+  final RxBool _isSavingScreen = false.obs;
+  bool get isSavingScreen => _isSavingScreen.value;
 
-  void handleTouch() {
-    lastTouchTime.value = DateTime.now();
-  }
+  Timer? timer;
 
   void checkForInactivity() async {
-    while (true) {
-      await Future.delayed(const Duration(minutes: 1)); // Check every 5 minutes
-      final inactivityDuration = DateTime.now().difference(Box.lastTouchTime);
-      if (inactivityDuration.inMinutes >= 1) {
-        // Show screen saver
-        Get.offAllNamed(Routes.screenSaver);
-        break;
-      }
+    if (isSavingScreen) {
+      log('already saving');
+      return;
     }
+    final lastTouchTime = Box.lastTouchTime;
+    log('$lastTouchTime');
+    if (DateTime.now().add(const Duration(minutes: 1)).isAfter(lastTouchTime)) {
+      log('saving screen');
+      _isSavingScreen.value = true;
+      update();
+      Get.offAllNamed(Routes.screenSaver);
+    }
+  }
+
+  startTimer() {
+    timer = Timer.periodic(const Duration(minutes: 1), (t) {
+      checkForInactivity();
+    });
   }
 
   @override
   void onInit() {
     super.onInit();
-    ever(lastTouchTime, (_) => checkForInactivity()); // Check on touch updates
+    startTimer();
+  }
+
+  @override
+  void onClose() {
+    timer?.cancel();
+    super.onClose();
   }
 }

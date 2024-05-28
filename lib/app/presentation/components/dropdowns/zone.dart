@@ -21,7 +21,7 @@ class ZoneDropdownWidget extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           child: DropdownButton<ZoneDefinition>(
             underline: Container(), isExpanded: true,
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             items: dc
                 .getZoneListForDropdown()
                 .map((e) => DropdownMenuItem<ZoneDefinition>(

@@ -1,6 +1,7 @@
 // Dart imports:
 // Package imports:
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
@@ -119,8 +120,11 @@ class Box {
   //#endregion
 
   //#region SCREEN SAVER
-  static Future<void> handleTouch() async => await setInt(
-      key: Keys.lastTouchTime, value: DateTime.now().millisecondsSinceEpoch);
+  static Future<void> handleTouch() async {
+    log('saving last touch');
+    await setInt(
+        key: Keys.lastTouchTime, value: DateTime.now().millisecondsSinceEpoch);
+  }
 
   static DateTime get lastTouchTime =>
       DateTime.fromMicrosecondsSinceEpoch(getInt(key: Keys.lastTouchTime));

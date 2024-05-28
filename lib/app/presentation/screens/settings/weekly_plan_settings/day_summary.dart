@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -30,7 +31,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                   Container(
                     color: Theme.of(context).focusColor,
                     height: 32,
-                    child: Center(child: Text('Tab buraya')),
+                    child: const Center(child: Text('Tab buraya')),
                   ),
                   Row(
                     children: [
@@ -44,7 +45,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                           child: Center(
                               child: Text(
                             '$z',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           )),
                         )
                     ],
@@ -53,15 +54,15 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Divider(
+                        const Divider(
                           height: 2,
                         ),
                         Row(
                           children: [
                             Expanded(
                               child: Text(
-                                dayName(i),
-                                style: TextStyle(
+                                CommonUtils.dayName(i),
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 12),
                               ),
                             ),
@@ -79,15 +80,15 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                                       },
                                       child: Container(
                                         margin:
-                                            EdgeInsets.symmetric(horizontal: 1),
+                                            const EdgeInsets.symmetric(horizontal: 1),
                                         width: 26,
                                         color: selectedDays.contains(z)
                                             ? Colors.green
                                             : (z % 2 == 0)
                                                 ? Colors.transparent
                                                 : Colors.grey.withOpacity(0.3),
-                                        padding: EdgeInsets.all(2),
-                                        child: Center(
+                                        padding: const EdgeInsets.all(2),
+                                        child: const Center(
                                             child: Text(
                                           '23°\nL1',
                                           style: TextStyle(fontSize: 12),
@@ -96,13 +97,13 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                                     )
                                   : Container(
                                       margin:
-                                          EdgeInsets.symmetric(horizontal: 1),
+                                          const EdgeInsets.symmetric(horizontal: 1),
                                       width: 26,
                                       color: (z % 2 == 0)
                                           ? Colors.transparent
                                           : Colors.grey.withOpacity(0.3),
-                                      padding: EdgeInsets.all(2),
-                                      child: Center(
+                                      padding: const EdgeInsets.all(2),
+                                      child: const Center(
                                           child: Text(
                                         '23°\nL1',
                                         style: TextStyle(fontSize: 12),
@@ -120,27 +121,27 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                             onPressed: () {
                               Get.bottomSheet(Container(
                                 color: Theme.of(context).canvasColor,
-                                padding: EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
                                 child: Text(
                                     'Selected: ${selectedDays.toString()}'),
                               ));
                             },
-                            child: Text('Edit Selected')),
+                            child: const Text('Edit Selected')),
                       ElevatedButton(
                         onPressed: () {
                           Get.bottomSheet(Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).canvasColor,
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 topRight: Radius.circular(20),
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(20),
                               child: Column(
                                 children: [
-                                  Row(
+                                  const Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -148,13 +149,13 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                                       Text('Copy Day'),
                                     ],
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   Row(
                                     children: [
                                       Expanded(
                                           child: Column(
                                         children: [
-                                          Text('Copy Day'),
+                                          const Text('Copy Day'),
                                           for (int i = 0; i < 7; i++)
                                             Text('Day $i'),
                                         ],
@@ -162,7 +163,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                                       Expanded(
                                           child: Column(
                                         children: [
-                                          Text('Paste to'),
+                                          const Text('Paste to'),
                                           for (int i = 0; i < 7; i++)
                                             Text('Day $i'),
                                         ],
@@ -174,7 +175,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                             ),
                           ));
                         },
-                        child: Text('Copy Paste Options'),
+                        child: const Text('Copy Paste Options'),
                       ),
                     ],
                   ),
@@ -185,26 +186,5 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
         );
       },
     );
-  }
-
-  String dayName(int i) {
-    switch (i) {
-      case 0:
-        return 'MON';
-      case 1:
-        return 'TUE';
-      case 2:
-        return 'WED';
-      case 3:
-        return 'THU';
-      case 4:
-        return 'FRI';
-      case 5:
-        return 'SAT';
-      case 6:
-        return 'SUN';
-      default:
-        return '';
-    }
   }
 }

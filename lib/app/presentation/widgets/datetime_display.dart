@@ -36,7 +36,7 @@ class _DateTextWidgetState extends State<DateTextWidget> {
   void _updateDateTime() {
     setState(() {
       DateTime now = DateTime.now();
-      formattedDate = DateFormat.yMd().format(now);
+      formattedDate = DateFormat('d MMM, E').format(now);
       formattedTime = DateFormat.Hms().format(now);
       // _currentDateTime = '$formattedDate\n$formattedTime';
     });

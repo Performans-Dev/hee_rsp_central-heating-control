@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
                   constraints:
                       const BoxConstraints(maxWidth: 480, maxHeight: 300),
                   alignment: Alignment.center,
-                  child: SingleChildScrollView(
+                  child: PiScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,

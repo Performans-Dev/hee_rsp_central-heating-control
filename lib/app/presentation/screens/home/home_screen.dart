@@ -26,19 +26,17 @@ class HomeScreen extends StatelessWidget {
           return AppScaffold(
             body: Stack(
               children: [
-                Container(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      mainAxisExtent: height,
-                    ),
-                    itemBuilder: (context, index) =>
-                        ZoneItem(zone: dc.zoneList[index]),
-                    itemCount: length,
-                    shrinkWrap: true,
+                GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisExtent: height,
                   ),
+                  itemBuilder: (context, index) =>
+                      ZoneItem(zone: dc.zoneList[index]),
+                  itemCount: length,
+                  shrinkWrap: true,
                 ),
-                // SingleChildScrollView(
+                // PiScrollView(
                 //   child: Center(
                 //     child: Padding(
                 //       padding: const EdgeInsets.symmetric(vertical: 8),

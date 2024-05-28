@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/models/wifi.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ class SettingsPreferences extends StatelessWidget {
     Locale currentLocale = LocalizationService.locale;
     TimezoneDefinition currentTimezone =
         TimezoneDefinition.fromJson(Box.getString(key: Keys.selectedTimezone));
+
     return AppScaffold(
       title: 'Preferences',
       selectedIndex: 3,
@@ -34,8 +36,7 @@ class SettingsPreferences extends StatelessWidget {
             title: 'Settings / Preferences',
           ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: PiScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -131,6 +132,9 @@ class SettingsPreferences extends StatelessWidget {
                       Get.toNamed(Routes.developer);
                     },
                   ),
+                  const SizedBox(height: 8),
+                  const Text('close app / shutdown os / reboot os / factory reset'),
+                  const SizedBox(height: 8),
                   const SizedBox(height: 8),
                 ],
               ),

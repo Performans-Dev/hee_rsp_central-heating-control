@@ -10,6 +10,7 @@ import 'package:central_heating_control/app/presentation/components/dropdowns/er
 import 'package:central_heating_control/app/presentation/components/dropdowns/type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/zone.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,9 +45,8 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
       builder: (dc) => AppScaffold(
         title: 'Heaters',
         selectedIndex: 3,
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
+        body: PiScrollView(
+           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -134,7 +134,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 3,
                           child: FormItemComponent(
@@ -142,7 +142,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                             child: Text('${heater.level1ConsumptionAmount}'),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 1,
                           child: FormItemComponent(
@@ -170,7 +170,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 3,
                           child: FormItemComponent(
@@ -178,7 +178,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                             child: Text('${heater.level2ConsumptionAmount}'),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           flex: 1,
                           child: FormItemComponent(

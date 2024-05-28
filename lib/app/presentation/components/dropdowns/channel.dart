@@ -43,7 +43,7 @@ class ChannelDropdownWidget extends StatelessWidget {
         borderRadius: UiDimens.formRadius,
         child: DropdownButton<Channel>(
           underline: Container(), isExpanded: true,
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           items: data.map((e) {
             bool isUsed = group == GpioGroup.outPin
                 ? usedOutChannels.map((c) => c?.id).toList().contains(e.id)

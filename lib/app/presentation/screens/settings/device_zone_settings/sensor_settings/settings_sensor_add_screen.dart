@@ -2,7 +2,7 @@ import 'package:central_heating_control/app/data/models/com_port.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/dropdown.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,8 +57,7 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: PiScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,29 +74,29 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
                       keyboardType: TextInputType.number,
                       labelText: 'MaxValue',
                     ),
-                    DropdownWidget<ComPort?>(
-                      data: dc.comportList,
-                      labelText: "Comport",
-                      hintText: "Select Comport",
-                      onSelected: (p0) {
-                        setState(() {
-                          selectedPort = p0;
-                        });
-                      },
-                      selectedValue: selectedPort,
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownWidget<ZoneDefinition?>(
-                      hintText: "Select Zone",
-                      data: dc.zoneList,
-                      labelText: "Zone",
-                      onSelected: (p0) {
-                        setState(() {
-                          selectedZone = p0;
-                        });
-                      },
-                      selectedValue: selectedZone,
-                    ),
+                    // DropdownWidget<ComPort?>(
+                    //   data: dc.comportList,
+                    //   labelText: "Comport",
+                    //   hintText: "Select Comport",
+                    //   onSelected: (p0) {
+                    //     setState(() {
+                    //       selectedPort = p0;
+                    //     });
+                    //   },
+                    //   selectedValue: selectedPort,
+                    // ),
+                    // const SizedBox(height: 8),
+                    // DropdownWidget<ZoneDefinition?>(
+                    //   hintText: "Select Zone",
+                    //   data: dc.zoneList,
+                    //   labelText: "Zone",
+                    //   onSelected: (p0) {
+                    //     setState(() {
+                    //       selectedZone = p0;
+                    //     });
+                    //   },
+                    //   selectedValue: selectedZone,
+                    // ),
                     Container(
                       padding: const EdgeInsets.all(12),
                       child: Row(

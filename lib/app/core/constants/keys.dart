@@ -47,6 +47,7 @@ class Keys {
   static const String queryUsername = 'username=?';
   static const String queryIsAdmin = 'isAdmin=?';
   static const String queryZoneId = 'zoneId=?';
+  static const String queryPlanId = 'planId=?';
   static const String queryIdIn = 'id IN (?)';
 
   static const String dbDropUsers = '''
