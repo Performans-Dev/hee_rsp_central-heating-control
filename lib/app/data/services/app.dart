@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
@@ -33,6 +34,7 @@ class AppController extends GetxController {
     populateUserList();
     fetchSettings();
     logoutUser();
+    readDevice();
     super.onReady();
   }
 
@@ -227,6 +229,15 @@ class AppController extends GetxController {
     return chcDeviceId;
   }
 
+  final Rxn<String> _versionName = Rxn();
+  String? get versionName => _versionName.value;
+
+  Future<void> readDevice() async {
+    ChcDevice device = await DeviceUtils.createDeviceInfo();
+    _versionName.value = device.appVersion;
+    update();
+  }
+
   //#endregion
 
   //#region ACTIVATION
@@ -288,7 +299,4 @@ class AppController extends GetxController {
   }
 
   //#endregion
-
-
-  
 }

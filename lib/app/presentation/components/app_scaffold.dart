@@ -63,6 +63,21 @@ class AppScaffold extends StatelessWidget {
                         : UiAssets.appIconLight),
                   ),
                 ),
+                trailing: Container(
+                  height: 100,
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    '${app.versionName}',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.color
+                              ?.withOpacity(0.4),
+                        ),
+                  ),
+                ),
                 onDestinationSelected: (value) async {
                   switch (value) {
                     case 0:

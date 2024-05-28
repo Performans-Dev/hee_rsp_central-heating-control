@@ -16,84 +16,75 @@ class SettingsScreen extends StatelessWidget {
       builder: (app) => AppScaffold(
         title: 'Settings',
         selectedIndex: 3,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: PiScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    ListTile(
-                      title: const Text('Zone, Heaters, Sensor Management'),
-                      subtitle: const Text(
-                          'Add/Modify/Remove zones, devices and sensors'),
-                      trailing: const Icon(Icons.chevron_right),
-                      tileColor: Theme.of(context).highlightColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      onTap: () {
-                        NavController.toZoneDeviceSensorManagement();
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    ListTile(
-                      title: const Text('Functions'),
-                      subtitle:
-                          const Text('Define custom functions and triggers'),
-                      trailing: const Icon(Icons.chevron_right),
-                      tileColor: Theme.of(context).highlightColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 8),
-                    ListTile(
-                      title: const Text('Weekly Plan Settings'),
-                      subtitle: const Text(
-                          'Define rules that runs on weekly schedule'),
-                      trailing: const Icon(Icons.chevron_right),
-                      tileColor: Theme.of(context).highlightColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      onTap: () {
-                        Get.toNamed(Routes.settingsPlanList);
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    ListTile(
-                      title: const Text('User Management'),
-                      subtitle:
-                          const Text('Add/Remove/Modify users and admins'),
-                      trailing: const Icon(Icons.chevron_right),
-                      tileColor: Theme.of(context).highlightColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      onTap: () => NavController.toSettingsUserList(),
-                    ),
-                    const SizedBox(height: 8),
-                    ListTile(
-                      title: const Text('Preferences'),
-                      subtitle: const Text(
-                          'Themes, localizations, extension modules, updates'),
-                      trailing: const Icon(Icons.chevron_right),
-                      tileColor: Theme.of(context).highlightColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      onTap: () => NavController.toSettingsPreferences(),
-                    ),
-                  ],
+        body: PiScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              ListTile(
+                title: const Text('Zone, Heaters, Sensor Management'),
+                subtitle:
+                    const Text('Add/Modify/Remove zones, devices and sensors'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                onTap: () {
+                  NavController.toZoneDeviceSensorManagement();
+                },
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              ListTile(
+                title: const Text('Functions'),
+                subtitle: const Text('Define custom functions and triggers'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () {},
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                title: const Text('Weekly Plan Settings'),
+                subtitle:
+                    const Text('Define rules that runs on weekly schedule'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () {
+                  Get.toNamed(Routes.settingsPlanList);
+                },
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                title: const Text('User Management'),
+                subtitle: const Text('Add/Remove/Modify users and admins'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () => NavController.toSettingsUserList(),
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                title: const Text('Preferences'),
+                subtitle: const Text(
+                    'Themes, localizations, extension modules, updates'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () => NavController.toSettingsPreferences(),
+              ),
+            ],
+          ),
         ),
       ),
     );

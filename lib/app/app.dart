@@ -18,11 +18,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => Box.handleTouch(),
-      onTap: () => Box.handleTouch(),
-      onDoubleTap: () => Box.handleTouch(),
-      onLongPress: () => Box.handleTouch(),
-      onPanStart: (_) => Box.handleTouch(),
+      // onTapDown: (_) => Box.handleTouch(),
+      // onTap: () => Box.handleTouch(),
+      // onDoubleTap: () => Box.handleTouch(),
+      // onLongPress: () => Box.handleTouch(),
+      // onPanStart: (_) => Box.handleTouch(),
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: UiStrings.appName,

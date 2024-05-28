@@ -12,24 +12,24 @@ class ScreenSaverController extends GetxController {
   Timer? timer;
 
   void checkForInactivity() async {
-    if (isSavingScreen) {
-      log('already saving');
-      return;
-    }
-    final lastTouchTime = Box.lastTouchTime;
-    log('$lastTouchTime');
-    if (DateTime.now().add(const Duration(minutes: 1)).isAfter(lastTouchTime)) {
-      log('saving screen');
-      _isSavingScreen.value = true;
-      update();
-      Get.offAllNamed(Routes.screenSaver);
-    }
+    // if (isSavingScreen) {
+    //   log('already saving');
+    //   return;
+    // }
+    // final lastTouchTime = Box.lastTouchTime;
+    // log('$lastTouchTime');
+    // if (DateTime.now().add(const Duration(minutes: 1)).isAfter(lastTouchTime)) {
+    //   log('saving screen');
+    //   _isSavingScreen.value = true;
+    //   update();
+    //   Get.offAllNamed(Routes.screenSaver);
+    // }
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(minutes: 1), (t) {
-      checkForInactivity();
-    });
+    // timer = Timer.periodic(const Duration(minutes: 1), (t) {
+    //   checkForInactivity();
+    // });
   }
 
   @override

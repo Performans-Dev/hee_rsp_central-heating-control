@@ -10,16 +10,20 @@ class GpioController extends GetxController {
 
   @override
   void onInit() {
-    startTimer();
+    if (GetPlatform.isLinux) {
+      startTimer();
+    }
     super.onInit();
   }
 
   @override
   void onReady() {
-    initOutPins();
-    initInPins();
-    initBtnPins();
-    initBuzzer();
+    if (GetPlatform.isLinux) {
+      initOutPins();
+      initInPins();
+      initBtnPins();
+      initBuzzer();
+    }
     super.onReady();
   }
 

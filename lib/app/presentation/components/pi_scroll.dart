@@ -14,7 +14,7 @@ class PiScrollView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScrollConfiguration(
       behavior: TouchScrollBehavior(),
-      child: PiScrollView(
+      child: SingleChildScrollView(
         padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
         child: child,
       ),
