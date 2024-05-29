@@ -73,3 +73,6 @@ flutter:
 # sudo apt-get -y install libsqlite3-0 libsqlite3-dev
 
 # dart run flutter_native_splash:create --path=pubspec.yaml    
+
+
+# scp -r /Users/io/Development/FlutterProjects/heethings/CentralHeatingControl/CHC pi@192.168.1.248:~/Development/CHC

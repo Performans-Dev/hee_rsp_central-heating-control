@@ -1,7 +1,111 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
 
 class UiData {
+  static final List<Channel> channels = [
+    Channel(
+        name: 'CHO-1',
+        id: 'out1',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-2',
+        id: 'out2',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-3',
+        id: 'out3',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-4',
+        id: 'out4',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-5',
+        id: 'out5',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-6',
+        id: 'out6',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-7',
+        id: 'out7',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHO-8',
+        id: 'out8',
+        direction: GpioDirection.pinOut,
+        group: GpioGroup.outPin),
+    Channel(
+        name: 'CHI-1',
+        id: 'in1',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-2',
+        id: 'in2',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-3',
+        id: 'in3',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-4',
+        id: 'in4',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-5',
+        id: 'in5',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-6',
+        id: 'in6',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-7',
+        id: 'in7',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHI-8',
+        id: 'in8',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.inPin),
+    Channel(
+        name: 'CHB-1',
+        id: 'btn1',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.buttonPin),
+    Channel(
+        name: 'CHB-2',
+        id: 'btn2',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.buttonPin),
+    Channel(
+        name: 'CHB-3',
+        id: 'btn3',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.buttonPin),
+    Channel(
+        name: 'CHB-4',
+        id: 'btn4',
+        direction: GpioDirection.pinIn,
+        group: GpioGroup.buttonPin),
+  ];
+
   static final List<ComPort> ports = [
     ComPort(
       id: 'SER',
@@ -58,6 +162,13 @@ class UiData {
       pinNumber: GpioPin.gpio4,
       direction: GpioDirection.pinOut,
       group: GpioGroup.uart,
+    ),
+    ComPort(
+      id: 'BUZZER',
+      title: 'Buzzer',
+      pinNumber: GpioPin.gpio0,
+      direction: GpioDirection.pinOut,
+      group: GpioGroup.buzzer,
     ),
     ComPort(
       id: 'IN0',
@@ -152,6 +263,22 @@ class UiData {
     ),
   ];
 
+  static List<ComPort> getPortsDropdown(GpioGroup? group) {
+    return [
+      ComPort.empty(),
+      ...ports.where((element) =>
+          group != null ? element.group == group : element.id.isNotEmpty)
+    ];
+  }
+
+  static List<Channel> getChannelsDropdown(GpioGroup? group) {
+    return [
+      Channel.empty(),
+      ...channels
+          .where((e) => group != null ? e.group == group : e.id.isNotEmpty)
+    ];
+  }
+
   static List<String> colorList = [
     '',
     '#FF5733', // Orange
@@ -163,4 +290,19 @@ class UiData {
     '#B833FF', // Purple
     '#A1FF33' // Lime
   ];
+
+  static List<int> get outPins => ports
+      .where((e) => e.group == GpioGroup.outPin)
+      .map((e) => e.pinNumber.index)
+      .toList();
+
+  static List<int> get inPins => ports
+      .where((e) => e.group == GpioGroup.inPin)
+      .map((e) => e.pinNumber.index)
+      .toList();
+
+  static List<int> get btnPins => ports
+      .where((e) => e.group == GpioGroup.buttonPin)
+      .map((e) => e.pinNumber.index)
+      .toList();
 }

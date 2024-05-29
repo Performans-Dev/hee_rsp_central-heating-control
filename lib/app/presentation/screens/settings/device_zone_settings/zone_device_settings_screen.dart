@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,9 +20,8 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
             title: 'Settings / Zones, Heaters and Sensors',
           ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
+            child: PiScrollView(
+               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -45,7 +45,9 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.settingsHeaterList);
+                    },
                   ),
                   const SizedBox(height: 8),
                   ListTile(

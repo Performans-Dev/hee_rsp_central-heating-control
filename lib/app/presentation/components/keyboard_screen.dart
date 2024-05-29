@@ -28,14 +28,14 @@ class OnScreenKeyboard extends StatelessWidget {
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => Get.back(),
             ),
           ),
           Align(
             alignment: Alignment.bottomRight,
             child: IconButton(
-              icon: Icon(Icons.send),
+              icon: const Icon(Icons.send),
               onPressed: () => Get.back(result: 'icindeki yazi budur'),
             ),
           ),

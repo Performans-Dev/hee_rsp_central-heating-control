@@ -3,7 +3,6 @@ import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
@@ -26,9 +25,7 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
-    // size: GetPlatform.isLinux || GetPlatform.isMacOS
-    //     ? const Size(800, 480)
-    //     : null,
+    size: GetPlatform.isMacOS ? const Size(800, 480) : null,
     backgroundColor: Colors.black,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.hidden,
@@ -36,10 +33,9 @@ Future<void> main() async {
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    // if (GetPlatform.isLinux || GetPlatform.isMacOS) {
-    // } else {
-    await windowManager.setFullScreen(true);
-    // }
+    if (!GetPlatform.isMacOS) {
+      await windowManager.setFullScreen(true);
+    }
     await windowManager.focus();
   });
 

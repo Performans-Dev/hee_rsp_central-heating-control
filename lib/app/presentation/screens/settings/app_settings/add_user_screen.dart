@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +48,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
               title: 'Settings / Add New User',
             ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: PiScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,

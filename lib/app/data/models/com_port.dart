@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/data/models/dropdown.dart';
 
 class ComPort {
   String id;
@@ -28,7 +27,6 @@ class ComPort {
     };
   }
 
-  DropdownModel toDropdown() => DropdownModel(text: title, value: id);
   factory ComPort.fromMap(Map<String, dynamic> map) {
     return ComPort(
       id: map['id'] ?? '',
@@ -38,6 +36,14 @@ class ComPort {
       group: GpioGroup.values[map['group']?.toInt() ?? 0],
     );
   }
+
+  factory ComPort.empty() => ComPort(
+        id: '',
+        title: '---',
+        pinNumber: GpioPin.gpioNone,
+        direction: GpioDirection.none,
+        group: GpioGroup.empty,
+      );
 
   String toJson() => json.encode(toMap());
 

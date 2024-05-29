@@ -1,4 +1,5 @@
 class Keys {
+  static const String lastTouchTime = 'lastTouchTime';
   static const String localeLang = 'localeLang';
   static const String localeCulture = 'localeCulture';
   static const String isDarkMode = 'isDarkMode';
@@ -28,7 +29,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 6;
+  static const int databaseVersion = 8;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -38,11 +39,15 @@ class Keys {
   static const String tableZoneUsers = 'zoneUsers';
   static const String tableZoneHeaters = 'zoneHeaters';
   static const String tableZoneSensors = 'zoneSensors';
+  static const String tableHardwareParameters = 'hardwareParameters';
+  static const String tablePlans = 'plans';
+  static const String tablePlanDetails = 'planDetails';
 
   static const String queryId = 'id=?';
   static const String queryUsername = 'username=?';
   static const String queryIsAdmin = 'isAdmin=?';
   static const String queryZoneId = 'zoneId=?';
+  static const String queryPlanId = 'planId=?';
   static const String queryIdIn = 'id IN (?)';
 
   static const String dbDropUsers = '''
@@ -90,7 +95,7 @@ class Keys {
       errorChannel INTEGER,
       errorChannelType INTEGER,
       state INTEGER NOT NULL DEFAULT 0,
-      zoneId INTEGER
+      zoneId INTEGER NOT NULL DEFAULT 0
     )
   ''';
   static const String dbDropZones = '''
@@ -133,6 +138,54 @@ class Keys {
       zoneId INTEGER NOT NULL,
       heaterId INTEGER NOT NULL
     )
+  ''';
+
+  static const String dbDropHardwareParameters = '''
+    DROP TABLE IF EXISTS hardwareParameters
+  ''';
+
+  static const String dbCreateHardwareParameters = '''
+    CREATE TABLE IF NOT EXISTS hardwareParameters (
+      id INTEGER NOT NULL DEFAULT 0,
+      name TEXT,
+      inputCount INTEGER NOT NULL DEFAULT 0,
+      outputCount INTEGER NOT NULL DEFAULT 0,
+      analogCount INTEGER NOT NULL DEFAULT 0,
+      version TEXT,
+      type TEXT,
+      isExtension INTEGER NOT NULL DEFAULT 1
+    )
+  ''';
+
+  static const String dbDropPlans = '''
+    DROP TABLE IF EXISTS plans
+  ''';
+  static const String dbCreatePlans = '''
+    CREATE TABLE IF NOT EXISTS plans (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      isDefault INTEGER NOT NULL DEFAULT 0,
+      isActive INTEGER NOT NULL DEFAULT 0
+    )
+  ''';
+
+  static const String dbDropPlanDetails = '''
+    DROP TABLE IF EXISTS planDetails
+  ''';
+  static const String dbCreatePlanDetails = '''
+    CREATE TABLE IF NOT EXISTS planDetails (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      planId INTEGER NOT NULL,
+      hour INTEGER NOT NULL,
+      day INTEGER NOT NULL,
+      level INTEGER NOT NULL DEFAULT 0
+    )
+  ''';
+  static const String dbInsertDefaultPlan = '''
+    INSERT INTO plans (name, isDefault, isActive) VALUES ('Default', 1, 1)
+  ''';
+  static const String dbInsertDefaultPlanDetails = '''
+    INSERT INTO planDetails (planId, hour, day, level) VALUES (1, {H}, {D}, 1)
   ''';
 
   //#endregion

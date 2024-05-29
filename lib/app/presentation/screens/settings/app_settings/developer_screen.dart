@@ -1,10 +1,150 @@
+import 'package:central_heating_control/app/core/constants/data.dart';
+import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
+import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/form_item.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DeveloperScreen extends StatelessWidget {
   const DeveloperScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return GetBuilder<GpioController>(builder: (gc) {
+      return AppScaffold(
+        title: 'Diagnostics',
+        selectedIndex: 3,
+        body: PiScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FormItemComponent(
+                label: 'OUT PINS',
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < gc.outStates.length; i++)
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: UiDimens.formRadius,
+                        ),
+                        child: InkWell(
+                          onTap: () => gc.onOutTap(i),
+                          borderRadius: UiDimens.formRadius,
+                          child: ClipRRect(
+                            borderRadius: UiDimens.formRadius,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('${UiData.outPins[i]}'),
+                                  Icon(
+                                    Icons.sunny,
+                                    color: gc.outStates[i]
+                                        ? Colors.red
+                                        : Colors.grey.withOpacity(0.3),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+              ),
+              const Divider(),
+              FormItemComponent(
+                label: 'IN PINS',
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < gc.inStates.length; i++)
+                      Card(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('${UiData.inPins[i]}'),
+                              Icon(
+                                Icons.sunny,
+                                color: !gc.inStates[i]
+                                    ? Colors.green
+                                    : Colors.grey.withOpacity(0.3),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              FormItemComponent(
+                label: 'BUTTONS',
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < gc.btnStates.length; i++)
+                      Card(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('${UiData.btnPins[i]}'),
+                              Icon(
+                                Icons.sunny,
+                                color: !gc.btnStates[i]
+                                    ? Colors.green
+                                    : Colors.grey.withOpacity(0.3),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              FormItemComponent(
+                label: 'Buzzer',
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    for (final item in BuzzerType.values)
+                      Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: UiDimens.formRadius,
+                        ),
+                        child: InkWell(
+                          onTap: () => gc.buzz(item),
+                          borderRadius: UiDimens.formRadius,
+                          child: ClipRRect(
+                            borderRadius: UiDimens.formRadius,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                  item.name.camelCaseToHumanReadable()),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

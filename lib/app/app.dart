@@ -17,22 +17,29 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: UiStrings.appName,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode:
-          Box.getBool(key: Keys.isDarkMode) ? ThemeMode.dark : ThemeMode.light,
-      defaultTransition: Transition.circularReveal,
-      getPages: getPages,
-      initialRoute: Routes.home,
-      initialBinding: AppBindings(),
-      locale: LocalizationService.locale,
-      fallbackLocale: LocalizationService.fallbackLocale,
-      translationsKeys: LocalizationService.keys,
-      onReady: onReady,
-      
+    return GestureDetector(
+      // onTapDown: (_) => Box.handleTouch(),
+      // onTap: () => Box.handleTouch(),
+      // onDoubleTap: () => Box.handleTouch(),
+      // onLongPress: () => Box.handleTouch(),
+      // onPanStart: (_) => Box.handleTouch(),
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: UiStrings.appName,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: Box.getBool(key: Keys.isDarkMode)
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        defaultTransition: Transition.circularReveal,
+        getPages: getPages,
+        initialRoute: Routes.home,
+        initialBinding: AppBindings(),
+        locale: LocalizationService.locale,
+        fallbackLocale: LocalizationService.fallbackLocale,
+        translationsKeys: LocalizationService.keys,
+        onReady: onReady,
+      ),
     );
   }
 

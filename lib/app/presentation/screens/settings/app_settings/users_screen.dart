@@ -22,7 +22,7 @@ class SettingsUserListScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            BreadcrumbWidget(
+            const BreadcrumbWidget(
               title: 'User Management/ Users',
             ),
             Expanded(

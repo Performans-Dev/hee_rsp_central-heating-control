@@ -1,9 +1,8 @@
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
@@ -11,19 +10,19 @@ const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 class SettingsEditSensorScreen extends StatelessWidget {
   SettingsEditSensorScreen({super.key});
 
-  String dropdownValue = list.first;
+  final String dropdownValue = list.first;
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          BreadcrumbWidget(
+          const BreadcrumbWidget(
             title: 'Settings / Sensor Settings/ Edit Sensor',
           ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: PiScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +83,7 @@ class SettingsEditSensorScreen extends StatelessWidget {
                       onChanged: (_) {},
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 200,
                   )
                 ],
