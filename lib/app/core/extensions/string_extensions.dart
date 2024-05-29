@@ -26,3 +26,23 @@ extension CamelCaseConverter on String {
     return withSpaces[0].toUpperCase() + withSpaces.substring(1);
   }
 }
+
+extension Substring on String {
+  /// Returns a substring starting from the beginning of the string
+  /// up to the specified length.
+  String left(int length) {
+    if (length <= 0) {
+      return "";
+    }
+    return substring(0, length.clamp(0, this.length));
+  }
+
+  /// Returns a substring starting from the end of the string
+  /// with the specified length.
+  String right(int length) {
+    if (length <= 0) {
+      return "";
+    }
+    return substring(this.length - length.clamp(0, this.length), this.length);
+  }
+}

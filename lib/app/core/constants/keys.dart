@@ -29,7 +29,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 8;
+  static const int databaseVersion = 9;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -178,7 +178,9 @@ class Keys {
       planId INTEGER NOT NULL,
       hour INTEGER NOT NULL,
       day INTEGER NOT NULL,
-      level INTEGER NOT NULL DEFAULT 0
+      level INTEGER NOT NULL DEFAULT 0,
+      degree INTEGER NOT NULL DEFAULT 20,
+      planBy INTEGER NOT NULL DEFAULT 0
     )
   ''';
   static const String dbInsertDefaultPlan = '''

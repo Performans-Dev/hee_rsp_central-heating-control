@@ -96,3 +96,7 @@ enum BuzzerType {
   alarm,
 }
 
+enum PlanBy {
+  level,
+  thermostate,
+}

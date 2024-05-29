@@ -128,7 +128,7 @@ class DataController extends GetxController {
   List<PlanDefinition> get planList => _planList;
 
   Future<void> getPlanListFromDb() async {
-    final data = await DbProvider.db.getPlanList();
+    final data = await DbProvider.db.getPlanDefinitions();
     _planList.assignAll(data);
     update();
   }
@@ -137,7 +137,7 @@ class DataController extends GetxController {
   List<PlanDetail> get planDetails => _planDetails;
 
   Future<void> getPlanDetailsFromDb() async {
-    final data = await DbProvider.db.getPlanDetail();
+    final data = await DbProvider.db.getPlanDetails();
     _planDetails.assignAll(data);
     update();
   }

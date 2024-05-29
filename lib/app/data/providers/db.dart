@@ -51,20 +51,20 @@ class DbProvider {
   }
 
   Future<void> createDatabaseStructure(Database db) async {
-    await db.execute(Keys.dbDropUsers);
-    await db.execute(Keys.dbCreateUsers);
+    // await db.execute(Keys.dbDropUsers);
+    // await db.execute(Keys.dbCreateUsers);
 
-    await db.execute(Keys.dbDropSensors);
-    await db.execute(Keys.dbCreateSensors);
+    // await db.execute(Keys.dbDropSensors);
+    // await db.execute(Keys.dbCreateSensors);
 
-    await db.execute(Keys.dbDropHeaters);
-    await db.execute(Keys.dbCreateHeaters);
+    // await db.execute(Keys.dbDropHeaters);
+    // await db.execute(Keys.dbCreateHeaters);
 
-    await db.execute(Keys.dbDropZones);
-    await db.execute(Keys.dbCreateZones);
+    // await db.execute(Keys.dbDropZones);
+    // await db.execute(Keys.dbCreateZones);
 
-    await db.execute(Keys.dbDropZoneUsers);
-    await db.execute(Keys.dbCreateZoneUsers);
+    // await db.execute(Keys.dbDropZoneUsers);
+    // await db.execute(Keys.dbCreateZoneUsers);
 
     // await db.execute(Keys.dbDropZoneSensors);
     // await db.execute(Keys.dbCreateZoneSensors);
@@ -689,7 +689,7 @@ class DbProvider {
   //MARK: PLANS
 
   //#region PLAN LIST
-  Future<List<PlanDefinition>> getPlanList() async {
+  Future<List<PlanDefinition>> getPlanDefinitions() async {
     final plans = <PlanDefinition>[];
     final db = await database;
     if (db == null) return plans;
@@ -704,10 +704,105 @@ class DbProvider {
       return plans;
     }
   }
+
+  Future<PlanDefinition?> getPlanById({required int planId}) async {
+    final db = await database;
+    if (db == null) return null;
+    try {
+      final data = await db.query(
+        Keys.tablePlans,
+        where: Keys.queryId,
+        whereArgs: [planId],
+      );
+      if (data.isNotEmpty) {
+        final map = data.first;
+        return PlanDefinition.fromMap(map);
+      }
+      return null;
+    } on Exception catch (err) {
+      log(err.toString());
+      return null;
+    }
+  }
+
+  Future<PlanDefinition?> addPlanDefinition(
+      {required PlanDefinition plan}) async {
+    final db = await database;
+    if (db == null) return null;
+    try {
+      final id = await db.insert(
+        Keys.tablePlans,
+        plan.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      final data = await db.query(
+        Keys.tablePlans,
+        where: Keys.queryId,
+        whereArgs: [id],
+      );
+      if (data.isNotEmpty) {
+        final map = data.first;
+        return PlanDefinition.fromMap(map);
+      }
+      return null;
+    } on Exception catch (err) {
+      log(err.toString());
+      return null;
+    }
+  }
+
+  Future<PlanDefinition?> updatePlanDefinition(
+      {required PlanDefinition plan}) async {
+    final db = await database;
+    if (db == null) return null;
+    try {
+      final id = await db.update(
+        Keys.tablePlans,
+        plan.toMap(),
+        where: Keys.queryId,
+        whereArgs: [plan.id],
+      );
+      final data = await db.query(
+        Keys.tablePlans,
+        where: Keys.queryId,
+        whereArgs: [id],
+      );
+      if (data.isNotEmpty) {
+        final map = data.first;
+        return PlanDefinition.fromMap(map);
+      }
+      return null;
+    } on Exception catch (err) {
+      log(err.toString());
+      return null;
+    }
+  }
+
+  Future<bool> deletePlanAndDetails({required int planId}) async {
+    final db = await database;
+    if (db == null) return false;
+    try {
+      final planToDelete = await getPlanById(planId: planId);
+      if (planToDelete?.isDefault == 1) {
+        return false;
+      }
+      final itemsToDelete = await getPlanDetails(planId: planId);
+      await removePlanDetails(planDetails: itemsToDelete);
+      final int result = await db.delete(
+        Keys.tablePlans,
+        where: Keys.queryId,
+        whereArgs: [planId],
+      );
+      return result > 0;
+    } on Exception catch (err) {
+      log(err.toString());
+      return false;
+    }
+  }
   //#endregion
 
   //#region PLAN DETAILS
-  Future<List<PlanDetail>> getPlanDetail({int? planId}) async {
+  Future<List<PlanDetail>> getPlanDetails({int? planId}) async {
     final planDetails = <PlanDetail>[];
     final db = await database;
     if (db == null) return planDetails;
@@ -727,6 +822,71 @@ class DbProvider {
       log(err.toString());
       return planDetails;
     }
+  }
+
+  Future<List<PlanDetail>> addPlanDetails({
+    required List<PlanDetail> planDetails,
+  }) async {
+    final result = <PlanDetail>[];
+    final db = await database;
+    if (db == null) return result;
+    try {
+      for (var item in result) {
+        await db.insert(
+          Keys.tablePlanDetails,
+          item.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+      return getPlanDetails(planId: planDetails.first.planId);
+    } on Exception catch (err) {
+      log(err.toString());
+      return result;
+    }
+  }
+
+  Future<List<PlanDetail>> removePlanDetails(
+      {required List<PlanDetail> planDetails}) async {
+    final result = <PlanDetail>[];
+    final db = await database;
+    if (db == null) return result;
+    try {
+      for (var item in result) {
+        await db.delete(
+          Keys.tablePlanDetails,
+          where: Keys.queryId,
+          whereArgs: [item.id],
+        );
+      }
+      return getPlanDetails(planId: planDetails.first.planId);
+    } on Exception catch (err) {
+      log(err.toString());
+      return result;
+    }
+  }
+
+  Future<List<PlanDetail>> copyPlanDetails({
+    required int sourcePlanId,
+    required int targetPlanId,
+  }) async {
+    final sourceItems = await getPlanDetails(planId: sourcePlanId);
+    final existingItems = await getPlanDetails(planId: targetPlanId);
+    if (existingItems.isNotEmpty) {
+      await removePlanDetails(planDetails: existingItems);
+    }
+    final newItems = <PlanDetail>[];
+    for (var item in sourceItems) {
+      newItems.add(PlanDetail(
+        id: 0,
+        planId: targetPlanId,
+        hour: item.hour,
+        day: item.day,
+        level: item.level,
+        degree: item.degree,
+        planBy: item.planBy,
+      ));
+    }
+    return await addPlanDetails(planDetails: newItems);
   }
   //#endregion
 }
