@@ -49,6 +49,7 @@ class Keys {
   static const String queryZoneId = 'zoneId=?';
   static const String queryPlanId = 'planId=?';
   static const String queryIdIn = 'id IN (?)';
+  static const String queryDayAndHour = 'day=? AND hour=?';
 
   static const String dbDropUsers = '''
     DROP TABLE IF EXISTS users

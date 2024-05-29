@@ -141,5 +141,12 @@ class DataController extends GetxController {
     _planDetails.assignAll(data);
     update();
   }
+
+  Future<void> addPlanDetailsToDb(List<PlanDetail> pdetails) async {
+    final _ = await DbProvider.db.addPlanDetails(planDetails: pdetails);
+    await getPlanListFromDb();
+    await getPlanDetailsFromDb();
+    update();
+  }
   //#endregion
 }

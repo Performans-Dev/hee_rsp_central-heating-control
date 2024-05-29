@@ -831,7 +831,13 @@ class DbProvider {
     final db = await database;
     if (db == null) return result;
     try {
-      for (var item in result) {
+      for (var item in planDetails) {
+        await db.delete(
+          Keys.tablePlanDetails,
+          where: Keys.queryDayAndHour,
+          whereArgs: [item.day, item.hour],
+        );
+
         await db.insert(
           Keys.tablePlanDetails,
           item.toMap(),

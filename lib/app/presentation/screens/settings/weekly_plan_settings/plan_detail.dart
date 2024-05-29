@@ -17,6 +17,7 @@ class SettingsPlanDetailScreen extends StatefulWidget {
 }
 
 class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
+  late int planId;
   final DataController dataController = Get.find();
   late PlanDefinition plan;
   late List<PlanDetail> planDetails;
@@ -32,10 +33,8 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
   @override
   void initState() {
     super.initState();
-    int planId = int.parse(Get.parameters['planId'] ?? '0');
-    planDetails =
-        dataController.planDetails.where((e) => e.planId == planId).toList();
-    plan = dataController.planList.firstWhere((e) => e.id == planId);
+    planId = int.parse(Get.parameters['planId'] ?? '0');
+    fetchData();
     planByValues.first = true;
   }
 
@@ -143,7 +142,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                     ? Icon(
                                         Icons.light_mode,
                                         size: 14,
-                                        color:   Colors.orange.withOpacity(0.83),
+                                        color: Colors.orange.withOpacity(0.83),
                                       )
                                     : Text(
                                         '-',
@@ -246,7 +245,26 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                               child: Text('Cancel'),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                if (selectedBoxes.isEmpty) return;
+                                final dataToSave = selectedBoxes
+                                    .map((e) => PlanDetail(
+                                          id: 0,
+                                          planId: plan.id,
+                                          hour: int.parse(e.right(2)),
+                                          day: int.parse(e.left(1)),
+                                          level: levelList[
+                                              levelValues.indexWhere((e) => e)],
+                                          degree: setTemperature,
+                                          planBy: planByList[planByValues
+                                              .indexWhere((e) => e)],
+                                        ))
+                                    .toList();
+                                await dc.addPlanDetailsToDb(dataToSave);
+                                selectedBoxes.clear();
+                                setState(() {});
+                                fetchData();
+                              },
                               child: Text('SAVE'),
                             ),
                           ],
@@ -258,5 +276,11 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
         );
       },
     );
+  }
+
+  void fetchData() async {
+    planDetails =
+        dataController.planDetails.where((e) => e.planId == planId).toList();
+    plan = dataController.planList.firstWhere((e) => e.id == planId);
   }
 }
