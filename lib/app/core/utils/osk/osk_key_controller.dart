@@ -19,7 +19,6 @@ class OskKeyController extends GetxController {
     required this.numberOnly,
   }) {
     _currentText.value = initialValue;
-    updateLayoutBasedOnInputType();
   }
 
   String get currentText => _currentText.value;
@@ -53,20 +52,7 @@ class OskKeyController extends GetxController {
   void receiveOnTap(KeyType type, String value) {
     switch (type) {
       case KeyType.character:
-        if (inputType == OnScreenKeyboardInputType.name &&
-            _currentText.isEmpty) {
-          _currentText.value += value.toUpperCase();
-          _layoutType.value = OskType.upperCase;
-        } else if (inputType == OnScreenKeyboardInputType.name &&
-            _currentText.endsWith(' ')) {
-          _currentText.value += value.toUpperCase();
-          _layoutType.value = OskType.upperCase;
-        } else {
-          _currentText.value += value.toLowerCase();
-          _layoutType.value = OskType.lowerCase;
-        }
-        update();
-
+        _currentText.value += value;
         break;
       case KeyType.space:
         _currentText.value += " ";
@@ -122,28 +108,5 @@ class OskKeyController extends GetxController {
         break;
     }
     update();
-  }
-
-  void updateLayoutBasedOnInputType() {
-    switch (inputType) {
-      case OnScreenKeyboardInputType.name:
-        _layoutType.value = OskType.upperCase;
-        break;
-      case OnScreenKeyboardInputType.email:
-        _layoutType.value = OskType.lowerCase;
-        break;
-      case OnScreenKeyboardInputType.number:
-        _layoutType.value = OskType.numbers;
-        break;
-      case OnScreenKeyboardInputType.text:
-        _layoutType.value = OskType.lowerCase;
-        break;
-      case OnScreenKeyboardInputType.alphanumeric:
-        _layoutType.value = OskType.specialCharacters;
-        break;
-      default:
-        _layoutType.value = OskType.lowerCase;
-        break;
-    }
   }
 }
