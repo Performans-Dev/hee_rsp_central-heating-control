@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
+import 'package:central_heating_control/app/presentation/components/idle_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -17,12 +18,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // onTapDown: (_) => Box.handleTouch(),
-      // onTap: () => Box.handleTouch(),
-      // onDoubleTap: () => Box.handleTouch(),
-      // onLongPress: () => Box.handleTouch(),
-      // onPanStart: (_) => Box.handleTouch(),
+    return IdleDetector(
+      excludedRoutes: [Routes.settings],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: UiStrings.appName,

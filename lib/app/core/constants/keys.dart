@@ -29,7 +29,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 9;
+  static const int databaseVersion = 10;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -87,12 +87,19 @@ class Keys {
       type INTEGER NOT NULL DEFAULT 0,
       connectionType INTEGER NOT NULL DEFAULT 0,
       ipAddress TEXT,
+      levelType INTEGER NOT NULL DEFAULT 1,
       level1Relay TEXT,
       level1ConsumptionAmount DOUBLE,
       level1ConsumptionUnit TEXT,
+      level1Carbon DOUBLE,
       level2Relay TEXT,
       level2ConsumptionAmount DOUBLE,
       level2ConsumptionUnit TEXT,
+      level2Carbon DOUBLE,
+      level3Relay TEXT,
+      level3ConsumptionAmount DOUBLE,
+      level3ConsumptionUnit TEXT,
+      level3Carbon DOUBLE,
       errorChannel INTEGER,
       errorChannelType INTEGER,
       state INTEGER NOT NULL DEFAULT 0,

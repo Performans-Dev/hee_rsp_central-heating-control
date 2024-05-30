@@ -239,8 +239,7 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.screenSaver,
     page: () => const ScreenSaverScreen(),
-    transitionDuration: const Duration(milliseconds: 1000),
-    transition: Transition.zoom,
+    transition: Transition.fadeIn,
   ),
 
   GetPage(

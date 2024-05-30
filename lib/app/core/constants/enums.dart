@@ -78,6 +78,13 @@ enum HeaterDeviceType {
   naturalGas,
 }
 
+enum HeaterDeviceLevel {
+  none,
+  onOff,
+  twoLevels,
+  threeLevels,
+}
+
 enum HeaterState {
   off,
   on,

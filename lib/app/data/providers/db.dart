@@ -54,17 +54,17 @@ class DbProvider {
     // await db.execute(Keys.dbDropUsers);
     // await db.execute(Keys.dbCreateUsers);
 
-    // await db.execute(Keys.dbDropSensors);
-    // await db.execute(Keys.dbCreateSensors);
+    await db.execute(Keys.dbDropSensors);
+    await db.execute(Keys.dbCreateSensors);
 
-    // await db.execute(Keys.dbDropHeaters);
-    // await db.execute(Keys.dbCreateHeaters);
+    await db.execute(Keys.dbDropHeaters);
+    await db.execute(Keys.dbCreateHeaters);
 
-    // await db.execute(Keys.dbDropZones);
-    // await db.execute(Keys.dbCreateZones);
+    await db.execute(Keys.dbDropZones);
+    await db.execute(Keys.dbCreateZones);
 
-    // await db.execute(Keys.dbDropZoneUsers);
-    // await db.execute(Keys.dbCreateZoneUsers);
+    await db.execute(Keys.dbDropZoneUsers);
+    await db.execute(Keys.dbCreateZoneUsers);
 
     // await db.execute(Keys.dbDropZoneSensors);
     // await db.execute(Keys.dbCreateZoneSensors);

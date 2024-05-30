@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/channel.dart';
-import 'package:get/get.dart';
 
 class HeaterDevice {
   int id;
@@ -13,12 +14,19 @@ class HeaterDevice {
   HeaterDeviceType type;
   HeaterDeviceConnectionType connectionType;
   String? ipAddress;
+  HeaterDeviceLevel levelType;
   Channel? level1Relay;
   double? level1ConsumptionAmount;
   String? level1ConsumptionUnit;
+  double? level1Carbon;
   Channel? level2Relay;
   double? level2ConsumptionAmount;
   String? level2ConsumptionUnit;
+  double? level2Carbon;
+  Channel? level3Relay;
+  double? level3ConsumptionAmount;
+  String? level3ConsumptionUnit;
+  double? level3Carbon;
   Channel? errorChannel;
   ErrorChannelType? errorChannelType;
   int state;
@@ -31,12 +39,19 @@ class HeaterDevice {
     required this.type,
     required this.connectionType,
     this.ipAddress,
+    required this.levelType,
     this.level1Relay,
     this.level1ConsumptionAmount,
     this.level1ConsumptionUnit,
+    this.level1Carbon,
     this.level2Relay,
     this.level2ConsumptionAmount,
     this.level2ConsumptionUnit,
+    this.level2Carbon,
+    this.level3Relay,
+    this.level3ConsumptionAmount,
+    this.level3ConsumptionUnit,
+    this.level3Carbon,
     this.errorChannel,
     this.errorChannelType,
     required this.state,
@@ -52,12 +67,19 @@ class HeaterDevice {
           'type': type.index,
           'connectionType': connectionType.index,
           'ipAddress': ipAddress,
+          'levelType': levelType.index,
           'level1Relay': level1Relay?.id,
           'level1ConsumptionAmount': level1ConsumptionAmount,
           'level1ConsumptionUnit': level1ConsumptionUnit,
+          'level1Carbon': level1Carbon,
           'level2Relay': level2Relay?.id,
           'level2ConsumptionAmount': level2ConsumptionAmount,
           'level2ConsumptionUnit': level2ConsumptionUnit,
+          'level2Carbon': level2Carbon,
+          'level3Relay': level3Relay?.id,
+          'level3ConsumptionAmount': level3ConsumptionAmount,
+          'level3ConsumptionUnit': level3ConsumptionUnit,
+          'level3Carbon': level3Carbon,
           'errorChannel': errorChannel?.id,
           'errorChannelType': errorChannelType?.index,
           'state': state,
@@ -70,12 +92,19 @@ class HeaterDevice {
           'type': type.index,
           'connectionType': connectionType.index,
           'ipAddress': ipAddress,
+          'levelType': levelType.index,
           'level1Relay': level1Relay?.id,
           'level1ConsumptionAmount': level1ConsumptionAmount,
           'level1ConsumptionUnit': level1ConsumptionUnit,
+          'level1Carbon': level1Carbon,
           'level2Relay': level2Relay?.id,
           'level2ConsumptionAmount': level2ConsumptionAmount,
           'level2ConsumptionUnit': level2ConsumptionUnit,
+          'level2Carbon': level2Carbon,
+          'level3Relay': level3Relay?.id,
+          'level3ConsumptionAmount': level3ConsumptionAmount,
+          'level3ConsumptionUnit': level3ConsumptionUnit,
+          'level3Carbon': level3Carbon,
           'errorChannel': errorChannel?.id,
           'errorChannelType': errorChannelType?.index,
           'state': state,
@@ -90,6 +119,7 @@ class HeaterDevice {
         type: HeaterDeviceType.none,
         connectionType: HeaterDeviceConnectionType.none,
         state: HeaterState.off.index,
+        levelType: HeaterDeviceLevel.none,
       );
 
   factory HeaterDevice.fromMap(Map<String, dynamic> map) {
@@ -102,27 +132,36 @@ class HeaterDevice {
       connectionType: HeaterDeviceConnectionType
           .values[map['connectionType']?.toInt() ?? 0],
       ipAddress: map['ipAddress'],
+      levelType: HeaterDeviceLevel.values[map['levelType']?.toInt() ?? 0],
       level1Relay: map['level1Relay'] != null
           ? UiData.channels
               .firstWhereOrNull((element) => element.id == map['level1Relay'])
           : null,
       level1ConsumptionAmount: map['level1ConsumptionAmount']?.toDouble(),
       level1ConsumptionUnit: map['level1ConsumptionUnit'],
+      level1Carbon: map['level1Carbon']?.toDouble(),
       level2Relay: map['level2Relay'] != null
           ? UiData.channels
               .firstWhereOrNull((element) => element.id == map['level2Relay'])
           : null,
       level2ConsumptionAmount: map['level2ConsumptionAmount']?.toDouble(),
       level2ConsumptionUnit: map['level2ConsumptionUnit'],
-      errorChannel: map['errorChannel'] != null
+      level2Carbon: map['level2Carbon']?.toDouble(),
+      level3Relay: map['level3Relay'] != null
           ? UiData.channels
-              .firstWhereOrNull((element) => element.id == map['errorChannel'])
+              .firstWhereOrNull((element) => element.id == map['level3Relay'])
+          : null,
+      level3ConsumptionAmount: map['level3ConsumptionAmount']?.toDouble(),
+      level3ConsumptionUnit: map['level3ConsumptionUnit'],
+      level3Carbon: map['level3Carbon']?.toDouble(),
+      errorChannel: map['errorChannel'] != null
+          ? Channel.fromMap(map['errorChannel'])
           : null,
       errorChannelType: map['errorChannelType'] != null
           ? ErrorChannelType.values[map['errorChannelType']]
           : null,
       state: map['state']?.toInt() ?? 0,
-      zoneId: map['zoneId'],
+      zoneId: map['zoneId']?.toInt(),
     );
   }
 

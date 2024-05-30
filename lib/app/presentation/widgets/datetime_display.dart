@@ -36,7 +36,9 @@ class _DateTextWidgetState extends State<DateTextWidget> {
   void _updateDateTime() {
     setState(() {
       DateTime now = DateTime.now();
-      formattedDate = DateFormat('d MMM, E').format(now);
+      formattedDate = widget.large
+          ? DateFormat('d MMMM\nEEEE').format(now)
+          : DateFormat('d MMM, E').format(now);
       formattedTime = DateFormat.Hms().format(now);
       // _currentDateTime = '$formattedDate\n$formattedTime';
     });
@@ -50,8 +52,9 @@ class _DateTextWidgetState extends State<DateTextWidget> {
       children: [
         Text(
           formattedDate,
+          textAlign: TextAlign.center,
           style: widget.large
-              ? Theme.of(context).textTheme.displayLarge?.copyWith(
+              ? Theme.of(context).textTheme.displayMedium?.copyWith(
                   letterSpacing: 1,
                   color: Colors.white.withOpacity(0.83),
                   shadows: [
