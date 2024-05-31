@@ -1,7 +1,9 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
@@ -9,6 +11,7 @@ import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SetupAdminUserScreen extends StatefulWidget {
   const SetupAdminUserScreen({super.key});
@@ -58,9 +61,29 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         const Divider(),
-                        TextInputWidget(
-                          labelText: "Name Surname",
-                          controller: nameController,
+                        // TextInputWidget(
+                        //   labelText: "Name Surname",
+                        //   controller: nameController,
+
+                        // ),
+                        FormItemComponent(
+                          label: 'Name Surname',
+                          child: TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              border: UiDimens.formBorder,
+                            ),
+                            readOnly: true,
+                            onTap: () async {
+                              final result = OSKKey.show(
+                                label: 'Name Surname',
+                                initialValue: nameController.text,
+                              );
+                              setState(() {
+                                nameController.text = result as String? ?? '';
+                              });
+                            },
+                          ),
                         ),
                         TextInputWidget(
                           labelText: "PIN",

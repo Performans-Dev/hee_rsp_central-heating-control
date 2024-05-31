@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class TextInputWidget extends StatelessWidget {
   final String labelText;
@@ -31,6 +32,14 @@ class TextInputWidget extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         obscuringCharacter: obscuringCharacter ?? " ",
+        readOnly: true,
+        onTap: () async {
+          final result = await OSKKey.show(
+            initialValue: controller?.text,
+            label: labelText,
+          );
+          controller?.text = result;
+        },
       ),
     );
   }

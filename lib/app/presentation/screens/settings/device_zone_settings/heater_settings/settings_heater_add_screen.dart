@@ -16,6 +16,7 @@ import 'package:central_heating_control/app/presentation/components/pi_scroll.da
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsHeaterAddScreen extends StatefulWidget {
   const SettingsHeaterAddScreen({super.key});
@@ -501,7 +502,18 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                       FormItemComponent(
                         label: 'Name',
                         child: TextField(
+                          onTap: () async {
+                            final result = await OSKKey.show(
+                              initialValue: heater.name,
+                              label: 'Heater Name',
+                              type: OSKKeyInputType.name,
+                            );
+                            setState(() {
+                              nameController.text = result;
+                            });
+                          },
                           controller: nameController,
+                          readOnly: true,
                           decoration: InputDecoration(
                             border: UiDimens.formBorder,
                             hintText: 'Type a name here',
