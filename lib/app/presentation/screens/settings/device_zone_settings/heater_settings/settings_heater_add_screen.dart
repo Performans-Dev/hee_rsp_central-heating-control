@@ -29,12 +29,17 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
   HeaterDevice heater = HeaterDevice.initial();
   late PageController pageController;
   int currentPage = 0;
-  // late TextEditingController nameController;
-  // late TextEditingController ipAddressController;
-  // late TextEditingController level1ConsumptionController;
-  // late TextEditingController level1UnitController;
-  // late TextEditingController level2ConsumptionController;
-  // late TextEditingController level2UnitController;
+  late TextEditingController nameController;
+  late TextEditingController ipAddressController;
+  late TextEditingController level1ConsumptionController;
+  late TextEditingController level1UnitController;
+  late TextEditingController level1CarbonController;
+  late TextEditingController level2ConsumptionController;
+  late TextEditingController level2UnitController;
+  late TextEditingController level2CarbonController;
+  late TextEditingController level3ConsumptionController;
+  late TextEditingController level3UnitController;
+  late TextEditingController level3CarbonController;
 
   @override
   void initState() {
@@ -47,23 +52,38 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
               : 0;
         });
       });
-    // nameController = TextEditingController()
-    //   ..addListener(() => setState(() => heater.name = nameController.text));
-    // ipAddressController = TextEditingController()
-    //   ..addListener(
-    //       () => setState(() => heater.ipAddress = ipAddressController.text));
-    // level1ConsumptionController = TextEditingController()
-    //   ..addListener(() => setState(() => heater.level1ConsumptionAmount =
-    //       double.tryParse(level1ConsumptionController.text)));
-    // level1UnitController = TextEditingController()
-    //   ..addListener(() => setState(
-    //       () => heater.level1ConsumptionUnit = level1UnitController.text));
-    // level2ConsumptionController = TextEditingController()
-    //   ..addListener(() => setState(() => heater.level2ConsumptionAmount =
-    //       double.tryParse(level2ConsumptionController.text)));
-    // level2UnitController = TextEditingController()
-    //   ..addListener(() => setState(
-    //       () => heater.level2ConsumptionUnit = level2UnitController.text));
+    nameController = TextEditingController()
+      ..addListener(() => setState(() => heater.name = nameController.text));
+    ipAddressController = TextEditingController()
+      ..addListener(
+          () => setState(() => heater.ipAddress = ipAddressController.text));
+    level1ConsumptionController = TextEditingController()
+      ..addListener(() => setState(() => heater.level1ConsumptionAmount =
+          double.tryParse(level1ConsumptionController.text)));
+    level1UnitController = TextEditingController()
+      ..addListener(() => setState(
+          () => heater.level1ConsumptionUnit = level1UnitController.text));
+    level1CarbonController = TextEditingController()
+      ..addListener(() => setState(() =>
+          heater.level1Carbon = double.tryParse(level1CarbonController.text)));
+    level2ConsumptionController = TextEditingController()
+      ..addListener(() => setState(() => heater.level2ConsumptionAmount =
+          double.tryParse(level2ConsumptionController.text)));
+    level2UnitController = TextEditingController()
+      ..addListener(() => setState(
+          () => heater.level2ConsumptionUnit = level2UnitController.text));
+    level2CarbonController = TextEditingController()
+      ..addListener(() => setState(() =>
+          heater.level2Carbon = double.tryParse(level2CarbonController.text)));
+    level3ConsumptionController = TextEditingController()
+      ..addListener(() => setState(() => heater.level3ConsumptionAmount =
+          double.tryParse(level3ConsumptionController.text)));
+    level3UnitController = TextEditingController()
+      ..addListener(() => setState(
+          () => heater.level3ConsumptionUnit = level3UnitController.text));
+    level3CarbonController = TextEditingController()
+      ..addListener(() => setState(() =>
+          heater.level3Carbon = double.tryParse(level3CarbonController.text)));
   }
 
   @override
@@ -273,7 +293,9 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                             )
                           : heater.connectionType ==
                                   HeaterDeviceConnectionType.ethernet
-                              ? Column(
+                              ?
+                              // MARK: IP Address
+                              Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -281,6 +303,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                                       label:
                                           'Enter the IP Address of your heater',
                                       child: TextField(
+                                        controller: ipAddressController,
                                         decoration: InputDecoration(
                                           border: UiDimens.formBorder,
                                           hintText: 'eg: 192.168.1.156',
@@ -302,27 +325,236 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                                   ),
                                 ),
                 ),
-                //
+                //MARK: CONSUMPTION
                 Container(
                   constraints: BoxConstraints.expand(),
-                  child: Text('a'),
-                  color: Colors.red,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Please enter Consumption Values and CO2 emissions'),
+                      SizedBox(height: 20),
+                      //MARK: Consumption Header
+                      Row(
+                        children: [
+                          Expanded(child: Container()),
+                          Expanded(
+                            child: Text(
+                              'Consumption\nAmount',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Consumption\nUnit',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'CO2\nEmission',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                      //MARK: LEVEL 1 CONSUMPTION
+                      SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(child: Text('Level 1')),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: level1ConsumptionController,
+                              decoration: InputDecoration(
+                                border: UiDimens.formBorder,
+                                hintText: '0.0',
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: level1UnitController,
+                              decoration: InputDecoration(
+                                border: UiDimens.formBorder,
+                                hintText:
+                                    heater.type == HeaterDeviceType.electric
+                                        ? 'kwH'
+                                        : 'm3',
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: level1CarbonController,
+                              decoration: InputDecoration(
+                                border: UiDimens.formBorder,
+                                hintText: 'mg',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      //MARK: LEVEL 2 CONSUMPTION
+                      if (heater.levelType == HeaterDeviceLevel.twoLevels ||
+                          heater.levelType == HeaterDeviceLevel.threeLevels)
+                        SizedBox(height: 12),
+                      if (heater.levelType == HeaterDeviceLevel.twoLevels ||
+                          heater.levelType == HeaterDeviceLevel.threeLevels)
+                        Row(
+                          children: [
+                            Expanded(child: Text('Level 2')),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: level2ConsumptionController,
+                                decoration: InputDecoration(
+                                  border: UiDimens.formBorder,
+                                  hintText: '0.0',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: level2UnitController,
+                                decoration: InputDecoration(
+                                  border: UiDimens.formBorder,
+                                  hintText:
+                                      heater.type == HeaterDeviceType.electric
+                                          ? 'kwH'
+                                          : 'm3',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: level2CarbonController,
+                                decoration: InputDecoration(
+                                  border: UiDimens.formBorder,
+                                  hintText: 'mg',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      //MARK: LEVEL 3 CONSUMPTION
+                      if (heater.levelType == HeaterDeviceLevel.threeLevels)
+                        SizedBox(height: 12),
+                      if (heater.levelType == HeaterDeviceLevel.threeLevels)
+                        Row(
+                          children: [
+                            Expanded(child: Text('Level 3')),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: level3ConsumptionController,
+                                decoration: InputDecoration(
+                                  border: UiDimens.formBorder,
+                                  hintText: '0.0',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: level3UnitController,
+                                decoration: InputDecoration(
+                                  border: UiDimens.formBorder,
+                                  hintText:
+                                      heater.type == HeaterDeviceType.electric
+                                          ? 'kwH'
+                                          : 'm3',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller: level3CarbonController,
+                                decoration: InputDecoration(
+                                  border: UiDimens.formBorder,
+                                  hintText: 'mg',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                  padding: EdgeInsets.all(60),
                 ),
+                //MARK: NAME-COLOR
                 Container(
                   constraints: BoxConstraints.expand(),
-                  child: Text('a'),
-                  color: Colors.purple,
+                  padding: EdgeInsets.all(60),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FormItemComponent(
+                        label: 'Name',
+                        child: TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            border: UiDimens.formBorder,
+                            hintText: 'Type a name here',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      FormItemComponent(
+                        label: 'Pick a color',
+                        child: ColorPickerWidget(
+                          selectedValue: heater.color,
+                          onSelected: (value) {
+                            setState(() {
+                              heater.color = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+
+                //MARK: SUMMARY
                 Container(
                   constraints: BoxConstraints.expand(),
-                  child: Text('a'),
-                  color: Colors.lightGreen,
+                  padding: EdgeInsets.all(60),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Name: ${heater.name}'),
+                      Text(
+                          'Type: ${heater.type.name.camelCaseToHumanReadable()}'),
+                      Text(
+                          'Connection: ${heater.connectionType.name.camelCaseToHumanReadable()}'),
+                      Text(
+                          'Level Settings: ${heater.levelType.name.camelCaseToHumanReadable()}'),
+                      Text('Channels:'),
+                      Text('Consumptions:'),
+                      Text(
+                          'Level1 ${heater.level1ConsumptionAmount}${heater.level1ConsumptionUnit} (${heater.level1Carbon})'),
+                      Text(
+                          'Level2 ${heater.level2ConsumptionAmount}${heater.level2ConsumptionUnit} (${heater.level2Carbon})'),
+                      Text(
+                          'Level3 ${heater.level3ConsumptionAmount}${heater.level3ConsumptionUnit} (${heater.level3Carbon})'),
+                    ],
+                  ),
                 ),
               ],
               onPageChanged: (p) {},
             ),
-            previousButton,
-            nextButton,
+            if (currentPage > 0) previousButton,
+            currentPage > 5 ? saveButton : nextButton,
           ],
         ),
 
@@ -877,23 +1109,29 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
         ),
       );
 
-  Widget get saveButton => ElevatedButton(
-        onPressed: heater.name.isNotEmpty &&
-                heater.type != HeaterDeviceType.none &&
-                heater.connectionType != HeaterDeviceConnectionType.none
-            ? () async {
-                final DataController dc = Get.find();
-                final result = await dc.addHeater(heater);
-                if (result) {
-                  //TODO: snackbar success
+  Widget get saveButton => Align(
+        alignment: Alignment.bottomRight,
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: ElevatedButton(
+            onPressed: heater.name.isNotEmpty &&
+                    heater.type != HeaterDeviceType.none &&
+                    heater.connectionType != HeaterDeviceConnectionType.none
+                ? () async {
+                    final DataController dc = Get.find();
+                    final result = await dc.addHeater(heater);
+                    if (result) {
+                      //TODO: snackbar success
 
-                  Get.back();
-                } else {
-                  //TODO: snackbar error
-                }
-              }
-            : null,
-        child: const Text("Save"),
+                      Get.back();
+                    } else {
+                      //TODO: snackbar error
+                    }
+                  }
+                : null,
+            child: const Text("Save"),
+          ),
+        ),
       );
 
   Widget get cancelButton => ElevatedButton(
