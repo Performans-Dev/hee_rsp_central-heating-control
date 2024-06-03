@@ -37,6 +37,8 @@ class DataController extends GetxController {
   }
   //#endregion
 
+  //MARK: PORTS
+
   //#region COMMUNICATION PORTS
   final List<ComPort> _comportList = <ComPort>[].obs;
   List<ComPort> get comportList => _comportList;
@@ -47,7 +49,9 @@ class DataController extends GetxController {
 
   //#endregion
 
-  //#region ZONES
+  //MARK: ZONES
+
+  //#region ZONE LIST
   final List<ZoneDefinition> _zoneList = <ZoneDefinition>[].obs;
   List<ZoneDefinition> get zoneList => _zoneList;
   List<ZoneDefinition> getZoneListForDropdown() =>
@@ -58,7 +62,9 @@ class DataController extends GetxController {
     _zoneList.assignAll(data);
     update();
   }
+  //#endregion
 
+  //#region ZONE ADD
   Future<bool> addZone(ZoneDefinition zone) async {
     final result = await DbProvider.db.addZone(zone);
     if (result > 0) {
@@ -67,7 +73,9 @@ class DataController extends GetxController {
     }
     return false;
   }
+  //#endregion
 
+  //#region ZONE UPDATE
   Future<bool> updateZone(ZoneDefinition zone) async {
     final result = await DbProvider.db.updateZone(zone);
     if (result > 0) {
@@ -78,7 +86,9 @@ class DataController extends GetxController {
   }
   //#endregion
 
-  //#region HEATERS
+  //MARK: HEATERS
+
+  //#region HEATERS LIST
   final List<HeaterDevice> _heaterList = <HeaterDevice>[].obs;
   List<HeaterDevice> get heaterList => _heaterList;
   Future<void> getHeaterListFromDb() async {
@@ -86,7 +96,9 @@ class DataController extends GetxController {
     _heaterList.assignAll(data);
     update();
   }
+  //#endregion
 
+  //#region HEATER ADD
   Future<bool> addHeater(HeaterDevice heater) async {
     final result = await DbProvider.db.addHeater(heater);
     if (result > 0) {
@@ -95,7 +107,9 @@ class DataController extends GetxController {
     }
     return false;
   }
+  //#endregion
 
+  //#region HEATER UPDATE
   Future<bool> updateHeater(HeaterDevice heater) async {
     final result = await DbProvider.db.updateHeater(heater);
     if (result > 0) {
@@ -106,7 +120,9 @@ class DataController extends GetxController {
   }
   //#endregion
 
-  //#region SENSORS
+  //MARK: SENSORS
+
+  //#region SENSORS LIST
   final List<SensorDevice> _sensorList = <SensorDevice>[].obs;
   List<SensorDevice> get sensorList => _sensorList;
   Future<void> getSensorListFromDb() async {
@@ -114,7 +130,9 @@ class DataController extends GetxController {
     _sensorList.assignAll(data);
     update();
   }
+  //#endregion
 
+  //#region SENSORS ADD
   Future<void> addSensor(SensorDevice sensor) async {
     final result = await DbProvider.db.addSensor(sensor);
     if (result > 0) {
@@ -123,7 +141,9 @@ class DataController extends GetxController {
   }
   //#endregion
 
-  //#region PLANS
+  //MARK: PLANS
+
+  //#region PLANS LIST
   final RxList<PlanDefinition> _planList = <PlanDefinition>[].obs;
   List<PlanDefinition> get planList => _planList;
 
@@ -132,7 +152,9 @@ class DataController extends GetxController {
     _planList.assignAll(data);
     update();
   }
+  //#endregion
 
+  //#region PLAN DETAILS
   final RxList<PlanDetail> _planDetails = <PlanDetail>[].obs;
   List<PlanDetail> get planDetails => _planDetails;
 
@@ -147,6 +169,36 @@ class DataController extends GetxController {
     await getPlanListFromDb();
     await getPlanDetailsFromDb();
     update();
+  }
+  //#endregion
+
+  //#region PLAN COPY
+  Future<int?> copyPlan({required int sourcePlanId}) async {
+    final data = await DbProvider.db.getPlanDetails(planId: sourcePlanId);
+    final target = await DbProvider.db.addPlanDefinition(
+      plan: PlanDefinition(
+        id: 0,
+        name: 'New Plan',
+        isDefault: 0,
+        isActive: 0,
+      ),
+    );
+    if (target != null) {
+      for (int i = 0; i < data.length; i++) {
+        data[i].planId = target.id;
+        data[i].id = 0;
+      }
+      await addPlanDetailsToDb(data);
+    }
+    return target?.id;
+  }
+  //#endregion
+
+  //#region PLAN DELETE
+  Future<bool> deletePlan({required int planId}) async {
+    final result = await DbProvider.db.deletePlanAndDetails(planId: planId);
+    getPlanListFromDb();
+    return result;
   }
   //#endregion
 }

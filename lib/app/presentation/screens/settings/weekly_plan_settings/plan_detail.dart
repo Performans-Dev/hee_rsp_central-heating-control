@@ -61,14 +61,16 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                     ),
                     SizedBox(width: 20),
                     IconButton(
-                      onPressed: () {
-                        //TODO: show keyboard
-                        /// final result= await OskKeyboard()
-                        /// if (result!=null && result.isNotEmpty) {
-                        /// plan.name=result;
-                        /// dc.updatePlanDefinition(plan);
-                        /// }
-                      },
+                      onPressed: plan.isDefault == 1
+                          ? null
+                          : () {
+                              //TODO: show keyboard
+                              /// final result= await OskKeyboard()
+                              /// if (result!=null && result.isNotEmpty) {
+                              /// plan.name=result;
+                              /// dc.updatePlanDefinition(plan);
+                              /// }
+                            },
                       icon: Icon(Icons.edit),
                     ),
                   ],

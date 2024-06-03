@@ -1,3 +1,5 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -34,8 +36,21 @@ class SettingsPlanListScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        onPressed:
-                            dc.planList[index].isDefault == 1 ? null : () {},
+                        onPressed: dc.planList[index].isDefault == 1
+                            ? null
+                            : () {
+                                DialogUtils.confirmDialog(
+                                  context: context,
+                                  title: 'Deleting Plan',
+                                  description:
+                                      'Are you sure you want to delete the plan ${dc.planList[index].name}',
+                                  positiveText: 'Delete',
+                                  negativeText: 'Cancel',
+                                  positiveCallback: () {
+                                    deletePlan(context, dc.planList[index].id);
+                                  },
+                                );
+                              },
                         icon: const Icon(Icons.delete),
                       ),
                       IconButton(
@@ -44,7 +59,33 @@ class SettingsPlanListScreen extends StatelessWidget {
                         icon: const Icon(Icons.edit),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final newPlanId = await dc.copyPlan(
+                              sourcePlanId: dc.planList[index].id);
+                          if (newPlanId != null) {
+                            if (context.mounted) {
+                              DialogUtils.snackbar(
+                                context: context,
+                                message: 'Copied to new plan',
+                                type: SnackbarType.success,
+                              );
+                            }
+                            Get.toNamed(
+                              Routes.settingsPlanDetail,
+                              parameters: {
+                                'planId': newPlanId.toString(),
+                              },
+                            );
+                          } else {
+                            if (context.mounted) {
+                              DialogUtils.snackbar(
+                                context: context,
+                                message: 'Could not able to copy plan details',
+                                type: SnackbarType.error,
+                              );
+                            }
+                          }
+                        },
                         icon: const Icon(Icons.copy),
                       ),
                       IconButton(
@@ -77,5 +118,31 @@ class SettingsPlanListScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  void deletePlan(BuildContext context, int id) async {
+    final DataController dataController = Get.find();
+    final result = await dataController.deletePlan(planId: id);
+    if (context.mounted) {
+      if (result) {
+        DialogUtils.snackbar(
+          context: context,
+          message: 'Plan deleted',
+          type: SnackbarType.info,
+        );
+      } else {
+        DialogUtils.snackbar(
+          context: context,
+          message: 'Could not delete plan,',
+          type: SnackbarType.error,
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: () {
+              deletePlan(context, id);
+            },
+          ),
+        );
+      }
+    }
   }
 }
