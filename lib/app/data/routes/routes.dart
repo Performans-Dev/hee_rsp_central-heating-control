@@ -2,6 +2,7 @@ class Routes {
   static const String developer = '/dev';
 
   static const String home = '/home';
+  static const String zone = '/zone';
   static const String splash = '/initializing';
 
   static const String pin = '/pin';

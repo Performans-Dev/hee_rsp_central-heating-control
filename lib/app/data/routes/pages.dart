@@ -36,6 +36,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/setup_adm
 import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
 final List<GetPage> getPages = [
@@ -53,6 +54,14 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.home,
     page: () => const HomeScreen(),
+    middlewares: [
+      SetupMiddleware(),
+      UserMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.zone,
+    page: () => const ZoneScreen(),
     middlewares: [
       SetupMiddleware(),
       UserMiddleware(),
