@@ -35,6 +35,7 @@ class TextInputWidget extends StatelessWidget {
         readOnly: true,
         onTap: () async {
           final result = await OSKKey.show(
+            context: context,
             initialValue: controller?.text,
             label: labelText,
           );

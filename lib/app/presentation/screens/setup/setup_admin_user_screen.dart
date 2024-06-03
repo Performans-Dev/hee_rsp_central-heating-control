@@ -76,6 +76,7 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                             readOnly: true,
                             onTap: () async {
                               final result = OSKKey.show(
+                                context: context,
                                 label: 'Name Surname',
                                 initialValue: nameController.text,
                               );
