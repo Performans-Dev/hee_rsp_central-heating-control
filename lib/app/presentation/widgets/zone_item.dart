@@ -20,8 +20,9 @@ class ZoneItem extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: CommonUtils.hexToColor(context, zone.color)
-                    .withOpacity(0.3)),
+              color:
+                  CommonUtils.hexToColor(context, zone.color).withOpacity(0.3),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [

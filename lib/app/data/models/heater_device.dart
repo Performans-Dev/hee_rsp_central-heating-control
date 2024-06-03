@@ -155,7 +155,7 @@ class HeaterDevice {
       level3ConsumptionUnit: map['level3ConsumptionUnit'],
       level3Carbon: map['level3Carbon']?.toDouble(),
       errorChannel: map['errorChannel'] != null
-          ? Channel.fromMap(map['errorChannel'])
+          ? UiData.channels.firstWhereOrNull((e) => e.id == map['errorChannel'])
           : null,
       errorChannelType: map['errorChannelType'] != null
           ? ErrorChannelType.values[map['errorChannelType']]

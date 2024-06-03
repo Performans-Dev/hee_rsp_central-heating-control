@@ -396,7 +396,8 @@ class DbProvider {
       final result = await db.query(Keys.tableHeaters);
       if (result.isNotEmpty) {
         for (final map in result) {
-          heaters.add(HeaterDevice.fromMap(map));
+          final h = HeaterDevice.fromMap(map);
+          heaters.add(h);
         }
       }
     } on Exception catch (err) {
