@@ -29,7 +29,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 11;
+  static const int databaseVersion = 12;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -114,7 +114,9 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       color TEXT,
-      state INTEGER NOT NULL DEFAULT 0
+      state INTEGER NOT NULL DEFAULT 0,
+      setValue INTEGER,
+      selectedPlan INTEGER
     )
   ''';
   static const String dbDropZoneUsers = '''

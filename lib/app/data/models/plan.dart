@@ -27,6 +27,9 @@ class PlanDefinition {
           'isActive': isActive,
         };
 
+  factory PlanDefinition.none() =>
+      PlanDefinition(id: -1, name: 'None', isDefault: 0, isActive: 0);
+
   factory PlanDefinition.fromMap(Map<String, dynamic> map) {
     return PlanDefinition(
       id: map['id']?.toInt() ?? 0,

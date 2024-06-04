@@ -73,16 +73,16 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                             decoration: InputDecoration(
                               border: UiDimens.formBorder,
                             ),
-                            readOnly: true,
-                            onTap: () async {
-                              final result = OSKKey.show(
-                                label: 'Name Surname',
-                                initialValue: nameController.text,
-                              );
-                              setState(() {
-                                nameController.text = result as String? ?? '';
-                              });
-                            },
+                            // readOnly: true,
+                            // onTap: () async {
+                            //   final result = OSKKey.show(
+                            //     label: 'Name Surname',
+                            //     initialValue: nameController.text,
+                            //   );
+                            //   setState(() {
+                            //     nameController.text = result as String? ?? '';
+                            //   });
+                            // },
                           ),
                         ),
                         TextInputWidget(

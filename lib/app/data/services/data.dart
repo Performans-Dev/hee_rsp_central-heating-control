@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {
@@ -61,6 +62,10 @@ class DataController extends GetxController {
     final data = await DbProvider.db.getZoneList();
     _zoneList.assignAll(data);
     update();
+    final ProcessController pc = Get.find();
+    for (final z in data) {
+      pc.initZone(z);
+    }
   }
   //#endregion
 
@@ -84,6 +89,17 @@ class DataController extends GetxController {
     }
     return false;
   }
+
+  Future<bool> updateZonePlan({required int zoneId, int? planId}) async {
+    var zone = zoneList.firstWhere((e) => e.id == zoneId);
+    zone.selectedPlan = planId;
+    final result = await updateZone(zone);
+
+    ProcessController processController = Get.find();
+    processController.initZone(zone);
+
+    return result;
+  }
   //#endregion
 
   //MARK: HEATERS
@@ -95,6 +111,10 @@ class DataController extends GetxController {
     final data = await DbProvider.db.getHeaters();
     _heaterList.assignAll(data);
     update();
+    final ProcessController pc = Get.find();
+    for (final h in data) {
+      pc.initHeater(h);
+    }
   }
   //#endregion
 
@@ -149,6 +169,7 @@ class DataController extends GetxController {
 
   Future<void> getPlanListFromDb() async {
     final data = await DbProvider.db.getPlanDefinitions();
+    data.insert(0, PlanDefinition.none());
     _planList.assignAll(data);
     update();
   }

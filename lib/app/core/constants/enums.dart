@@ -75,7 +75,9 @@ enum HeaterDeviceConnectionType {
 enum HeaterDeviceType {
   none,
   electric,
-  naturalGas,
+  electricThreePhase,
+  liquidNaturalGas,
+  liquidPetrolGas,
 }
 
 enum HeaterDeviceLevel {
@@ -87,7 +89,10 @@ enum HeaterDeviceLevel {
 
 enum HeaterState {
   off,
-  on,
+  auto,
+  level1,
+  level2,
+  level3,
 }
 
 enum ErrorChannelType {

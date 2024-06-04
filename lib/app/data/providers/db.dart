@@ -51,8 +51,8 @@ class DbProvider {
   }
 
   Future<void> createDatabaseStructure(Database db) async {
-    // await db.execute(Keys.dbDropUsers);
-    // await db.execute(Keys.dbCreateUsers);
+    await db.execute(Keys.dbDropUsers);
+    await db.execute(Keys.dbCreateUsers);
 
     await db.execute(Keys.dbDropSensors);
     await db.execute(Keys.dbCreateSensors);
@@ -66,15 +66,9 @@ class DbProvider {
     await db.execute(Keys.dbDropZoneUsers);
     await db.execute(Keys.dbCreateZoneUsers);
 
-    // await db.execute(Keys.dbDropZoneSensors);
-    // await db.execute(Keys.dbCreateZoneSensors);
-
-    // await db.execute(Keys.dbDropZoneHeaters);
-    // await db.execute(Keys.dbCreateZoneHeaters);
-    //
     await db.execute(Keys.dbDropHardwareParameters);
     await db.execute(Keys.dbCreateHardwareParameters);
-    //
+
     await db.execute(Keys.dbDropPlans);
     await db.execute(Keys.dbCreatePlans);
 
@@ -437,25 +431,16 @@ class DbProvider {
     if (db == null) return -1;
     try {
       final zoneUsers = zone.users;
-      final zoneSensors = zone.sensors;
-      final zoneDevices = zone.heaters;
       final zoneMap = {
         'name': zone.name,
         'color': zone.color,
-        'state': zone.state,
+        'state': zone.state.index,
       };
       final int id = await db.insert(Keys.tableZones, zoneMap);
       for (final user in zoneUsers) {
         await db.insert(Keys.tableZoneUsers, {'zoneId': id, 'userId': user.id});
       }
-      for (final sensor in zoneSensors) {
-        await db.insert(
-            Keys.tableZoneSensors, {'zoneId': id, 'sensorId': sensor.id});
-      }
-      for (final device in zoneDevices) {
-        await db.insert(
-            Keys.tableZoneHeaters, {'zoneId': id, 'heaterId': device.id});
-      }
+
       return id;
     } on Exception catch (err) {
       log(err.toString());
@@ -501,7 +486,7 @@ class DbProvider {
         'id': zone.id,
         'name': zone.name,
         'color': zone.color,
-        'state': zone.state,
+        'state': zone.state.index,
       };
       final int updateResult = await db.update(
         Keys.tableZones,

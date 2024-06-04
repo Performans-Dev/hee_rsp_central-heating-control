@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_item.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       builder: (app) {
-        return GetBuilder<DataController>(builder: (dc) {
-          int length = dc.zoneList.length;
+        return GetBuilder<ProcessController>(builder: (pc) {
+          int length = pc.zoneProcessList.length;
           double height = 120;
           int crossAxisCount = 3;
           if (length < 7) {
@@ -32,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisExtent: height,
                   ),
                   itemBuilder: (context, index) =>
-                      ZoneItem(zone: dc.zoneList[index]),
+                      ZoneItem(id: pc.zoneProcessList[index].zone.id),
                   itemCount: length,
                   shrinkWrap: true,
                 ),

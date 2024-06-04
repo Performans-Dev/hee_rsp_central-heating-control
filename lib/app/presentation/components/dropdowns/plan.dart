@@ -26,7 +26,7 @@ class PlanDropdownWidget extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           items: dc.planList
               .map((e) => DropdownMenuItem<int?>(
-                    value: e.id,
+                    value: e.id == -1 ? null : e.id,
                     child: Text(e.name),
                   ))
               .toList(),

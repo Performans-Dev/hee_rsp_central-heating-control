@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
@@ -12,7 +13,9 @@ class ZoneDefinition {
   List<SensorDevice> sensors;
   String color;
   List<AppUser> users;
-  int state;
+  HeaterState state;
+  int? setValue;
+  int? selectedPlan;
   ZoneDefinition({
     required this.id,
     required this.name,
@@ -21,6 +24,8 @@ class ZoneDefinition {
     required this.color,
     required this.users,
     required this.state,
+    this.setValue,
+    this.selectedPlan,
   });
 
   Map<String, dynamic> toMap() => id > 0
@@ -31,7 +36,9 @@ class ZoneDefinition {
           'sensors': sensors.map((x) => x.toMap()).toList(),
           'color': color,
           'users': users.map((x) => x.toMap()).toList(),
-          'state': state,
+          'state': state.index,
+          'setValue': setValue,
+          'selectedPlan': selectedPlan,
         }
       : {
           'name': name,
@@ -39,7 +46,9 @@ class ZoneDefinition {
           'sensors': sensors.map((x) => x.toMap()).toList(),
           'color': color,
           'users': users.map((x) => x.toMap()).toList(),
-          'state': state,
+          'state': state.index,
+          'setValue': setValue,
+          'selectedPlan': selectedPlan,
         };
 
   factory ZoneDefinition.fromMap(Map<String, dynamic> map) {
@@ -58,7 +67,9 @@ class ZoneDefinition {
       users: map['users'] == null
           ? []
           : List<AppUser>.from(map['users']?.map((x) => AppUser.fromMap(x))),
-      state: map['state']?.toInt() ?? 0,
+      state: HeaterState.values[map['state']?.toInt() ?? 0],
+      setValue: map['setValue'],
+      selectedPlan: map['selectedPlan']?.toInt(),
     );
   }
 
@@ -69,7 +80,8 @@ class ZoneDefinition {
         sensors: [],
         color: UiData.colorList.first,
         users: [],
-        state: 0,
+        state: HeaterState.off,
+        setValue: null,
       );
 
   String toJson() => json.encode(toMap());
