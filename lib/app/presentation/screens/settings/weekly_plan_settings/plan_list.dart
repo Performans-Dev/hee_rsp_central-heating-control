@@ -24,84 +24,89 @@ class SettingsPlanListScreen extends StatelessWidget {
             children: [
               const BreadcrumbWidget(title: 'Settings / Plan List'),
               ListView.builder(
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(dc.planList[index].name),
-                  leading: Icon(
-                    Icons.check,
-                    color: dc.planList[index].isActive == 1
-                        ? Colors.green
-                        : Colors.grey.withOpacity(0.3),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: dc.planList[index].isDefault == 1
-                            ? null
-                            : () {
-                                DialogUtils.confirmDialog(
-                                  context: context,
-                                  title: 'Deleting Plan',
-                                  description:
-                                      'Are you sure you want to delete the plan ${dc.planList[index].name}',
-                                  positiveText: 'Delete',
-                                  negativeText: 'Cancel',
-                                  positiveCallback: () {
-                                    deletePlan(context, dc.planList[index].id);
-                                  },
-                                );
-                              },
-                        icon: const Icon(Icons.delete),
-                      ),
-                      IconButton(
-                        onPressed:
-                            dc.planList[index].isDefault == 1 ? null : () {},
-                        icon: const Icon(Icons.edit),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          final newPlanId = await dc.copyPlan(
-                              sourcePlanId: dc.planList[index].id);
-                          if (newPlanId != null) {
-                            if (context.mounted) {
-                              DialogUtils.snackbar(
-                                context: context,
-                                message: 'Copied to new plan',
-                                type: SnackbarType.success,
-                              );
-                            }
-                            Get.toNamed(
-                              Routes.settingsPlanDetail,
-                              parameters: {
-                                'planId': newPlanId.toString(),
-                              },
-                            );
-                          } else {
-                            if (context.mounted) {
-                              DialogUtils.snackbar(
-                                context: context,
-                                message: 'Could not able to copy plan details',
-                                type: SnackbarType.error,
-                              );
-                            }
-                          }
-                        },
-                        icon: const Icon(Icons.copy),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(
-                            Routes.settingsPlanDetail,
-                            parameters: {
-                              'planId': dc.planList[index].id.toString(),
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.zoom_in),
-                      ),
-                    ],
-                  ),
-                ),
+                itemBuilder: (context, index) {
+                  final plan = dc.planList[index];
+                  return plan.id <= 0
+                      ? Container()
+                      : ListTile(
+                          title: Text(plan.name),
+                          leading: Icon(
+                            Icons.check,
+                            color: plan.isActive == 1
+                                ? Colors.green
+                                : Colors.grey.withOpacity(0.3),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: plan.isDefault == 1
+                                    ? null
+                                    : () {
+                                        DialogUtils.confirmDialog(
+                                          context: context,
+                                          title: 'Deleting Plan',
+                                          description:
+                                              'Are you sure you want to delete the plan ${plan.name}',
+                                          positiveText: 'Delete',
+                                          negativeText: 'Cancel',
+                                          positiveCallback: () {
+                                            deletePlan(context, plan.id);
+                                          },
+                                        );
+                                      },
+                                icon: const Icon(Icons.delete),
+                              ),
+                              IconButton(
+                                onPressed: plan.isDefault == 1 ? null : () {},
+                                icon: const Icon(Icons.edit),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  final newPlanId =
+                                      await dc.copyPlan(sourcePlanId: plan.id);
+                                  if (newPlanId != null) {
+                                    if (context.mounted) {
+                                      DialogUtils.snackbar(
+                                        context: context,
+                                        message: 'Copied to new plan',
+                                        type: SnackbarType.success,
+                                      );
+                                    }
+                                    Get.toNamed(
+                                      Routes.settingsPlanDetail,
+                                      parameters: {
+                                        'planId': newPlanId.toString(),
+                                      },
+                                    );
+                                  } else {
+                                    if (context.mounted) {
+                                      DialogUtils.snackbar(
+                                        context: context,
+                                        message:
+                                            'Could not able to copy plan details',
+                                        type: SnackbarType.error,
+                                      );
+                                    }
+                                  }
+                                },
+                                icon: const Icon(Icons.copy),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Get.toNamed(
+                                    Routes.settingsPlanDetail,
+                                    parameters: {
+                                      'planId': plan.id.toString(),
+                                    },
+                                  );
+                                },
+                                icon: const Icon(Icons.zoom_in),
+                              ),
+                            ],
+                          ),
+                        );
+                },
                 itemCount: dc.planList.length,
                 shrinkWrap: true,
               ),

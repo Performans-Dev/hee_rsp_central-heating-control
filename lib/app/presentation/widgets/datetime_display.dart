@@ -33,6 +33,17 @@ class _DateTextWidgetState extends State<DateTextWidget> {
     super.dispose();
   }
 
+  /// Updates the current date and time and formats it accordingly.
+  ///
+  /// This function retrieves the current date and time using `DateTime.now()`
+  /// and formats it using the `DateFormat` class. The formatted date and time
+  /// are then stored in the `formattedDate` and `formattedTime` variables.
+  ///
+  /// If the `large` property of the `widget` is `true`, the date is formatted
+  /// as "d MMMM\nEEEE", otherwise it is formatted as "d MMM, E". The time is
+  /// always formatted as "HH:mm:ss".
+  ///
+  /// This function does not return any value.
   void _updateDateTime() {
     setState(() {
       DateTime now = DateTime.now();

@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsPlanDetailScreen extends StatefulWidget {
   const SettingsPlanDetailScreen({super.key});
@@ -63,13 +64,17 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                     IconButton(
                       onPressed: plan.isDefault == 1
                           ? null
-                          : () {
-                              //TODO: show keyboard
-                              /// final result= await OskKeyboard()
-                              /// if (result!=null && result.isNotEmpty) {
-                              /// plan.name=result;
-                              /// dc.updatePlanDefinition(plan);
-                              /// }
+                          : () async {
+                              final result = await OSKKey.show(
+                                context: context,
+                                label: 'Name',
+                                initialValue: plan.name,
+                              );
+
+                              if (result != null && result.isNotEmpty) {
+                                plan.name = result;
+                                dc.updatePlanDefinition(plan: plan);
+                              }
                             },
                       icon: Icon(Icons.edit),
                     ),

@@ -43,6 +43,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
         selectedIndex: 0,
         title: 'Zone View "${zone.zone.name}"',
         body: PiScrollView(
+          padding: EdgeInsets.zero,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -65,10 +66,27 @@ class _ZoneScreenState extends State<ZoneScreen> {
                       zoneId: zone.zone.id, value: b);
                 },
                 desiredTemperature: zone.desiredTemperature,
+                onMinusPressed: zone.desiredTemperature > 150
+                    ? () {
+                        pc.onZoneThermostatDecreased(zoneId: zone.zone.id);
+                      }
+                    : null,
+                onPlusPressed: zone.desiredTemperature < 350
+                    ? () {
+                        pc.onZoneThermostatIncreased(zoneId: zone.zone.id);
+                      }
+                    : null,
               ),
-              Text('state control'),
-              Text('Heater list+controls'),
-              Text('Sensor list'),
+              Divider(),
+              Text('Heaters'),
+              ListView.builder(
+                itemBuilder: (context, index) =>
+                    ListTile(title: Text(heaters[index].heater.name)),
+                itemCount: heaters.length,
+                shrinkWrap: true,
+              ),
+              Divider(),
+              Text('Sensors'),
               /* 
                
                 //MARK: WEEKLY PLAN

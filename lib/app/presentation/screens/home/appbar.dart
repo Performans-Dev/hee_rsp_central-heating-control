@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/presentation/components/indicator_network.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: const [
         Icon(Icons.warning),
         SizedBox(width: 4),
-        Icon(Icons.lan_outlined),
-        SizedBox(width: 4),
-        Icon(Icons.wifi),
+        AppBarNetworkIndicator(),
         SizedBox(width: 8),
         DateTextWidget(),
         SizedBox(width: 8),

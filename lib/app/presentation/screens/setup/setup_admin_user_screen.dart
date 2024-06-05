@@ -73,7 +73,6 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                             decoration: InputDecoration(
                               border: UiDimens.formBorder,
                             ),
-                            readOnly: true,
                             onTap: () async {
                               final result = OSKKey.show(
                                 context: context,

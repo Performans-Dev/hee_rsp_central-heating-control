@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
@@ -22,6 +23,7 @@ class SettingsHeaterListItemWidget extends StatelessWidget {
         leading: Text(heater.icon),
         trailing: zone == null ? const Text('no zone') : Text(zone.name),
         onTap: () {
+          Buzz.feedback();
           Get.toNamed(
             Routes.settingsHeaterEdit,
             parameters: {

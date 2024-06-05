@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -21,7 +22,7 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
           ),
           Expanded(
             child: PiScrollView(
-               child: Column(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -34,6 +35,7 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () {
+                      Buzz.feedback();
                       Get.toNamed(Routes.settingsZoneList);
                     },
                   ),
@@ -46,6 +48,7 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () {
+                      Buzz.feedback();
                       Get.toNamed(Routes.settingsHeaterList);
                     },
                   ),
@@ -58,6 +61,7 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () {
+                      Buzz.feedback();
                       Get.toNamed(Routes.settingsSensorsList);
                     },
                   ),

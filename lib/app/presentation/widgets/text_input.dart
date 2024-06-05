@@ -32,8 +32,6 @@ class TextInputWidget extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         obscuringCharacter: obscuringCharacter ?? " ",
-
-        readOnly: true,
         onTap: () async {
           final result = await OSKKey.show(
             context: context,

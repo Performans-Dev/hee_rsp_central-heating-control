@@ -22,6 +22,18 @@ class DbProvider {
   }
 
   //#region INIT
+
+  /// Initializes the database by opening a connection to the database file.
+  ///
+  /// This function creates the database file if it doesn't exist and performs
+  /// necessary migrations if the database version is different from the expected
+  /// version.
+  ///
+  /// Returns a [Future] that completes with a [Database] object representing
+  /// the opened database connection. If the database file cannot be opened,
+  /// the function returns `null`.
+  ///
+  /// Throws a [DatabaseException] if there is an error opening the database.
   Future<Database?> initDb() async {
     var dbFactory = databaseFactoryFfi;
     final io.Directory appDocumentsDir =
@@ -50,6 +62,25 @@ class DbProvider {
     );
   }
 
+  /// Creates the database structure by executing SQL commands to drop and create tables.
+  ///
+  /// This function drops and creates the following tables:
+  /// - Users
+  /// - Sensors
+  /// - Heaters
+  /// - Zones
+  /// - ZoneUsers
+  /// - HardwareParameters
+  /// - Plans
+  /// - PlanDetails
+  ///
+  /// After creating the tables, it inserts a default plan and default plan details.
+  ///
+  /// Parameters:
+  /// - `db`: The [Database] object representing the database connection.
+  ///
+  /// Returns:
+  /// - A [Future] that completes when the database structure is created.
   Future<void> createDatabaseStructure(Database db) async {
     await db.execute(Keys.dbDropUsers);
     await db.execute(Keys.dbCreateUsers);
@@ -89,6 +120,12 @@ class DbProvider {
   //MARK: USERS
 
   //#region USER INSERT
+  /// Inserts a new user into the database.
+  ///
+  /// The [user] parameter represents the user object to be inserted.
+  ///
+  /// Returns the number of rows affected by the insertion. If the database is not
+  /// available, -1 is returned.
   Future<int> addUser(AppUser user) async {
     final db = await database;
     if (db == null) return -1;
@@ -106,6 +143,12 @@ class DbProvider {
   //#endregion
 
   //#region USER DELETE
+  /// Deletes a user from the database.
+  ///
+  /// The [user] parameter represents the user object to be deleted.
+  ///
+  /// Returns the number of rows affected by the deletion. If the database is not
+  /// available, -1 is returned.
   Future<int> deleteUser(AppUser user) async {
     final db = await database;
     if (db == null) return -1;

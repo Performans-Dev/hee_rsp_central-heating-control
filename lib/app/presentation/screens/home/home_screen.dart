@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisExtent: height,
                   ),
                   itemBuilder: (context, index) =>
-                      ZoneItem(id: pc.zoneProcessList[index].zone.id),
+                      ZoneItemWidget(id: pc.zoneProcessList[index].zone.id),
                   itemCount: length,
                   shrinkWrap: true,
                 ),

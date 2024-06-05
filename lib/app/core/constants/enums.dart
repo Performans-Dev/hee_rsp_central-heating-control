@@ -3,6 +3,12 @@ enum ConnectionState {
   connected,
 }
 
+enum NetworkIndicator {
+  none,
+  ethernet,
+  wifi,
+}
+
 enum JobState {
   idle,
   requested,

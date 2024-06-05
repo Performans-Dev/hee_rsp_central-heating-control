@@ -15,6 +15,8 @@ class ZoneStateControlWidget extends StatelessWidget {
     required this.hasThermostat,
     required this.onThermostatCallback,
     this.desiredTemperature,
+    this.onMinusPressed,
+    this.onPlusPressed,
   });
   final HeaterState zoneState;
   final Function(HeaterState) stateCallback;
@@ -23,24 +25,19 @@ class ZoneStateControlWidget extends StatelessWidget {
   final bool hasThermostat;
   final Function(bool) onThermostatCallback;
   final int? desiredTemperature;
+  final GestureTapCallback? onMinusPressed;
+  final GestureTapCallback? onPlusPressed;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 20),
           Row(
             children: [
               ToggleButtons(
-                children: [
-                  Text('Off'),
-                  Text('Auto'),
-                  Text('On'),
-                  Text('High'),
-                  Text('Max'),
-                ],
                 isSelected: [
                   zoneState == HeaterState.off,
                   zoneState == HeaterState.auto,
@@ -52,6 +49,13 @@ class ZoneStateControlWidget extends StatelessWidget {
                 onPressed: (value) {
                   stateCallback(HeaterState.values[value]);
                 },
+                children: const [
+                  Text('Off'),
+                  Text('Auto'),
+                  Text('On'),
+                  Text('High'),
+                  Text('Max'),
+                ],
               ),
             ],
           ),
@@ -75,16 +79,23 @@ class ZoneStateControlWidget extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(onPressed: () {}, icon: Icon(Icons.remove)),
-                        Text(TextUtils.temperature(desiredTemperature!,
-                            presicion: 0)),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                        IconButton(
+                          onPressed: onMinusPressed,
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Text(
+                          TextUtils.temperature(desiredTemperature!,
+                              presicion: 0),
+                        ),
+                        IconButton(
+                          onPressed: onPlusPressed,
+                          icon: const Icon(Icons.add),
+                        ),
                       ],
                     ),
                 ],
               ),
             ),
-          SizedBox(height: 20),
         ],
       ),
     );

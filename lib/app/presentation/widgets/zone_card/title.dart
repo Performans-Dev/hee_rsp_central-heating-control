@@ -13,19 +13,22 @@ class ZoneCardTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.topLeft,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+          ],
+        ),
       ),
     );
   }

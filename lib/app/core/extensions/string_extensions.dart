@@ -46,3 +46,15 @@ extension Substring on String {
     return substring(this.length - length.clamp(0, this.length), this.length);
   }
 }
+
+extension DiacriticsAwareString on String {
+  static const diacritics =
+      'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËĚèéêëěðČÇçčÐĎďğIıÌÍÎÏìíîïĽľÙÚÛÜŮùúûüůŇÑñňŘřŞşŠšŤťŸÝÿýŽž';
+  static const nonDiacritics =
+      'AAAAAAaaaaaaOOOOOOOooooooEEEEEeeeeeeCCccDDdgIiIIIIiiiiLlUUUUUuuuuuNNnnRrSsSsTtYYyyZz';
+
+  String get withoutDiacriticalMarks => this.splitMapJoin('',
+      onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
+          ? nonDiacritics[diacritics.indexOf(char)]
+          : char);
+}

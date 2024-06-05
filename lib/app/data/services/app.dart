@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
@@ -18,6 +19,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
   //#region SUPER
@@ -92,21 +94,54 @@ class AppController extends GetxController {
       if (!connected) {
         switch (result) {
           case ConnectivityResult.wifi:
+            connected = true;
+            _networkIndicator.value = NetworkIndicator.wifi;
+            break;
           case ConnectivityResult.ethernet:
+            connected = true;
+            _networkIndicator.value = NetworkIndicator.ethernet;
+            break;
           case ConnectivityResult.vpn:
           case ConnectivityResult.mobile:
           case ConnectivityResult.bluetooth:
             connected = true;
+            _networkIndicator.value = NetworkIndicator.none;
             break;
           default:
             connected = false;
+            _networkIndicator.value = NetworkIndicator.none;
             break;
         }
       }
     }
     _didConnected.value = connected;
     update();
+    getNetworkInfo();
   }
+
+  final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
+  NetworkIndicator get networkIndicator => _networkIndicator.value;
+  //#endregion
+
+  //#region NETWORK
+  Future<void> getNetworkInfo() async {
+    final info = NetworkInfo();
+    final wifiName = await info.getWifiName();
+    final wifiIp = await info.getWifiIP();
+    final wifiGateway = await info.getWifiGatewayIP();
+    _networkName.value = wifiName;
+    _networkIP.value = wifiIp;
+    _networkGateway.value = wifiGateway;
+    update();
+  }
+
+  final Rxn<String> _networkName = Rxn();
+  final Rxn<String> _networkIP = Rxn();
+  final Rxn<String> _networkGateway = Rxn();
+  String? get networkName => _networkName.value;
+  String? get networkIp => _networkIP.value;
+  String? get networkGateway => _networkGateway.value;
+
   //#endregion
 
   //#region USER

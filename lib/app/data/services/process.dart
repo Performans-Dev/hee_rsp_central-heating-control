@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
@@ -26,10 +27,19 @@ class ProcessController extends GetxController {
     } else {
       _zoneProcessList.firstWhere((e) => e.zone.id == z.id).zone = z;
     }
+
     update();
     for (final heater in heaters) {
       initHeater(heater);
     }
+  }
+
+  sortZoneList() {
+    _zoneProcessList.sort((a, b) => a.zone.name
+        .toLowerCase()
+        .withoutDiacriticalMarks
+        .compareTo(b.zone.name.toLowerCase().withoutDiacriticalMarks));
+    update();
   }
 
   initHeater(HeaterDevice h) {
@@ -55,6 +65,7 @@ class ProcessController extends GetxController {
     _zoneProcessList.removeWhere((e) => e.zone.id == zoneId);
     _zoneProcessList.add(z);
     update();
+    sortZoneList();
   }
 
   void onZoneThermostatOptionCalled(
@@ -64,5 +75,24 @@ class ProcessController extends GetxController {
     _zoneProcessList.removeWhere((e) => e.zone.id == zoneId);
     _zoneProcessList.add(z);
     update();
+    sortZoneList();
+  }
+
+  void onZoneThermostatDecreased({required int zoneId}) async {
+    var z = zoneProcessList.firstWhere((e) => e.zone.id == zoneId);
+    z.desiredTemperature = z.desiredTemperature - 10;
+    _zoneProcessList.removeWhere((e) => e.zone.id == zoneId);
+    _zoneProcessList.add(z);
+    update();
+    sortZoneList();
+  }
+
+  void onZoneThermostatIncreased({required int zoneId}) async {
+    var z = zoneProcessList.firstWhere((e) => e.zone.id == zoneId);
+    z.desiredTemperature = z.desiredTemperature + 10;
+    _zoneProcessList.removeWhere((e) => e.zone.id == zoneId);
+    _zoneProcessList.add(z);
+    update();
+    sortZoneList();
   }
 }

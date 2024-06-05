@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -40,7 +41,10 @@ class SettingsHeaterListScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
         child: ElevatedButton(
-          onPressed: () => Get.toNamed(Routes.settingsHeaterAdd),
+          onPressed: () {
+            Buzz.feedback();
+            Get.toNamed(Routes.settingsHeaterAdd);
+          },
           child: const Text("Add New Heater"),
         ),
       );
