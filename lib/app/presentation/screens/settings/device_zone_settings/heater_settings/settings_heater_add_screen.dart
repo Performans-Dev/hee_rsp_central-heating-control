@@ -525,11 +525,11 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                       label: 'Name',
                       child: TextField(
                         onTap: () async {
-                          final result = await OSKKey.show(
+                          final result = await OnScreenKeyboard.show(
                             context: context,
                             initialValue: heater.name,
                             label: 'Heater Name',
-                            type: OSKKeyInputType.name,
+                            type: OSKInputType.name,
                           );
                           setState(() {
                             nameController.text = result;

@@ -74,7 +74,7 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                               border: UiDimens.formBorder,
                             ),
                             onTap: () async {
-                              final result = OSKKey.show(
+                              final result = OnScreenKeyboard.show(
                                 context: context,
                                 label: 'Name Surname',
                                 initialValue: nameController.text,

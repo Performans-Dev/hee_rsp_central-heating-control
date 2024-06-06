@@ -65,10 +65,11 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                       onPressed: plan.isDefault == 1
                           ? null
                           : () async {
-                              final result = await OSKKey.show(
+                              final result = await OnScreenKeyboard.show(
                                 context: context,
                                 label: 'Name',
                                 initialValue: plan.name,
+                                type: OSKInputType.name,
                               );
 
                               if (result != null && result.isNotEmpty) {

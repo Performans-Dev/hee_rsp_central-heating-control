@@ -33,7 +33,7 @@ class TextInputWidget extends StatelessWidget {
         obscureText: obscureText,
         obscuringCharacter: obscuringCharacter ?? " ",
         onTap: () async {
-          final result = await OSKKey.show(
+          final result = await OnScreenKeyboard.show(
             context: context,
             initialValue: controller?.text,
             label: labelText,
