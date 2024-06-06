@@ -115,6 +115,6 @@ enum BuzzerType {
 }
 
 enum PlanBy {
-  level,
-  thermostate,
+  noThermostat,
+  thermostat,
 }
