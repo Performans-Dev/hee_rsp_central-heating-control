@@ -15,6 +15,8 @@ class ZoneStateControlWidget extends StatelessWidget {
     required this.hasThermostat,
     required this.onThermostatCallback,
     this.desiredTemperature,
+    this.onMinusPressed,
+    this.onPlusPressed,
   });
   final HeaterState zoneState;
   final Function(HeaterState) stateCallback;
@@ -23,68 +25,98 @@ class ZoneStateControlWidget extends StatelessWidget {
   final bool hasThermostat;
   final Function(bool) onThermostatCallback;
   final int? desiredTemperature;
+  final GestureTapCallback? onMinusPressed;
+  final GestureTapCallback? onPlusPressed;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      height: 110,
+      child: Row(
         children: [
-          SizedBox(height: 20),
-          Row(
-            children: [
-              ToggleButtons(
+          Expanded(
+            flex: 6,
+            child: Container(
+              constraints: BoxConstraints.expand(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Off'),
-                  Text('Auto'),
-                  Text('On'),
-                  Text('High'),
-                  Text('Max'),
+                  ToggleButtons(
+                    isSelected: [
+                      zoneState == HeaterState.off,
+                      zoneState == HeaterState.auto,
+                      zoneState == HeaterState.level1,
+                      zoneState == HeaterState.level2,
+                      zoneState == HeaterState.level3,
+                    ],
+                    borderRadius: UiDimens.formRadius,
+                    onPressed: (value) {
+                      stateCallback(HeaterState.values[value]);
+                    },
+                    children: const [
+                      Text('Off'),
+                      Text('Auto'),
+                      Text('On'),
+                      Text('High'),
+                      Text('Max'),
+                    ],
+                  ),
                 ],
-                isSelected: [
-                  zoneState == HeaterState.off,
-                  zoneState == HeaterState.auto,
-                  zoneState == HeaterState.level1,
-                  zoneState == HeaterState.level2,
-                  zoneState == HeaterState.level3,
-                ],
-                borderRadius: UiDimens.formRadius,
-                onPressed: (value) {
-                  stateCallback(HeaterState.values[value]);
-                },
-              ),
-            ],
-          ),
-          if (zoneState == HeaterState.auto)
-            FormItemComponent(
-              label: 'Selected Plan on Auto Mode',
-              child: PlanDropdownWidget(
-                onChanged: (v) => planCallback(v == -1 ? null : v),
-                value: planId,
               ),
             ),
-          if (zoneState == HeaterState.level1 ||
-              zoneState == HeaterState.level2 ||
-              zoneState == HeaterState.level3)
-            FormItemComponent(
-              label: 'Enable Thermostat',
-              child: Row(
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            flex: 10,
+            child: Container(
+              constraints: BoxConstraints.expand(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Switch(value: hasThermostat, onChanged: onThermostatCallback),
-                  if (hasThermostat && desiredTemperature != null)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(onPressed: () {}, icon: Icon(Icons.remove)),
-                        Text(TextUtils.temperature(desiredTemperature!,
-                            presicion: 0)),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-                      ],
+                  if (zoneState == HeaterState.auto)
+                    FormItemComponent(
+                      label: 'Selected Plan on Auto Mode',
+                      child: PlanDropdownWidget(
+                        onChanged: (v) => planCallback(v == -1 ? null : v),
+                        value: planId,
+                      ),
+                    ),
+                  if (zoneState == HeaterState.level1 ||
+                      zoneState == HeaterState.level2 ||
+                      zoneState == HeaterState.level3)
+                    FormItemComponent(
+                      label: 'Enable Thermostat',
+                      child: Row(
+                        children: [
+                          Switch(
+                              value: hasThermostat,
+                              onChanged: onThermostatCallback),
+                          if (hasThermostat && desiredTemperature != null)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: onMinusPressed,
+                                  icon: const Icon(Icons.remove),
+                                ),
+                                Text(
+                                  TextUtils.temperature(desiredTemperature!,
+                                      presicion: 0),
+                                ),
+                                IconButton(
+                                  onPressed: onPlusPressed,
+                                  icon: const Icon(Icons.add),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                 ],
               ),
             ),
-          SizedBox(height: 20),
+          ),
         ],
       ),
     );

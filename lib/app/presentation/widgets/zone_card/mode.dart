@@ -12,11 +12,13 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
     required this.currentState,
     this.currentTemperature,
     this.desiredTemperature,
+    this.planName,
   });
   final HeaterState desiredState;
   final int currentState;
   final int? currentTemperature;
   final int? desiredTemperature;
+  final String? planName;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
           children: [
             if (desiredTemperature != null)
               Text(
-                'Set: ${TextUtils.temperature(desiredTemperature!)}',
+                'Set: ${TextUtils.temperature(desiredTemperature!, presicion: 0)}',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             SizedBox(height: 12),
@@ -43,7 +45,8 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(TextUtils.stateDisplay(desiredState)),
+                Text(
+                    '${TextUtils.stateDisplay(desiredState)}${desiredState == HeaterState.auto ? ' ($planName)' : ''}'),
                 SizedBox(width: 8),
                 FlameIndicatorWidget(value: currentState),
               ],

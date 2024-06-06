@@ -1,5 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/core/utils/text.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
@@ -43,9 +45,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
         selectedIndex: 0,
         title: 'Zone View "${zone.zone.name}"',
         body: PiScrollView(
+          padding: EdgeInsets.zero,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Text('Title: Zone Controls'),
               ZoneStateControlWidget(
                 zoneState: zone.selectedState,
                 stateCallback: (v) {
@@ -65,118 +69,84 @@ class _ZoneScreenState extends State<ZoneScreen> {
                       zoneId: zone.zone.id, value: b);
                 },
                 desiredTemperature: zone.desiredTemperature,
+                onMinusPressed: zone.desiredTemperature > 150
+                    ? () {
+                        pc.onZoneThermostatDecreased(zoneId: zone.zone.id);
+                      }
+                    : null,
+                onPlusPressed: zone.desiredTemperature < 350
+                    ? () {
+                        pc.onZoneThermostatIncreased(zoneId: zone.zone.id);
+                      }
+                    : null,
               ),
-              Text('state control'),
-              Text('Heater list+controls'),
-              Text('Sensor list'),
-              /* 
-               
-                //MARK: WEEKLY PLAN
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: SwitchListTile(
-                          value: planEnabled,
-                          onChanged: (v) {
-                            setState(() {
-                              planEnabled = !planEnabled;
-                            });
+              Divider(),
+              Text('Title Heaters'),
+              ListView.builder(
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: ListTile(
+                    tileColor: CommonUtils.hexToColor(
+                            context, heaters[index].heater.color)
+                        .withOpacity(0.3),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: UiDimens.formRadius),
+                    title: Text(heaters[index].heater.name),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ToggleButtons(
+                          borderRadius: UiDimens.formRadius,
+                          onPressed: (v) {
+                            //
                           },
-                          title: const Text('Enable Weekly Plan'),
-                          controlAffinity: ListTileControlAffinity.leading,
+                          children: [
+                            Text('Off'),
+                            Text('Zone'),
+                            Text('On'),
+                            Text('High'),
+                            Text('Max'),
+                          ],
+                          isSelected: [
+                            heaters[index].selectedState == HeaterState.off,
+                            heaters[index].selectedState == HeaterState.auto,
+                            heaters[index].selectedState == HeaterState.level1,
+                            heaters[index].selectedState == HeaterState.level2,
+                            heaters[index].selectedState == HeaterState.level3,
+                          ],
                         ),
-                      ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    if (planEnabled)
-                      Expanded(
-                        child: PlanDropdownWidget(
-                          onChanged: (value) {
-                            setState(() {
-                              selectedPlan = value;
-                            });
-                          },
-                          value: selectedPlan,
-                        ),
-                      )
-                  ],
+                    leading: CircleAvatar(
+                      child: Text(
+                          TextUtils.stateDisplay(heaters[index].selectedState)),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Text('${heaters[index].currentLevel}'),
+                      ],
+                    ),
+                  ),
                 ),
-                //MARK: HEATERS
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: const Text('HEATERS'),
+                itemCount: heaters.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+              ),
+              Divider(),
+              Text('Title Sensors'),
+              ListView.builder(
+                itemBuilder: (context, index) => ListTile(
+                  title: Text('Sample Sensor'),
+                  leading: CircleAvatar(
+                    child: Text(
+                      '22.3°',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
                 ),
-                heaters.isEmpty
-                    ? const Center(
-                        child: Text('No heater in zone'),
-                      )
-                    : ListView.builder(
-                        itemBuilder: (context, index) {
-                          final maxLevel = heaters[index].levelType.index;
-                          var controlValues = <bool>[];
-                          for (int i = 0; i <= maxLevel; i++) {
-                            controlValues.add(false);
-                          }
-                          controlValues[heaters[index].state] = true;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: ListTile(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: UiDimens.formRadius,
-                              ),
-                              tileColor: CommonUtils.hexToColor(
-                                      context, heaters[index].color)
-                                  .withOpacity(0.3),
-                              title: Text(heaters[index].name),
-                              subtitle: Text('state: ${heaters[index].state}'),
-                              leading: heaters[index].icon.isEmpty
-                                  ? null
-                                  : Text(heaters[index].icon),
-                              trailing: ToggleButtons(
-                                isSelected: controlValues,
-                                borderRadius: UiDimens.formRadius,
-                                onPressed: (i) {
-                                  //TODO:  print('Heater ${e.id} is now $i');
-                                },
-                                children: [
-                                  for (int i = 0; i <= maxLevel; i++)
-                                    Text(i.toString())
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        itemCount: heaters.length,
-                        shrinkWrap: true,
-                      ),
-        
-                //MARK: SENSORS
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: const Text('SENSORS'),
-                ),
-                sensors.isEmpty
-                    ? const Center(
-                        child: Text('No sensors in zone'),
-                      )
-                    : Wrap(
-                        children: sensors
-                            .map((e) => Card(
-                                  child: Column(
-                                    children: [
-                                      Text(e.name),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
-                      ), */
+                itemCount: 1,
+                shrinkWrap: true,
+              ),
             ],
           ),
         ),

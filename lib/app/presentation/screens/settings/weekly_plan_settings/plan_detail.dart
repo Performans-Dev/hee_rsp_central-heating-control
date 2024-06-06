@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsPlanDetailScreen extends StatefulWidget {
   const SettingsPlanDetailScreen({super.key});
@@ -63,13 +64,18 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                     IconButton(
                       onPressed: plan.isDefault == 1
                           ? null
-                          : () {
-                              //TODO: show keyboard
-                              /// final result= await OskKeyboard()
-                              /// if (result!=null && result.isNotEmpty) {
-                              /// plan.name=result;
-                              /// dc.updatePlanDefinition(plan);
-                              /// }
+                          : () async {
+                              final result = await OnScreenKeyboard.show(
+                                context: context,
+                                label: 'Name',
+                                initialValue: plan.name,
+                                type: OSKInputType.name,
+                              );
+
+                              if (result != null && result.isNotEmpty) {
+                                plan.name = result;
+                                dc.updatePlanDefinition(plan: plan);
+                              }
                             },
                       icon: Icon(Icons.edit),
                     ),
@@ -175,69 +181,44 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Set Selected:"),
+                            Text("Set:"),
                             ToggleButtons(
-                              isSelected: planByValues,
+                              borderRadius: UiDimens.formRadius,
                               constraints: const BoxConstraints(
                                 minHeight: 32.0,
-                                minWidth: 96.0,
+                                minWidth: 36,
                               ),
-                              borderRadius: UiDimens.formRadius,
-                              onPressed: (index) {
-                                planByValues =
-                                    planByList.map((e) => false).toList();
-                                planByValues[index] = true;
-                                setState(() {});
+                              onPressed: (v) {
+                                //
                               },
-                              children:
-                                  planByList.map((e) => Text(e.name)).toList(),
+                              children: [
+                                Text('Off'),
+                                Text('On'),
+                                Text('High'),
+                                Text('Max'),
+                              ],
+                              isSelected: [false, false, false, false],
                             ),
-                            if (planByValues[planByList
-                                .indexWhere((e) => e == PlanBy.level)])
-                              ToggleButtons(
-                                children:
-                                    levelList.map((e) => Text('$e')).toList(),
-                                isSelected: levelValues,
-                                constraints: const BoxConstraints(
-                                  minHeight: 32.0,
-                                  minWidth: 32.0,
-                                ),
-                                onPressed: (index) {
-                                  levelValues =
-                                      levelList.map((e) => false).toList();
-                                  levelValues[index] = true;
-                                  setState(() {});
-                                },
-                                borderRadius: UiDimens.formRadius,
+                            SizedBox(width: 8),
+                            ToggleButtons(
+                              borderRadius: UiDimens.formRadius,
+                              constraints: const BoxConstraints(
+                                minHeight: 32.0,
+                                minWidth: 36,
                               ),
-                            if (planByValues[planByList
-                                .indexWhere((e) => e == PlanBy.thermostate)])
-                              Container(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                        onPressed: setTemperature > 15
-                                            ? () {
-                                                setState(() {
-                                                  setTemperature--;
-                                                });
-                                              }
-                                            : null,
-                                        icon: Icon(Icons.remove)),
-                                    Text('$setTemperature°'),
-                                    IconButton(
-                                        onPressed: setTemperature < 35
-                                            ? () {
-                                                setState(() {
-                                                  setTemperature++;
-                                                });
-                                              }
-                                            : null,
-                                        icon: Icon(Icons.add)),
-                                  ],
-                                ),
-                              ),
+                              onPressed: (v) {
+                                //
+                              },
+                              children: [Text('Thermostat')],
+                              isSelected: [false],
+                            ),
+                            IconButton(
+                                onPressed: () {}, icon: Icon(Icons.remove)),
+                            Text('22°'),
+                            IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                            Expanded(
+                              child: Container(),
+                            ),
                             OutlinedButton(
                               onPressed: () {
                                 setState(() {

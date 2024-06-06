@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/main.dart';
@@ -15,6 +16,7 @@ class NavController {
   }
 
   static void toHome() async {
+    Buzz.feedback();
     Future.delayed(
       Duration.zero,
       () => Get.offAllNamed(Routes.home),
@@ -22,6 +24,7 @@ class NavController {
   }
 
   static void toSettings() async {
+    Buzz.feedback();
     Future.delayed(
       Duration.zero,
       () => Get.toNamed(Routes.settings),
@@ -29,6 +32,7 @@ class NavController {
   }
 
   static void toZoneDeviceSensorManagement() async {
+    Buzz.feedback();
     Future.delayed(
       Duration.zero,
       () => Get.toNamed(Routes.settingstZoneDeviceSensorManagement),
@@ -36,6 +40,7 @@ class NavController {
   }
 
   static void toSettingsUserList() async {
+    Buzz.feedback();
     Future.delayed(
       Duration.zero,
       () => Get.toNamed(Routes.settingsUserList),
@@ -43,6 +48,7 @@ class NavController {
   }
 
   static void toSettingsAddUser() async {
+    Buzz.feedback();
     Future.delayed(
       Duration.zero,
       () => Get.toNamed(Routes.settingsUserAdd),
@@ -50,6 +56,7 @@ class NavController {
   }
 
   static void toSettingsPreferences() async {
+    Buzz.feedback();
     Future.delayed(
       Duration.zero,
       () => Get.toNamed(Routes.settingsPreferences),
@@ -57,6 +64,7 @@ class NavController {
   }
 
   static void lock() {
+    Buzz.success();
     AppController appController = Get.find();
     appController.logoutUser();
     Get.toNamed(Routes.screenSaver);

@@ -29,7 +29,8 @@ dependencies:
   sqflite_common_ffi: ^2.3.3
   window_manager: ^0.3.8
   on_screen_keyboard_tr:
-    path: packages/on_screen_keyboard_tr/
+    path: modules/on_screen_keyboard_tr/
+  network_info_plus: ^5.0.3
 
 dev_dependencies:
   flutter_test:

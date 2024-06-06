@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -38,6 +39,7 @@ class SettingsZoneListScreen extends StatelessWidget {
                       .toString()),
                   trailing: const Text('Edit button'),
                   onTap: () {
+                    Buzz.feedback();
                     Get.toNamed(
                       Routes.settingsZoneEdit,
                       parameters: {
@@ -60,7 +62,10 @@ class SettingsZoneListScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
         child: ElevatedButton(
-          onPressed: () => Get.toNamed(Routes.settingsZoneAdd),
+          onPressed: () {
+            Buzz.feedback();
+            Get.toNamed(Routes.settingsZoneAdd);
+          },
           child: const Text("Add New Zone"),
         ),
       );

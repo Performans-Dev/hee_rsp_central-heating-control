@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/data/models/com_port.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/weekly_plan_definition.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
@@ -220,6 +221,14 @@ class DataController extends GetxController {
     final result = await DbProvider.db.deletePlanAndDetails(planId: planId);
     getPlanListFromDb();
     return result;
+  }
+  //#endregion
+
+  //#region PLAN UPDATE DEFINITION
+  Future<bool> updatePlanDefinition({required PlanDefinition plan}) async {
+    final result = await DbProvider.db.updatePlanDefinition(plan: plan);
+    getPlanListFromDb();
+    return result != null;
   }
   //#endregion
 }

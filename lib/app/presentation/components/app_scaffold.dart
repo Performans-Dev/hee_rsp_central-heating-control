@@ -1,8 +1,10 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
+import 'package:central_heating_control/app/presentation/widgets/com_indicator_led.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -64,27 +66,36 @@ class AppScaffold extends StatelessWidget {
                   ),
                 ),
                 trailing: Container(
+                  width: 56,
                   height: 100,
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    '${app.versionName}',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.color
-                              ?.withOpacity(0.4),
-                        ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ComIndicatorLedWidget(),
+                      Text(
+                        '${app.versionName}',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.color
+                                  ?.withOpacity(0.4),
+                            ),
+                      ),
+                    ],
                   ),
                 ),
                 onDestinationSelected: (value) async {
                   switch (value) {
                     case 0:
+                      
                       NavController.toHome();
                       break;
                     case 1:
-                      Get.toNamed(Routes.daySummaryScreen);
+                      // Get.toNamed(Routes.daySummaryScreen);
                       break;
                     case 2:
                       //TODO: replace this with change heating mode

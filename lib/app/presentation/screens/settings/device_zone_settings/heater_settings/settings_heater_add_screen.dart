@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/core/utils/text.dart';
@@ -524,11 +525,11 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                       label: 'Name',
                       child: TextField(
                         onTap: () async {
-                          final result = await OSKKey.show(
+                          final result = await OnScreenKeyboard.show(
                             context: context,
                             initialValue: heater.name,
                             label: 'Heater Name',
-                            type: OSKKeyInputType.name,
+                            type: OSKInputType.name,
                           );
                           setState(() {
                             nameController.text = result;
@@ -697,6 +698,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
           child: ElevatedButton(
             onPressed: currentPage <= 5
                 ? () {
+                    Buzz.feedback();
                     pageController.animateToPage(
                       currentPage + 1,
                       duration: const Duration(milliseconds: 200),
@@ -716,6 +718,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
           child: ElevatedButton(
             onPressed: currentPage > 0
                 ? () {
+                    Buzz.feedback();
                     pageController.animateToPage(
                       currentPage - 1,
                       duration: const Duration(milliseconds: 200),
@@ -740,6 +743,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                     final DataController dc = Get.find();
                     final result = await dc.addHeater(heater);
                     if (result) {
+                      Buzz.success();
                       if (context.mounted) {
                         DialogUtils.snackbar(
                           context: context,
@@ -750,6 +754,7 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
 
                       Get.back();
                     } else {
+                      Buzz.error();
                       if (context.mounted) {
                         DialogUtils.snackbar(
                           context: context,
