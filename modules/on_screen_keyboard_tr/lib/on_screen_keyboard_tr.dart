@@ -1445,6 +1445,10 @@ class _OSKController extends GetxController {
         }
         break;
       case _KeyType.alt:
+        if (getInputType == OSKInputType.name) {
+          _inputType.value = OSKInputType.text;
+          update();
+        }
         if (!numberOnly) {
           switch (_layoutType.value) {
             case _OSKLayoutType.lowerCase:
@@ -1573,6 +1577,8 @@ class _OSKKeyScreen extends StatefulWidget {
   final dynamic initialValue;
   final String? hintText;
   final BuildContext ctx;
+  final int? maxLength;
+  final int? minLength;
 
   const _OSKKeyScreen({
     super.key,
@@ -1581,6 +1587,8 @@ class _OSKKeyScreen extends StatefulWidget {
     this.label,
     this.initialValue,
     this.hintText,
+    this.maxLength,
+    this.minLength,
   });
 
   @override
@@ -1643,11 +1651,24 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
         value = value.toLowerCase();
       }
     }
+    if (widget.maxLength != null &&
+        oskKeyController.currentText.length >= widget.maxLength! &&
+        type == _KeyType.character) {
+      return;
+    }
 
-    oskKeyController.receiveOnTap(type, value);
-
-    if (value == 'subdirectory_arrow_left') {
-      Navigator.pop(context, oskKeyController.currentText);
+    if (type == _KeyType.character || type == _KeyType.space) {
+      oskKeyController.receiveOnTap(type, value);
+    } else if (type == _KeyType.enter) {
+      // minLength kontrolü
+      if (widget.minLength != null &&
+          oskKeyController.currentText.length < widget.minLength!) {
+        return;
+      } else {
+        Navigator.pop(context, oskKeyController.currentText);
+      }
+    } else {
+      oskKeyController.receiveOnTap(type, value);
     }
   }
 
