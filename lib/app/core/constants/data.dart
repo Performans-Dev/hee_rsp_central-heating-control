@@ -3,6 +3,27 @@ import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
 
 class UiData {
+  static final List<String> dateFormats = [
+    "yyyy-MM-dd", // 2024-06-07
+    "MM/dd/yyyy", // 06/07/2024
+    "dd/MM/yyyy", // 07/06/2024
+    "dd-MM-yyyy", // 07-06-2024
+    "yyyy/MM/dd", // 2024/06/07
+    "EEE, MMM d, yyyy", // Fri, Jun 7, 2024
+    "EEE, MMM d", // Fri, Jun 7
+    "MMMM d, yyyy", // June 7, 2024
+    "MMM d, yyyy", // Jun 7, 2024
+    "dd MMMM yyyy", // 07 June 2024
+    'd MMM, EEE',
+  ];
+
+  static final List<String> timeFormats = [
+    "HH:mm",
+    "hh:mm a",
+    "HH:mm:ss",
+    "hh:mm:ss a",
+  ];
+
   static final List<Channel> channels = [
     Channel(
         name: 'CHO-1',

@@ -1,11 +1,21 @@
 import 'dart:async';
 
+import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateTextWidget extends StatefulWidget {
-  const DateTextWidget({super.key, this.large = false});
+  const DateTextWidget({
+    super.key,
+    this.large = false,
+    this.oneLine = false,
+    this.dateFormat,
+    this.timeFormat,
+  });
   final bool large;
+  final bool oneLine;
+  final String? dateFormat;
+  final String? timeFormat;
 
   @override
   State<DateTextWidget> createState() => _DateTextWidgetState();
@@ -45,60 +55,64 @@ class _DateTextWidgetState extends State<DateTextWidget> {
   ///
   /// This function does not return any value.
   void _updateDateTime() {
+    String df = widget.dateFormat ?? UiData.dateFormats.last;
+    String tf = widget.timeFormat ?? UiData.timeFormats[2];
+
     setState(() {
       DateTime now = DateTime.now();
-      formattedDate = widget.large
-          ? DateFormat('d MMMM\nEEEE').format(now)
-          : DateFormat('d MMM, E').format(now);
-      formattedTime = DateFormat.Hms().format(now);
+      formattedDate = widget.oneLine
+          ? DateFormat('$df $tf').format(now)
+          : DateFormat(df).format(now);
+      formattedTime = DateFormat(tf).format(now);
       // _currentDateTime = '$formattedDate\n$formattedTime';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          formattedDate,
-          textAlign: TextAlign.center,
-          style: widget.large
-              ? Theme.of(context).textTheme.displayMedium?.copyWith(
-                  letterSpacing: 1,
-                  color: Colors.white.withOpacity(0.83),
-                  shadows: [
-                    BoxShadow(
-                      color: Theme.of(context).canvasColor,
-                      blurRadius: 12,
-                      offset: const Offset(1, 1),
-                      blurStyle: BlurStyle.outer,
-                    ),
-                  ],
-                )
-              : Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(letterSpacing: 1),
-        ),
-        Text(
-          formattedTime,
-          style: widget.large
-              ? Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.white.withOpacity(0.83),
-                  shadows: [
-                    BoxShadow(
-                      color: Theme.of(context).canvasColor,
-                      blurRadius: 12,
-                      offset: const Offset(1, 1),
-                      blurStyle: BlurStyle.outer,
-                    ),
-                  ],
-                )
-              : Theme.of(context).textTheme.labelLarge,
-        ),
-      ],
-    );
+    return widget.oneLine
+        ? Text(formattedDate)
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                formattedDate,
+                textAlign: TextAlign.center,
+                style: widget.large
+                    ? Theme.of(context).textTheme.displayMedium?.copyWith(
+                        letterSpacing: 1,
+                        color: Colors.white.withOpacity(0.83),
+                        shadows: [
+                          BoxShadow(
+                            color: Theme.of(context).canvasColor,
+                            blurRadius: 12,
+                            offset: const Offset(1, 1),
+                            blurStyle: BlurStyle.outer,
+                          ),
+                        ],
+                      )
+                    : Theme.of(context).textTheme.bodySmall?.copyWith(
+                          letterSpacing: 1,
+                        ),
+              ),
+              Text(
+                formattedTime,
+                style: widget.large
+                    ? Theme.of(context).textTheme.displayLarge?.copyWith(
+                        color: Colors.white.withOpacity(0.83),
+                        shadows: [
+                          BoxShadow(
+                            color: Theme.of(context).canvasColor,
+                            blurRadius: 12,
+                            offset: const Offset(1, 1),
+                            blurStyle: BlurStyle.outer,
+                          ),
+                        ],
+                      )
+                    : Theme.of(context).textTheme.labelLarge,
+              ),
+            ],
+          );
   }
 }

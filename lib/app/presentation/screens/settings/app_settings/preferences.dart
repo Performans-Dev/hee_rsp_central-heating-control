@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
+import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +25,7 @@ class SettingsPreferences extends StatelessWidget {
     Locale currentLocale = LocalizationService.locale;
     TimezoneDefinition currentTimezone =
         TimezoneDefinition.fromJson(Box.getString(key: Keys.selectedTimezone));
+
 
     return AppScaffold(
       title: 'Preferences',
@@ -72,8 +74,14 @@ class SettingsPreferences extends StatelessWidget {
                   const SizedBox(height: 8),
                   ListTile(
                     leading: const Icon(Icons.language),
-                    title: const Text('Timezone'),
-                    subtitle: Text(currentTimezone.name),
+                    title: const Text('Date, Time & Timezone Settings'),
+                    subtitle: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DateTextWidget(oneLine: true),
+                        Text(', ${currentTimezone.name}'),
+                      ],
+                    ),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,
                     shape: RoundedRectangleBorder(
@@ -133,7 +141,8 @@ class SettingsPreferences extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 8),
-                  const Text('close app / shutdown os / reboot os / factory reset'),
+                  const Text(
+                      'close app / shutdown os / reboot os / factory reset'),
                   const SizedBox(height: 8),
                   const SizedBox(height: 8),
                 ],

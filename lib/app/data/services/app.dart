@@ -213,6 +213,8 @@ class AppController extends GetxController {
     final response = await AppProvider.fetchTimezoneList();
     final data = response.data as List<TimezoneDefinition>;
     _timezones.assignAll(data);
+    final set = _timezones.toSet();
+    _timezones.assignAll(set.toList());
     update();
   }
 

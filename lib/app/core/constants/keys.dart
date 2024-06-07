@@ -5,6 +5,8 @@ class Keys {
   static const String isDarkMode = 'isDarkMode';
 
   static const String selectedTimezone = 'selectedTimezone';
+  static const String selectedTimeFormat = 'selectedTimeFormat';
+  static const String selectedDateFormat = 'selectedDateFormat';
   static const String didLanguageSelected = 'didLanguageSelected';
   static const String didTimezoneSelected = 'didTimezoneSelected';
   static const String didActivated = 'didActivated';
