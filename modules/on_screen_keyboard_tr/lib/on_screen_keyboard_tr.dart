@@ -1859,6 +1859,8 @@ class OnScreenKeyboard {
     String? label,
     OSKInputType type = OSKInputType.name,
     String? hintText,
+    int? maxLength,
+    int? minLength,
     required BuildContext context,
   }) async {
     return await Get.to(
@@ -1869,6 +1871,8 @@ class OnScreenKeyboard {
         inputType: type,
         label: label,
         ctx: context,
+        maxLength: maxLength,
+        minLength: minLength,
       ),
     );
   }
