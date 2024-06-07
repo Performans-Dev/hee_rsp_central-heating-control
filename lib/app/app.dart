@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/constants/strings.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
@@ -13,6 +15,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
+class PiScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+
+        // etc.
+      };
+}
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -21,6 +34,7 @@ class MainApp extends StatelessWidget {
     return IdleDetector(
       excludedRoutes: [Routes.settings],
       child: GetMaterialApp(
+        scrollBehavior: PiScrollBehavior(),
         debugShowCheckedModeBanner: false,
         title: UiStrings.appName,
         theme: lightTheme,

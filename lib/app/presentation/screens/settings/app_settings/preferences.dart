@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
@@ -26,7 +28,6 @@ class SettingsPreferences extends StatelessWidget {
     TimezoneDefinition currentTimezone =
         TimezoneDefinition.fromJson(Box.getString(key: Keys.selectedTimezone));
 
-
     return AppScaffold(
       title: 'Preferences',
       selectedIndex: 3,
@@ -34,9 +35,9 @@ class SettingsPreferences extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const BreadcrumbWidget(
-            title: 'Settings / Preferences',
-          ),
+          // const BreadcrumbWidget(
+          //   title: 'Settings / Preferences',
+          // ),
           Expanded(
             child: PiScrollView(
               child: Column(
@@ -141,10 +142,43 @@ class SettingsPreferences extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                      'close app / shutdown os / reboot os / factory reset'),
-                  const SizedBox(height: 8),
-                  const SizedBox(height: 8),
+                  ListTile(
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    leading: Icon(Icons.settings_suggest),
+                    title: Text('Advanced'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Kill'),
+                        ),
+                        SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Shutdown'),
+                        ),
+                        SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final result =
+                                await Process.run('sudo reboot', ['now']);
+                            print(result);
+                          },
+                          child: Text('Reboot'),
+                        ),
+                        SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Factory Reset'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 28),
                 ],
               ),
             ),
