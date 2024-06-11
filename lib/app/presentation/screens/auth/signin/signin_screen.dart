@@ -1,3 +1,5 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
@@ -74,7 +76,13 @@ class _SigninScreenState extends State<SigninScreen> {
                               password: passwordController.text,
                             );
                             if (acc == null) {
-                              //raise error
+                              if (context.mounted) {
+                                DialogUtils.snackbar(
+                                  context: context,
+                                  message: 'Wrong credentials',
+                                  type: SnackbarType.error,
+                                );
+                              }
                               logger.d('EEEEEEE');
                             } else {
                               NavController.toHome();

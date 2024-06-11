@@ -58,10 +58,6 @@ class SettingsPlanListScreen extends StatelessWidget {
                                 icon: const Icon(Icons.delete),
                               ),
                               IconButton(
-                                onPressed: plan.isDefault == 1 ? null : () {},
-                                icon: const Icon(Icons.edit),
-                              ),
-                              IconButton(
                                 onPressed: () async {
                                   final newPlanId =
                                       await dc.copyPlan(sourcePlanId: plan.id);

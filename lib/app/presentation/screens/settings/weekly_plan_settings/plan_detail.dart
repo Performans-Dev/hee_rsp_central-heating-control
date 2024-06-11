@@ -22,6 +22,8 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
   final DataController dataController = Get.find();
   late PlanDefinition plan;
   late List<PlanDetail> planDetails;
+
+  bool allowEdit = false;
   final selectedBoxes = <String>[];
   List<PlanBy> planByList = PlanBy.values;
   List<bool> planByValues = PlanBy.values.map((e) => false).toList();
@@ -119,19 +121,21 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                         ),
                         for (int z = 0; z < 24; z++)
                           InkWell(
-                            onTap: () {
-                              final pb = '$i${'0$z'.right(2)}';
-                              if (selectedBoxes.contains(pb)) {
-                                setState(() {
-                                  selectedBoxes.remove(pb);
-                                });
-                              } else {
-                                setState(() {
-                                  selectedBoxes.add(pb);
-                                });
-                              }
-                              print(selectedBoxes.length);
-                            },
+                            onTap: allowEdit
+                                ? () {
+                                    final pb = '$i${'0$z'.right(2)}';
+                                    if (selectedBoxes.contains(pb)) {
+                                      setState(() {
+                                        selectedBoxes.remove(pb);
+                                      });
+                                    } else {
+                                      setState(() {
+                                        selectedBoxes.add(pb);
+                                      });
+                                    }
+                                    print(selectedBoxes.length);
+                                  }
+                                : null,
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 1),
                               width: 25,
@@ -265,5 +269,8 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
     planDetails =
         dataController.planDetails.where((e) => e.planId == planId).toList();
     plan = dataController.planList.firstWhere((e) => e.id == planId);
+    setState(() {
+      allowEdit = plan.isDefault != 1;
+    });
   }
 }
