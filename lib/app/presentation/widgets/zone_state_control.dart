@@ -1,6 +1,6 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/utils/text.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +101,7 @@ class ZoneStateControlWidget extends StatelessWidget {
                                   icon: const Icon(Icons.remove),
                                 ),
                                 Text(
-                                  TextUtils.temperature(desiredTemperature!,
+                                  CCUtils.temperature(desiredTemperature!,
                                       presicion: 0),
                                 ),
                                 IconButton(

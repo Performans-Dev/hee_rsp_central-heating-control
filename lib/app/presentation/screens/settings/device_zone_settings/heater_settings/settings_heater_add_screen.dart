@@ -4,7 +4,7 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/core/utils/text.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -626,27 +626,27 @@ class _SettingsHeaterAddScreenState extends State<SettingsHeaterAddScreen> {
                               ),
                               FormItemComponent(
                                 label: 'Consumption on Level 1',
-                                child: Text('${TextUtils.displayConsumption(
+                                child: Text('${CCUtils.displayConsumption(
                                   consumptionAmount:
                                       heater.level1ConsumptionAmount,
                                   consumptionUnit: heater.level1ConsumptionUnit,
-                                )}  (${TextUtils.displayCarbon(heater.level1Carbon)})'),
+                                )}  (${CCUtils.displayCarbon(heater.level1Carbon)})'),
                               ),
                               FormItemComponent(
                                 label: 'Consumption on Level 2',
-                                child: Text('${TextUtils.displayConsumption(
+                                child: Text('${CCUtils.displayConsumption(
                                   consumptionAmount:
                                       heater.level2ConsumptionAmount,
                                   consumptionUnit: heater.level2ConsumptionUnit,
-                                )}  (${TextUtils.displayCarbon(heater.level2Carbon)})'),
+                                )}  (${CCUtils.displayCarbon(heater.level2Carbon)})'),
                               ),
                               FormItemComponent(
                                 label: 'Consumption on Level 3',
-                                child: Text('${TextUtils.displayConsumption(
+                                child: Text('${CCUtils.displayConsumption(
                                   consumptionAmount:
                                       heater.level3ConsumptionAmount,
                                   consumptionUnit: heater.level3ConsumptionUnit,
-                                )}  (${TextUtils.displayCarbon(heater.level3Carbon)})'),
+                                )}  (${CCUtils.displayCarbon(heater.level3Carbon)})'),
                               ),
                             ],
                           ),

@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/core/utils/text.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/presentation/widgets/flame_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -32,13 +32,13 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
           children: [
             if (desiredTemperature != null)
               Text(
-                'Set: ${TextUtils.temperature(desiredTemperature!, presicion: 0)}',
+                'Set: ${CCUtils.temperature(desiredTemperature!, presicion: 0)}',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             SizedBox(height: 12),
             if (currentTemperature != null)
               Text(
-                TextUtils.temperature(currentTemperature!),
+                CCUtils.temperature(currentTemperature!),
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             SizedBox(height: 12),
@@ -46,7 +46,7 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                    '${TextUtils.stateDisplay(desiredState)}${desiredState == HeaterState.auto ? ' ($planName)' : ''}'),
+                    '${CCUtils.stateDisplay(desiredState)}${desiredState == HeaterState.auto ? ' ($planName)' : ''}'),
                 SizedBox(width: 8),
                 FlameIndicatorWidget(value: currentState),
               ],

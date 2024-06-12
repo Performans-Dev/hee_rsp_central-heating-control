@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/core/utils/text.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
@@ -119,7 +119,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                     ),
                     leading: CircleAvatar(
                       child: Text(
-                          TextUtils.stateDisplay(heaters[index].selectedState)),
+                          CCUtils.stateDisplay(heaters[index].selectedState)),
                     ),
                     subtitle: Row(
                       children: [

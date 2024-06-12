@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:flutter/material.dart';
 
-class TextUtils {
+class CCUtils {
   static String displayConsumption(
       {double? consumptionAmount, String? consumptionUnit}) {
     if (consumptionAmount == null || consumptionUnit == null) {
@@ -27,12 +28,25 @@ class TextUtils {
       case HeaterState.level2:
         return 'High';
       case HeaterState.level3:
-        return 'Full';
+        return 'Max';
     }
   }
 
   static String temperature(int t,
       {bool divideBy10 = true, int presicion = 1}) {
     return '${(t / (divideBy10 ? 10 : 1)).toStringAsFixed(presicion)}°';
+  }
+
+  static Color colorByLevel(int level) {
+    switch (level) {
+      case 1:
+        return Colors.yellow;
+      case 2:
+        return Colors.orange;
+      case 3:
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }
