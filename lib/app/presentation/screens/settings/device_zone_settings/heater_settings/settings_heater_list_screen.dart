@@ -21,7 +21,8 @@ class SettingsHeaterListScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const BreadcrumbWidget(title: 'Settings / Heaters'),
+              SizedBox(height: 12),
+              // const BreadcrumbWidget(title: 'Settings / Heaters'),
               ListView.builder(
                 itemBuilder: (context, index) =>
                     SettingsHeaterListItemWidget(heater: dc.heaterList[index]),

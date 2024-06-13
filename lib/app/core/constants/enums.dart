@@ -113,8 +113,3 @@ enum BuzzerType {
   error,
   alarm,
 }
-
-enum PlanBy {
-  noThermostat,
-  thermostat,
-}

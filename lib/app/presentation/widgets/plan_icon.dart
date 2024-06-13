@@ -1,4 +1,3 @@
-import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,14 @@ class PlanIconWidget extends StatelessWidget {
     } else {
       Widget icon = const SizedBox();
       if (planDetail!.level == 0) {
-        icon = Text('off');
+        icon = Text(
+          '-',
+          style: TextStyle(
+            fontSize: 12,
+            color:
+                Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.2),
+          ),
+        );
       } else {
         icon = Icon(
           Icons.light_mode,
@@ -30,11 +36,17 @@ class PlanIconWidget extends StatelessWidget {
         );
       }
 
-      if (planDetail!.planBy == PlanBy.thermostat) {
+      if (planDetail!.hasThermostat == 1) {
         return Stack(
           children: [
             icon,
-            Text(CCUtils.temperature(planDetail!.degree)),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                CCUtils.temperature(planDetail!.degree, presicion: 0),
+                style: const TextStyle(fontSize: 10),
+              ),
+            ),
           ],
         );
       } else {

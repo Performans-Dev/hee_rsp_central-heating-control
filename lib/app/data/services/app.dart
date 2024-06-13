@@ -14,6 +14,7 @@ import 'package:central_heating_control/app/data/models/signin_request.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -336,4 +337,19 @@ class AppController extends GetxController {
   }
 
   //#endregion
+
+  Future<void> createAdmin() async {
+    var result = await DbProvider.db.addUser(
+        AppUser(id: -1, username: 'Admin', pin: '000000', isAdmin: true));
+    GpioController gpio = GpioController();
+    if (result < -1) {
+      gpio.buzz(BuzzerType.alarm);
+    } else if (result == -1) {
+      gpio.buzz(BuzzerType.error);
+    } else if (result == 0) {
+      gpio.buzz(BuzzerType.success);
+    } else {
+      gpio.buzz(BuzzerType.feedback);
+    }
+  }
 }

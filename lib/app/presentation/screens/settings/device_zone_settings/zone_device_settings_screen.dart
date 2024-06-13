@@ -14,62 +14,55 @@ class SettingsZoneDeviceSensorManagementScreen extends StatelessWidget {
     return AppScaffold(
       title: 'Zones, Heaters, Sensors',
       selectedIndex: 3,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const BreadcrumbWidget(
-            title: 'Settings / Zones, Heaters and Sensors',
-          ),
-          Expanded(
-            child: PiScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  ListTile(
-                    title: const Text('Zone'),
-                    trailing: const Icon(Icons.chevron_right),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onTap: () {
-                      Buzz.feedback();
-                      Get.toNamed(Routes.settingsZoneList);
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  ListTile(
-                    title: const Text('Heaters'),
-                    trailing: const Icon(Icons.chevron_right),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onTap: () {
-                      Buzz.feedback();
-                      Get.toNamed(Routes.settingsHeaterList);
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  ListTile(
-                    title: const Text('Sensor'),
-                    trailing: const Icon(Icons.chevron_right),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onTap: () {
-                      Buzz.feedback();
-                      Get.toNamed(Routes.settingsSensorsList);
-                    },
-                  ),
-                ],
+      body: PiScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            ListTile(
+              title: const Text('Zone'),
+              subtitle: Text('List and manage zones'.tr),
+              trailing: const Icon(Icons.chevron_right),
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
+              onTap: () {
+                Buzz.feedback();
+                Get.toNamed(Routes.settingsZoneList);
+              },
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            ListTile(
+              title: const Text('Heaters'),
+              subtitle: Text('List and manage heaters'.tr),
+              trailing: const Icon(Icons.chevron_right),
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onTap: () {
+                Buzz.feedback();
+                Get.toNamed(Routes.settingsHeaterList);
+              },
+            ),
+            const SizedBox(height: 8),
+            ListTile(
+              title: const Text('Sensor'),
+              subtitle: Text('List and manage sensors'.tr),
+              trailing: const Icon(Icons.chevron_right),
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onTap: () {
+                Buzz.feedback();
+                Get.toNamed(Routes.settingsSensorsList);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

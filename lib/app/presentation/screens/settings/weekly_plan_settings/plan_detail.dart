@@ -1,9 +1,11 @@
+import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/settings.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -28,25 +30,21 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
 
   bool allowEdit = false;
   final selectedBoxes = <String>[];
-  List<PlanBy> planByList = PlanBy.values;
-  List<bool> planByValues = PlanBy.values.map((e) => false).toList();
 
   List<HeaterState> stateList =
       HeaterState.values.where((e) => e.index != 1).toList();
   late List<bool> selectedStateValues;
   bool selectedHasThermostat = false;
-  int selectedSetTemperature = 220;
+  int selectedSetTemperature = UiSettings.defaultTemperature;
   List<PlanDetail> selectedPlanDetails = [];
   bool editedOnTheFly = false;
 
   @override
   void initState() {
     super.initState();
-    selectedStateValues = stateList.map((e) => false).toList();
-    selectedStateValues[0] = true;
+    resetToDefaultValues();
     planId = int.parse(Get.parameters['planId'] ?? '0');
     fetchData();
-    planByValues.first = true;
   }
 
   @override
@@ -115,7 +113,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                     ),
                 ],
               ),
-              //
+              //MARK: PLAN TABLE
               for (int i = 0; i < 7; i++)
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -148,25 +146,6 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                   planDetail: planDetails.firstWhereOrNull(
                                       (e) => e.day == i && e.hour == z),
                                 ),
-                                /*  planDetails.firstWhereOrNull(
-                                            (e) => e.day == i && e.hour == z) !=
-                                        null
-                                    ? Icon(
-                                        Icons.light_mode,
-                                        size: 14,
-                                        color: Colors.orange.withOpacity(0.83),
-                                      )
-                                    : Text(
-                                        '-',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.color
-                                              ?.withOpacity(0.2),
-                                        ),
-                                      ), */
                               ),
                             ),
                           ),
@@ -174,7 +153,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                     ),
                   ],
                 ),
-
+              //MARK: FOOTER ACTIONS
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -215,23 +194,23 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                 minHeight: 32.0,
                                 minWidth: 100,
                               ),
-                              onPressed: selectedStateValues.first
-                                  ? null
-                                  : (v) {
+                              onPressed: selectedStateValues.indexOf(true) > 0
+                                  ? (v) {
                                       setState(() {
                                         selectedHasThermostat =
                                             !selectedHasThermostat;
                                         editedOnTheFly = true;
                                       });
-                                    },
+                                    }
+                                  : null,
                               isSelected: [selectedHasThermostat],
-                              children: [const Text('Thermostat')],
+                              children: const [Text('Thermostat')],
                             ),
                             IconButton(
                                 onPressed: selectedHasThermostat &&
                                         selectedSetTemperature >
                                             UiSettings.minTemperature &&
-                                        !selectedStateValues.first
+                                        selectedStateValues.indexOf(true) > 0
                                     ? () {
                                         setState(() {
                                           selectedSetTemperature -= 10;
@@ -265,7 +244,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                 onPressed: selectedHasThermostat &&
                                         selectedSetTemperature <
                                             UiSettings.maxTemperature &&
-                                        !selectedStateValues.first
+                                        selectedStateValues.indexOf(true) > 0
                                     ? () {
                                         setState(() {
                                           selectedSetTemperature += 10;
@@ -278,12 +257,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                               child: Container(),
                             ),
                             OutlinedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedBoxes.clear();
-                                  editedOnTheFly = false;
-                                });
-                              },
+                              onPressed: onCancelPressed,
                               style: const ButtonStyle(
                                 padding:
                                     WidgetStatePropertyAll<EdgeInsetsGeometry>(
@@ -294,30 +268,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
-                              onPressed: editedOnTheFly
-                                  ? () async {
-                                      if (selectedBoxes.isEmpty) return;
-
-                                      // final dataToSave = selectedBoxes
-                                      //     .map((e) => PlanDetail(
-                                      //           id: 0,
-                                      //           planId: plan.id,
-                                      //           hour: int.parse(e.right(2)),
-                                      //           day: int.parse(e.left(1)),
-                                      //           level: defaultLevelList[
-                                      //               selectedLevelValues
-                                      //                   .indexWhere((e) => e)],
-                                      //           degree: selectedSetTemperature,
-                                      //           planBy: planByList[planByValues
-                                      //               .indexWhere((e) => e)],
-                                      //         ))
-                                      //     .toList();
-                                      // await dc.addPlanDetailsToDb(dataToSave);
-                                      // selectedBoxes.clear();
-                                      // setState(() {});
-                                      // fetchData();
-                                    }
-                                  : null,
+                              onPressed: editedOnTheFly ? onSavePressed : null,
                               style: const ButtonStyle(
                                 padding:
                                     WidgetStatePropertyAll<EdgeInsetsGeometry>(
@@ -338,9 +289,29 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                   SizedBox(
                                     width: 24,
                                     child: Text(
-                                      selectedHasThermostat
-                                          ? '${(selectedSetTemperature / 10).toStringAsFixed(0)}°'
-                                          : 'Lvl ${selectedStateValues.indexOf(true)}',
+                                      selectedStateValues.contains(true)
+                                          ? selectedHasThermostat
+                                              ? '${(selectedSetTemperature / 10).toStringAsFixed(0)}°'
+                                              : selectedStateValues
+                                                          .indexOf(true) ==
+                                                      0
+                                                  ? 'Off'
+                                                  : selectedStateValues
+                                                              .indexOf(true) ==
+                                                          1
+                                                      ? 'On'
+                                                      : selectedStateValues
+                                                                  .indexOf(
+                                                                      true) ==
+                                                              2
+                                                          ? 'High'
+                                                          : selectedStateValues
+                                                                      .indexOf(
+                                                                          true) ==
+                                                                  3
+                                                              ? 'Max'
+                                                              : 'Lvl ${selectedStateValues.indexOf(true)}'
+                                          : '---',
                                       style: TextStyle(fontSize: 10),
                                     ),
                                   )
@@ -358,6 +329,15 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
     );
   }
 
+  //MARK: RESET
+  void resetToDefaultValues() {
+    selectedStateValues = stateList.map((e) => false).toList();
+    selectedSetTemperature = UiSettings.defaultTemperature;
+    selectedHasThermostat = false;
+    setState(() {});
+  }
+
+  //MARK: ONCELLTAP
   void onCellTap({required int day, required int hour}) {
     if (!allowEdit) {
       return;
@@ -373,8 +353,39 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
         selectedBoxes.add(pb);
       });
     }
+    if (selectedBoxes.isEmpty) {
+      resetToDefaultValues();
+      return;
+    }
+    List<PlanDetail> selectedBoxPlanDetails =
+        planDetails.where((e) => e.day == day && e.hour == hour).toList();
+    if (selectedBoxPlanDetails.isNotEmpty) {
+      var _level = selectedBoxPlanDetails.first.level;
+      var _hasThermostat = selectedBoxPlanDetails.first.hasThermostat;
+      var _setTemperature = selectedBoxPlanDetails.first.degree;
+      for (final item in selectedBoxPlanDetails) {
+        if (item != selectedBoxPlanDetails.first) {
+          if (_level != item.level ||
+              _hasThermostat != item.hasThermostat ||
+              _setTemperature != item.degree) {
+            resetToDefaultValues();
+            return;
+          }
+          _level = item.level;
+          _hasThermostat = item.hasThermostat;
+          _setTemperature = item.degree;
+        }
+      }
+      setState(() {
+        selectedStateValues =
+            stateList.map((e) => e.index == _level ? true : false).toList();
+        selectedSetTemperature = _setTemperature;
+        selectedHasThermostat = _hasThermostat == 1;
+      });
+    }
   }
 
+  //MARK: FETCH
   void fetchData() async {
     planDetails =
         dataController.planDetails.where((e) => e.planId == planId).toList();
@@ -382,5 +393,49 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
     setState(() {
       allowEdit = plan.isDefault != 1;
     });
+  }
+
+  void onCancelPressed() {
+    resetToDefaultValues();
+    setState(() {
+      selectedBoxes.clear();
+      editedOnTheFly = false;
+    });
+  }
+
+  //MARK: SAVE
+  Future<void> onSavePressed() async {
+    if (selectedBoxes.isEmpty || !selectedStateValues.contains(true)) {
+      DialogUtils.snackbar(
+        context: context,
+        message: 'Cannot save witghout data',
+        type: SnackbarType.info,
+      );
+      return;
+    }
+
+    final dataToSave = selectedBoxes
+        .map((e) => PlanDetail(
+              id: 0,
+              planId: plan.id,
+              hour: int.parse(e.right(2)),
+              day: int.parse(e.left(1)),
+              level: selectedStateValues.indexOf(true),
+              degree: selectedSetTemperature,
+              hasThermostat: selectedHasThermostat ? 1 : 0,
+            ))
+        .toList();
+    await dataController.addPlanDetailsToDb(dataToSave);
+    selectedBoxes.clear();
+    editedOnTheFly = false;
+    setState(() {});
+    fetchData();
+    if (mounted) {
+      DialogUtils.snackbar(
+        context: context,
+        message: 'Saved',
+        type: SnackbarType.success,
+      );
+    }
   }
 }

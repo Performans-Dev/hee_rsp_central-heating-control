@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
@@ -21,32 +22,34 @@ class SettingsZoneListScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const BreadcrumbWidget(
-                title: 'Settings / Zones',
-              ),
+              SizedBox(height: 12),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemBuilder: (context, index) => ListTile(
-                  tileColor:
-                      CommonUtils.hexToColor(context, dc.zoneList[index].color)
-                          .withOpacity(0.3),
-                  title: Text(dc.zoneList[index].name),
-                  subtitle: Text(dc.zoneList[index].users
-                      .map((e) => e.username)
-                      .toList()
-                      .join(', ')
-                      .toString()),
-                  trailing: const Text('Edit button'),
-                  onTap: () {
-                    Buzz.feedback();
-                    Get.toNamed(
-                      Routes.settingsZoneEdit,
-                      parameters: {
-                        'id': dc.zoneList[index].id.toString(),
-                      },
-                    );
-                  },
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: UiDimens.formRadius),
+                    tileColor: CommonUtils.hexToColor(
+                            context, dc.zoneList[index].color)
+                        .withOpacity(0.3),
+                    title: Text(dc.zoneList[index].name),
+                    subtitle: Text(dc.zoneList[index].users
+                        .map((e) => e.username)
+                        .toList()
+                        .join(', ')
+                        .toString()),
+                    onTap: () {
+                      Buzz.feedback();
+                      Get.toNamed(
+                        Routes.settingsZoneEdit,
+                        parameters: {
+                          'id': dc.zoneList[index].id.toString(),
+                        },
+                      );
+                    },
+                  ),
                 ),
                 itemCount: dc.zoneList.length,
               ),

@@ -36,13 +36,8 @@ class DbProvider {
   /// Throws a [DatabaseException] if there is an error opening the database.
   Future<Database?> initDb() async {
     var dbFactory = databaseFactoryFfi;
-    final io.Directory appDocumentsDir =
-        await getApplicationDocumentsDirectory();
-    String dbPath = p.join(
-      appDocumentsDir.path,
-      Keys.databasePath,
-      Keys.databaseName,
-    );
+    final dbPath = await getDbPath();
+    if (dbPath == null) return null;
     log(dbPath);
     return await dbFactory.openDatabase(
       dbPath,
@@ -51,15 +46,30 @@ class DbProvider {
           await createDatabaseStructure(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
-          //TODO: backup users
-
-          await createDatabaseStructure(db);
-          //TODO: restore users
+          if (oldVersion < newVersion) {
+            await createDatabaseStructure(db);
+          }
         },
         singleInstance: true,
         version: Keys.databaseVersion,
       ),
     );
+  }
+
+  Future<String?> getDbPath() async {
+    try {
+      // final io.Directory appDocumentsDir =
+      //     await getApplicationDocumentsDirectory();
+      String dbPath = p.join(
+        // appDocumentsDir.path,
+        'home/pi/Heethins/CC/databases',
+        Keys.databasePath,
+        Keys.databaseName,
+      );
+      return dbPath;
+    } on Exception catch (e) {
+      return e.toString();
+    }
   }
 
   /// Creates the database structure by executing SQL commands to drop and create tables.
@@ -128,7 +138,7 @@ class DbProvider {
   /// available, -1 is returned.
   Future<int> addUser(AppUser user) async {
     final db = await database;
-    if (db == null) return -1;
+    if (db == null) return -2;
     try {
       return await db.insert(
         Keys.tableUsers,
@@ -478,6 +488,7 @@ class DbProvider {
         'name': zone.name,
         'color': zone.color,
         'state': zone.state.index,
+        'selectedPlan': zone.selectedPlan,
       };
       final int id = await db.insert(Keys.tableZones, zoneMap);
       for (final user in zoneUsers) {
@@ -523,13 +534,14 @@ class DbProvider {
     if (db == null) return -1;
     try {
       final zoneUsers = zone.users;
-      final zoneSensors = zone.sensors;
-      final zoneDevices = zone.heaters;
+      // final zoneSensors = zone.sensors;
+      // final zoneDevices = zone.heaters;
       final zoneMap = {
         'id': zone.id,
         'name': zone.name,
         'color': zone.color,
         'state': zone.state.index,
+        'selectedPlan': zone.selectedPlan,
       };
       final int updateResult = await db.update(
         Keys.tableZones,
@@ -544,22 +556,8 @@ class DbProvider {
         await db.insert(
             Keys.tableZoneUsers, {'zoneId': zone.id, 'userId': user.id});
       }
-      final int zoneSensorsToDelete = await db.delete(Keys.tableZoneSensors,
-          where: Keys.queryZoneId, whereArgs: [zone.id]);
-      for (final sensor in zoneSensors) {
-        await db.insert(
-            Keys.tableZoneSensors, {'zoneId': zone.id, 'sensorId': sensor.id});
-      }
-      final int zoneHeatersToDelete = await db.delete(Keys.tableZoneHeaters,
-          where: Keys.queryZoneId, whereArgs: [zone.id]);
-      for (final device in zoneDevices) {
-        await db.insert(
-            Keys.tableZoneHeaters, {'zoneId': zone.id, 'heaterId': device.id});
-      }
-      return updateResult +
-          zoneUsersToDelete +
-          zoneSensorsToDelete +
-          zoneHeatersToDelete;
+
+      return updateResult + zoneUsersToDelete;
     } on Exception catch (err) {
       log(err.toString());
       return -1;
@@ -918,7 +916,7 @@ class DbProvider {
         day: item.day,
         level: item.level,
         degree: item.degree,
-        planBy: item.planBy,
+        hasThermostat: item.hasThermostat,
       ));
     }
     return await addPlanDetails(planDetails: newItems);

@@ -14,6 +14,7 @@ import 'package:central_heating_control/app/presentation/components/pi_scroll.da
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsHeaterEditScreen extends StatefulWidget {
   const SettingsHeaterEditScreen({super.key});
@@ -26,6 +27,16 @@ class SettingsHeaterEditScreen extends StatefulWidget {
 class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
   late HeaterDevice heater;
   final DataController dataController = Get.find();
+  late TextEditingController nameController;
+  late TextEditingController l1ConsumptionController;
+  late TextEditingController l2ConsumptionController;
+  late TextEditingController l3ConsumptionController;
+  late TextEditingController l1UnitController;
+  late TextEditingController l2UnitController;
+  late TextEditingController l3UnitController;
+  late TextEditingController l1CarbonController;
+  late TextEditingController l2CarbonController;
+  late TextEditingController l3CarbonController;
 
   @override
   void initState() {
@@ -37,22 +48,69 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
     } else {
       NavController.toHome();
     }
+    nameController = TextEditingController(text: heater.name);
+    l1ConsumptionController = TextEditingController(
+        text: (heater.level1ConsumptionAmount ?? 0).toString());
+    l2ConsumptionController = TextEditingController(
+        text: (heater.level2ConsumptionAmount ?? 0).toString());
+    l3ConsumptionController = TextEditingController(
+        text: (heater.level3ConsumptionAmount ?? 0).toString());
+    l1UnitController =
+        TextEditingController(text: heater.level1ConsumptionUnit ?? '');
+    l2UnitController =
+        TextEditingController(text: heater.level2ConsumptionUnit ?? '');
+    l3UnitController =
+        TextEditingController(text: heater.level3ConsumptionUnit ?? '');
+    l1CarbonController =
+        TextEditingController(text: (heater.level1Carbon ?? 0).toString());
+    l2CarbonController =
+        TextEditingController(text: (heater.level2Carbon ?? 0).toString());
+    l3CarbonController =
+        TextEditingController(text: (heater.level3Carbon ?? 0).toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
       builder: (dc) => AppScaffold(
-        title: 'Heaters',
+        title: 'Edit Heater',
         selectedIndex: 3,
         body: PiScrollView(
-           child: Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FormItemComponent(label: 'Name', child: Text(heater.name)),
+              //MARK: NAME
+              FormItemComponent(
+                label: 'Name',
+                child: TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    border: UiDimens.formBorder,
+                  ),
+                  onTap: () async {
+                    final result = await OnScreenKeyboard.show(
+                      context: context,
+                      initialValue: nameController.text,
+                      label: 'Heater Name',
+                      hintText: 'Type a name for your heater',
+                      maxLength: 16,
+                      minLength: 1,
+                      type: OSKInputType.name,
+                    );
+                    if (result != null) {
+                      nameController.text = result;
+                      setState(() {
+                        heater.name = result;
+                      });
+                    }
+                  },
+                ),
+              ),
               Row(
                 children: [
+                  //MARK: TYPE-CONNECTION-ZONE
+
                   //#region TYPE
                   Expanded(
                     child: FormItemComponent(
@@ -104,6 +162,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                   //#endregion
                 ],
               ),
+              //MARK: IP
               if (heater.connectionType == HeaterDeviceConnectionType.ethernet)
                 //#region IP ADDRESS
                 FormItemComponent(
@@ -111,6 +170,7 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                   child: Text('${heater.ipAddress}'),
                 ),
               //#endregion
+              //MARK: RELAY
               if (heater.connectionType == HeaterDeviceConnectionType.relay)
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -139,7 +199,27 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 3,
                           child: FormItemComponent(
                             label: 'Consumption',
-                            child: Text('${heater.level1ConsumptionAmount}'),
+                            child: TextField(
+                              controller: l1ConsumptionController,
+                              decoration: InputDecoration(
+                                border: UiDimens.formBorder,
+                              ),
+                              onTap: () async {
+                                final result = await OnScreenKeyboard.show(
+                                  context: context,
+                                  initialValue: l1ConsumptionController.text,
+                                  label: 'Consumption',
+                                  type: OSKInputType.number,
+                                );
+                                if (result != null) {
+                                  l1ConsumptionController.text = result;
+                                  setState(() {
+                                    heater.level1ConsumptionAmount =
+                                        double.tryParse(result);
+                                  });
+                                }
+                              },
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -147,7 +227,26 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 1,
                           child: FormItemComponent(
                             label: 'Unit',
-                            child: Text('${heater.level1ConsumptionUnit}'),
+                            child: TextField(
+                              controller: l1UnitController,
+                              decoration: InputDecoration(
+                                border: UiDimens.formBorder,
+                              ),
+                              onTap: () async {
+                                final result = await OnScreenKeyboard.show(
+                                  context: context,
+                                  initialValue: l1UnitController.text,
+                                  label: 'Unit',
+                                  type: OSKInputType.text,
+                                );
+                                if (result != null) {
+                                  l1UnitController.text = result;
+                                  setState(() {
+                                    heater.level1ConsumptionUnit = result;
+                                  });
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -175,7 +274,26 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 3,
                           child: FormItemComponent(
                             label: 'Consumption',
-                            child: Text('${heater.level2ConsumptionAmount}'),
+                            child: TextField(
+                              controller: l2ConsumptionController,
+                              decoration:
+                                  InputDecoration(border: UiDimens.formBorder),
+                              onTap: () async {
+                                final result = await OnScreenKeyboard.show(
+                                  context: context,
+                                  initialValue: l2ConsumptionController.text,
+                                  label: 'Consumption',
+                                  type: OSKInputType.number,
+                                );
+                                if (result != null) {
+                                  l2ConsumptionController.text = result;
+                                  setState(() {
+                                    heater.level2ConsumptionAmount =
+                                        double.tryParse(result);
+                                  });
+                                }
+                              },
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -183,7 +301,25 @@ class _SettingsHeaterEditScreenState extends State<SettingsHeaterEditScreen> {
                           flex: 1,
                           child: FormItemComponent(
                             label: 'Unit',
-                            child: Text('${heater.level2ConsumptionUnit}'),
+                            child: TextField(
+                              controller: l2UnitController,
+                              decoration:
+                                  InputDecoration(border: UiDimens.formBorder),
+                              onTap: () async {
+                                final result = await OnScreenKeyboard.show(
+                                  context: context,
+                                  initialValue: l2UnitController.text,
+                                  label: 'Unit',
+                                  type: OSKInputType.text,
+                                );
+                                if (result != null) {
+                                  l2UnitController.text = result;
+                                  setState(() {
+                                    heater.level2ConsumptionUnit = result;
+                                  });
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ],

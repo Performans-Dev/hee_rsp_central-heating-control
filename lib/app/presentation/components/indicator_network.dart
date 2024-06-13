@@ -34,7 +34,7 @@ class AppBarNetworkIndicator extends StatelessWidget {
       return app.didConnected
           ? Tooltip(
               message: message,
-              
+              triggerMode: TooltipTriggerMode.tap,
               child: Icon(iconData),
             )
           : Icon(Icons.wifi_off);

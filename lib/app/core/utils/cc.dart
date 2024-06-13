@@ -32,17 +32,19 @@ class CCUtils {
     }
   }
 
-  static String temperature(int t,
-      {bool divideBy10 = true, int presicion = 1}) {
-    return '${(t / (divideBy10 ? 10 : 1)).toStringAsFixed(presicion)}°';
-  }
+  static String temperature(
+    int t, {
+    bool divideBy10 = true,
+    int presicion = 1,
+  }) =>
+      '${(t / (divideBy10 ? 10 : 1)).toStringAsFixed(presicion)}°';
 
   static Color colorByLevel(int level) {
     switch (level) {
       case 1:
-        return Colors.yellow;
-      case 2:
         return Colors.orange;
+      case 2:
+        return Colors.deepOrange;
       case 3:
         return Colors.red;
       default:

@@ -1,14 +1,14 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
-import 'package:central_heating_control/main.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -23,12 +23,14 @@ class SetupAdminUserScreen extends StatefulWidget {
 class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
   late final TextEditingController nameController;
   late final TextEditingController pinController;
+  String theMessage = '';
 
   @override
   void initState() {
     super.initState();
     nameController = TextEditingController();
     pinController = TextEditingController();
+    initMessage();
   }
 
   @override
@@ -36,6 +38,13 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
     nameController.dispose();
     pinController.dispose();
     super.dispose();
+  }
+
+  initMessage() async {
+    var m = await DbProvider.db.getDbPath();
+    setState(() {
+      theMessage = m ?? '';
+    });
   }
 
   @override
@@ -94,12 +103,16 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                         ElevatedButton(
                           onPressed: () async {
                             if (nameController.text.isEmpty) {
-                              logger.d('name required');
+                              DialogUtils.snackbar(
+                                  context: context,
+                                  message: 'Name cannot be empty');
                               return;
                             }
 
                             if (pinController.text.length != 6) {
-                              logger.d("invalid pin");
+                              DialogUtils.snackbar(
+                                  context: context,
+                                  message: 'Pin must be 6 digits');
                               return;
                             }
 
@@ -112,7 +125,11 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
 
                             final result = await DbProvider.db.addUser(appUser);
                             if (result <= 0) {
-                              logger.d('add user error');
+                              if (context.mounted) {
+                                DialogUtils.snackbar(
+                                    context: context,
+                                    message: 'User already exists');
+                              }
                               return;
                             }
                             await app.populateUserList();
@@ -124,12 +141,15 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
                             if (loginResult) {
                               NavController.toHome();
                             } else {
-                              //TODO: raise alert
-                              logger.d('some error');
+                              if (context.mounted) {
+                                DialogUtils.snackbar(
+                                    context: context, message: 'Login failed');
+                              }
                             }
                           },
                           child: const Text('Create User'),
                         ),
+                        Text('dbMessage: $theMessage'),
                       ],
                     ),
                   ),
@@ -139,11 +159,15 @@ class _SetupAdminUserScreenState extends State<SetupAdminUserScreen> {
               const StackTopRightWidget(child: Text('Initial Setup 5 / 5')),
               StackBottomRightWidget(
                 child: ElevatedButton.icon(
-                  onPressed: app.hasAdminUser
-                      ? () {
-                          NavController.toHome();
-                        }
-                      : null,
+                  onPressed:
+                      // app.hasAdminUser
+                      //     ?
+                      () async {
+                    await app.createAdmin();
+                    NavController.toHome();
+                  }
+                  // : null
+                  ,
                   label: const Text('FINISH'),
                   icon: const Icon(Icons.arrow_right_alt),
                 ),

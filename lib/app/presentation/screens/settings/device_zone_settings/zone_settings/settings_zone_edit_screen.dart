@@ -1,5 +1,8 @@
 import 'dart:developer';
 
+import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -8,6 +11,7 @@ import 'package:central_heating_control/app/presentation/components/pi_scroll.da
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsZoneEditScreen extends StatefulWidget {
   const SettingsZoneEditScreen({super.key});
@@ -40,9 +44,30 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(height: 12),
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Zone Name'),
+                  decoration: InputDecoration(
+                    border: UiDimens.formBorder,
+                    labelText: 'Zone Name',
+                  ),
+                  onTap: () async {
+                    final result = await OnScreenKeyboard.show(
+                      context: context,
+                      initialValue: nameController.text,
+                      label: 'Zone Name',
+                      hintText: 'Type a zone name here',
+                      maxLength: 16,
+                      minLength: 1,
+                      type: OSKInputType.name,
+                    );
+                    if (result != null) {
+                      nameController.text = result;
+                    }
+                    setState(() {
+                      zone.name = nameController.text;
+                    });
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text('LABEL: Select Zone color'),
@@ -87,19 +112,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
   }
 
   Widget get saveButton => ElevatedButton(
-        onPressed: zone.users.isNotEmpty
-            ? () async {
-                final DataController dc = Get.find();
-                final result = await dc.updateZone(zone);
-                if (result) {
-                  //TODO: snackbar success
-
-                  Get.back();
-                } else {
-                  //TODO: snackbar error
-                }
-              }
-            : null,
+        onPressed: zone.users.isNotEmpty ? saveZone : null,
         child: const Text("Save"),
       );
 
@@ -116,4 +129,32 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
         'Delete this zone and all of its contents',
         style: TextStyle(color: Colors.red),
       ));
+
+  Future<void> saveZone() async {
+    final DataController dc = Get.find();
+    final result = await dc.updateZone(zone);
+    if (result) {
+      if (mounted) {
+        DialogUtils.snackbar(
+          context: context,
+          message: 'Zone Updated',
+          type: SnackbarType.success,
+        );
+      }
+
+      Get.back();
+    } else {
+      if (mounted) {
+        DialogUtils.snackbar(
+          context: context,
+          message: 'Couldn\'t update zone',
+          type: SnackbarType.error,
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: saveZone,
+          ),
+        );
+      }
+    }
+  }
 }
