@@ -23,42 +23,77 @@ class DeveloperScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FormItemComponent(
-                label: 'OUT PINS',
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    for (int i = 0; i < gc.outStates.length; i++)
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: UiDimens.formRadius,
-                        ),
-                        child: InkWell(
-                          onTap: () => gc.onOutTap(i),
-                          borderRadius: UiDimens.formRadius,
-                          child: ClipRRect(
-                            borderRadius: UiDimens.formRadius,
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text('${UiData.outPins[i]}'),
-                                  Icon(
-                                    Icons.sunny,
-                                    color: gc.outStates[i]
-                                        ? Colors.red
-                                        : Colors.grey.withOpacity(0.3),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                  ],
-                ),
+              Row(
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        gc.openRelays(true);
+                      },
+                      child: Text('Open Output')),
+                  ElevatedButton(
+                      onPressed: () {
+                        gc.openRelays(false);
+                      },
+                      child: Text('Close Output')),
+                  Text('oe:'),
+                  Icon(
+                    Icons.sunny,
+                    color: gc.oeState ? Colors.red : Colors.grey,
+                  ),
+                  Text('ser:'),
+                  Icon(
+                    Icons.sunny,
+                    color: gc.serState ? Colors.red : Colors.grey,
+                  ),
+                  Text('srclk:'),
+                  Icon(
+                    Icons.sunny,
+                    color: gc.srclkState ? Colors.red : Colors.grey,
+                  ),
+                  Text('rclk:'),
+                  Icon(
+                    Icons.sunny,
+                    color: gc.rclkState ? Colors.red : Colors.grey,
+                  ),
+                ],
               ),
+              Text(gc.log),
+              // FormItemComponent(
+              //   label: 'OUT PINS',
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       for (int i = 0; i < gc.outStates.length; i++)
+              //         Card(
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: UiDimens.formRadius,
+              //           ),
+              //           child: InkWell(
+              //             onTap: () => gc.onOutTap(i),
+              //             borderRadius: UiDimens.formRadius,
+              //             child: ClipRRect(
+              //               borderRadius: UiDimens.formRadius,
+              //               child: Container(
+              //                 padding: const EdgeInsets.all(10),
+              //                 child: Column(
+              //                   mainAxisSize: MainAxisSize.min,
+              //                   children: [
+              //                     Text('${UiData.outPins[i]}'),
+              //                     Icon(
+              //                       Icons.sunny,
+              //                       color: gc.outStates[i]
+              //                           ? Colors.red
+              //                           : Colors.grey.withOpacity(0.3),
+              //                     ),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         )
+              //     ],
+              //   ),
+              // ),
               const Divider(),
               FormItemComponent(
                 label: 'IN PINS',
@@ -132,8 +167,7 @@ class DeveloperScreen extends StatelessWidget {
                             borderRadius: UiDimens.formRadius,
                             child: Container(
                               padding: const EdgeInsets.all(10),
-                              child: Text(
-                                  item.name.camelCaseToHumanReadable()),
+                              child: Text(item.name.camelCaseToHumanReadable()),
                             ),
                           ),
                         ),
