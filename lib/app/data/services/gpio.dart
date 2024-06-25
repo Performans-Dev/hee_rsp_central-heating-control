@@ -126,6 +126,11 @@ class GpioController extends GetxController {
       return;
     }
     switch (t) {
+      case BuzzerType.mini:
+        buzzerPin?.write(true);
+        await Future.delayed(const Duration(milliseconds: 10));
+        buzzerPin?.write(false);
+        break;
       case BuzzerType.feedback:
         buzzerPin?.write(true);
         await Future.delayed(const Duration(milliseconds: 20));

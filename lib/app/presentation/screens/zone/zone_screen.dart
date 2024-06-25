@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
@@ -53,6 +54,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
               ZoneStateControlWidget(
                 zoneState: zone.selectedState,
                 stateCallback: (v) {
+                  Buzz.success();
                   pc.onZoneStateCalled(
                     zoneId: zone.zone.id,
                     state: v,
@@ -60,22 +62,26 @@ class _ZoneScreenState extends State<ZoneScreen> {
                 },
                 planId: zone.zone.selectedPlan,
                 planCallback: (v) {
+                  Buzz.success();
                   dataController.updateZonePlan(
                       zoneId: zone.zone.id, planId: v);
                 },
                 hasThermostat: zone.hasThermostat,
                 onThermostatCallback: (b) {
+                  Buzz.feedback();
                   pc.onZoneThermostatOptionCalled(
                       zoneId: zone.zone.id, value: b);
                 },
                 desiredTemperature: zone.desiredTemperature,
                 onMinusPressed: zone.desiredTemperature > 150
                     ? () {
+                        Buzz.mini();
                         pc.onZoneThermostatDecreased(zoneId: zone.zone.id);
                       }
                     : null,
                 onPlusPressed: zone.desiredTemperature < 350
                     ? () {
+                        Buzz.mini();
                         pc.onZoneThermostatIncreased(zoneId: zone.zone.id);
                       }
                     : null,
@@ -98,6 +104,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         ToggleButtons(
                           borderRadius: UiDimens.formRadius,
                           onPressed: (v) {
+                            Buzz.error();
                             //
                           },
                           children: [

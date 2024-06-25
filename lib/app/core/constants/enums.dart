@@ -108,6 +108,7 @@ enum ErrorChannelType {
 
 enum BuzzerType {
   none,
+  mini,
   feedback,
   success,
   error,

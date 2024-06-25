@@ -177,10 +177,10 @@ class AppController extends GetxController {
 
   //#region SETTINGS
   Future<void> fetchSettings() async {
-    await populateLanguages();
-    await populateTimezones();
     _didSettingsFetched.value = true;
     update();
+    await populateLanguages();
+    await populateTimezones();
     NavController.toHome();
   }
   //#endregion

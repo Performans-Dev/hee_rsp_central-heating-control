@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/network.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/main.dart';
@@ -18,6 +19,8 @@ class BaseNetworkProvider {
       'X-Api-Key': Secrets.apiKey,
     };
     Dio dio = Dio();
+    dio.options.receiveTimeout = const Duration(seconds: 10);
+    dio.options.connectTimeout = const Duration(seconds: 5);
     dio.options.contentType = 'application/json';
     dio.options.headers.addAll(headers);
     dio.options.receiveTimeout = const Duration(seconds: 30);
@@ -43,9 +46,11 @@ class BaseNetworkProvider {
       return NetworkUtils.processDioResponse(response);
     } on DioException catch (error) {
       logger.e('Error:', error: error);
+      Buzz.error();
       return NetworkUtils.processDioError(error);
     } catch (exception) {
       logger.e('Error:', error: exception);
+      Buzz.error();
       return NetworkUtils.processError({'error': exception.toString()});
     }
   }
@@ -63,9 +68,11 @@ class BaseNetworkProvider {
       return NetworkUtils.processDioResponse(response);
     } on DioException catch (error) {
       logger.e('Error:', error: error);
+      Buzz.error();
       return NetworkUtils.processDioError(error);
     } catch (exception) {
       logger.e('Error:', error: exception);
+      Buzz.error();
       return NetworkUtils.processError({'error': exception.toString()});
     }
   }

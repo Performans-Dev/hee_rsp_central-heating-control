@@ -3,6 +3,11 @@ import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:get/get.dart';
 
 class Buzz {
+  static void mini() {
+    final GpioController gpio = Get.find();
+    gpio.buzz(BuzzerType.mini);
+  }
+
   static void feedback() {
     final GpioController gpio = Get.find();
     gpio.buzz(BuzzerType.feedback);
