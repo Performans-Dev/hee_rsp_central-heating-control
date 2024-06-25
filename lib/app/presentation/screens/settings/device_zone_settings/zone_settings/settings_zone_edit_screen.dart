@@ -29,8 +29,9 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
   void initState() {
     super.initState();
     int id = int.parse(Get.parameters['id'] ?? '0');
+    nameController = TextEditingController();
     zone = dataController.zoneList.firstWhere((element) => element.id == id);
-    nameController = TextEditingController(text: zone.name);
+    nameController.text = zone.name;
   }
 
   @override
@@ -81,13 +82,17 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
                   SwitchListTile(
                     title: Text(user.username),
                     controlAffinity: ListTileControlAffinity.leading,
-                    value: zone.users.map((e) => e.id).contains(user.id),
+                    value: user.isAdmin
+                        ? true
+                        : zone.users.map((e) => e.id).contains(user.id),
                     selected: zone.users.map((e) => e.id).contains(user.id),
-                    onChanged: (value) => setState(() =>
-                        //value ? zone.users.add(user) : zone.users.remove(user)
-                        !zone.users.contains(user)
-                            ? zone.users.add(user)
-                            : zone.users.remove(user)),
+                    onChanged: user.isAdmin
+                        ? null
+                        : (value) => setState(() =>
+                            //value ? zone.users.add(user) : zone.users.remove(user)
+                            !zone.users.contains(user)
+                                ? zone.users.add(user)
+                                : zone.users.remove(user)),
                   ),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
@@ -112,7 +117,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
   }
 
   Widget get saveButton => ElevatedButton(
-        onPressed: zone.users.isNotEmpty ? saveZone : null,
+        onPressed: zone.name.isNotEmpty ? saveZone : null,
         child: const Text("Save"),
       );
 

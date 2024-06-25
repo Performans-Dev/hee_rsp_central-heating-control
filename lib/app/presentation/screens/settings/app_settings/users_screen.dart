@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/presentation/components/app_scaffold
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsUserListScreen extends StatelessWidget {
   const SettingsUserListScreen({super.key});
@@ -22,9 +23,7 @@ class SettingsUserListScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const BreadcrumbWidget(
-              title: 'User Management/ Users',
-            ),
+            SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -35,33 +34,93 @@ class SettingsUserListScreen extends StatelessWidget {
                       child: Text(app.userList[index].username.getInitials()),
                     ),
                     title: Text(app.userList[index].username),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon((app.userList[index].isAdmin)
-                            ? Icons.key
-                            : Icons.key_off),
-                        const SizedBox(width: 12),
-                        IconButton(
-                          onPressed: () {
-                            Get.toNamed(
-                              Routes.settingsUserEdit,
-                              arguments: [
-                                app.userList[index],
+                    subtitle: app.userList[index].isAdmin
+                        ? Text('Admin')
+                        : Text('User'),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Change Name"),
+                                Icon(Icons.drive_file_rename_outline),
                               ],
-                            );
-                          },
-                          icon: const Icon(Icons.edit),
-                        ),
-                        IconButton(
-                          onPressed: () => onDeleteUserPressed(
-                            context: context,
-                            index: index,
+                            ),
+                            onTap: () async {
+                              final result = await OnScreenKeyboard.show(
+                                context: context,
+                                label: 'Name, Surname',
+                                initialValue: app.userList[index].username,
+                                type: OSKInputType.name,
+                              );
+                              if (result != null) {
+                                var u = app.userList[index];
+                                u.username = result;
+                                await DbProvider.db.updateUser(u);
+                                app.populateUserList();
+                                DialogUtils.snackbar(
+                                    context: context,
+                                    message: 'Username updated');
+                              }
+                            },
                           ),
-                          icon: const Icon(Icons.delete),
-                        ),
-                      ],
+                          PopupMenuItem(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Change Password"),
+                                Icon(Icons.key),
+                              ],
+                            ),
+                            onTap: () async {
+                              //
+                            },
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Delete"),
+                                Icon(Icons.delete),
+                              ],
+                            ),
+                            onTap: () => onDeleteUserPressed(
+                              context: context,
+                              index: index,
+                            ),
+                          ),
+                        ];
+                      },
                     ),
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: [
+                    //     Icon((app.userList[index].isAdmin)
+                    //         ? Icons.key
+                    //         : Icons.key_off),
+                    //     const SizedBox(width: 12),
+                    //     IconButton(
+                    //       onPressed: () {
+                    //         Get.toNamed(
+                    //           Routes.settingsUserEdit,
+                    //           arguments: [
+                    //             app.userList[index],
+                    //           ],
+                    //         );
+                    //       },
+                    //       icon: const Icon(Icons.edit),
+                    //     ),
+                    //     IconButton(
+                    //       onPressed: () => onDeleteUserPressed(
+                    //         context: context,
+                    //         index: index,
+                    //       ),
+                    //       icon: const Icon(Icons.delete),
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                 ),
                 itemCount: app.userList.length,

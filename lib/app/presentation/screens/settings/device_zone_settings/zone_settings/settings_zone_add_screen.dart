@@ -1,3 +1,6 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -6,6 +9,7 @@ import 'package:central_heating_control/app/presentation/components/pi_scroll.da
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsZoneAddScreen extends StatefulWidget {
   const SettingsZoneAddScreen({super.key});
@@ -40,9 +44,28 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 20),
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Name of the zone'),
+                decoration: InputDecoration(
+                  border: UiDimens.formBorder,
+                  labelText: 'Name of the zone',
+                ),
+                onTap: () async {
+                  final result = await OnScreenKeyboard.show(
+                    context: context,
+                    label: 'Zone Name',
+                    initialValue: nameController.text,
+                    maxLength: 16,
+                    minLength: 1,
+                    type: OSKInputType.name,
+                  );
+                  if (result != null) {
+                    setState(() {
+                      nameController.text = result;
+                    });
+                  }
+                },
               ),
               const SizedBox(height: 20),
               const Text('LABEL: Select Zone color'),
@@ -52,14 +75,19 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
               ),
 
               const SizedBox(height: 20),
-              const Text('LABEL: Select USers'),
+              const Text('LABEL: Select Users'),
               for (final user in app.userList)
                 SwitchListTile(
                   title: Text(user.username),
                   controlAffinity: ListTileControlAffinity.leading,
-                  value: zone.users.map((e) => e.id).contains(user.id),
-                  onChanged: (value) => setState(() =>
-                      value ? zone.users.add(user) : zone.users.remove(user)),
+                  value: user.isAdmin
+                      ? true
+                      : zone.users.map((e) => e.id).contains(user.id),
+                  onChanged: user.isAdmin
+                      ? null
+                      : (value) => setState(() => value
+                          ? zone.users.add(user)
+                          : zone.users.remove(user)),
                 ),
 
               //
@@ -83,19 +111,7 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
   }
 
   Widget get saveButton => ElevatedButton(
-        onPressed: zone.users.isNotEmpty
-            ? () async {
-                final DataController dc = Get.find();
-                final result = await dc.addZone(zone);
-                if (result) {
-                  //TODO: snackbar success
-
-                  Get.back();
-                } else {
-                  //TODO: snackbar error
-                }
-              }
-            : null,
+        onPressed: zone.name.isNotEmpty ? saveZone : null,
         child: const Text("Save"),
       );
 
@@ -103,4 +119,31 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
         onPressed: () => Get.back(),
         child: const Text("Cancel"),
       );
+
+  void saveZone() async {
+    final DataController dc = Get.find();
+    final result = await dc.addZone(zone);
+    if (result) {
+      if (mounted) {
+        DialogUtils.snackbar(
+          context: context,
+          message: 'Zone added',
+          type: SnackbarType.success,
+        );
+      }
+      Get.back();
+    } else {
+      if (mounted) {
+        DialogUtils.snackbar(
+          context: context,
+          message: 'Unexpected error occured',
+          type: SnackbarType.error,
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: saveZone,
+          ),
+        );
+      }
+    }
+  }
 }

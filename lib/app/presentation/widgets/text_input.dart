@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
@@ -24,6 +25,7 @@ class TextInputWidget extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
+          border: UiDimens.formBorder,
           /*   border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
           ), */

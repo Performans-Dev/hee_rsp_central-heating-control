@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
@@ -9,6 +10,7 @@ import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsAddUserScreen extends StatefulWidget {
   const SettingsAddUserScreen({super.key});
@@ -44,23 +46,57 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const BreadcrumbWidget(
-              title: 'Settings / Add New User',
-            ),
             Expanded(
               child: PiScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextInputWidget(
-                      labelText: "Name Surname",
+                    SizedBox(height: 12),
+                    TextField(
                       controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Name, Surname',
+                        border: UiDimens.formBorder,
+                      ),
+                      onTap: () async {
+                        final result = await OnScreenKeyboard.show(
+                          context: context,
+                          label: 'Name, Surname',
+                          initialValue: nameController.text,
+                          type: OSKInputType.name,
+                        );
+                        if (result != null) {
+                          setState(() {
+                            nameController.text = result;
+                          });
+                        }
+                      },
                     ),
-                    TextInputWidget(
-                      labelText: "'Pin Code'",
+                    SizedBox(height: 12),
+                    TextField(
                       controller: pinController,
+                      decoration: InputDecoration(
+                        labelText: 'Pin Code',
+                        border: UiDimens.formBorder,
+                      ),
+                      onTap: () async {
+                        final result = await OnScreenKeyboard.show(
+                          context: context,
+                          label: 'Pin Code',
+                          initialValue: pinController.text,
+                          minLength: 6,
+                          maxLength: 6,
+                          type: OSKInputType.number,
+                        );
+                        if (result != null) {
+                          setState(() {
+                            pinController.text = result;
+                          });
+                        }
+                      },
                     ),
+                    SizedBox(height: 12),
                     SwitchListTile(
                       value: isAdminChecked,
                       onChanged: (v) {
