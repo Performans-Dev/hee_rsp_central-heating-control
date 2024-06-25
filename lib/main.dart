@@ -21,6 +21,8 @@ Future<void> main() async {
   // init database
   sqfliteFfiInit();
 
+  //TODO: get width-height, set window size if not 800x480
+
   // apply window options
   await windowManager.ensureInitialized();
 
