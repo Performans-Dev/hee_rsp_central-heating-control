@@ -1326,6 +1326,7 @@ class _OSKController extends GetxController {
   final _layoutType = _OSKLayoutType.lowerCase.obs;
   final _currentText = ''.obs;
   final _isShiftActive = false.obs;
+  final void Function(String)? feedbackFunction;
 
   _OSKController({
     required this.inputType,
@@ -1333,12 +1334,16 @@ class _OSKController extends GetxController {
     required this.label,
     required this.hintText,
     required this.numberOnly,
+    this.feedbackFunction,
   }) {
     _currentText.value = initialValue;
 
     _inputType.value = inputType;
     if (numberOnly) {
       _layoutType.value = _OSKLayoutType.numbers;
+    }
+    if (feedbackFunction != null) {
+      ever(_currentText, feedbackFunction!);
     }
 
     update();
@@ -1467,6 +1472,9 @@ class _OSKController extends GetxController {
       default:
         break;
     }
+    if (feedbackFunction != null) {
+      feedbackFunction!(_currentText.value);
+    }
     update();
 
     updateKeyboardLayout();
@@ -1579,6 +1587,7 @@ class _OSKKeyScreen extends StatefulWidget {
   final BuildContext ctx;
   final int? maxLength;
   final int? minLength;
+  final void Function(String)? feedbackFunction;
 
   const _OSKKeyScreen({
     super.key,
@@ -1589,6 +1598,7 @@ class _OSKKeyScreen extends StatefulWidget {
     this.hintText,
     this.maxLength,
     this.minLength,
+    this.feedbackFunction,
   });
 
   @override
@@ -1604,6 +1614,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
   late OSKInputType type;
   late dynamic initialValue;
   final numberOnlyChars = "0123456789,.";
+  bool isSubmitEnabled = false;
 
   double cursorOpacity = 0;
   late Timer cursorTimer;
@@ -1621,6 +1632,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
           initialValue: initialValue,
           hintText: hintText,
           numberOnly: type == OSKInputType.number,
+          feedbackFunction: widget.feedbackFunction,
         ),
         permanent: false);
 
@@ -1663,12 +1675,24 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
       // minLength kontrolü
       if (widget.minLength != null &&
           oskKeyController.currentText.length < widget.minLength!) {
-        return;
+        setState(() {
+          isSubmitEnabled = false;
+        });
       } else {
+        setState(() {
+          isSubmitEnabled = true;
+        });
         Navigator.pop(context, oskKeyController.currentText);
       }
     } else {
       oskKeyController.receiveOnTap(type, value);
+    }
+    setState(() {
+      isSubmitEnabled = widget.minLength == null ||
+          oskKeyController.currentText.length >= widget.minLength!;
+    });
+    if (widget.feedbackFunction != null) {
+      widget.feedbackFunction!(oskKeyController.currentText);
     }
   }
 
@@ -1728,16 +1752,28 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
                     ?.withOpacity(0.60)),
           ),
         );
-
+        var hintTextWidget = Container(
+          margin: const EdgeInsets.only(top: 91, left: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Text(
+            hintText,
+            style: TextStyle(
+              fontSize: 22,
+              color: Theme.of(widget.ctx)
+                  .textTheme
+                  .labelMedium!
+                  .color
+                  ?.withOpacity(0.60),
+            ),
+          ),
+        );
         var valueWidget = Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                oskKeyController.currentText.isEmpty
-                    ? hintText
-                    : oskKeyController.currentText,
+                oskKeyController.currentText,
                 style: TextStyle(
                     fontSize: 22,
                     color: Theme.of(widget.ctx).textTheme.labelMedium!.color),
@@ -1752,12 +1788,6 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
               ),
             ],
           ),
-        );
-
-        var suggestWidget = Container(
-          padding: const EdgeInsets.all(12),
-          child: Obx(() => Text(
-              "${oskKeyController.getInputType.name} ${oskKeyController.layoutType.name}")),
         );
 
         var btnClear = Container(
@@ -1780,9 +1810,11 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
         var btnSubmit = Container(
           padding: const EdgeInsets.all(12),
           child: ElevatedButton(
-              onPressed: () {
-                Get.back(result: oskKeyController.currentText);
-              },
+              onPressed: isSubmitEnabled
+                  ? () {
+                      Get.back(result: oskKeyController.currentText);
+                    }
+                  : null,
               child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -1796,43 +1828,50 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
 
         return Scaffold(
             backgroundColor: Theme.of(widget.ctx).canvasColor,
-            body: Column(
-              mainAxisSize: MainAxisSize.max,
+            body: Stack(
+              alignment: Alignment.topLeft,
               children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            labelWidget,
-                            Expanded(child: valueWidget),
-                            suggestWidget,
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: btnClear,
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                labelWidget,
+                                Expanded(child: valueWidget),
+                              ],
                             ),
-                            Expanded(
-                              child: btnSubmit,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  child: btnClear,
+                                ),
+                                Expanded(
+                                  child: btnSubmit,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    kb,
+                  ],
                 ),
-                kb,
+                oskKeyController.currentText.isEmpty
+                    ? hintTextWidget
+                    : Container(),
               ],
             ));
       },
@@ -1862,6 +1901,8 @@ class OnScreenKeyboard {
     int? maxLength,
     int? minLength,
     required BuildContext context,
+    void Function(String)? feedbackFunction,
+    // function alıcak feedbackfunction bu fonskyon null değilse bu fonksiyonu çalıştırcak her basışta. controllerde rxfunction açıcaz.
   }) async {
     return await Get.to(
       transition: Transition.downToUp,
@@ -1873,6 +1914,7 @@ class OnScreenKeyboard {
         ctx: context,
         maxLength: maxLength,
         minLength: minLength,
+        feedbackFunction: feedbackFunction,
       ),
     );
   }
