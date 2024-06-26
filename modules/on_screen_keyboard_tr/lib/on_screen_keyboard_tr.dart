@@ -1752,8 +1752,36 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
                     ?.withOpacity(0.60)),
           ),
         );
+        String descriptionText = "";
+        if (widget.minLength != null && widget.maxLength != null) {
+          if (widget.minLength == widget.maxLength) {
+            descriptionText = " ${widget.maxLength} karakter girmelisin.";
+          } else {
+            descriptionText =
+                "En az ${widget.minLength}, en çok ${widget.maxLength} karakter girmelisin.";
+          }
+        }
+        if (widget.minLength != null && widget.maxLength == null) {
+          descriptionText = "En az ${widget.minLength} karakter girmelisin.";
+        }
+        if (widget.minLength == null && widget.maxLength != null) {
+          descriptionText = "En fazla ${widget.maxLength} karakter girmelisin.";
+        }
+        var descriptionWidget = Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Text(
+            descriptionText,
+            style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(widget.ctx)
+                    .textTheme
+                    .labelMedium!
+                    .color
+                    ?.withOpacity(0.60)),
+          ),
+        );
+
         var hintTextWidget = Container(
-          margin: const EdgeInsets.only(top: 91, left: 4),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Text(
             hintText,
@@ -1828,50 +1856,50 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
 
         return Scaffold(
             backgroundColor: Theme.of(widget.ctx).canvasColor,
-            body: Stack(
-              alignment: Alignment.topLeft,
+            body: Column(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            labelWidget,
+                            Expanded(
+                                child: Stack(
                               children: [
-                                labelWidget,
-                                Expanded(child: valueWidget),
+                                valueWidget,
+                                if (oskKeyController.currentText.isEmpty)
+                                  hintTextWidget
                               ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  child: btnClear,
-                                ),
-                                Expanded(
-                                  child: btnSubmit,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                            )),
+                            descriptionWidget
+                          ],
+                        ),
                       ),
-                    ),
-                    kb,
-                  ],
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              child: btnClear,
+                            ),
+                            Expanded(
+                              child: btnSubmit,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                oskKeyController.currentText.isEmpty
-                    ? hintTextWidget
-                    : Container(),
+                kb,
               ],
             ));
       },
