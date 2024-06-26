@@ -149,34 +149,9 @@ class SettingsPreferences extends StatelessWidget {
                     ),
                     leading: Icon(Icons.settings_suggest),
                     title: Text('Advanced'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Kill'),
-                        ),
-                        SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Shutdown'),
-                        ),
-                        SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final result =
-                                await Process.run('sudo reboot', ['now']);
-                            print(result);
-                          },
-                          child: Text('Reboot'),
-                        ),
-                        SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Factory Reset'),
-                        ),
-                      ],
-                    ),
+                    onTap: () {
+                      Get.toNamed(Routes.settingsAdvanced);
+                    },
                   ),
                   const SizedBox(height: 28),
                 ],

@@ -46,6 +46,7 @@ class Routes {
 
   static const String settingsPlanList = '/settings-plan-list';
   static const String settingsPlanDetail = '/settings-plan-detail';
+  static const String settingsAdvanced = '/settings-advanced';
 
   static const String onScreenKeyboard = '/oskb';
 

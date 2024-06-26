@@ -125,6 +125,13 @@ class DbProvider {
       }
     }
   }
+
+  Future<void> resetDb() async {
+    final db = await database;
+    if (db == null) return;
+    await createDatabaseStructure(db);
+  }
+
   //#endregion
 
   //MARK: USERS
