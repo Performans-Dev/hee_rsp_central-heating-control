@@ -48,21 +48,21 @@ class _LanguageScreenState extends State<LanguageScreen> {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (_, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: CheckboxListTile(
-                    dense: true,
-                    value: _selectedLanguage == app.languages[index].name,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _selectedLanguage =
-                            value! ? app.languages[index].name : null;
-                      });
-                    },
-                    title: Text(app.languages[index].name),
-                    subtitle: Text(app.languages[index].countryCode),
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
-                ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: RadioListTile(
+                      dense: true,
+                      value: app.languages[index].name,
+                      groupValue: _selectedLanguage,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedLanguage = value;
+                          /*       _selectedLanguage =
+                            value! ? app.languages[index].name : null; */
+                        });
+                      },
+                      title: Text(app.languages[index].name),
+                      subtitle: Text(app.languages[index].countryCode),
+                    )),
                 itemCount: app.languages.length,
               ),
             ),

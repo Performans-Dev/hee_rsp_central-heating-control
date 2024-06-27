@@ -79,7 +79,7 @@ class SettingsPreferences extends StatelessWidget {
                     subtitle: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        DateTextWidget(oneLine: true),
+                        const DateTextWidget(oneLine: true),
                         Text(', ${currentTimezone.name}'),
                       ],
                     ),
@@ -104,7 +104,9 @@ class SettingsPreferences extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.settingsWifiCredentials);
+                    },
                   ),
                   const SizedBox(height: 8),
                   ListTile(
@@ -147,8 +149,8 @@ class SettingsPreferences extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    leading: Icon(Icons.settings_suggest),
-                    title: Text('Advanced'),
+                    leading: const Icon(Icons.settings_suggest),
+                    title: const Text('Advanced'),
                     onTap: () {
                       Get.toNamed(Routes.settingsAdvanced);
                     },

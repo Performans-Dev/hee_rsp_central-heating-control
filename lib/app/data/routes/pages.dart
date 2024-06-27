@@ -18,6 +18,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_se
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/wifi_credentials.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_list_screen.dart';
@@ -160,7 +161,7 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.settingsWifiCredentials,
-    page: () => SettingsPreferences(),
+    page: () => WifiCredentialsScreen(),
     middlewares: [
       AdminMiddleware(),
     ],
