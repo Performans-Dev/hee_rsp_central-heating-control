@@ -3,6 +3,7 @@ class Keys {
   static const String localeLang = 'localeLang';
   static const String localeCulture = 'localeCulture';
   static const String isDarkMode = 'isDarkMode';
+  static const String selectedTheme = 'selectedTheme';
 
   static const String selectedTimezone = 'selectedTimezone';
   static const String selectedTimeFormat = 'selectedTimeFormat';

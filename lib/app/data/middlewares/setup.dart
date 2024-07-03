@@ -11,25 +11,25 @@ class SetupMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
 
-    if (!appController.didSettingsFetched) {
-      return const RouteSettings(name: Routes.splash);
-    }
+    // if (!appController.didSettingsFetched) {
+    //   return const RouteSettings(name: Routes.splash);
+    // }
 
-    if (!appController.didLanguageSelected) {
-      return const RouteSettings(name: Routes.setupLanguage);
-    }
+    // if (!appController.didLanguageSelected) {
+    //   return const RouteSettings(name: Routes.setupLanguage);
+    // }
 
-    if (!appController.didTimezoneSelected) {
-      return const RouteSettings(name: Routes.setupTimezone);
-    }
+    // if (!appController.didTimezoneSelected) {
+    //   return const RouteSettings(name: Routes.setupTimezone);
+    // }
 
-    if (!appController.didActivated) {
-      return const RouteSettings(name: Routes.activation);
-    }
+    // if (!appController.didActivated) {
+    //   return const RouteSettings(name: Routes.activation);
+    // }
 
-    if (!appController.hasAdminUser) {
-      return const RouteSettings(name: Routes.setupAdminUser);
-    }
+    // if (!appController.hasAdminUser) {
+    //   return const RouteSettings(name: Routes.setupAdminUser);
+    // }
 
     return null;
   }

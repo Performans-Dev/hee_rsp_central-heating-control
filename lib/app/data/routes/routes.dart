@@ -9,8 +9,11 @@ class Routes {
   static const String screenSaver = '/screen-saver';
 
   //#region INITIAL SETUP
+  static const String setupTheme = '/setup-theme';
   static const String setupLanguage = '/setup-language';
   static const String setupTimezone = '/setup-timezone';
+  static const String setupDateFormat = '/setup-date-format';
+  static const String setupConnection = '/setup-connection';
   static const String setupAdminUser = '/setup-admin-user';
   //#endregion
 

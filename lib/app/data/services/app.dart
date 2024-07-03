@@ -30,14 +30,16 @@ class AppController extends GetxController {
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
     checkFlags();
+    _selectedTheme.value = Box.getString(key: Keys.selectedTheme);
+    update();
   }
 
   @override
   void onReady() {
-    populateUserList();
+    // populateUserList();
     fetchSettings();
-    logoutUser();
-    readDevice();
+    // logoutUser();
+    // readDevice();
     super.onReady();
   }
 
@@ -82,6 +84,15 @@ class AppController extends GetxController {
     _didTimezoneSelected.value = Box.getBool(key: Keys.didTimezoneSelected);
     _didActivated.value = Box.getBool(key: Keys.didActivated);
     _hasAdminUser.value = (await DbProvider.db.getAdminUsers()).isNotEmpty;
+    update();
+  }
+
+  Future<void> resetFlags() async {
+    _didLanguageSelected.value = false;
+    _didTimezoneSelected.value = false;
+    _didActivated.value = false;
+    _hasAdminUser.value = false;
+    _didSettingsFetched.value = false;
     update();
   }
   //#endregion
@@ -181,7 +192,7 @@ class AppController extends GetxController {
     update();
     await populateLanguages();
     await populateTimezones();
-    NavController.toHome();
+    // NavController.toHome();
   }
   //#endregion
 
@@ -336,6 +347,24 @@ class AppController extends GetxController {
     await Box.setBool(key: Keys.isDarkMode, value: isDarkMode);
   }
 
+  //#endregion
+
+  //#region THEME
+  final RxList<String> _themeList = <String>[
+    'default',
+    'nature',
+    'warmy',
+    'crimson',
+  ].obs;
+  List<String> get themeList => _themeList;
+
+  final Rx<String> _selectedTheme = 'nature'.obs;
+  String get selectedTheme => _selectedTheme.value;
+  void setSelectedTheme(String theme) async {
+    _selectedTheme.value = theme;
+    update();
+    await Box.setString(key: Keys.selectedTheme, value: selectedTheme);
+  }
   //#endregion
 
   Future<void> createAdmin() async {

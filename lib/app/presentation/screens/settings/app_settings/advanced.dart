@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -128,6 +130,8 @@ class SettingsAdvancedScreen extends StatelessWidget {
           DbProvider.db.resetDb();
           final box = GetStorage();
           await box.erase();
+          final AppController app = Get.find();
+          app.resetFlags();
           NavController.toHome();
         },
         negativeText: "Cancel");

@@ -16,7 +16,21 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       // automaticallyImplyLeading: false,
       centerTitle: false,
-      actions: const [
+      actions: [
+        IconButton(
+          onPressed: () async {
+            await windowManager.maximize();
+          },
+          icon: Icon(Icons.fullscreen_exit),
+        ),
+        SizedBox(width: 8),
+        IconButton(
+          onPressed: () async {
+            await windowManager.setFullScreen(true);
+          },
+          icon: Icon(Icons.fullscreen_sharp),
+        ),
+        SizedBox(width: 8),
         Icon(Icons.warning),
         SizedBox(width: 4),
         AppBarNetworkIndicator(),

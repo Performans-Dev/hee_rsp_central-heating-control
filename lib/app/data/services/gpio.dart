@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/hardware/mcp3008.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:get/get.dart';
 import 'package:rpi_gpio/gpio.dart';
+import 'package:rpi_spi/rpi_spi.dart';
 
 class GpioController extends GetxController {
   Timer? timer;
@@ -24,6 +27,8 @@ class GpioController extends GetxController {
       initInPins();
       initBtnPins();
       initBuzzer();
+      initSerial();
+      initSpi();
     }
     super.onReady();
   }
@@ -34,6 +39,8 @@ class GpioController extends GetxController {
     for (final item in outGpios) {
       item.dispose();
     }
+    spi?.dispose();
+    serial?.dispose();
     super.onClose();
   }
 
@@ -43,6 +50,7 @@ class GpioController extends GetxController {
   // final Rx<GPIO> _gpio = GPIO.advanced(5, config).obs;
   // GPIO get gpio => _gpio.value;
 
+  //MARK: GPIO in-out
   final RxList<GPIO> _outGpios = <GPIO>[].obs;
   List<GPIO> get outGpios => _outGpios;
 
@@ -121,6 +129,7 @@ class GpioController extends GetxController {
     );
   }
 
+  //MARK: BUZZER
   Future<void> buzz(BuzzerType t) async {
     if (buzzerPin == null) {
       return;
@@ -172,6 +181,7 @@ class GpioController extends GetxController {
     }
   }
 
+  //MARK: RELAY
   final Rx<bool> _oeState = false.obs;
   bool get oeState => _oeState.value;
   final Rx<bool> _srclkState = false.obs;
@@ -235,5 +245,123 @@ class GpioController extends GetxController {
     update();
 
     buzz(BuzzerType.feedback);
+  }
+
+  //MARK: SERIAL UART
+  final Rxn<Serial> _serial = Rxn();
+  Serial? get serial => _serial.value;
+
+  final Rx<String> _serialLog = ''.obs;
+  String get serialLog => _serialLog.value;
+
+  void initSerial() {
+    try {
+      Serial s = Serial('/dev/serial0', Baudrate.b9600);
+      s.setBaudrate(Baudrate.b9600);
+      s.setParity(Parity.parityNone);
+      s.setDataBits(DataBits.db8);
+
+      _serial.value = s;
+      update();
+    } on Exception catch (e) {
+      print(e);
+      Buzz.alarm();
+    }
+  }
+
+  Future<void> serialSend({String? message}) async {
+    Buzz.mini();
+    if (serial == null) {
+      _serialLog.value = 'no-device';
+      update();
+      return;
+    }
+
+    if (message == null || message.isEmpty) {
+      message = DateTime.now().toIso8601String();
+    }
+
+    var serialPin = outGpios.firstWhere((e) => e.line == 4);
+
+    serialPin.write(true);
+    await Future.delayed(const Duration(milliseconds: 100));
+    serial?.writeString(message);
+    await Future.delayed(const Duration(milliseconds: 100));
+    serialPin.write(false);
+    await Future.delayed(const Duration(milliseconds: 100));
+    Buzz.mini();
+
+    _serialLog.value = message;
+    update();
+  }
+
+  Future<void> serialReceive() async {
+    Buzz.mini();
+    String message = '';
+    if (serial == null) return;
+    var bytes = 0;
+    try {
+      for (int i = 0; i < 50; i++) {
+        bytes = serial!.getInputWaiting();
+        if (bytes > 0) break;
+        await (Future.delayed(Duration(milliseconds: 100)));
+      }
+
+      if (bytes > 0) {
+        SerialReadEvent event = serial!.read(bytes, 5000);
+        message = event.toString();
+      } else {
+        message = 'no message received';
+      }
+    } on Exception catch (e) {
+      message = e.toString();
+    }
+    Buzz.mini();
+    _serialLog.value += message;
+    update();
+  }
+
+  //MARK: SPI
+  final Rx<String> _spiLog = 'idle'.obs;
+  String get spiLog => _spiLog.value;
+
+  final Rxn<RpiSpi> _spi = Rxn();
+  RpiSpi? get spi => _spi.value;
+
+  void initSpi() {
+    _spi.value = RpiSpi();
+    _spiLog.value = 'SPI ready';
+    update();
+  }
+
+  Future<void> readSpiSensor() async {
+    if (spi == null) return;
+    buzz(BuzzerType.feedback);
+    final Mcp3008 mcp3008 = Mcp3008(spi!, 0, 24);
+    String response = '';
+    StringBuffer out;
+    response += 'Read analog values from MCP3008 channels 0 - 7:';
+
+    response += '      | Channel';
+    out = StringBuffer('      ');
+    for (var channel = 0; channel < 8; ++channel) {
+      out.write('| ${channel.toString().padLeft(4)} ');
+    }
+    response += out.toString();
+    response += '-' * 63;
+
+    for (var count = 1; count <= 10; ++count) {
+      await Future.delayed(const Duration(seconds: 1));
+      out = StringBuffer(' ${count.toString().padLeft(4)} ');
+      for (var channel = 0; channel < 8; ++channel) {
+        var value = mcp3008.read(channel);
+        out.write('| ${value.toString().padLeft(4)} ');
+      }
+      response += out.toString();
+      await Future.delayed(Duration(milliseconds: 10));
+    }
+    _spiLog.value = response;
+    update();
+    buzz(BuzzerType.success);
   }
 }

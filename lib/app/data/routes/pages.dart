@@ -22,8 +22,8 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_se
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/heater_settings/settings_heater_list_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/edit_settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/sensor_settings/settings_sensor_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_device_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/device_zone_settings/zone_settings/settings_zone_add_screen.dart';
@@ -33,9 +33,12 @@ import 'package:central_heating_control/app/presentation/screens/settings/settin
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/day_summary.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/plan_detail.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/plan_list.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/connection/connection_setup_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/date_format/date_format_setup_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/language/language_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/setup/setup_language_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/setup/setup_timezone_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/theme/theme_setup_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/timezone/timezone_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
@@ -55,9 +58,9 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.home,
     page: () => const HomeScreen(),
-    middlewares: [
-      SetupMiddleware(),
-      UserMiddleware(),
+    middlewares: const [
+      // SetupMiddleware(),
+      // UserMiddleware(),
     ],
   ),
   GetPage(
@@ -93,12 +96,29 @@ final List<GetPage> getPages = [
     page: () => const SplashScreen(),
   ),
   GetPage(
+    name: Routes.setupTheme,
+    page: () => const SetupThemeScreen(),
+    transition: Transition.fadeIn,
+  ),
+  GetPage(
     name: Routes.setupLanguage,
     page: () => const SetupLanguageScreen(),
+    transition: Transition.fadeIn,
   ),
   GetPage(
     name: Routes.setupTimezone,
     page: () => const SetupTimezoneScreen(),
+    transition: Transition.fadeIn,
+  ),
+  GetPage(
+    name: Routes.setupDateFormat,
+    page: () => const SetupDateFormatScreen(),
+    transition: Transition.fadeIn,
+  ),
+  GetPage(
+    name: Routes.setupConnection,
+    page: () => const SetupConnectionScreen(),
+    transition: Transition.fadeIn,
   ),
 
   //#region SETTINGS

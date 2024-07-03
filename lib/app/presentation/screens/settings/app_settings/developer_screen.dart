@@ -9,9 +9,14 @@ import 'package:central_heating_control/app/presentation/components/pi_scroll.da
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DeveloperScreen extends StatelessWidget {
+class DeveloperScreen extends StatefulWidget {
   const DeveloperScreen({super.key});
 
+  @override
+  State<DeveloperScreen> createState() => _DeveloperScreenState();
+}
+
+class _DeveloperScreenState extends State<DeveloperScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GpioController>(builder: (gc) {
@@ -172,6 +177,43 @@ class DeveloperScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              FormItemComponent(
+                label: 'Serial',
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async => await gc.serialSend(),
+                          child: Text('Serial Send'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async => await gc.serialReceive(),
+                          child: Text('Serial Receive'),
+                        ),
+                      ],
+                    ),
+                    Text(gc.serialLog),
+                  ],
+                ),
+              ),
+              Divider(),
+              FormItemComponent(
+                label: 'SPI',
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async => await gc.readSpiSensor(),
+                      child: Text('Read Data'),
+                    ),
+                    Text(gc.spiLog),
                   ],
                 ),
               ),

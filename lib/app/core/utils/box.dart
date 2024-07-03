@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/wifi.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -16,6 +17,7 @@ class Box {
     required String value,
   }) async {
     final box = GetStorage();
+    logger.d('Box: setting $key to $value');
     await box.write(key, value);
   }
 
@@ -71,6 +73,21 @@ class Box {
   bool get didLanguageSelected => getBool(key: Keys.didLanguageSelected);
   bool get didTimezoneSelected => getBool(key: Keys.didTimezoneSelected);
   bool get didActivated => getBool(key: Keys.didActivated);
+  //#endregion
+
+  //#region THEME
+  static String get selectedTheme {
+    return getString(
+      key: Keys.selectedTheme,
+      defaultVal: 'default',
+    );
+  }
+
+  static Future<void> setSelectedTheme(String theme) async => await setString(
+        key: Keys.selectedTheme,
+        value: theme,
+      );
+
   //#endregion
 
   //#region DEVICE-ID
