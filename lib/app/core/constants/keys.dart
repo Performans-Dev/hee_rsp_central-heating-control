@@ -10,6 +10,8 @@ class Keys {
   static const String selectedDateFormat = 'selectedDateFormat';
   static const String didLanguageSelected = 'didLanguageSelected';
   static const String didTimezoneSelected = 'didTimezoneSelected';
+  static const String didDateFormatSelected = 'didDateFormatSelected';
+  static const String didPickedTheme = 'didPickedTheme';
   static const String didActivated = 'didActivated';
 
   static const String sessionKey = 'sessionKey';

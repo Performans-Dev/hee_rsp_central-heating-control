@@ -4,6 +4,7 @@ class Routes {
   static const String home = '/home';
   static const String zone = '/zone';
   static const String splash = '/initializing';
+  static const String splashFetchSettings = '/fetch-settings';
 
   static const String pin = '/pin';
   static const String screenSaver = '/screen-saver';

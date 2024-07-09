@@ -51,6 +51,8 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
             //save timeformat
             await Box.setString(
                 key: Keys.selectedTimeFormat, value: _selectedTimeFormat);
+            await Box.setBool(key: Keys.didDateFormatSelected, value: true);
+
             Get.toNamed(Routes.setupConnection);
           },
           progressValue: 3 / 9,

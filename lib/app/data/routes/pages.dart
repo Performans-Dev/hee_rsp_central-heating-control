@@ -40,6 +40,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/setup_adm
 import 'package:central_heating_control/app/presentation/screens/setup/theme/theme_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/timezone/timezone_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/splash/splash_settings.dart';
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
@@ -58,9 +59,9 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.home,
     page: () => const HomeScreen(),
-    middlewares: const [
-      // SetupMiddleware(),
-      // UserMiddleware(),
+    middlewares: [
+      SetupMiddleware(),
+      UserMiddleware(),
     ],
   ),
   GetPage(
@@ -94,6 +95,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.splash,
     page: () => const SplashScreen(),
+  ),
+  GetPage(
+    name: Routes.splashFetchSettings,
+    page: () => const SplashFetchSettingsScreen(),
   ),
   GetPage(
     name: Routes.setupTheme,

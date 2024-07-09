@@ -36,7 +36,18 @@ class MainApp extends StatelessWidget {
         final theme = MaterialTheme(
             ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
         return IdleDetector(
-          excludedRoutes: [Routes.settings],
+          excludedRoutes: const [
+            Routes.setupConnection,
+            Routes.setupDateFormat,
+            Routes.setupLanguage,
+            Routes.setupTimezone,
+            Routes.setupTheme,
+            Routes.activation,
+            Routes.signin,
+            Routes.developer,
+            Routes.screenSaver,
+            Routes.setupAdminUser,
+          ],
           child: GetMaterialApp(
             scrollBehavior: PiScrollBehavior(),
             debugShowCheckedModeBanner: false,
@@ -50,7 +61,7 @@ class MainApp extends StatelessWidget {
                 : ThemeMode.light,
             defaultTransition: Transition.circularReveal,
             getPages: getPages,
-            initialRoute: Routes.setupLanguage, // Routes.home,
+            initialRoute: Routes.home,
             initialBinding: AppBindings(),
             locale: LocalizationService.locale,
             fallbackLocale: LocalizationService.fallbackLocale,

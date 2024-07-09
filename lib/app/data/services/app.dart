@@ -37,7 +37,7 @@ class AppController extends GetxController {
   @override
   void onReady() {
     // populateUserList();
-    fetchSettings();
+    // fetchSettings();
     // logoutUser();
     // readDevice();
     super.onReady();
@@ -70,6 +70,9 @@ class AppController extends GetxController {
   final RxBool _didTimezoneSelected = false.obs;
   bool get didTimezoneSelected => _didTimezoneSelected.value;
 
+  final RxBool _didDateFormatSelected = false.obs;
+  bool get didDateFormatSelected => _didDateFormatSelected.value;
+
   final RxBool _didActivated = false.obs;
   bool get didActivated => _didActivated.value;
 
@@ -79,9 +82,14 @@ class AppController extends GetxController {
   final RxBool _hasAdminUser = false.obs;
   bool get hasAdminUser => _hasAdminUser.value;
 
+  final RxBool _didPickedTheme = false.obs;
+  bool get didPickedTheme => _didPickedTheme.value;
+
   Future<void> checkFlags() async {
     _didLanguageSelected.value = Box.getBool(key: Keys.didLanguageSelected);
     _didTimezoneSelected.value = Box.getBool(key: Keys.didTimezoneSelected);
+    _didDateFormatSelected.value = Box.getBool(key: Keys.didDateFormatSelected);
+    _didPickedTheme.value = Box.getBool(key: Keys.didPickedTheme);
     _didActivated.value = Box.getBool(key: Keys.didActivated);
     _hasAdminUser.value = (await DbProvider.db.getAdminUsers()).isNotEmpty;
     update();
@@ -90,8 +98,10 @@ class AppController extends GetxController {
   Future<void> resetFlags() async {
     _didLanguageSelected.value = false;
     _didTimezoneSelected.value = false;
+    _didDateFormatSelected.value = false;
     _didActivated.value = false;
     _hasAdminUser.value = false;
+    _didPickedTheme.value = false;
     _didSettingsFetched.value = false;
     update();
   }
@@ -166,6 +176,14 @@ class AppController extends GetxController {
   Future<void> populateUserList() async {
     final users = await DbProvider.db.getUsers();
     _userList.assignAll(users);
+    if (users.isEmpty) {
+      _userList.add(AppUser(
+        username: 'Admin User',
+        id: 0,
+        isAdmin: true,
+        pin: '000000',
+      ));
+    }
     update();
   }
 

@@ -30,6 +30,7 @@ Future<void> main() async {
     size: GetPlatform.isMacOS ? const Size(800, 480) : null,
     backgroundColor: Colors.black,
     skipTaskbar: false,
+    // center: true,
     titleBarStyle: TitleBarStyle.hidden,
     windowButtonVisibility: true,
   );
