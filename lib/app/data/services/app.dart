@@ -36,10 +36,10 @@ class AppController extends GetxController {
 
   @override
   void onReady() {
-    // populateUserList();
+    populateUserList();
     // fetchSettings();
-    // logoutUser();
-    // readDevice();
+    logoutUser();
+    readDevice();
     super.onReady();
   }
 
@@ -177,12 +177,14 @@ class AppController extends GetxController {
     final users = await DbProvider.db.getUsers();
     _userList.assignAll(users);
     if (users.isEmpty) {
-      _userList.add(AppUser(
+      final defaultUser = AppUser(
         username: 'Admin User',
-        id: 0,
+        id: -1,
         isAdmin: true,
         pin: '000000',
-      ));
+      );
+      await DbProvider.db.addUser(defaultUser);
+      await populateUserList();
     }
     update();
   }

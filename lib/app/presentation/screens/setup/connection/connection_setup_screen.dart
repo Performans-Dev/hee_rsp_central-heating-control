@@ -23,7 +23,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
           },
           nextCallback: () async {
             //save dateformat
-            //  Get.toNamed(Routes.setupConnection);
+            Get.toNamed(Routes.home);
           },
           progressValue: 4 / 9,
           child: Column(

@@ -21,37 +21,37 @@ class SetupMiddleware extends GetMiddleware {
       return const RouteSettings(name: Routes.splashFetchSettings);
     }
 
-    log(
+    /* log(
       'didLanguageSelected: ${appController.didLanguageSelected}',
       name: 'SetupMiddleware',
     );
     if (!appController.didLanguageSelected) {
       return const RouteSettings(name: Routes.setupLanguage);
-    }
+    } */
 
-    log(
+    /* log(
       'didTimezoneSelected: ${appController.didTimezoneSelected}',
       name: 'SetupMiddleware',
     );
     if (!appController.didTimezoneSelected) {
       return const RouteSettings(name: Routes.setupTimezone);
-    }
+    } */
 
-    log(
+    /*  log(
       'didDateFormatSelected: ${appController.didDateFormatSelected}',
       name: 'SetupMiddleware',
     );
     if (!appController.didDateFormatSelected) {
       return const RouteSettings(name: Routes.setupDateFormat);
-    }
+    } */
 
-    log(
+/*     log(
       'didActivated: ${appController.didActivated}',
       name: 'SetupMiddleware',
     );
     if (!appController.didActivated) {
       return const RouteSettings(name: Routes.activation);
-    }
+    } */
 
     log(
       'hasAdminUser: ${appController.hasAdminUser}',
@@ -61,13 +61,13 @@ class SetupMiddleware extends GetMiddleware {
       return const RouteSettings(name: Routes.setupAdminUser);
     }
 
-    log(
+    /* log(
       'didPickedTheme: ${appController.didPickedTheme}',
       name: 'SetupMiddleware',
     );
     if (!appController.didPickedTheme) {
       return const RouteSettings(name: Routes.setupTheme);
-    }
+    } */
 
     return null;
   }
