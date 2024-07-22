@@ -61,7 +61,7 @@ class MainApp extends StatelessWidget {
                 : ThemeMode.light,
             defaultTransition: Transition.circularReveal,
             getPages: getPages,
-            initialRoute: Routes.home,
+            initialRoute: Routes.setupLanguage,
             initialBinding: AppBindings(),
             locale: LocalizationService.locale,
             fallbackLocale: LocalizationService.fallbackLocale,

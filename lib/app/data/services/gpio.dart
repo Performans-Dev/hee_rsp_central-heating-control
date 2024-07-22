@@ -335,9 +335,9 @@ class GpioController extends GetxController {
   }
 
   Future<void> readSpiSensor() async {
-    if (spi == null) return;
+   /*  if (spi == null) return;
     buzz(BuzzerType.feedback);
-    final Mcp3008 mcp3008 = Mcp3008(spi!, 0, 24);
+    // final Mcp3008 mcp3008 = Mcp3008(spi!, 0, 24);
     String response = '';
     StringBuffer out;
     response += 'Read analog values from MCP3008 channels 0 - 7:';
@@ -362,6 +362,6 @@ class GpioController extends GetxController {
     }
     _spiLog.value = response;
     update();
-    buzz(BuzzerType.success);
+    buzz(BuzzerType.success); */
   }
 }
