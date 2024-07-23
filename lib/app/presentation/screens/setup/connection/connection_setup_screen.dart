@@ -5,10 +5,12 @@ import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:process_run/shell.dart';
 
 enum SetupConnectionState {
   none,
@@ -26,17 +28,29 @@ class SetupConnectionScreen extends StatefulWidget {
 }
 
 class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
-  final TextEditingController _ssidController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _passwordController;
   late Timer timer;
   SetupConnectionState screenState = SetupConnectionState.none;
   final AppController appController = Get.find();
-
+  String title = "";
+  String selectedSsid = "";
+  List<String> _wifiSsids = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _passwordController = TextEditingController()
+      ..addListener(() {
+        setState(() {});
+      });
     // initTimer();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    _passwordController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -49,10 +63,6 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
             widget = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Bağlantınız yok",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
                 const SizedBox(height: 2),
                 Text(
                   "Hangi yöntem ile bağlanmak istiyorsunuz?",
@@ -62,14 +72,14 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    cardWidget(
-                        "Wifi",
-                        () => setState(
-                              () {
-                                screenState = SetupConnectionState.wifiForm;
-                              },
-                            ),
-                        Icons.wifi),
+                    cardWidget("Wifi", () {
+                      setState(
+                        () {
+                          screenState = SetupConnectionState.wifiForm;
+                        },
+                      );
+                      _fetchWifiSsids();
+                    }, Icons.wifi),
                     cardWidget("Ethernet", () {
                       setState(() {
                         screenState = SetupConnectionState.checkingEth;
@@ -80,52 +90,146 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                 )
               ],
             );
-
+            title = "Bağlantınız yok";
             break;
           case SetupConnectionState.checkingEth:
             widget = loadingWidget;
+            title = " Ethernet bağlantısı kontrol ediliyor";
             break;
           case SetupConnectionState.checkingWifi:
             widget = loadingWidget;
+            title = " Wifi bağlantısı kontrol ediliyor";
             break;
           case SetupConnectionState.wifiForm: // ssid paswword kutusu
-            widget = Column(
+            widget = selectedSsid.isEmpty
+                ? _wifiSsids.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            height: 200,
+                            child: ListView.builder(
+                              itemCount: _wifiSsids.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(_wifiSsids[index]),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedSsid = _wifiSsids[index];
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton.icon(
+                                  label:
+                                      const Text("Bağlantı yöntemini değiştir"),
+                                  onPressed: () {
+                                    setState(() {
+                                      screenState = SetupConnectionState.none;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.arrow_back)),
+                              TextButton.icon(
+                                  label: const Text("WIFI listesini yenile"),
+                                  onPressed: () {
+                                    _fetchWifiSsids();
+                                  },
+                                  icon: const Icon(Icons.refresh)),
+                            ],
+                          ),
+                        ],
+                      )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          selectedSsid,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextInputWidget(
+                              controller: _passwordController,
+                              labelText: 'WIFI Password',
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: _passwordController.text.isNotEmpty
+                                ? () {
+                                    //ssid şifre diske yaz
+                                    // işletim sistemine bağlan komutu gönder
+                                    // Save WiFi credentials and initiate connection check
+                                    saveCredentialsAndConnect();
+                                    setState(() {
+                                      screenState =
+                                          SetupConnectionState.checkingWifi;
+                                    });
+                                    startTimer();
+                                  }
+                                : null,
+                            child: const Text("Kaydet ve Bağlan"),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              label: const Text("Bağlantı yöntemini değiştir"),
+                              onPressed: () {
+                                setState(() {
+                                  screenState = SetupConnectionState.none;
+                                });
+                              },
+                              icon: const Icon(Icons.arrow_back)),
+                          TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedSsid = "";
+                                });
+                              },
+                              child: const Text("Başka bir ağı seç"))
+                        ],
+                      ),
+                    ],
+                  );
+
+            /*       Column(
               children: [
-                TextField(
+                TextInputWidget(
                   controller: _ssidController,
-                  decoration: const InputDecoration(
-                    labelText: 'WiFi SSID',
-                  ),
+                  labelText: 'WIFI SSID',
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'WiFi Password',
-                  ),
-                  obscureText: true,
-                ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    //ssid şifre diske yaz
-                    // işletim sistemine bağlan komutu gönder
-                    // Save WiFi credentials and initiate connection check
-                    saveCredentialsAndConnect();
-                    setState(() {
-                      screenState = SetupConnectionState.checkingWifi;
-                    });
-                    startTimer();
-                  },
-                  child: const Text("Submit"),
-                ),
+            
               ],
-            );
+            ); */
+            title = "WiFi şifresini girin";
             break;
-          case SetupConnectionState.connected: // okey ikonu
+          case SetupConnectionState.connected:
             widget = const SizedBox(
-              child: Text("connected"),
+              height: 250,
+              child: Center(
+                child: Icon(
+                  Icons.check,
+                  color: Colors.green,
+                  size: 48,
+                ),
+              ),
             );
+            title = "Bağlandı";
             break;
         }
         return SetupScaffold(
@@ -133,10 +237,11 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
           previousCallback: () {
             Get.toNamed(Routes.setupDateFormat);
           },
-          nextCallback: () async {
-            //save dateformat
-            Get.toNamed(Routes.home);
-          },
+          nextCallback: SetupConnectionState.connected == screenState
+              ? () async {
+                  Get.toNamed(Routes.home);
+                }
+              : null,
           progressValue: 4 / 9,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -144,7 +249,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
             children: [
               const SizedBox(height: 30),
               Text(
-                'Connect your Central Heating Control'.tr,
+                title.tr,
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
@@ -170,20 +275,20 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
   }
 
   Future<void> saveCredentialsAndConnect() async {
-    String ssid = _ssidController.text;
     String password = _passwordController.text;
 
-    await saveCredentials(ssid, password);
+    await saveCredentials(selectedSsid, password);
 
     await connectToWifi();
   }
 
   Future<void> connectToWifi() async {
+    //TODO: TEKRAR BAK ÇALIŞIYOR MU CİHAZDA DENE.
     await Process.run('nmcli', [
       'd',
       'wifi',
       'connect',
-      _ssidController.text,
+      selectedSsid,
       'password',
       _passwordController.text
     ]);
@@ -193,6 +298,16 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
     final box = GetStorage();
     await box.write("ssid", ssid);
     await box.write("password", password);
+  }
+
+  Future<void> _fetchWifiSsids() async {
+    var shell = Shell();
+    var result = await shell.run('nmcli -t -f SSID dev wifi');
+
+    setState(() {
+      _wifiSsids =
+          result.outText.split('\n').where((ssid) => ssid.isNotEmpty).toList();
+    });
   }
 
   Widget cardWidget(String text, Function()? onTap, IconData icon) {
@@ -206,7 +321,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
         borderRadius: BorderRadius.circular(10),
         onTap: onTap,
         child: Container(
-          constraints: BoxConstraints(minWidth: 150, minHeight: 100),
+          constraints: const BoxConstraints(minWidth: 150, minHeight: 100),
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -218,7 +333,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                   size: 48,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Text(
@@ -232,12 +347,15 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
     );
   }
 
-  Widget get loadingWidget => Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10),
-        child: LinearProgressIndicator(
-          borderRadius: UiDimens.formRadius,
-          color: Theme.of(context).indicatorColor,
+  Widget get loadingWidget => SizedBox(
+        height: 250,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: LinearProgressIndicator(
+              borderRadius: UiDimens.formRadius,
+            ),
+          ),
         ),
       );
 }

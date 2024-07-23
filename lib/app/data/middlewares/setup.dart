@@ -20,6 +20,9 @@ class SetupMiddleware extends GetMiddleware {
     if (!appController.didSettingsFetched) {
       return const RouteSettings(name: Routes.splashFetchSettings);
     }
+    if (appController.didConnected) {
+      return const RouteSettings(name: Routes.home);
+    }
 
     /* log(
       'didLanguageSelected: ${appController.didLanguageSelected}',

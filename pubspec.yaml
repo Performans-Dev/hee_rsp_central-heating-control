@@ -35,6 +35,7 @@ dependencies:
     path: modules/rpi_spi/
   flutter_libserialport: ^0.4.0
   google_fonts: ^6.2.1
+  process_run: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
