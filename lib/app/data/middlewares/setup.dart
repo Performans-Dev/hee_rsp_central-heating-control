@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:flutter/material.dart';
@@ -13,33 +15,29 @@ class SetupMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
 
-    log(
-      'didSettingsFetched: ${appController.didSettingsFetched}',
-      name: 'SetupMiddleware',
-    );
+    if (!appController.connectivityResultReceived) {
+      return const RouteSettings(name: Routes.splashConnection);
+    }
+
+    if (!appController.didConnected) {
+      return const RouteSettings(name: Routes.setupConnection);
+    }
     if (!appController.didSettingsFetched) {
       return const RouteSettings(name: Routes.splashFetchSettings);
     }
-    if (appController.didConnected) {
-      return const RouteSettings(name: Routes.home);
+    if (!Box.getBool(key: Keys.didLanguageSelected)) {
+      return const RouteSettings(name: Routes.setupLanguage);
+    }
+    if (!Box.getBool(key: Keys.didTimezoneSelected)) {
+      return const RouteSettings(name: Routes.setupTimezone);
     }
 
-    /* log(
-      'didLanguageSelected: ${appController.didLanguageSelected}',
-      name: 'SetupMiddleware',
-    );
-    if (!appController.didLanguageSelected) {
-      return const RouteSettings(name: Routes.setupLanguage);
-    } */
-
-    /* log(
-      'didTimezoneSelected: ${appController.didTimezoneSelected}',
-      name: 'SetupMiddleware',
-    );
-    if (!appController.didTimezoneSelected) {
-      return const RouteSettings(name: Routes.setupTimezone);
-    } */
-
+    if (!Box.getBool(key: Keys.didDateFormatSelected)) {
+      return const RouteSettings(name: Routes.setupDateFormat);
+    }
+    if (!Box.getBool(key: Keys.didPickedTheme)) {
+      return const RouteSettings(name: Routes.setupTheme);
+    }
     /*  log(
       'didDateFormatSelected: ${appController.didDateFormatSelected}',
       name: 'SetupMiddleware',

@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,10 +25,12 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
         // nextLabel: 'Next',
         nextCallback: () async {
           await app.onLanguageSelected(selectedIndex);
-          Get.toNamed(Routes.setupTimezone);
-          // NavController.toHome();
+
+          NavController.toHome();
         },
-        // previousCallback: () {},
+        previousCallback: () {
+          Get.toNamed(Routes.setupConnection);
+        },
         // previousLabel: 'Back',
         child: Column(
           mainAxisSize: MainAxisSize.min,

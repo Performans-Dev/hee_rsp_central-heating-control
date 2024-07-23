@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,7 @@ class _SetupThemeScreenState extends State<SetupThemeScreen> {
         label: 'Select Theme',
         nextCallback: () async {
           await Box.setBool(key: Keys.didPickedTheme, value: true);
-          Get.toNamed(Routes.setupLanguage);
+          NavController.toHome();
         },
         progressValue: 1 / 20,
         child: Column(

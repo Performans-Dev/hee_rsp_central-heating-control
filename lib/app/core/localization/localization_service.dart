@@ -7,8 +7,12 @@ import 'package:get/get.dart';
 
 class LocalizationService {
   static final locale = Locale(
-    Box.getString(key: Keys.localeLang, defaultVal: 'en'),
-    Box.getString(key: Keys.localeCulture, defaultVal: 'US'),
+    (Box.getString(key: Keys.localeLang, defaultVal: 'en').isNotEmpty
+        ? Box.getString(key: Keys.localeLang, defaultVal: 'en')
+        : 'en'),
+    (Box.getString(key: Keys.localeCulture, defaultVal: 'US').isNotEmpty
+        ? Box.getString(key: Keys.localeCulture, defaultVal: 'US')
+        : 'US'),
   );
   static const fallbackLocale = Locale('tr', 'TR');
 

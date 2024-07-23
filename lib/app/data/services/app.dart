@@ -61,6 +61,9 @@ class AppController extends GetxController {
   //#endregion
 
   //#region FLAGS
+  final RxBool _connectivityResultReceived = false.obs;
+  bool get connectivityResultReceived => _connectivityResultReceived.value;
+
   final RxBool _didSettingsFetched = false.obs;
   bool get didSettingsFetched => _didSettingsFetched.value;
 
@@ -112,6 +115,7 @@ class AppController extends GetxController {
       _connectivitySubscription;
   _onConnectivityChanged(List<ConnectivityResult> results) {
     bool connected = false;
+
     for (final result in results) {
       if (!connected) {
         switch (result) {
@@ -137,6 +141,7 @@ class AppController extends GetxController {
       }
     }
     _didConnected.value = connected;
+    _connectivityResultReceived.value = true;
     update();
     getNetworkInfo();
   }

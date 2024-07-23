@@ -61,7 +61,7 @@ class MainApp extends StatelessWidget {
                 : ThemeMode.light,
             defaultTransition: Transition.circularReveal,
             getPages: getPages,
-            initialRoute: Routes.setupConnection,
+            initialRoute: Routes.home,
             initialBinding: AppBindings(),
             locale: LocalizationService.locale,
             fallbackLocale: LocalizationService.fallbackLocale,
@@ -76,7 +76,6 @@ class MainApp extends StatelessWidget {
   void onReady() async {
     // apply saved language and locale
     await LocalizationService().applySavedLocale();
-
     // remove splash screen
     FlutterNativeSplash.remove();
 

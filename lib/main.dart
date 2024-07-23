@@ -1,4 +1,6 @@
 import 'package:central_heating_control/app/app.dart';
+import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -47,6 +49,10 @@ Future<void> main() async {
 
   // bind services
   await AppBindings().dependencies();
+  //  Box.setBool(key: Keys.didLanguageSelected, value: false);
+  // Box.setBool(key: Keys.didTimezoneSelected, value: false);
+  //   Box.setBool(key: Keys.didDateFormatSelected, value: false);
+  // Box.setBool(key: Keys.didPickedTheme, value: false);
 
   // run app
   runApp(const MainApp());

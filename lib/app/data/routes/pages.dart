@@ -39,6 +39,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/language/
 import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/theme/theme_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/timezone/timezone_setup_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/splash/splash_connection.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_settings.dart';
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
@@ -99,6 +100,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.splashFetchSettings,
     page: () => const SplashFetchSettingsScreen(),
+  ),
+  GetPage(
+    name: Routes.splashConnection,
+    page: () => const SplashConnectionScreen(),
   ),
   GetPage(
     name: Routes.setupTheme,
