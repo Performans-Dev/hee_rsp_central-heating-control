@@ -300,6 +300,7 @@ class AppController extends GetxController {
     _chcDeviceId.value = response.data?.id;
     update();
     await Box.setString(key: Keys.deviceId, value: chcDeviceId ?? '');
+    await Box.setBool(key: Keys.didRegisteredDevice, value: true);
     return chcDeviceId;
   }
 

@@ -13,6 +13,8 @@ class Keys {
   static const String didDateFormatSelected = 'didDateFormatSelected';
   static const String didPickedTheme = 'didPickedTheme';
   static const String didActivated = 'didActivated';
+  static const String didRegisteredDevice = 'didRegisteredDevice';
+  static const String didSignedIn = 'didSignedIn';
 
   static const String sessionKey = 'sessionKey';
   static const String deviceId = 'deviceId';

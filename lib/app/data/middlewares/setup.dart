@@ -38,6 +38,12 @@ class SetupMiddleware extends GetMiddleware {
     if (!Box.getBool(key: Keys.didPickedTheme)) {
       return const RouteSettings(name: Routes.setupTheme);
     }
+    if (!Box.getBool(key: Keys.didRegisteredDevice)) {
+      return const RouteSettings(name: Routes.registerDevice);
+    }
+    if (!Box.getBool(key: Keys.didSignedIn)) {
+      return const RouteSettings(name: Routes.signin);
+    }
     /*  log(
       'didDateFormatSelected: ${appController.didDateFormatSelected}',
       name: 'SetupMiddleware',
