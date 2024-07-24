@@ -4,7 +4,6 @@ import 'package:central_heating_control/app/data/middlewares/chc_device.dart';
 import 'package:central_heating_control/app/data/middlewares/setup.dart';
 import 'package:central_heating_control/app/data/middlewares/user.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/presentation/screens/activation/activation_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/register_device_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/auth/signin/signin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
@@ -33,10 +32,12 @@ import 'package:central_heating_control/app/presentation/screens/settings/settin
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/day_summary.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/plan_detail.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/weekly_plan_settings/plan_list.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/activation/activation.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/connection/connection_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/date_format/date_format_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/language/language_setup_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/setup/setup_admin_user_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/admin_user/setup_admin_user_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/subscription/check_subscription.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/theme/theme_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/timezone/timezone_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_connection.dart';
@@ -88,6 +89,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.registerDevice,
     page: () => const RegisterDeviceScreen(),
+  ),
+  GetPage(
+    name: Routes.checkSubscription,
+    page: () => const CheckSubscriptionScreen(),
   ),
   GetPage(
     name: Routes.setupAdminUser,

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:flutter/material.dart';
@@ -44,37 +45,17 @@ class SetupMiddleware extends GetMiddleware {
     if (!Box.getBool(key: Keys.didSignedIn)) {
       return const RouteSettings(name: Routes.signin);
     }
-    /*  log(
-      'didDateFormatSelected: ${appController.didDateFormatSelected}',
-      name: 'SetupMiddleware',
-    );
-    if (!appController.didDateFormatSelected) {
-      return const RouteSettings(name: Routes.setupDateFormat);
-    } */
 
-/*     log(
-      'didActivated: ${appController.didActivated}',
-      name: 'SetupMiddleware',
-    );
-    if (!appController.didActivated) {
+    if (!Box.getBool(key: Keys.didCheckedSubscription)) {
+      return const RouteSettings(name: Routes.checkSubscription);
+    }
+
+    if (!Box.getBool(key: Keys.didActivated)) {
       return const RouteSettings(name: Routes.activation);
-    } */
-
-    log(
-      'hasAdminUser: ${appController.hasAdminUser}',
-      name: 'SetupMiddleware',
-    );
+    }
     if (!appController.hasAdminUser) {
       return const RouteSettings(name: Routes.setupAdminUser);
     }
-
-    /* log(
-      'didPickedTheme: ${appController.didPickedTheme}',
-      name: 'SetupMiddleware',
-    );
-    if (!appController.didPickedTheme) {
-      return const RouteSettings(name: Routes.setupTheme);
-    } */
 
     return null;
   }

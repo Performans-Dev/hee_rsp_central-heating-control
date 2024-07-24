@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
@@ -239,7 +240,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
           },
           nextCallback: SetupConnectionState.connected == screenState
               ? () async {
-                  Get.toNamed(Routes.home);
+                  NavController.toHome();
                 }
               : null,
           progressValue: 4 / 9,

@@ -85,6 +85,7 @@ https://www.abelectronics.co.uk/kb/article/30/rtc-pi-setup-on-raspberry-pi-os
 ## COPY SOURCE TO PI
 ```
 rsync -avz ~/Development/FlutterProjects/heethings/CentralHeatingControl/CHC pi@192.168.1.123:~/Heethings
+rsync -avz ~/Developer/Projects/chc/hee_rsp_central-heating-control pi@192.168.1.123:~/Heethings
 ```
 
 ## BUILD ON PI

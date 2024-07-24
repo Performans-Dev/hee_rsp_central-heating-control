@@ -15,6 +15,8 @@ class Keys {
   static const String didActivated = 'didActivated';
   static const String didRegisteredDevice = 'didRegisteredDevice';
   static const String didSignedIn = 'didSignedIn';
+  static const String didCheckedSubscription = 'didCheckedSubscription';
+  static const String subscriptionResult = 'subscriptionResult';
 
   static const String sessionKey = 'sessionKey';
   static const String deviceId = 'deviceId';

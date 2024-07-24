@@ -23,6 +23,8 @@ class Routes {
   static const String activation = '/activation';
   static const String signin = '/signin';
   static const String registerDevice = '/register-device';
+  static const String checkSubscription = '/check-subscription';
+
   //#endregion
 
   static const String settings = '/settings';

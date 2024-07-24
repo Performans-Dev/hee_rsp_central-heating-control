@@ -114,3 +114,9 @@ enum BuzzerType {
   error,
   alarm,
 }
+
+enum SubscriptionResult {
+  none,
+  free,
+  pro,
+}

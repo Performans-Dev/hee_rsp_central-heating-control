@@ -1,6 +1,8 @@
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -53,6 +55,12 @@ Future<void> main() async {
   // Box.setBool(key: Keys.didTimezoneSelected, value: false);
   //   Box.setBool(key: Keys.didDateFormatSelected, value: false);
   // Box.setBool(key: Keys.didPickedTheme, value: false);
+  //Box.setBool(key: Keys.didRegisteredDevice, value: false);
+  //Box.setBool(key: Keys.didActivated, value: false);
+/*   await DbProvider.db.deleteUser(
+      AppUser(id: 1, username: "Admin User", pin: "0000000", isAdmin: true));
+  await DbProvider.db
+      .deleteUser(AppUser(id: 2, username: "İo", pin: "123456", isAdmin: true)); */
 
   // run app
   runApp(const MainApp());

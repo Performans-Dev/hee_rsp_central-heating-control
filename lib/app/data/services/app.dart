@@ -40,6 +40,7 @@ class AppController extends GetxController {
     // fetchSettings();
     logoutUser();
     readDevice();
+    checkAdminUser();
     super.onReady();
   }
 
@@ -108,6 +109,19 @@ class AppController extends GetxController {
     _didSettingsFetched.value = false;
     update();
   }
+
+  Future<void> checkAdminUser() async {
+    final users = await DbProvider.db.getAdminUsers();
+    for (var user in users) {
+      print(" ${user.username}, ${user.isAdmin},  ${user.pin}");
+    }
+    if (users.isEmpty) {
+      print("user yok");
+    }
+    _hasAdminUser.value = (users).isNotEmpty;
+    update();
+  }
+
   //#endregion
 
   //#region CONECTIVITY
@@ -182,13 +196,13 @@ class AppController extends GetxController {
     final users = await DbProvider.db.getUsers();
     _userList.assignAll(users);
     if (users.isEmpty) {
-      final defaultUser = AppUser(
+/*       final defaultUser = AppUser(
         username: 'Admin User',
         id: -1,
         isAdmin: true,
         pin: '000000',
-      );
-      await DbProvider.db.addUser(defaultUser);
+      ); */
+      //await DbProvider.db.addUser(defaultUser);
       await populateUserList();
     }
     update();
@@ -287,6 +301,7 @@ class AppController extends GetxController {
     _account.value = response.data;
     update();
     await Box.setString(key: Keys.accountId, value: account?.id ?? '');
+    await Box.setBool(key: Keys.didSignedIn, value: response.success);
     return account;
   }
   //#endregion
@@ -314,6 +329,15 @@ class AppController extends GetxController {
   }
 
   //#endregion
+//#region  CHECK-SUBSCRIPTION
+  Future<void> checkSubscirption() async {
+    final response = await AppProvider.checkSubscription();
+
+    await Box.setBool(key: Keys.didCheckedSubscription, value: true);
+    await Box.setInt(
+        key: Keys.subscriptionResult, value: response.data?.index ?? 0);
+  }
+//#endregion
 
   //#region ACTIVATION
   final Rxn<String> _activationId = Rxn();

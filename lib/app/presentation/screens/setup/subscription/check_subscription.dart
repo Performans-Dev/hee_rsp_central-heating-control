@@ -1,50 +1,51 @@
-import 'package:central_heating_control/app/core/utils/device.dart';
-import 'package:central_heating_control/app/data/models/chc_device.dart';
+import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/logo.dart';
-import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RegisterDeviceScreen extends StatefulWidget {
-  const RegisterDeviceScreen({super.key});
+class CheckSubscriptionScreen extends StatefulWidget {
+  const CheckSubscriptionScreen({super.key});
 
   @override
-  State<RegisterDeviceScreen> createState() => _RegisterDeviceScreenState();
+  State<CheckSubscriptionScreen> createState() =>
+      _CheckSubscriptionScreenState();
 }
 
-class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
+class _CheckSubscriptionScreenState extends State<CheckSubscriptionScreen> {
   final AppController appController = Get.find();
+
   bool isBusy = false;
 
   @override
   void initState() {
     super.initState();
-    registerDevice();
+    checkSubscription();
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(builder: (app) {
       return SetupScaffold(
-        progressValue: 5 / 8,
-        label: 'Register Device'.tr,
+        label: "Subscription".tr,
+        progressValue: 6 / 9,
         previousCallback: () {
-          Get.toNamed(Routes.setupTimezone);
+          Get.toNamed(Routes.signin);
+        },
+        nextCallback: () {
+          NavController.toHome();
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             Text(
-              'Registering Hardware'.tr,
+              'Check Subscription'.tr,
               textAlign: TextAlign.left,
               style: Theme.of(context).textTheme.titleLarge,
             ),
@@ -53,7 +54,7 @@ class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
               child: isBusy
                   ? const CircularProgressIndicator()
                   : app.chcDeviceId == null
-                      ? const Text('error')
+                      ? const Text('Error')
                       : const Text('Please wait'),
             )
           ],
@@ -62,21 +63,21 @@ class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
     });
   }
 
-  Future<void> registerDevice() async {
+  Future<void> checkSubscription() async {
     setState(() {
       isBusy = true;
     });
-
-    ChcDevice device = await DeviceUtils.createDeviceInfo();
-    final response = await appController.registerDevice(device);
+    await appController.checkSubscirption();
     setState(() {
       isBusy = false;
     });
 
-    if (response == null) {
-      logger.d('error');
-    } else {
+    if (Box.getBool(key: Keys.didCheckedSubscription)) {
       NavController.toHome();
+    } else {
+      Future.delayed(Duration(seconds: 1), () {
+        checkSubscription();
+      });
     }
   }
 }
