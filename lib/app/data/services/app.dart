@@ -15,7 +15,6 @@ import 'package:central_heating_control/app/data/models/timezone_definition.dart
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
-import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';

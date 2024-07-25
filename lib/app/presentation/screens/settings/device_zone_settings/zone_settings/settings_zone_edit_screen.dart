@@ -45,7 +45,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 TextField(
                   controller: nameController,
                   decoration: InputDecoration(

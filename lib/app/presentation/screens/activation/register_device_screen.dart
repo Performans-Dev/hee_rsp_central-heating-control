@@ -4,8 +4,6 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/logo.dart';
-import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,7 +38,7 @@ class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Text(
@@ -49,7 +47,7 @@ class _RegisterDeviceScreenState extends State<RegisterDeviceScreen> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const Divider(),
-            Container(
+            SizedBox(
               height: 250,
               width: double.infinity,
               child: Center(

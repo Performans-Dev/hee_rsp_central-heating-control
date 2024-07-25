@@ -8,7 +8,6 @@ import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:process_run/shell.dart';
@@ -297,7 +296,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
   }
 
   startTimer() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     checkNetwork(autotrigger: false);
   }
@@ -316,7 +315,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
     setState(() {
       screenState = SetupConnectionState.checkingWifi;
     });
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     checkNetwork(autotrigger: false);
   }
 

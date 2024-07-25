@@ -6,8 +6,6 @@ import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
-import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -52,7 +50,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     TextField(
                       controller: nameController,
                       decoration: InputDecoration(
@@ -73,7 +71,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                         }
                       },
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     TextField(
                       controller: pinController,
                       decoration: InputDecoration(
@@ -96,7 +94,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                         }
                       },
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     SwitchListTile(
                       value: isAdminChecked,
                       onChanged: (v) {

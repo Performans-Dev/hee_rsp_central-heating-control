@@ -3,14 +3,10 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
-import 'package:central_heating_control/app/data/models/sensor_device.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_state_control.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +46,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Title: Zone Controls'),
+              const Text('Title: Zone Controls'),
               ZoneStateControlWidget(
                 zoneState: zone.selectedState,
                 stateCallback: (v) {
@@ -86,8 +82,8 @@ class _ZoneScreenState extends State<ZoneScreen> {
                       }
                     : null,
               ),
-              Divider(),
-              Text('Title Heaters'),
+              const Divider(),
+              const Text('Title Heaters'),
               ListView.builder(
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
@@ -107,19 +103,19 @@ class _ZoneScreenState extends State<ZoneScreen> {
                             Buzz.error();
                             //
                           },
-                          children: [
-                            Text('Off'),
-                            Text('Zone'),
-                            Text('On'),
-                            Text('High'),
-                            Text('Max'),
-                          ],
                           isSelected: [
                             heaters[index].selectedState == HeaterState.off,
                             heaters[index].selectedState == HeaterState.auto,
                             heaters[index].selectedState == HeaterState.level1,
                             heaters[index].selectedState == HeaterState.level2,
                             heaters[index].selectedState == HeaterState.level3,
+                          ],
+                          children: const [
+                            Text('Off'),
+                            Text('Zone'),
+                            Text('On'),
+                            Text('High'),
+                            Text('Max'),
                           ],
                         ),
                       ],
@@ -137,12 +133,12 @@ class _ZoneScreenState extends State<ZoneScreen> {
                 ),
                 itemCount: heaters.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
               ),
-              Divider(),
-              Text('Title Sensors'),
+              const Divider(),
+              const Text('Title Sensors'),
               ListView.builder(
-                itemBuilder: (context, index) => ListTile(
+                itemBuilder: (context, index) => const ListTile(
                   title: Text('Sample Sensor'),
                   leading: CircleAvatar(
                     child: Text(

@@ -38,7 +38,7 @@ class ZoneStateControlWidget extends StatelessWidget {
           Expanded(
             flex: 6,
             child: Container(
-              constraints: BoxConstraints.expand(),
+              constraints: const BoxConstraints.expand(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -66,11 +66,11 @@ class ZoneStateControlWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             flex: 10,
             child: Container(
-              constraints: BoxConstraints.expand(),
+              constraints: const BoxConstraints.expand(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

@@ -1,15 +1,10 @@
-import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
-import 'package:central_heating_control/app/presentation/components/form_item.dart';
-import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/logo.dart';
-import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

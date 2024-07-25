@@ -196,7 +196,7 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.settingsWifiCredentials,
-    page: () => WifiCredentialsScreen(),
+    page: () => const WifiCredentialsScreen(),
     middlewares: [
       AdminMiddleware(),
     ],

@@ -19,7 +19,7 @@ class _SplashConnectionScreenState extends State<SplashConnectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(child: CircularProgressIndicator()),
     );
   }
@@ -27,7 +27,7 @@ class _SplashConnectionScreenState extends State<SplashConnectionScreen> {
   Future<void> runInitTask() async {
     final AppController appController = Get.find();
     if (!appController.connectivityResultReceived) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         runInitTask();
       });
     } else {

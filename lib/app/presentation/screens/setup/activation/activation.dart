@@ -40,7 +40,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const Divider(),
-          Container(
+          SizedBox(
             height: 250,
             width: double.infinity,
             child: Center(

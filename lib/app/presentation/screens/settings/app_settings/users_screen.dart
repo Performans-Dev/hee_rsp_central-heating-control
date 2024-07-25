@@ -2,11 +2,9 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -23,7 +21,7 @@ class SettingsUserListScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -35,13 +33,13 @@ class SettingsUserListScreen extends StatelessWidget {
                     ),
                     title: Text(app.userList[index].username),
                     subtitle: app.userList[index].isAdmin
-                        ? Text('Admin')
-                        : Text('User'),
+                        ? const Text('Admin')
+                        : const Text('User'),
                     trailing: PopupMenuButton(
                       itemBuilder: (context) {
                         return [
                           PopupMenuItem(
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Change Name"),
@@ -67,7 +65,7 @@ class SettingsUserListScreen extends StatelessWidget {
                             },
                           ),
                           PopupMenuItem(
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Change Password"),
@@ -79,7 +77,7 @@ class SettingsUserListScreen extends StatelessWidget {
                             },
                           ),
                           PopupMenuItem(
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Delete"),

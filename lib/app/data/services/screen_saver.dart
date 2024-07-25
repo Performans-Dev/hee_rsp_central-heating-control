@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:get/get.dart';
 
 class ScreenSaverController extends GetxController {

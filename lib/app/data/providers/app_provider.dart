@@ -30,7 +30,7 @@ class AppProvider {
   }
 
   static Future<GenericResponse<SubscriptionResult>> checkSubscription() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     return GenericResponse.success(SubscriptionResult.free);
     //TODO:
   }

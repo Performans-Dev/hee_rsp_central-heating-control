@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/hardware/mcp3008.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:get/get.dart';
-import 'package:rpi_gpio/gpio.dart';
 import 'package:rpi_spi/rpi_spi.dart';
 
 class GpioController extends GetxController {
@@ -206,39 +204,39 @@ class GpioController extends GetxController {
 
     oe.write(true);
     _oeState.value = true;
-    _log.value += '\noe: ${oeState} ';
+    _log.value += '\noe: $oeState ';
     update();
     ser.write(value);
     _serState.value = value;
-    _log.value += '\nser: ${serState} ';
+    _log.value += '\nser: $serState ';
     update();
     for (int i = 0; i < 8; i++) {
       srclk.write(true);
       _srclkState.value = true;
-      _log.value += '\nsrclk: ${srclkState} ';
+      _log.value += '\nsrclk: $srclkState ';
       update();
       await Future.delayed(const Duration(milliseconds: 1));
       srclk.write(false);
       _srclkState.value = false;
-      _log.value += '\nsrclk: ${srclkState} ';
+      _log.value += '\nsrclk: $srclkState ';
       update();
       await Future.delayed(const Duration(milliseconds: 1));
     }
 
     rclk.write(true);
     _rclkState.value = true;
-    _log.value += '\nrclk: ${rclkState} ';
+    _log.value += '\nrclk: $rclkState ';
     update();
     await Future.delayed(const Duration(milliseconds: 1));
     rclk.write(false);
     _rclkState.value = false;
-    _log.value += '\nrclk: ${rclkState} ';
+    _log.value += '\nrclk: $rclkState ';
     update();
     await Future.delayed(const Duration(milliseconds: 1));
 
     oe.write(false);
     _oeState.value = false;
-    _log.value += '\noe: ${oeState} ';
+    _log.value += '\noe: $oeState ';
     update();
 
     _log.value += '\nfunction end';
@@ -304,7 +302,7 @@ class GpioController extends GetxController {
       for (int i = 0; i < 50; i++) {
         bytes = serial!.getInputWaiting();
         if (bytes > 0) break;
-        await (Future.delayed(Duration(milliseconds: 100)));
+        await (Future.delayed(const Duration(milliseconds: 100)));
       }
 
       if (bytes > 0) {

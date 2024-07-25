@@ -60,15 +60,15 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
               width: double.infinity,
               color: Theme.of(context).canvasColor,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 80),
-                margin: EdgeInsets.only(top: 30, bottom: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 80),
+                margin: const EdgeInsets.only(top: 30, bottom: 10),
                 child: Text(
                   'Confirm your timezone'.tr,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 80),
               child: Divider(
                 height: 2,
@@ -78,7 +78,7 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
               child: ListView.builder(
                 controller: scrollController,
                 itemBuilder: (context, i) => Container(
-                  margin: EdgeInsets.symmetric(horizontal: 80),
+                  margin: const EdgeInsets.symmetric(horizontal: 80),
                   child: ListTile(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),

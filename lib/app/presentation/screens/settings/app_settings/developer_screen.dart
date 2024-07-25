@@ -34,28 +34,28 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                       onPressed: () {
                         gc.openRelays(true);
                       },
-                      child: Text('Open Output')),
+                      child: const Text('Open Output')),
                   ElevatedButton(
                       onPressed: () {
                         gc.openRelays(false);
                       },
-                      child: Text('Close Output')),
-                  Text('oe:'),
+                      child: const Text('Close Output')),
+                  const Text('oe:'),
                   Icon(
                     Icons.sunny,
                     color: gc.oeState ? Colors.red : Colors.grey,
                   ),
-                  Text('ser:'),
+                  const Text('ser:'),
                   Icon(
                     Icons.sunny,
                     color: gc.serState ? Colors.red : Colors.grey,
                   ),
-                  Text('srclk:'),
+                  const Text('srclk:'),
                   Icon(
                     Icons.sunny,
                     color: gc.srclkState ? Colors.red : Colors.grey,
                   ),
-                  Text('rclk:'),
+                  const Text('rclk:'),
                   Icon(
                     Icons.sunny,
                     color: gc.rclkState ? Colors.red : Colors.grey,
@@ -191,11 +191,11 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                       children: [
                         ElevatedButton(
                           onPressed: () async => await gc.serialSend(),
-                          child: Text('Serial Send'),
+                          child: const Text('Serial Send'),
                         ),
                         ElevatedButton(
                           onPressed: () async => await gc.serialReceive(),
-                          child: Text('Serial Receive'),
+                          child: const Text('Serial Receive'),
                         ),
                       ],
                     ),
@@ -203,7 +203,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   ],
                 ),
               ),
-              Divider(),
+              const Divider(),
               FormItemComponent(
                 label: 'SPI',
                 child: Column(
@@ -211,7 +211,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () async => await gc.readSpiSensor(),
-                      child: Text('Read Data'),
+                      child: const Text('Read Data'),
                     ),
                     Text(gc.spiLog),
                   ],

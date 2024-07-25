@@ -4,7 +4,6 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,7 +49,7 @@ class _CheckSubscriptionScreenState extends State<CheckSubscriptionScreen> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const Divider(),
-            Container(
+            SizedBox(
               height: 250,
               width: double.infinity,
               child: Center(
@@ -79,7 +78,7 @@ class _CheckSubscriptionScreenState extends State<CheckSubscriptionScreen> {
     if (Box.getBool(key: Keys.didCheckedSubscription)) {
       NavController.toHome();
     } else {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         checkSubscription();
       });
     }

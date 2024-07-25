@@ -1,6 +1,4 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
-import 'package:central_heating_control/app/core/utils/buzz.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
@@ -65,7 +63,7 @@ class AppScaffold extends StatelessWidget {
                         : UiAssets.appIconLight),
                   ),
                 ),
-                trailing: Container(
+                trailing: SizedBox(
                   width: 56,
                   height: 100,
                   child: Column(
@@ -73,7 +71,7 @@ class AppScaffold extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ComIndicatorLedWidget(),
+                      const ComIndicatorLedWidget(),
                       Text(
                         '${app.versionName}',
                         textAlign: TextAlign.center,
