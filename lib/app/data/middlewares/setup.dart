@@ -20,7 +20,7 @@ class SetupMiddleware extends GetMiddleware {
       return const RouteSettings(name: Routes.splashConnection);
     }
 
-    if (!appController.didConnected) {
+    if (!appController.didConnected ) {
       return const RouteSettings(name: Routes.setupConnection);
     }
     if (!appController.didSettingsFetched) {

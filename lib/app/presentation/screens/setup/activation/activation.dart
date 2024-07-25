@@ -40,12 +40,16 @@ class _ActivationScreenState extends State<ActivationScreen> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const Divider(),
-          Center(
-            child: isBusy
-                ? const CircularProgressIndicator()
-                : appController.chcDeviceId == null
-                    ? const Text('Error')
-                    : const Text('Please wait'),
+          Container(
+            height: 250,
+            width: double.infinity,
+            child: Center(
+              child: isBusy
+                  ? const CircularProgressIndicator()
+                  : appController.chcDeviceId == null
+                      ? const Text('Error')
+                      : const Text('Please wait'),
+            ),
           )
         ],
       ),

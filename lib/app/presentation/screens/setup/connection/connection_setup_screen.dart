@@ -19,6 +19,7 @@ enum SetupConnectionState {
   checkingWifi,
   wifiForm,
   connected,
+  notConnected,
 }
 
 class SetupConnectionScreen extends StatefulWidget {
@@ -36,6 +37,8 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
   String title = "";
   String selectedSsid = "";
   List<String> _wifiSsids = [];
+  bool retryButtonVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +94,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                 )
               ],
             );
-            title = "Bağlantınız yok";
+            title = "Bağlantı tipi seçiniz";
             break;
           case SetupConnectionState.checkingEth:
             widget = loadingWidget;
@@ -104,7 +107,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
           case SetupConnectionState.wifiForm: // ssid paswword kutusu
             widget = selectedSsid.isEmpty
                 ? _wifiSsids.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
+                    ? loadingWidget
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -137,7 +140,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                                   },
                                   icon: const Icon(Icons.arrow_back)),
                               TextButton.icon(
-                                  label: const Text("WIFI listesini yenile"),
+                                  label: const Text("WiFi listesini yenile"),
                                   onPressed: () {
                                     _fetchWifiSsids();
                                   },
@@ -155,33 +158,6 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                           selectedSsid,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextInputWidget(
-                              controller: _passwordController,
-                              labelText: 'WIFI Password',
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          ElevatedButton(
-                            onPressed: _passwordController.text.isNotEmpty
-                                ? () {
-                                    //ssid şifre diske yaz
-                                    // işletim sistemine bağlan komutu gönder
-                                    // Save WiFi credentials and initiate connection check
-                                    saveCredentialsAndConnect();
-                                    setState(() {
-                                      screenState =
-                                          SetupConnectionState.checkingWifi;
-                                    });
-                                    startTimer();
-                                  }
-                                : null,
-                            child: const Text("Kaydet ve Bağlan"),
-                          ),
-                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,6 +179,35 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
                               child: const Text("Başka bir ağı seç"))
                         ],
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextInputWidget(
+                              controller: _passwordController,
+                              labelText: 'WIFI Password',
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: _passwordController.text.isNotEmpty
+                                ? () async {
+                                    //ssid şifre diske yaz
+                                    // işletim sistemine bağlan komutu gönder
+                                    // Save WiFi credentials and initiate connection check
+                                    setState(() {
+                                      screenState =
+                                          SetupConnectionState.checkingWifi;
+                                    });
+                                    final result =
+                                        await saveCredentialsAndConnect();
+                                    print(result);
+                                    checkNetwork(autotrigger: false);
+                                  }
+                                : null,
+                            child: const Text("Kaydet ve Bağlan"),
+                          ),
+                        ],
+                      ),
                     ],
                   );
 
@@ -217,7 +222,9 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
             
               ],
             ); */
-            title = "WiFi şifresini girin";
+            title = selectedSsid.isEmpty
+                ? "WiFi ağı seçin"
+                : "WiFi şifresini girin";
             break;
           case SetupConnectionState.connected:
             widget = const SizedBox(
@@ -231,6 +238,32 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
               ),
             );
             title = "Bağlandı";
+            break;
+          case SetupConnectionState.notConnected:
+            widget = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 2),
+                TextButton.icon(
+                    label: const Text("Bağlantı yöntemini değiştir"),
+                    onPressed: () {
+                      setState(() {
+                        screenState = SetupConnectionState.none;
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_back)),
+                const SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      retryConnection();
+                    },
+                    child: const Text("Tekrar Dene"),
+                  ),
+                ),
+              ],
+            );
+            title = "Bağlantı sağlanamadı";
             break;
         }
         return SetupScaffold(
@@ -263,29 +296,41 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
     );
   }
 
-  startTimer() {
-    timer = Timer(const Duration(seconds: 3), checkNetwork);
+  startTimer() async {
+    await Future.delayed(Duration(seconds: 3));
+
+    checkNetwork(autotrigger: false);
   }
 
-  checkNetwork() {
+  checkNetwork({bool autotrigger = true}) {
     setState(() {
       screenState = appController.didConnected
           ? SetupConnectionState.connected
-          : SetupConnectionState.none;
+          : autotrigger
+              ? SetupConnectionState.none
+              : SetupConnectionState.notConnected;
     });
   }
 
-  Future<void> saveCredentialsAndConnect() async {
+  void retryConnection() async {
+    setState(() {
+      screenState = SetupConnectionState.checkingWifi;
+    });
+    await Future.delayed(Duration(seconds: 3));
+    checkNetwork(autotrigger: false);
+  }
+
+  Future<ProcessResult> saveCredentialsAndConnect() async {
     String password = _passwordController.text;
 
     await saveCredentials(selectedSsid, password);
 
-    await connectToWifi();
+    return await connectToWifi();
   }
 
-  Future<void> connectToWifi() async {
+  Future<ProcessResult> connectToWifi() async {
     //TODO: TEKRAR BAK ÇALIŞIYOR MU CİHAZDA DENE.
-    await Process.run('nmcli', [
+    return await Process.run('nmcli', [
       'd',
       'wifi',
       'connect',
@@ -302,6 +347,9 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
   }
 
   Future<void> _fetchWifiSsids() async {
+    setState(() {
+      _wifiSsids.clear();
+    });
     var shell = Shell();
     var result = await shell.run('nmcli -t -f SSID dev wifi');
 
@@ -350,6 +398,7 @@ class _SetupConnectionScreenState extends State<SetupConnectionScreen> {
 
   Widget get loadingWidget => SizedBox(
         height: 250,
+        width: double.infinity,
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(10),
