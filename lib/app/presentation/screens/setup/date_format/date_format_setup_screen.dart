@@ -1,9 +1,11 @@
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/string.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
@@ -46,6 +48,8 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
             Get.toNamed(Routes.setupTimezone);
           },
           nextCallback: () async {
+            GpioController gpio = GpioController();
+            gpio.buzz(BuzzerType.feedback);
             //save dateformat
             await Box.setString(
                 key: Keys.selectedDateFormat, value: _selectedDateFormat);
@@ -77,6 +81,8 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
                         data: UiData.dateFormats,
                         value: _selectedDateFormat,
                         onChanged: (v) {
+                          GpioController gpio = GpioController();
+                          gpio.buzz(BuzzerType.feedback);
                           if (v == null) return;
                           setState(() => _selectedDateFormat = v);
                         },
@@ -91,6 +97,8 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
                         data: UiData.timeFormats,
                         value: _selectedTimeFormat,
                         onChanged: (v) {
+                          GpioController gpio = GpioController();
+                          gpio.buzz(BuzzerType.feedback);
                           if (v == null) return;
                           setState(() => _selectedTimeFormat = v);
                         },

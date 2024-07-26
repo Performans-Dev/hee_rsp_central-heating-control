@@ -1,7 +1,9 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,9 @@ class _CheckSubscriptionScreenState extends State<CheckSubscriptionScreen> {
           Get.toNamed(Routes.signin);
         },
         nextCallback: () {
+          GpioController gpio = GpioController();
+
+          gpio.buzz(BuzzerType.feedback);
           NavController.toHome();
         },
         child: Column(

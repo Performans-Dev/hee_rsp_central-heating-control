@@ -2,10 +2,12 @@ import 'dart:math' as math;
 
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,8 @@ class _SetupThemeScreenState extends State<SetupThemeScreen> {
       return SetupScaffold(
         label: 'Select Theme',
         nextCallback: () async {
+          GpioController gpio = GpioController();
+          gpio.buzz(BuzzerType.feedback);
           await Box.setBool(key: Keys.didPickedTheme, value: true);
           NavController.toHome();
         },
@@ -119,6 +123,8 @@ class _SetupThemeScreenState extends State<SetupThemeScreen> {
               ),
               value: app.isDarkMode,
               onChanged: (v) {
+                GpioController gpio = GpioController();
+                gpio.buzz(BuzzerType.feedback);
                 app.toggleDarkMode();
               },
               controlAffinity: ListTileControlAffinity.leading,

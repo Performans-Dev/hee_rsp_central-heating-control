@@ -1,5 +1,7 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,6 +46,8 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
       return SetupScaffold(
         label: 'Timezone'.tr,
         nextCallback: () async {
+          GpioController gpio = GpioController();
+          gpio.buzz(BuzzerType.feedback);
           await app.onTimezoneSelected(selectedIndex);
           Get.toNamed(Routes.setupDateFormat);
         },
@@ -94,6 +98,8 @@ class _SetupTimezoneScreenState extends State<SetupTimezoneScreen> {
                     selected: selectedIndex == i,
                     selectedTileColor: Theme.of(context).highlightColor,
                     onTap: () {
+                      GpioController gpio = GpioController();
+                      gpio.buzz(BuzzerType.feedback);
                       setState(() {
                         selectedIndex = i;
                       });
