@@ -819,7 +819,11 @@ class DbProvider {
         return false;
       }
       final itemsToDelete = await getPlanDetails(planId: planId);
-      await removePlanDetails(planDetails: itemsToDelete);
+      if (itemsToDelete.isNotEmpty) {
+        await removePlanDetails(planDetails: itemsToDelete);
+      } else {
+        print('Plan details are empty.');
+      }
       final int result = await db.delete(
         Keys.tablePlans,
         where: Keys.queryId,

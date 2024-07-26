@@ -192,6 +192,10 @@ class DataController extends GetxController {
   //#region PLAN COPY
   Future<int?> copyPlan({required int sourcePlanId}) async {
     final data = await DbProvider.db.getPlanDetails(planId: sourcePlanId);
+    if (data.isEmpty) {
+      print('No details to copy for planId: $sourcePlanId');
+      return null;
+    }
     final target = await DbProvider.db.addPlanDefinition(
       plan: PlanDefinition(
         id: 0,
