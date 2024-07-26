@@ -1,8 +1,10 @@
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 
 import 'package:central_heating_control/app/data/services/bindings.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -30,7 +32,7 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
-    size: GetPlatform.isMacOS ? const Size(800, 480) : null,
+    size: !GetPlatform.isMacOS ? const Size(800, 480) : null,
     backgroundColor: Colors.black,
     skipTaskbar: false,
     // center: true,
@@ -39,7 +41,7 @@ Future<void> main() async {
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    if (!GetPlatform.isMacOS) {
+    if (GetPlatform.isMacOS) {
       await windowManager.setFullScreen(true);
     }
     await windowManager.focus();
@@ -50,6 +52,7 @@ Future<void> main() async {
 
   // bind services
   await AppBindings().dependencies();
+
   //  Box.setBool(key: Keys.didLanguageSelected, value: false);
   // Box.setBool(key: Keys.didTimezoneSelected, value: false);
   //   Box.setBool(key: Keys.didDateFormatSelected, value: false);

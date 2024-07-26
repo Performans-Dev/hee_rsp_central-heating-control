@@ -59,6 +59,7 @@ class SettingsUserListScreen extends StatelessWidget {
                                 await DbProvider.db.updateUser(u);
                                 app.populateUserList();
                                 DialogUtils.snackbar(
+                                    type: SnackbarType.success,
                                     context: context,
                                     message: 'Username updated');
                               }
@@ -73,6 +74,24 @@ class SettingsUserListScreen extends StatelessWidget {
                               ],
                             ),
                             onTap: () async {
+                              final result = await OnScreenKeyboard.show(
+                                context: context,
+                                label: 'Password',
+                                initialValue: app.userList[index].pin,
+                                type: OSKInputType.number,
+                                maxLength: 6,
+                                minLength: 6,
+                              );
+                              if (result != null) {
+                                var u = app.userList[index];
+                                u.pin = result;
+                                await DbProvider.db.updateUser(u);
+                                app.populateUserList();
+                                DialogUtils.snackbar(
+                                    type: SnackbarType.success,
+                                    context: context,
+                                    message: 'Password updated');
+                              }
                               //
                             },
                           ),
