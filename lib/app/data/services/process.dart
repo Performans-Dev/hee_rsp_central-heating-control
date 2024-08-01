@@ -3,8 +3,6 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
-import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:get/get.dart';
 
 class ProcessController extends GetxController {

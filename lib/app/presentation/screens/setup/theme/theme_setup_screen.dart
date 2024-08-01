@@ -2,11 +2,14 @@ import 'dart:math' as math;
 
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,8 +30,9 @@ class _SetupThemeScreenState extends State<SetupThemeScreen> {
       return SetupScaffold(
         label: 'Select Theme',
         nextCallback: () async {
+          Buzz.feedback();
           await Box.setBool(key: Keys.didPickedTheme, value: true);
-          Get.toNamed(Routes.setupLanguage);
+          NavController.toHome();
         },
         progressValue: 1 / 20,
         child: Column(
@@ -52,6 +56,7 @@ class _SetupThemeScreenState extends State<SetupThemeScreen> {
                       value: index,
                       groupValue: selectedIndex,
                       onChanged: (value) {
+                        Buzz.feedback();
                         setState(() {
                           selectedIndex = index;
                         });
@@ -119,6 +124,7 @@ class _SetupThemeScreenState extends State<SetupThemeScreen> {
               ),
               value: app.isDarkMode,
               onChanged: (v) {
+                Buzz.feedback();
                 app.toggleDarkMode();
               },
               controlAffinity: ListTileControlAffinity.leading,

@@ -1,5 +1,5 @@
 extension InitialsExtension on String {
-  String getInitials() {
+/*   String getInitials() {
     List<String> nameParts = split(" ");
     String initials = "";
     if (nameParts.length == 1) {
@@ -10,6 +10,30 @@ extension InitialsExtension on String {
       initials += nameParts[0][0].toUpperCase();
       initials += nameParts.last[0].toUpperCase();
     }
+    return initials;
+  } */
+  String getInitials() {
+    // Remove leading and trailing whitespace and split by spaces
+    List<String> nameParts = trim().split(" ");
+
+    // Remove any empty strings from the list
+    nameParts.removeWhere((part) => part.isEmpty);
+
+    // If no valid name parts exist, return an empty string
+    if (nameParts.isEmpty) return '';
+
+    // Initialize the initials
+    String initials = "";
+
+    if (nameParts.length == 1) {
+      // Only one word in the name
+      initials = nameParts[0][0].toUpperCase();
+    } else {
+      // More than one word in the name
+      initials += nameParts[0][0].toUpperCase();
+      initials += nameParts.last[0].toUpperCase();
+    }
+
     return initials;
   }
 }
@@ -53,7 +77,7 @@ extension DiacriticsAwareString on String {
   static const nonDiacritics =
       'AAAAAAaaaaaaOOOOOOOooooooEEEEEeeeeeeCCccDDdgIiIIIIiiiiLlUUUUUuuuuuNNnnRrSsSsTtYYyyZz';
 
-  String get withoutDiacriticalMarks => this.splitMapJoin('',
+  String get withoutDiacriticalMarks => splitMapJoin('',
       onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
           ? nonDiacritics[diacritics.indexOf(char)]
           : char);

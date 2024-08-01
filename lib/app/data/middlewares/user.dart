@@ -10,9 +10,9 @@ class UserMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
-    // if (appController.appUser == null) {
-    //   return const RouteSettings(name: Routes.screenSaver);
-    // }
+    if (appController.appUser == null) {
+      return const RouteSettings(name: Routes.screenSaver);
+    }
 
     return null;
   }

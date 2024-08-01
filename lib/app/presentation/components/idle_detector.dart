@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,7 +30,7 @@ class _IdleDetectorState extends State<IdleDetector> {
 
   void _startIdleTimer() {
     _idleTimer?.cancel();
-    _idleTimer = Timer(Duration(minutes: 5), _showScreensaver);
+    _idleTimer = Timer(const Duration(minutes: 5), _showScreensaver);
   }
 
   void _showScreensaver() {
@@ -75,13 +74,13 @@ class _IdleDetectorState extends State<IdleDetector> {
           children: [
             widget.child,
             AnimatedSwitcher(
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               child: _isScreensaverActive
                   ? GestureDetector(
                       onTap: _resetIdleTimer, // Handle taps on the screensaver
                       child: AnimatedOpacity(
                         opacity: _isScreensaverActive ? 1.0 : 0.0,
-                        duration: Duration(seconds: 1),
+                        duration: const Duration(seconds: 1),
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
@@ -98,7 +97,7 @@ class _IdleDetectorState extends State<IdleDetector> {
                         ),
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ),
           ],
         ),

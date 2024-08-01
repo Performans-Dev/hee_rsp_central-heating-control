@@ -1,4 +1,4 @@
-import 'package:grinder/grinder.dart';
+/* import 'package:grinder/grinder.dart';
 
 main(List<String> args) => grind(args);
 
@@ -6,3 +6,4 @@ main(List<String> args) => grind(args);
 void analyze() {
   Analyzer.analyze(['.']);
 }
+ */

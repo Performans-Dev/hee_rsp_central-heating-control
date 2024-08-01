@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:flutter/material.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
@@ -9,14 +10,21 @@ class TextInputWidget extends StatelessWidget {
   final double radius;
   final bool obscureText;
   final String? obscuringCharacter;
-  const TextInputWidget(
-      {super.key,
-      required this.labelText,
-      this.keyboardType,
-      this.controller,
-      this.radius = 16,
-      this.obscureText = false,
-      this.obscuringCharacter});
+  final int? maxLenght;
+  final int? minLength;
+  final OSKInputType? type;
+  const TextInputWidget({
+    super.key,
+    required this.labelText,
+    this.keyboardType,
+    this.controller,
+    this.radius = 16,
+    this.obscureText = false,
+    this.obscuringCharacter,
+    this.maxLenght,
+    this.minLength,
+    this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +47,12 @@ class TextInputWidget extends StatelessWidget {
             context: context,
             initialValue: controller?.text,
             label: labelText,
+            minLength: minLength,
+            maxLength: maxLenght,
+            type: type ?? OSKInputType.text,
+            feedbackFunction: () {
+              Buzz.feedback();
+            },
           );
           controller?.text = result;
         },

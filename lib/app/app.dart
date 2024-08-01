@@ -76,7 +76,6 @@ class MainApp extends StatelessWidget {
   void onReady() async {
     // apply saved language and locale
     await LocalizationService().applySavedLocale();
-
     // remove splash screen
     FlutterNativeSplash.remove();
 

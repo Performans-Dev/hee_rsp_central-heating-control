@@ -3,7 +3,6 @@ import 'package:central_heating_control/app/data/models/com_port.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
-import 'package:central_heating_control/app/data/models/weekly_plan_definition.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
@@ -11,10 +10,6 @@ import 'package:get/get.dart';
 
 class DataController extends GetxController {
   //#region SUPER
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   @override
   void onReady() {
@@ -197,6 +192,10 @@ class DataController extends GetxController {
   //#region PLAN COPY
   Future<int?> copyPlan({required int sourcePlanId}) async {
     final data = await DbProvider.db.getPlanDetails(planId: sourcePlanId);
+    if (data.isEmpty) {
+      print('No details to copy for planId: $sourcePlanId');
+      return null;
+    }
     final target = await DbProvider.db.addPlanDefinition(
       plan: PlanDefinition(
         id: 0,

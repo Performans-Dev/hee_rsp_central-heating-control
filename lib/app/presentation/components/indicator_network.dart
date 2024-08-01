@@ -37,7 +37,7 @@ class AppBarNetworkIndicator extends StatelessWidget {
               triggerMode: TooltipTriggerMode.tap,
               child: Icon(iconData),
             )
-          : Icon(Icons.wifi_off);
+          : const Icon(Icons.wifi_off);
     });
   }
 }

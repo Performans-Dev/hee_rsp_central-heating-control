@@ -85,17 +85,20 @@ https://www.abelectronics.co.uk/kb/article/30/rtc-pi-setup-on-raspberry-pi-os
 ## COPY SOURCE TO PI
 ```
 rsync -avz ~/Development/FlutterProjects/heethings/CentralHeatingControl/CHC pi@192.168.1.123:~/Heethings
+rsync -avz ~/Developer/Projects/chc/hee_rsp_central-heating-control pi@192.168.1.123:~/Heethings
 ```
 
 ## BUILD ON PI
 ```
 cd ~/Heethings/CHC
+cd ~/Heethings/hee_rsp_central-heating-control
 flutter clean && flutter pub get && flutter analyze && dart fix --apply && flutter build linux --release
 ```
 
 ## RUN ON PI
 ```
 cd ~/Heethings/CHC/build/linux/arm64/release/bundle
+cd ~/Heethings/hee_rsp_central-heating-control/build/linux/arm64/release/bundle
 ```
 ```
 sudo ./central_heating_control

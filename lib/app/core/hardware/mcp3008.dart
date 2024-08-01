@@ -1,4 +1,4 @@
-import 'package:rpi_spi/spi.dart';
+/* import 'package:rpi_spi/spi.dart';
 
 /// MCP3008 - 8-Channel 10-Bit A/D Converters.
 /// See https://cdn-shop.adafruit.com/datasheets/MCP3008.pdf
@@ -20,3 +20,4 @@ class Mcp3008 {
     return (result[2] << 8) + result[3];
   }
 }
+ */

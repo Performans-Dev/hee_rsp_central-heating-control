@@ -1,6 +1,10 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,11 +27,14 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
         label: 'Language'.tr,
         // nextLabel: 'Next',
         nextCallback: () async {
+          Buzz.feedback();
           await app.onLanguageSelected(selectedIndex);
-          Get.toNamed(Routes.setupTimezone);
-          // NavController.toHome();
+
+          NavController.toHome();
         },
-        // previousCallback: () {},
+        previousCallback: () {
+          Get.toNamed(Routes.setupConnection);
+        },
         // previousLabel: 'Back',
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -56,6 +63,7 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
                 selected: selectedIndex == i,
                 selectedTileColor: Theme.of(context).highlightColor,
                 onTap: () {
+                  Buzz.feedback();
                   setState(() {
                     selectedIndex = i;
                   });

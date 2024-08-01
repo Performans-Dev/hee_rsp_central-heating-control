@@ -1,10 +1,10 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
-import 'package:central_heating_control/app/presentation/widgets/logo.dart';
-import 'package:central_heating_control/app/presentation/widgets/stacks.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,9 +37,36 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(builder: (app) {
-      return Scaffold(
-        body: Stack(
+      return SetupScaffold(
+        label: 'Signin'.tr,
+        previousCallback: () {
+          Get.toNamed(Routes.setupDateFormat);
+        },
+        nextCallback: () async {
+          final acc = await app.signin(
+            email: usernameController.text,
+            password: passwordController.text,
+          );
+          if (acc == null) {
+            if (context.mounted) {
+              DialogUtils.snackbar(
+                context: context,
+                message: 'Wrong credentials',
+                type: SnackbarType.error,
+              );
+            }
+            logger.d('EEEEEEE');
+          } else {
+            NavController.toHome();
+          }
+        },
+        nextLabel: "Giriş Yap".tr,
+        progressValue: 5 / 9,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 30),
             Center(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 480),
@@ -52,9 +79,8 @@ class _SigninScreenState extends State<SigninScreen> {
                     Text(
                       'Sign in with your Heethings account'.tr,
                       textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const Divider(),
                     const Divider(),
                     TextInputWidget(
                       controller: usernameController,
@@ -65,32 +91,6 @@ class _SigninScreenState extends State<SigninScreen> {
                       controller: passwordController,
                       labelText: "Password",
                       radius: 0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            final acc = await app.signin(
-                              email: usernameController.text,
-                              password: passwordController.text,
-                            );
-                            if (acc == null) {
-                              if (context.mounted) {
-                                DialogUtils.snackbar(
-                                  context: context,
-                                  message: 'Wrong credentials',
-                                  type: SnackbarType.error,
-                                );
-                              }
-                              logger.d('EEEEEEE');
-                            } else {
-                              NavController.toHome();
-                            }
-                          },
-                          child: const Text('Sign in'),
-                        ),
-                      ],
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -109,23 +109,6 @@ class _SigninScreenState extends State<SigninScreen> {
                     const SizedBox(height: 12),
                   ],
                 ),
-              ),
-            ),
-            const StackTopLeftWidget(child: LogoWidget(size: 180)),
-            const StackTopRightWidget(child: Text('Initial Setup 3 / 4')),
-            StackBottomLeftWidget(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Terms of Use'),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Privacy Policy'),
-                  ),
-                ],
               ),
             ),
           ],

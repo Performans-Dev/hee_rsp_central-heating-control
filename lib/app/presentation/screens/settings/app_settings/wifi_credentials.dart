@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class WifiCredentialsScreen extends StatefulWidget {
-  WifiCredentialsScreen({super.key});
+  const WifiCredentialsScreen({super.key});
 
   @override
   State<WifiCredentialsScreen> createState() => _WifiCredentialsScreenState();

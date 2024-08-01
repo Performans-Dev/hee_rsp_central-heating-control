@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io' as io;
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
@@ -7,7 +6,6 @@ import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DbProvider {
@@ -821,7 +819,11 @@ class DbProvider {
         return false;
       }
       final itemsToDelete = await getPlanDetails(planId: planId);
-      await removePlanDetails(planDetails: itemsToDelete);
+      if (itemsToDelete.isNotEmpty) {
+        await removePlanDetails(planDetails: itemsToDelete);
+      } else {
+        print('Plan details are empty.');
+      }
       final int result = await db.delete(
         Keys.tablePlans,
         where: Keys.queryId,

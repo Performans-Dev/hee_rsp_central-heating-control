@@ -5,7 +5,7 @@ class ZoneCardWarningDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return const Align(
       alignment: Alignment.bottomLeft,
       child: Icon(Icons.warning),
     );

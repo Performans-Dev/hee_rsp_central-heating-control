@@ -1,9 +1,13 @@
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/string.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_scaffold.dart';
@@ -45,6 +49,7 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
             Get.toNamed(Routes.setupTimezone);
           },
           nextCallback: () async {
+            Buzz.feedback();
             //save dateformat
             await Box.setString(
                 key: Keys.selectedDateFormat, value: _selectedDateFormat);
@@ -53,7 +58,7 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
                 key: Keys.selectedTimeFormat, value: _selectedTimeFormat);
             await Box.setBool(key: Keys.didDateFormatSelected, value: true);
 
-            Get.toNamed(Routes.setupConnection);
+            NavController.toHome();
           },
           progressValue: 3 / 9,
           child: Column(
@@ -76,6 +81,8 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
                         data: UiData.dateFormats,
                         value: _selectedDateFormat,
                         onChanged: (v) {
+                          Buzz.feedback();
+                          ;
                           if (v == null) return;
                           setState(() => _selectedDateFormat = v);
                         },
@@ -90,6 +97,7 @@ class _SetupDateFormatScreenState extends State<SetupDateFormatScreen> {
                         data: UiData.timeFormats,
                         value: _selectedTimeFormat,
                         onChanged: (v) {
+                          Buzz.feedback();
                           if (v == null) return;
                           setState(() => _selectedTimeFormat = v);
                         },

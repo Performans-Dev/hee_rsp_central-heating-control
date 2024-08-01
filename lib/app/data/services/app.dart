@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
@@ -15,7 +16,6 @@ import 'package:central_heating_control/app/data/models/timezone_definition.dart
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
-import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
@@ -40,6 +40,7 @@ class AppController extends GetxController {
     // fetchSettings();
     logoutUser();
     readDevice();
+    checkAdminUser();
     super.onReady();
   }
 
@@ -61,6 +62,9 @@ class AppController extends GetxController {
   //#endregion
 
   //#region FLAGS
+  final RxBool _connectivityResultReceived = false.obs;
+  bool get connectivityResultReceived => _connectivityResultReceived.value;
+
   final RxBool _didSettingsFetched = false.obs;
   bool get didSettingsFetched => _didSettingsFetched.value;
 
@@ -105,6 +109,19 @@ class AppController extends GetxController {
     _didSettingsFetched.value = false;
     update();
   }
+
+  Future<void> checkAdminUser() async {
+    final users = await DbProvider.db.getAdminUsers();
+    for (var user in users) {
+      print(" ${user.username}, ${user.isAdmin},  ${user.pin}");
+    }
+    if (users.isEmpty) {
+      print("user yok");
+    }
+    _hasAdminUser.value = (users).isNotEmpty;
+    update();
+  }
+
   //#endregion
 
   //#region CONECTIVITY
@@ -112,6 +129,7 @@ class AppController extends GetxController {
       _connectivitySubscription;
   _onConnectivityChanged(List<ConnectivityResult> results) {
     bool connected = false;
+
     for (final result in results) {
       if (!connected) {
         switch (result) {
@@ -137,6 +155,7 @@ class AppController extends GetxController {
       }
     }
     _didConnected.value = connected;
+    _connectivityResultReceived.value = true;
     update();
     getNetworkInfo();
   }
@@ -177,13 +196,13 @@ class AppController extends GetxController {
     final users = await DbProvider.db.getUsers();
     _userList.assignAll(users);
     if (users.isEmpty) {
-      final defaultUser = AppUser(
+/*       final defaultUser = AppUser(
         username: 'Admin User',
         id: -1,
         isAdmin: true,
         pin: '000000',
-      );
-      await DbProvider.db.addUser(defaultUser);
+      ); */
+      //await DbProvider.db.addUser(defaultUser);
       await populateUserList();
     }
     update();
@@ -282,6 +301,7 @@ class AppController extends GetxController {
     _account.value = response.data;
     update();
     await Box.setString(key: Keys.accountId, value: account?.id ?? '');
+    await Box.setBool(key: Keys.didSignedIn, value: response.success);
     return account;
   }
   //#endregion
@@ -295,6 +315,7 @@ class AppController extends GetxController {
     _chcDeviceId.value = response.data?.id;
     update();
     await Box.setString(key: Keys.deviceId, value: chcDeviceId ?? '');
+    await Box.setBool(key: Keys.didRegisteredDevice, value: true);
     return chcDeviceId;
   }
 
@@ -308,6 +329,15 @@ class AppController extends GetxController {
   }
 
   //#endregion
+//#region  CHECK-SUBSCRIPTION
+  Future<void> checkSubscirption() async {
+    final response = await AppProvider.checkSubscription();
+
+    await Box.setBool(key: Keys.didCheckedSubscription, value: true);
+    await Box.setInt(
+        key: Keys.subscriptionResult, value: response.data?.index ?? 0);
+  }
+//#endregion
 
   //#region ACTIVATION
   final Rxn<String> _activationId = Rxn();
@@ -387,18 +417,18 @@ class AppController extends GetxController {
   }
   //#endregion
 
-  Future<void> createAdmin() async {
+/*   Future<void> createAdmin() async {
     var result = await DbProvider.db.addUser(
         AppUser(id: -1, username: 'Admin', pin: '000000', isAdmin: true));
-    GpioController gpio = GpioController();
+
     if (result < -1) {
-      gpio.buzz(BuzzerType.alarm);
+      Buzz.alarm();
     } else if (result == -1) {
-      gpio.buzz(BuzzerType.error);
+      Buzz.error();
     } else if (result == 0) {
-      gpio.buzz(BuzzerType.success);
+      Buzz.success();
     } else {
-      gpio.buzz(BuzzerType.feedback);
+      Buzz.feedback();
     }
-  }
+  } */
 }

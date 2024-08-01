@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:central_heating_control/app/core/constants/enums.dart';
 
 class PlanDefinition {
   int id;

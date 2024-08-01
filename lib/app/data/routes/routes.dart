@@ -5,6 +5,7 @@ class Routes {
   static const String zone = '/zone';
   static const String splash = '/initializing';
   static const String splashFetchSettings = '/fetch-settings';
+  static const String splashConnection = '/checking-connection';
 
   static const String pin = '/pin';
   static const String screenSaver = '/screen-saver';
@@ -22,6 +23,8 @@ class Routes {
   static const String activation = '/activation';
   static const String signin = '/signin';
   static const String registerDevice = '/register-device';
+  static const String checkSubscription = '/check-subscription';
+
   //#endregion
 
   static const String settings = '/settings';

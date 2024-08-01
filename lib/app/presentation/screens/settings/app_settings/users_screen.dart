@@ -2,11 +2,9 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -23,7 +21,7 @@ class SettingsUserListScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -35,13 +33,13 @@ class SettingsUserListScreen extends StatelessWidget {
                     ),
                     title: Text(app.userList[index].username),
                     subtitle: app.userList[index].isAdmin
-                        ? Text('Admin')
-                        : Text('User'),
+                        ? const Text('Admin')
+                        : const Text('User'),
                     trailing: PopupMenuButton(
                       itemBuilder: (context) {
                         return [
                           PopupMenuItem(
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Change Name"),
@@ -61,13 +59,14 @@ class SettingsUserListScreen extends StatelessWidget {
                                 await DbProvider.db.updateUser(u);
                                 app.populateUserList();
                                 DialogUtils.snackbar(
+                                    type: SnackbarType.success,
                                     context: context,
                                     message: 'Username updated');
                               }
                             },
                           ),
                           PopupMenuItem(
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Change Password"),
@@ -75,11 +74,29 @@ class SettingsUserListScreen extends StatelessWidget {
                               ],
                             ),
                             onTap: () async {
+                              final result = await OnScreenKeyboard.show(
+                                context: context,
+                                label: 'Password',
+                                initialValue: app.userList[index].pin,
+                                type: OSKInputType.number,
+                                maxLength: 6,
+                                minLength: 6,
+                              );
+                              if (result != null) {
+                                var u = app.userList[index];
+                                u.pin = result;
+                                await DbProvider.db.updateUser(u);
+                                app.populateUserList();
+                                DialogUtils.snackbar(
+                                    type: SnackbarType.success,
+                                    context: context,
+                                    message: 'Password updated');
+                              }
                               //
                             },
                           ),
                           PopupMenuItem(
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Delete"),

@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/api.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/activation_result.dart';
@@ -26,6 +27,12 @@ class AppProvider {
       return GenericResponse.success(d);
     }
     return GenericResponse.error();
+  }
+
+  static Future<GenericResponse<SubscriptionResult>> checkSubscription() async {
+    await Future.delayed(const Duration(seconds: 2));
+    return GenericResponse.success(SubscriptionResult.free);
+    //TODO:
   }
 
   static Future<GenericResponse<ActivationResult?>> checkActivation(

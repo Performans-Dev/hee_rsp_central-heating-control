@@ -1326,7 +1326,7 @@ class _OSKController extends GetxController {
   final _layoutType = _OSKLayoutType.lowerCase.obs;
   final _currentText = ''.obs;
   final _isShiftActive = false.obs;
-  final void Function(String)? feedbackFunction;
+  final void Function()? feedbackFunction;
 
   _OSKController({
     required this.inputType,
@@ -1341,9 +1341,6 @@ class _OSKController extends GetxController {
     _inputType.value = inputType;
     if (numberOnly) {
       _layoutType.value = _OSKLayoutType.numbers;
-    }
-    if (feedbackFunction != null) {
-      ever(_currentText, feedbackFunction!);
     }
 
     update();
@@ -1473,7 +1470,7 @@ class _OSKController extends GetxController {
         break;
     }
     if (feedbackFunction != null) {
-      feedbackFunction!(_currentText.value);
+      feedbackFunction!();
     }
     update();
 
@@ -1587,7 +1584,7 @@ class _OSKKeyScreen extends StatefulWidget {
   final BuildContext ctx;
   final int? maxLength;
   final int? minLength;
-  final void Function(String)? feedbackFunction;
+  final void Function()? feedbackFunction;
 
   const _OSKKeyScreen({
     super.key,
@@ -1692,7 +1689,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
           oskKeyController.currentText.length >= widget.minLength!;
     });
     if (widget.feedbackFunction != null) {
-      widget.feedbackFunction!(oskKeyController.currentText);
+      widget.feedbackFunction!();
     }
   }
 
@@ -1929,7 +1926,7 @@ class OnScreenKeyboard {
     int? maxLength,
     int? minLength,
     required BuildContext context,
-    void Function(String)? feedbackFunction,
+    void Function()? feedbackFunction,
     // function alıcak feedbackfunction bu fonskyon null değilse bu fonksiyonu çalıştırcak her basışta. controllerde rxfunction açıcaz.
   }) async {
     return await Get.to(

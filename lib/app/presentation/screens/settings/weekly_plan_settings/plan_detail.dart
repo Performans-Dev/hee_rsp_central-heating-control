@@ -1,4 +1,3 @@
-import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/settings.dart';
@@ -312,7 +311,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                                               ? 'Max'
                                                               : 'Lvl ${selectedStateValues.indexOf(true)}'
                                           : '---',
-                                      style: TextStyle(fontSize: 10),
+                                      style: const TextStyle(fontSize: 10),
                                     ),
                                   )
                                 ],
@@ -360,27 +359,27 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
     List<PlanDetail> selectedBoxPlanDetails =
         planDetails.where((e) => e.day == day && e.hour == hour).toList();
     if (selectedBoxPlanDetails.isNotEmpty) {
-      var _level = selectedBoxPlanDetails.first.level;
-      var _hasThermostat = selectedBoxPlanDetails.first.hasThermostat;
-      var _setTemperature = selectedBoxPlanDetails.first.degree;
+      var level = selectedBoxPlanDetails.first.level;
+      var hasThermostat = selectedBoxPlanDetails.first.hasThermostat;
+      var setTemperature = selectedBoxPlanDetails.first.degree;
       for (final item in selectedBoxPlanDetails) {
         if (item != selectedBoxPlanDetails.first) {
-          if (_level != item.level ||
-              _hasThermostat != item.hasThermostat ||
-              _setTemperature != item.degree) {
+          if (level != item.level ||
+              hasThermostat != item.hasThermostat ||
+              setTemperature != item.degree) {
             resetToDefaultValues();
             return;
           }
-          _level = item.level;
-          _hasThermostat = item.hasThermostat;
-          _setTemperature = item.degree;
+          level = item.level;
+          hasThermostat = item.hasThermostat;
+          setTemperature = item.degree;
         }
       }
       setState(() {
         selectedStateValues =
-            stateList.map((e) => e.index == _level ? true : false).toList();
-        selectedSetTemperature = _setTemperature;
-        selectedHasThermostat = _hasThermostat == 1;
+            stateList.map((e) => e.index == level ? true : false).toList();
+        selectedSetTemperature = setTemperature;
+        selectedHasThermostat = hasThermostat == 1;
       });
     }
   }
