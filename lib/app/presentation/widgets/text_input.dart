@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:flutter/material.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
@@ -49,6 +50,9 @@ class TextInputWidget extends StatelessWidget {
             minLength: minLength,
             maxLength: maxLenght,
             type: type ?? OSKInputType.text,
+            feedbackFunction: () {
+              Buzz.feedback();
+            },
           );
           controller?.text = result;
         },

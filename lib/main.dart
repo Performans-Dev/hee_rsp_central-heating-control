@@ -16,6 +16,21 @@ import 'package:window_manager/window_manager.dart';
 
 final Logger logger = Logger();
 Future<void> main() async {
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  bool isPi = !GetPlatform.isMacOS;
+
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+
   // shared preferences
   await GetStorage.init();
 
@@ -26,13 +41,11 @@ Future<void> main() async {
   // init database
   sqfliteFfiInit();
 
-  //TODO: get width-height, set window size if not 800x480
-
   // apply window options
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
-    size: !GetPlatform.isMacOS ? const Size(800, 480) : null,
+    size: !isPi ? const Size(800, 480) : null,
     backgroundColor: Colors.black,
     skipTaskbar: false,
     // center: true,
@@ -41,7 +54,7 @@ Future<void> main() async {
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    if (GetPlatform.isMacOS) {
+    if (isPi) {
       await windowManager.setFullScreen(true);
     }
     await windowManager.focus();
@@ -53,16 +66,16 @@ Future<void> main() async {
   // bind services
   await AppBindings().dependencies();
 
-  //  Box.setBool(key: Keys.didLanguageSelected, value: false);
+  // Box.setBool(key: Keys.didLanguageSelected, value: false);
   // Box.setBool(key: Keys.didTimezoneSelected, value: false);
-  //   Box.setBool(key: Keys.didDateFormatSelected, value: false);
+  // Box.setBool(key: Keys.didDateFormatSelected, value: false);
   // Box.setBool(key: Keys.didPickedTheme, value: false);
-  Box.setBool(key: Keys.didRegisteredDevice, value: false);
-  Box.setBool(key: Keys.didActivated, value: false);
-/*   await DbProvider.db.deleteUser(
-      AppUser(id: 1, username: "Admin User", pin: "0000000", isAdmin: true));
-  await DbProvider.db
-      .deleteUser(AppUser(id: 2, username: "İo", pin: "123456", isAdmin: true)); */
+  // Box.setBool(key: Keys.didRegisteredDevice, value: false);
+  // Box.setBool(key: Keys.didActivated, value: false);
+  // await DbProvider.db.deleteUser(
+  // AppUser(id: 1, username: "Admin User", pin: "0000000", isAdmin: true));
+  // await DbProvider.db
+  //     .deleteUser(AppUser(id: 2, username: "İo", pin: "123456", isAdmin: true));
 
   // run app
   runApp(const MainApp());

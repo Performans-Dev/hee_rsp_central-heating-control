@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
@@ -59,8 +60,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                         border: UiDimens.formBorder,
                       ),
                       onTap: () async {
-                        GpioController gpio = GpioController();
-                        gpio.buzz(BuzzerType.feedback);
+                        Buzz.feedback();
                         final result = await OnScreenKeyboard.show(
                           context: context,
                           label: 'Name, Surname',
@@ -82,8 +82,7 @@ class _SettingsAddUserScreenState extends State<SettingsAddUserScreen> {
                         border: UiDimens.formBorder,
                       ),
                       onTap: () async {
-                        GpioController gpio = GpioController();
-                        gpio.buzz(BuzzerType.feedback);
+                    Buzz.feedback();
                         final result = await OnScreenKeyboard.show(
                           context: context,
                           label: 'Pin Code',

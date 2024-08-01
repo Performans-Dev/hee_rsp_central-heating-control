@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
@@ -26,8 +27,7 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
         label: 'Language'.tr,
         // nextLabel: 'Next',
         nextCallback: () async {
-          GpioController gpio = GpioController();
-          gpio.buzz(BuzzerType.feedback);
+          Buzz.feedback();
           await app.onLanguageSelected(selectedIndex);
 
           NavController.toHome();
@@ -63,8 +63,7 @@ class _SetupLanguageScreenState extends State<SetupLanguageScreen> {
                 selected: selectedIndex == i,
                 selectedTileColor: Theme.of(context).highlightColor,
                 onTap: () {
-                  GpioController gpio = GpioController();
-                  gpio.buzz(BuzzerType.feedback);
+                  Buzz.feedback();
                   setState(() {
                     selectedIndex = i;
                   });

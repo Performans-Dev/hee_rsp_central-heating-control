@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
@@ -19,20 +20,20 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
   bool showUserList = true;
   int currentImageIndex = 0;
   Timer? imageChangeTimer;
+  Timer? timeChangeTimer;
   AlignmentGeometry timeAlignment = Alignment.center;
-
-  final List<String> imageUrls = [
-    'https://c4.wallpaperflare.com/wallpaper/849/720/847/two-white-5-petaled-flowers-wallpaper-preview.jpg',
-    'https://c4.wallpaperflare.com/wallpaper/142/751/831/landscape-anime-digital-art-fantasy-art-wallpaper-preview.jpg',
-    'https://c4.wallpaperflare.com/wallpaper/800/831/598/digital-art-neon-mountains-lake-wallpaper-preview.jpg',
-    'https://c4.wallpaperflare.com/wallpaper/135/692/935/astronaut-space-black-background-artwork-hd-wallpaper-preview.jpg',
-    'https://c4.wallpaperflare.com/wallpaper/767/612/930/nature-landscape-trees-digital-art-wallpaper-preview.jpg',
-  ];
+  double x = 0;
+  double y = 0;
+  final List<String> imageUrls = List.generate(
+      12,
+      (e) =>
+          'https://static.api2.run/pi/wallpaper/wp${('0${e + 1}'.right(2))}.jpg');
 
   @override
   void initState() {
     super.initState();
     startImageChangeTimer();
+    startTimeChangeTimer();
   }
 
   @override
@@ -42,27 +43,26 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
   }
 
   void startImageChangeTimer() {
-    imageChangeTimer = Timer.periodic(const Duration(seconds: 60), (timer) {
+    imageChangeTimer = Timer.periodic(const Duration(seconds: 31), (timer) {
       setState(() {
         currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+      });
+    });
+  }
+
+  void startTimeChangeTimer() {
+    timeChangeTimer = Timer.periodic(const Duration(seconds: 13), (timer) {
+      setState(() {
         timeAlignment = getRandomAlignment();
       });
     });
   }
 
   AlignmentGeometry getRandomAlignment() {
-    final alignments = [
-      Alignment.topLeft,
-      Alignment.topCenter,
-      Alignment.topRight,
-      Alignment.centerLeft,
-      Alignment.center,
-      Alignment.centerRight,
-      Alignment.bottomCenter,
-      Alignment.bottomRight,
-    ];
-    alignments.shuffle();
-    return alignments.first;
+    final random = Random();
+    x = (random.nextDouble() * 1.4) - 0.7;
+    y = (random.nextDouble() * 1.4) - 0.7;
+    return Alignment(x, y);
   }
 
   @override
@@ -80,6 +80,20 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                   fit: BoxFit.cover,
                   width: Get.width,
                   height: Get.height,
+                ),
+              ),
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "LOGO ",
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ),
+              const Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  "MARKA ",
+                  style: TextStyle(color: Colors.orange),
                 ),
               ),
               InkWell(

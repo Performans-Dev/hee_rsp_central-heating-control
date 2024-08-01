@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
@@ -416,18 +417,18 @@ class AppController extends GetxController {
   }
   //#endregion
 
-  Future<void> createAdmin() async {
+/*   Future<void> createAdmin() async {
     var result = await DbProvider.db.addUser(
         AppUser(id: -1, username: 'Admin', pin: '000000', isAdmin: true));
-    GpioController gpio = GpioController();
+
     if (result < -1) {
-      gpio.buzz(BuzzerType.alarm);
+      Buzz.alarm();
     } else if (result == -1) {
-      gpio.buzz(BuzzerType.error);
+      Buzz.error();
     } else if (result == 0) {
-      gpio.buzz(BuzzerType.success);
+      Buzz.success();
     } else {
-      gpio.buzz(BuzzerType.feedback);
+      Buzz.feedback();
     }
-  }
+  } */
 }
