@@ -12,6 +12,7 @@ gh repo sync
 ```
 
 ```
+sudo rm -rf .dart_tool
 flutter clean && flutter pub get
 flutter build linux --release
 ```
