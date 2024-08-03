@@ -8,6 +8,8 @@ cd /home/pi/Heethings/cc-source/hee_rsp_central-heating-control
 ```
 
 ```
+git checkout .
+git clean -fd
 gh repo sync
 ```
 
