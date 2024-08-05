@@ -161,11 +161,19 @@ class SettingsAdvancedScreen extends StatelessWidget {
             ),
           );
           try {
-            await Future.delayed(const Duration(seconds: 5));
             final result =
                 await Process.run('/home/pi/Heetings/ccupdate.sh', []);
 
-            print(result.exitCode);
+            SmartDialog.dismiss(tag: "Loading");
+            if (context.mounted) {
+              DialogUtils.confirmDialog(
+                context: context,
+                title: "Result",
+                description: '${result.exitCode}\n${result.toString()}',
+                positiveText: 'OK',
+                negativeText: '**',
+              );
+            }
           } finally {
             SmartDialog.dismiss(tag: "Loading");
           }
