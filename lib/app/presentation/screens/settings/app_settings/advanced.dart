@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
@@ -162,7 +163,12 @@ class SettingsAdvancedScreen extends StatelessWidget {
           );
           try {
             final result =
-                await Process.run('/home/pi/Heetings/ccupdate.sh', []);
+                await Process.run('sudo', ["/home/pi/Heetings/ccupdate.sh"]);
+            if (result.exitCode == 0) {
+              Buzz.success();
+            } else {
+              Buzz.error();
+            }
 
             SmartDialog.dismiss(tag: "Loading");
             if (context.mounted) {
