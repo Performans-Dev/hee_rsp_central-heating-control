@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 
 import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ Future<void> main() async {
   ///
   ///
   ///
-  bool isPi = !GetPlatform.isMacOS;
+  bool isPi = !kDebugMode;
 
   ///
   ///

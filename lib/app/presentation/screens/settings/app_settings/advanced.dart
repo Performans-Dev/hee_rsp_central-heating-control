@@ -163,6 +163,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
           );
           try {
             final result = await Process.run('flutter', ["upgrade"]);
+
             if (result.exitCode == 0) {
               Buzz.success();
             } else {
@@ -176,11 +177,15 @@ class SettingsAdvancedScreen extends StatelessWidget {
               DialogUtils.confirmDialog(
                 context: context,
                 title: "Result",
-                description: '${result.exitCode}\n${result.toString()}',
+                description:
+                    '${result.exitCode}\n${result.stderr.toString()}\n${result.stdout.toString()}',
                 positiveText: 'OK',
                 negativeText: '**',
               );
             }
+          } catch (e) {
+            print(e.toString());
+            Buzz.alarm();
           } finally {
             SmartDialog.dismiss(tag: "Loading");
           }
