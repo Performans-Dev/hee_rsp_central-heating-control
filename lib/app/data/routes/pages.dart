@@ -15,6 +15,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_se
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/edit_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/preferences.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_settings/theme_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/users_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/wifi_credentials.dart';
@@ -193,6 +194,10 @@ final List<GetPage> getPages = [
     middlewares: [
       AdminMiddleware(),
     ],
+  ),
+  GetPage(
+    name: Routes.settingsTheme,
+    page: () => const ThemeScreen(),
   ),
   GetPage(
     name: Routes.settingsWifiCredentials,

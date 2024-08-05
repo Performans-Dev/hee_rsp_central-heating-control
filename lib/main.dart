@@ -1,14 +1,8 @@
 import 'package:central_heating_control/app/app.dart';
-import 'package:central_heating_control/app/core/constants/keys.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/data/services/app.dart';
-
 import 'package:central_heating_control/app/data/services/bindings.dart';
-import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';

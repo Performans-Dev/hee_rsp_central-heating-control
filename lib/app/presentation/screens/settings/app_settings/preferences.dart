@@ -1,5 +1,5 @@
-
 import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
@@ -41,14 +41,16 @@ class SettingsPreferences extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SwitchListTile(
-                    secondary:
-                        Icon(app.isDarkMode ? Icons.dark_mode : Icons.sunny),
+                  const SizedBox(height: 8),
+                  ListTile(
                     title: const Text('Theme'),
-                    subtitle: Text(Get.isDarkMode ? 'Dark' : 'Light'),
-                    value: Get.isDarkMode,
-                    onChanged: (value) {
-                      app.toggleDarkMode();
+                    subtitle: Text(
+                      '${app.selectedTheme.camelCaseToHumanReadable()} - ${app.isDarkMode ? 'Dark' : 'Light'}',
+                    ),
+                    leading: const Icon(Icons.color_lens),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Get.toNamed(Routes.settingsTheme);
                     },
                     tileColor: Theme.of(context).highlightColor,
                     shape: RoundedRectangleBorder(
