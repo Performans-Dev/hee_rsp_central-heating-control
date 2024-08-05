@@ -184,7 +184,16 @@ class SettingsAdvancedScreen extends StatelessWidget {
               );
             }
           } catch (e) {
-            print(e.toString());
+            SmartDialog.dismiss(tag: "Loading");
+            if (context.mounted) {
+              DialogUtils.confirmDialog(
+                context: context,
+                title: "Result",
+                description: '${e.toString()}}',
+                positiveText: 'OK',
+                negativeText: '***',
+              );
+            }
             Buzz.alarm();
           } finally {
             SmartDialog.dismiss(tag: "Loading");
