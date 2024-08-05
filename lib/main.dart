@@ -45,7 +45,7 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
-    size: !isPi ? const Size(800, 480) : null,
+    size: isPi ? const Size(800, 480) : null,
     backgroundColor: Colors.black,
     skipTaskbar: false,
     // center: true,
@@ -54,7 +54,7 @@ Future<void> main() async {
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    if (isPi) {
+    if (!isPi) {
       await windowManager.setFullScreen(true);
     }
     await windowManager.focus();

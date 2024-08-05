@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:window_manager/window_manager.dart';
@@ -64,6 +65,18 @@ class SettingsAdvancedScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             ListTile(
+              leading: const Icon(Icons.update),
+              title: const Text('Update'),
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onTap: () {
+                updateCC(context);
+              },
+            ),
+            const SizedBox(height: 8),
+            ListTile(
               leading: const Icon(Icons.lock_reset_outlined),
               title: const Text('Factory Reset'),
               tileColor: Theme.of(context).highlightColor,
@@ -116,6 +129,46 @@ class SettingsAdvancedScreen extends StatelessWidget {
         positiveText: "Yes",
         positiveCallback: () async {
           Process.run('sudo', ['reboot', 'now']);
+        },
+        negativeText: "Cancel");
+  }
+
+  void updateCC(BuildContext context) {
+    DialogUtils.confirmDialog(
+        context: context,
+        title: "Update CC",
+        description: "Are you sure you want to  apply update now?",
+        positiveText: "Yes",
+        positiveCallback: () async {
+          SmartDialog.show(
+            tag: "Loading",
+            backDismiss: false,
+            clickMaskDismiss: false,
+            builder: (context) => Center(
+              child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).colorScheme.surface),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 16),
+                      Text("Güncelleniyor...")
+                    ],
+                  )),
+            ),
+          );
+          try {
+            await Future.delayed(const Duration(seconds: 5));
+            final result =
+                await Process.run('/home/pi/Heetings/ccupdate.sh', []);
+
+            print(result.exitCode);
+          } finally {
+            SmartDialog.dismiss(tag: "Loading");
+          }
         },
         negativeText: "Cancel");
   }

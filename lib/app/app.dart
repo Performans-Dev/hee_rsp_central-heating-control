@@ -13,6 +13,7 @@ import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:central_heating_control/app/presentation/components/idle_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 class PiScrollBehavior extends MaterialScrollBehavior {
@@ -67,6 +68,7 @@ class MainApp extends StatelessWidget {
             fallbackLocale: LocalizationService.fallbackLocale,
             translationsKeys: LocalizationService.keys,
             onReady: onReady,
+            builder: FlutterSmartDialog.init(),
           ),
         );
       }),
