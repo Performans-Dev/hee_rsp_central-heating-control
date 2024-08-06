@@ -14,9 +14,16 @@ import 'package:get_storage/get_storage.dart';
 import 'package:process_run/shell.dart';
 import 'package:window_manager/window_manager.dart';
 
-class SettingsAdvancedScreen extends StatelessWidget {
+class SettingsAdvancedScreen extends StatefulWidget {
   const SettingsAdvancedScreen({super.key});
 
+  @override
+  State<SettingsAdvancedScreen> createState() => _SettingsAdvancedScreenState();
+}
+
+class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
+  String stdOut = '';
+  String stdErr = '';
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -153,12 +160,12 @@ class SettingsAdvancedScreen extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Theme.of(context).colorScheme.surface),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(width: 16),
-                  Text("Güncelleniyor...")
+                  const CircularProgressIndicator(),
+                  const SizedBox(width: 16),
+                  Text(stdOut.isEmpty ? "Güncelleniyor..." : stdOut)
                 ],
               ),
             ),
@@ -172,9 +179,16 @@ class SettingsAdvancedScreen extends StatelessWidget {
           final shell = Shell(
             workingDirectory: '/home/pi/Heetings',
           );
-          final results = await shell.run('''
+          final results = await shell.run(
+            '''
+              cd /home/pi/Heethings
               echo "hello"
-            ''');
+            ''',
+            onProcess: (process) {
+              stdOut = process.stdout.toString();
+              stdErr = process.stderr.toString();
+            },
+          );
           for (final result in results) {
             if (result.exitCode == 0) {
               Buzz.success();
