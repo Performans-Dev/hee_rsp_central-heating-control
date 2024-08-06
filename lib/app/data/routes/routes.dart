@@ -59,4 +59,6 @@ class Routes {
   static const String onScreenKeyboard = '/oskb';
 
   static const String daySummaryScreen = '/day-summary-screen';
+
+  static const String shellTest = '/shell-test';
 }

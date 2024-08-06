@@ -41,6 +41,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/admin_use
 import 'package:central_heating_control/app/presentation/screens/setup/subscription/check_subscription.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/theme/theme_setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/timezone/timezone_setup_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/shell_test.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_connection.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_settings.dart';
@@ -298,5 +299,13 @@ final List<GetPage> getPages = [
     transition: Transition.fadeIn,
   ),
 
-  GetPage(name: Routes.daySummaryScreen, page: () => const DaySummaryScreen()),
+  GetPage(
+    name: Routes.daySummaryScreen,
+    page: () => const DaySummaryScreen(),
+  ),
+
+  GetPage(
+    name: Routes.shellTest,
+    page: () => const ShellTestScreen(),
+  ),
 ];

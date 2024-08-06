@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
@@ -72,16 +73,22 @@ class AppScaffold extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const ComIndicatorLedWidget(),
-                      Text(
-                        '${app.versionName}',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.color
-                                  ?.withOpacity(0.4),
-                            ),
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed(Routes.shellTest);
+                        },
+                        child: Text(
+                          '${app.versionName}',
+                          textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.color
+                                        ?.withOpacity(0.4),
+                                  ),
+                        ),
                       ),
                     ],
                   ),
@@ -89,7 +96,6 @@ class AppScaffold extends StatelessWidget {
                 onDestinationSelected: (value) async {
                   switch (value) {
                     case 0:
-                      
                       NavController.toHome();
                       break;
                     case 1:
