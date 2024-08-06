@@ -144,7 +144,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
       positiveText: "Yes",
       positiveCallback: () async {
         SmartDialog.show(
-          tag: "Loading",
+          tag: 'update_indicator',
           backDismiss: false,
           clickMaskDismiss: false,
           builder: (context) => Center(
@@ -173,7 +173,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
             workingDirectory: '/home/pi/Heetings',
           );
           final results = await shell.run('''
-              ls -al
+              echo "hello"
             ''');
           for (final result in results) {
             if (result.exitCode == 0) {
@@ -184,7 +184,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
             await Future.delayed(const Duration(seconds: 3));
           }
 
-          SmartDialog.dismiss(tag: "Loading");
+          SmartDialog.dismiss(tag: 'update_indicator');
           if (context.mounted) {
             DialogUtils.confirmDialog(
               context: context,
@@ -200,7 +200,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
             );
           }
         } catch (e) {
-          SmartDialog.dismiss(tag: "Loading");
+          SmartDialog.dismiss(tag: 'update_indicator');
           if (context.mounted) {
             DialogUtils.confirmDialog(
               context: context,
@@ -215,7 +215,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
           }
           Buzz.alarm();
         } finally {
-          SmartDialog.dismiss(tag: "Loading");
+          SmartDialog.dismiss(tag: 'update_indicator');
         }
       },
       negativeText: "Cancel",
