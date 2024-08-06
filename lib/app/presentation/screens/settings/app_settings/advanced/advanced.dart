@@ -57,6 +57,15 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
     ShellCommand(
       command: 'sudo',
       arguments: [
+        'chown',
+        '-R',
+        '\$(whoami)',
+        '/home/pi/Heethings/cc-source',
+      ],
+    ),
+    ShellCommand(
+      command: 'sudo',
+      arguments: [
         '-u',
         'pi',
         'flutter',
