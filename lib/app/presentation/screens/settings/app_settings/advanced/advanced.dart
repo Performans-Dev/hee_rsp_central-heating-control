@@ -64,8 +64,11 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
       ],
     ),
     ShellCommand(
-      command: 'flutter',
+      command: 'sudo',
       arguments: [
+        '-u',
+        'pi',
+        'flutter',
         'doctor',
         '-v',
       ],
