@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/data/models/shell_command.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
@@ -23,6 +24,52 @@ class SettingsAdvancedScreen extends StatefulWidget {
 class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
   String stdOut = '';
   String stdErr = '';
+
+  List<ShellCommand> updateCommands = [
+    ShellCommand(
+      command: 'git',
+      arguments: ['checkout', '.'],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
+    ),
+    ShellCommand(
+      command: 'git',
+      arguments: ['clean', '-fd'],
+    ),
+    ShellCommand(
+      command: 'gh',
+      arguments: ['repo', 'sync'],
+    ),
+    ShellCommand(
+      command: 'sudo',
+      arguments: ['rm', '-rf', '.dart_tool'],
+    ),
+    ShellCommand(
+      command: 'flutter',
+      arguments: ['clean'],
+    ),
+    ShellCommand(
+      command: 'flutter',
+      arguments: ['pub', 'get'],
+    ),
+    ShellCommand(
+      command: 'flutter',
+      arguments: ['build', 'linux', '--release'],
+    ),
+    ShellCommand(
+      command: 'cp',
+      arguments: [
+        '-r',
+        '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control/build/linux/arm64/release/bundle/*',
+        '/home/pi/Heethings/cc-app'
+      ],
+    ),
+    ShellCommand(
+      command: 'sudo',
+      arguments: ['reboot', 'now'],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -172,27 +219,51 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
         );
         try {
           //sudo -u pi /home/pi/Heetings/ccupdate.sh
+          String results = '';
+          String errors = '';
+          int counter = 0;
+          for (final command in updateCommands) {
+            final result = await Process.run(
+              command.command,
+              command.arguments ?? [],
+              workingDirectory: command.workingDirectory,
+            );
+            counter += result.exitCode;
+            setState(() {
+              stdOut = result.stdout.toString();
+            });
+            if (result.exitCode == 0) {
+              results += result.stdout.toString();
+            } else {
+              errors += result.stderr.toString();
+            }
+          }
 
-          final result = await Process.run(
-            'ccupdate.sh',
-            [''],
-            workingDirectory: '/home/pi/Heethings',
-          );
-
-          if (result.exitCode == 0) {
+          if (counter == 0) {
             Buzz.success();
           } else {
             Buzz.error();
           }
+
+          // final result = await Process.run(
+          //   './ccupdate.sh',
+          //   [''],
+          //   workingDirectory: '/home/pi/Heethings',
+          // );
+
+          // if (result.exitCode == 0) {
+          //   Buzz.success();
+          // } else {
+          //   Buzz.error();
+          // }
 
           SmartDialog.dismiss(tag: 'update_indicator');
           if (context.mounted) {
             DialogUtils.confirmDialog(
               context: context,
               title: "Result",
-              description: '${result.exitCode}\n'
-                  '${result.stderr.toString()}\n'
-                  '${result.stdout.toString()}',
+              description: '${results}\n'
+                  '${errors}',
               positiveText: 'Retry',
               negativeText: 'Cancel',
               positiveCallback: () {
