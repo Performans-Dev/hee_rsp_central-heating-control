@@ -18,6 +18,10 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
   List<ShellCommand> updateCommands = [
     ShellCommand(command: 'whoami'),
     ShellCommand(
+      command: 'runuser',
+      arguments: ['-u', 'pi', 'whoami'],
+    ),
+    ShellCommand(
       command: 'git',
       arguments: ['checkout', '.'],
       workingDirectory:
