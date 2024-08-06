@@ -176,6 +176,7 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
           final result = await Process.run(
             'ls',
             ['-al'],
+            workingDirectory: '/home/pi/Heethings',
           );
 
           if (result.exitCode == 0) {
