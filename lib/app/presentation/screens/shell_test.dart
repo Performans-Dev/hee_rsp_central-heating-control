@@ -19,17 +19,30 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
     ShellCommand(command: 'whoami'),
     ShellCommand(
       command: 'runuser',
-      arguments: ['-u', 'pi', 'whoami'],
+      arguments: [
+        '-u',
+        'pi',
+        'whoami',
+      ],
     ),
     ShellCommand(
-      command: 'git',
-      arguments: ['checkout', '.'],
+      command: 'runuser',
+      arguments: [
+        '-u',
+        'pi',
+        'git',
+        'checkout',
+        '.',
+      ],
       workingDirectory:
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
-      command: 'git',
+      command: 'runuser',
       arguments: [
+        '-u',
+        'pi',
+        'git',
         'clean',
         '-fd',
       ],
@@ -37,8 +50,11 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
-      command: 'gh',
+      command: 'runuser',
       arguments: [
+        '-u',
+        'pi',
+        'gh',
         'repo',
         'sync',
       ],
@@ -67,8 +83,22 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
-      command: 'flutter',
+      command: 'sudo',
       arguments: [
+        'chown',
+        '-R',
+        'pi',
+        '/home/pi/Heethings/cc-source/',
+      ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
+    ),
+    ShellCommand(
+      command: 'runuser',
+      arguments: [
+        '-u',
+        'pi',
+        'flutter',
         'doctor',
         '-v',
       ],
@@ -76,7 +106,7 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
-      command: 'sudo',
+      command: 'runuser',
       arguments: [
         '-u',
         'pi',
@@ -85,7 +115,7 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
       ],
     ),
     ShellCommand(
-      command: 'sudo',
+      command: 'runuser',
       arguments: [
         '-u',
         'pi',
@@ -97,7 +127,7 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
-      command: 'sudo',
+      command: 'runuser',
       arguments: [
         '-u',
         'pi',
