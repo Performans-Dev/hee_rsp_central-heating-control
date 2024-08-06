@@ -169,9 +169,11 @@ class SettingsAdvancedScreen extends StatelessWidget {
           //     await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
 
           //sudo -u pi /home/pi/Heetings/ccupdate.sh
-          var shell = Shell();
+          final shell = Shell(
+            workingDirectory: '/home/pi/Heetings',
+          );
           final results = await shell.run('''
-              ./Heetings/ccupdate.sh
+              ls -al
             ''');
           for (final result in results) {
             if (result.exitCode == 0) {
@@ -179,6 +181,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
             } else {
               Buzz.error();
             }
+            await Future.delayed(const Duration(seconds: 3));
           }
 
           SmartDialog.dismiss(tag: "Loading");
