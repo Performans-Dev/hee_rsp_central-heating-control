@@ -104,6 +104,14 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
+      command: 'flutter',
+      arguments: [
+        'doctor',
+      ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
+    ),
+    ShellCommand(
       command: 'runuser',
       arguments: [
         'pi',

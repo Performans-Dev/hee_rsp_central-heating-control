@@ -1,7 +1,7 @@
 name: central_heating_control
 description: "Central Heating Control by Heethings"
 publish_to: 'none'
-version: 1.0.18+1018
+version: 1.0.19+1019
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
@@ -83,3 +83,4 @@ flutter:
 
 # rsync -avz ~/Development/FlutterProjects/heethings/CentralHeatingControl/CHC pi@192.168.1.248:~/Development
 
+# export PATH="$PATH:/snap/bin"
