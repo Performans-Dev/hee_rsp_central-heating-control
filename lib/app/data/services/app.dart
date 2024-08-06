@@ -89,6 +89,13 @@ class AppController extends GetxController {
   final RxBool _didPickedTheme = false.obs;
   bool get didPickedTheme => _didPickedTheme.value;
 
+  final Rxn<String> _token = Rxn();
+  String? get token => _token.value;
+  void deleteToken() {
+    _token.value = null;
+    update();
+  }
+
   Future<void> checkFlags() async {
     _didLanguageSelected.value = Box.getBool(key: Keys.didLanguageSelected);
     _didTimezoneSelected.value = Box.getBool(key: Keys.didTimezoneSelected);
@@ -299,6 +306,9 @@ class AppController extends GetxController {
       ),
     );
     _account.value = response.data;
+    if (response.success) {
+      _token.value = response.data?.token ?? '';
+    }
     update();
     await Box.setString(key: Keys.accountId, value: account?.id ?? '');
     await Box.setBool(key: Keys.didSignedIn, value: response.success);

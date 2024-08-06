@@ -25,6 +25,7 @@ class Keys {
 
   static const String wifiCredentials = 'wifiCredentials';
   static const String userList = 'userList';
+  static const String forgottenPin = 'forgottenPin';
 
   static const String message = 'message';
   static const String type = 'type';

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:get/get.dart';
 
 class PinController extends GetxController {
@@ -72,5 +73,10 @@ class PinController extends GetxController {
       }
     }
     update();
+  }
+
+  Future<int> savePin(String newPin, String username) async {
+    final result = await DbProvider.db.savePin(newPin, username);
+    return result;
   }
 }

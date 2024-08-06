@@ -1,4 +1,8 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/presentation/widgets/keypad.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +52,36 @@ class DialogUtils {
     );
   }
 
-  alertDialog() {}
+  static alertDialog({
+    required BuildContext context,
+    required String title,
+    required String? description,
+    required String? positiveText,
+    GestureTapCallback? positiveCallback,
+  }) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: description != null ? Text(description) : null,
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Navigator.of(context).pop();
+                Get.back();
+                if (positiveCallback != null) {
+                  positiveCallback();
+                }
+              },
+              child: Text(positiveText ?? "Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   static void snackbar({
     required BuildContext context,
@@ -236,6 +269,14 @@ class DialogUtils {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 8),
+                          TextButton(
+                              onPressed: () {
+                                Box.setString(
+                                    key: Keys.forgottenPin, value: username);
+                                Get.toNamed(Routes.pinRecovery);
+                              },
+                              child: Text("Pin kodumu unuttum"))
                         ],
                       ),
                     ),
