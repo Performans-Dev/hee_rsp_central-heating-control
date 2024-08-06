@@ -6,12 +6,14 @@ class Account {
   String email;
   String displayName;
   int status;
+  String token;
   Account({
     required this.id,
     required this.createdAt,
     required this.email,
     required this.displayName,
     required this.status,
+    required this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,6 +23,7 @@ class Account {
       'email': email,
       'display_name': displayName,
       'status': status,
+      'token': token
     };
   }
 
@@ -31,6 +34,7 @@ class Account {
       email: map['email'] ?? '',
       displayName: map['display_name'] ?? '',
       status: map['status']?.toInt() ?? 0,
+      token: map['token'] ?? '',
     );
   }
 

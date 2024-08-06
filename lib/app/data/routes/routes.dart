@@ -8,7 +8,10 @@ class Routes {
   static const String splashConnection = '/checking-connection';
 
   static const String pin = '/pin';
+  static const String pinRecovery = '/pin-recovery';
   static const String screenSaver = '/screen-saver';
+  static const String checkConnection = '/check-connection';
+  static const String heetingsLogin = '/heetings-login';
 
   //#region INITIAL SETUP
   static const String setupTheme = '/setup-theme';

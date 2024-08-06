@@ -1,16 +1,21 @@
 import 'package:central_heating_control/app/data/middlewares/account.dart';
 import 'package:central_heating_control/app/data/middlewares/admin.dart';
 import 'package:central_heating_control/app/data/middlewares/chc_device.dart';
+import 'package:central_heating_control/app/data/middlewares/heetings_login.dart';
+import 'package:central_heating_control/app/data/middlewares/pin.dart';
 import 'package:central_heating_control/app/data/middlewares/setup.dart';
 import 'package:central_heating_control/app/data/middlewares/user.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/register_device_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/auth/signin/signin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/pin/heetings_login.dart';
+import 'package:central_heating_control/app/presentation/screens/pin/pin_recovery.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/screen_saver/screen_saver.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/add_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/advanced/advanced.dart';
+import 'package:central_heating_control/app/presentation/screens/pin/check_connection.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/developer_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/edit_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_settings/language_screen.dart';
@@ -60,6 +65,20 @@ final List<GetPage> getPages = [
     ],
   ),
   GetPage(
+    name: Routes.pinRecovery,
+    page: () => const PinRecoveryScreen(),
+    middlewares: [
+      ResetPinAccountMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.heetingsLogin,
+    page: () => const HeetingsLogin(),
+    middlewares: [
+      HeetingsLoginWiddleware(),
+    ],
+  ),
+  GetPage(
     name: Routes.home,
     page: () => const HomeScreen(),
     middlewares: [
@@ -94,6 +113,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.checkSubscription,
     page: () => const CheckSubscriptionScreen(),
+  ),
+  GetPage(
+    name: Routes.checkConnection,
+    page: () => const CheckConnectionScreen(),
   ),
   GetPage(
     name: Routes.setupAdminUser,

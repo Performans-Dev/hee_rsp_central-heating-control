@@ -1,10 +1,13 @@
 import 'dart:developer';
 import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -931,4 +934,21 @@ class DbProvider {
     return await addPlanDetails(planDetails: newItems);
   }
   //#endregion
+
+  Future<int> savePin(String newPin, String username) async {
+    final db = await database;
+    if (db == null) return -1;
+
+    try {
+      final result = await db.update(
+        Keys.tableUsers,
+        {"pin": newPin},
+        where: Keys.queryUsername,
+        whereArgs: [username],
+      );
+      return result;
+    } on Exception catch (err) {
+      return -2;
+    }
+  }
 }
