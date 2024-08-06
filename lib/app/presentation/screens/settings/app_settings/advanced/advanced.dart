@@ -284,6 +284,7 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
               results += result.stdout.toString();
             } else {
               errors += result.stderr.toString();
+              break;
             }
             await Future.delayed(Duration(seconds: 1));
           }
