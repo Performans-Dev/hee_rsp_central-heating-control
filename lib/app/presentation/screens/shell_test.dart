@@ -20,10 +20,9 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
     ShellCommand(
       command: 'runuser',
       arguments: [
-        '-u',
         'pi',
-        '-c'
-            '\'whoami\'',
+        '-c',
+        '\'whoami\'',
       ],
     ),
     ShellCommand(
@@ -97,7 +96,6 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
     ShellCommand(
       command: 'runuser',
       arguments: [
-        '-u',
         'pi',
         '-c',
         '\'flutter doctor -v\'',
@@ -108,20 +106,17 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
     ShellCommand(
       command: 'runuser',
       arguments: [
-        '-u',
         'pi',
-        'flutter',
-        'clean',
+        '-c',
+        '\'flutter clean\'',
       ],
     ),
     ShellCommand(
       command: 'runuser',
       arguments: [
-        '-u',
         'pi',
-        'flutter',
-        'pub',
-        'get',
+        '-c',
+        '\'flutter pub get\'',
       ],
       workingDirectory:
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
@@ -129,12 +124,9 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
     ShellCommand(
       command: 'runuser',
       arguments: [
-        '-u',
         'pi',
-        'flutter',
-        'build',
-        'linux',
-        '--release',
+        '-c',
+        '\'flutter build linux --release\'',
       ],
       workingDirectory:
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
