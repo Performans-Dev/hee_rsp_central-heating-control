@@ -64,6 +64,13 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
       ],
     ),
     ShellCommand(
+      command: 'flutter',
+      arguments: [
+        'doctor',
+        '-v',
+      ],
+    ),
+    ShellCommand(
       command: 'sudo',
       arguments: [
         '-u',
@@ -270,13 +277,15 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
             );
             counter += result.exitCode;
             setState(() {
-              stdOut = result.stdout.toString();
+              stdOut =
+                  '\n${command.command} ${command.arguments?.join(' ')}\n${result.stdout.toString()}';
             });
             if (result.exitCode == 0) {
               results += result.stdout.toString();
             } else {
               errors += result.stderr.toString();
             }
+            await Future.delayed(Duration(seconds: 1));
           }
 
           if (counter == 0) {
