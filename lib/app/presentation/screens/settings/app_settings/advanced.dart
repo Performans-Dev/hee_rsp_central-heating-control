@@ -125,110 +125,115 @@ class SettingsAdvancedScreen extends StatelessWidget {
 
   void rebootDevice(BuildContext context) {
     DialogUtils.confirmDialog(
-        context: context,
-        title: "Reboot",
-        description: "Are you sure you want to reboot now?",
-        positiveText: "Yes",
-        positiveCallback: () async {
-          Process.run('sudo', ['reboot', 'now']);
-        },
-        negativeText: "Cancel");
+      context: context,
+      title: "Reboot",
+      description: "Are you sure you want to reboot now?",
+      positiveText: "Yes",
+      positiveCallback: () async {
+        Process.run('sudo', ['reboot', 'now']);
+      },
+      negativeText: "Cancel",
+    );
   }
 
   void updateCC(BuildContext context) {
     DialogUtils.confirmDialog(
-        context: context,
-        title: "Update CC",
-        description: "Are you sure you want to  apply update now?",
-        positiveText: "Yes",
-        positiveCallback: () async {
-          SmartDialog.show(
-            tag: "Loading",
-            backDismiss: false,
-            clickMaskDismiss: false,
-            builder: (context) => Center(
-              child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).colorScheme.surface),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(width: 16),
-                      Text("Güncelleniyor...")
-                    ],
-                  )),
+      context: context,
+      title: "Update CC",
+      description: "Are you sure you want to  apply update now?",
+      positiveText: "Yes",
+      positiveCallback: () async {
+        SmartDialog.show(
+          tag: "Loading",
+          backDismiss: false,
+          clickMaskDismiss: false,
+          builder: (context) => Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).colorScheme.surface),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text("Güncelleniyor...")
+                ],
+              ),
             ),
-          );
-          try {
-            // final result =
-            //     await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
+          ),
+        );
+        try {
+          // final result =
+          //     await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
 
-            var shell = Shell();
-            final results = await shell.run('''
-              sudo -u pi /home/pi/Heetings/ccupdate.sh
+          //sudo -u pi /home/pi/Heetings/ccupdate.sh
+          var shell = Shell();
+          final results = await shell.run('''
+              ./Heetings/ccupdate.sh
             ''');
-            for (final result in results) {
-              if (result.exitCode == 0) {
-                Buzz.success();
-              } else {
-                Buzz.error();
-              }
+          for (final result in results) {
+            if (result.exitCode == 0) {
+              Buzz.success();
+            } else {
+              Buzz.error();
             }
-
-            SmartDialog.dismiss(tag: "Loading");
-            if (context.mounted) {
-              DialogUtils.confirmDialog(
-                context: context,
-                title: "Result",
-                description: '${results[0].exitCode}\n'
-                    '${results[0].stderr.toString()}\n'
-                    '${results[0].stdout.toString()}',
-                positiveText: 'Retry',
-                negativeText: 'Cancel',
-                positiveCallback: () {
-                  updateCC(context);
-                },
-              );
-            }
-          } catch (e) {
-            SmartDialog.dismiss(tag: "Loading");
-            if (context.mounted) {
-              DialogUtils.confirmDialog(
-                context: context,
-                title: "Exception",
-                description: e.toString(),
-                positiveText: 'Retry',
-                negativeText: 'Cancel',
-                positiveCallback: () {
-                  updateCC(context);
-                },
-              );
-            }
-            Buzz.alarm();
-          } finally {
-            SmartDialog.dismiss(tag: "Loading");
           }
-        },
-        negativeText: "Cancel");
+
+          SmartDialog.dismiss(tag: "Loading");
+          if (context.mounted) {
+            DialogUtils.confirmDialog(
+              context: context,
+              title: "Result",
+              description: '${results[0].exitCode}\n'
+                  '${results[0].stderr.toString()}\n'
+                  '${results[0].stdout.toString()}',
+              positiveText: 'Retry',
+              negativeText: 'Cancel',
+              positiveCallback: () {
+                updateCC(context);
+              },
+            );
+          }
+        } catch (e) {
+          SmartDialog.dismiss(tag: "Loading");
+          if (context.mounted) {
+            DialogUtils.confirmDialog(
+              context: context,
+              title: "Exception",
+              description: e.toString(),
+              positiveText: 'Retry',
+              negativeText: 'Cancel',
+              positiveCallback: () {
+                updateCC(context);
+              },
+            );
+          }
+          Buzz.alarm();
+        } finally {
+          SmartDialog.dismiss(tag: "Loading");
+        }
+      },
+      negativeText: "Cancel",
+    );
   }
 
   void factoryReset(BuildContext context) async {
     DialogUtils.confirmDialog(
-        context: context,
-        title: "Factory Reset",
-        description: "Are you sure you want to factory reset?",
-        positiveText: "Yes",
-        positiveCallback: () async {
-          DbProvider.db.resetDb();
-          final box = GetStorage();
-          await box.erase();
-          final AppController app = Get.find();
-          app.resetFlags();
-          NavController.toHome();
-        },
-        negativeText: "Cancel");
+      context: context,
+      title: "Factory Reset",
+      description: "Are you sure you want to factory reset?",
+      positiveText: "Yes",
+      positiveCallback: () async {
+        DbProvider.db.resetDb();
+        final box = GetStorage();
+        await box.erase();
+        final AppController app = Get.find();
+        app.resetFlags();
+        NavController.toHome();
+      },
+      negativeText: "Cancel",
+    );
   }
 }
