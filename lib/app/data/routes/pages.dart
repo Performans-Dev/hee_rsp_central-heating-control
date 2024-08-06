@@ -76,7 +76,7 @@ final List<GetPage> getPages = [
     name: Routes.heetingsLogin,
     page: () => const HeetingsLogin(),
     middlewares: [
-      HeetingsLoginWiddleware(),
+      HeetingsLoginMiddleware(),
     ],
   ),
   GetPage(
