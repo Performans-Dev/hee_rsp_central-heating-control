@@ -34,39 +34,70 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
     ),
     ShellCommand(
       command: 'git',
-      arguments: ['clean', '-fd'],
+      arguments: [
+        'clean',
+        '-fd',
+      ],
     ),
     ShellCommand(
       command: 'gh',
-      arguments: ['repo', 'sync'],
+      arguments: [
+        'repo',
+        'sync',
+      ],
     ),
     ShellCommand(
       command: 'sudo',
-      arguments: ['rm', '-rf', '.dart_tool'],
+      arguments: [
+        'rm',
+        '-rf',
+        '.dart_tool',
+      ],
     ),
     ShellCommand(
-      command: 'flutter',
-      arguments: ['clean'],
+      command: 'sudo',
+      arguments: [
+        '-u',
+        'pi',
+        'flutter',
+        'clean',
+      ],
     ),
     ShellCommand(
-      command: 'flutter',
-      arguments: ['pub', 'get'],
+      command: 'sudo',
+      arguments: [
+        '-u',
+        'pi',
+        'flutter',
+        'pub',
+        'get',
+      ],
     ),
     ShellCommand(
-      command: 'flutter',
-      arguments: ['build', 'linux', '--release'],
+      command: 'sudo',
+      arguments: [
+        '-u',
+        'pi',
+        'flutter',
+        'build',
+        'linux',
+        '--release',
+      ],
     ),
     ShellCommand(
       command: 'cp',
       arguments: [
         '-r',
         '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control/build/linux/arm64/release/bundle/*',
-        '/home/pi/Heethings/cc-app'
+        '/home/pi/Heethings/cc-app',
       ],
     ),
     ShellCommand(
       command: 'sudo',
-      arguments: ['reboot', 'now'],
+      arguments: [
+        'reboot',
+        'now',
+      ],
     ),
   ];
 
