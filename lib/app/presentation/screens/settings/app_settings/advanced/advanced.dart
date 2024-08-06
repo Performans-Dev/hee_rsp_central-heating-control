@@ -183,7 +183,6 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
           );
           final results = await shell.run(
             '''
-              cd /home/pi/Heethings
               echo "hello"
             ''',
             onProcess: (process) {
