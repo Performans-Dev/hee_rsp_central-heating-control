@@ -174,8 +174,8 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
           //sudo -u pi /home/pi/Heetings/ccupdate.sh
 
           final result = await Process.run(
-            'ls',
-            ['-al'],
+            'ccupdate.sh',
+            [''],
             workingDirectory: '/home/pi/Heethings',
           );
 
