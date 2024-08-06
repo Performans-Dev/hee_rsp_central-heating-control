@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:process_run/shell.dart';
 import 'package:window_manager/window_manager.dart';
 
 class SettingsAdvancedScreen extends StatelessWidget {
@@ -162,15 +163,19 @@ class SettingsAdvancedScreen extends StatelessWidget {
             ),
           );
           try {
-            final result =
-                await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
+            // final result =
+            //     await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
 
-            if (result.exitCode == 0) {
-              Buzz.success();
-            } else {
-              Buzz.error();
-
-              ///home/pi/Heetings/ccupdate.sh
+            var shell = Shell();
+            final results = await shell.run('''
+              sudo -u pi /home/pi/Heetings/ccupdate.sh
+            ''');
+            for (final result in results) {
+              if (result.exitCode == 0) {
+                Buzz.success();
+              } else {
+                Buzz.error();
+              }
             }
 
             SmartDialog.dismiss(tag: "Loading");
@@ -178,10 +183,14 @@ class SettingsAdvancedScreen extends StatelessWidget {
               DialogUtils.confirmDialog(
                 context: context,
                 title: "Result",
-                description:
-                    '${result.exitCode}\n${result.stderr.toString()}\n${result.stdout.toString()}',
-                positiveText: 'OK',
-                negativeText: '**',
+                description: '${results[0].exitCode}\n'
+                    '${results[0].stderr.toString()}\n'
+                    '${results[0].stdout.toString()}',
+                positiveText: 'Retry',
+                negativeText: 'Cancel',
+                positiveCallback: () {
+                  updateCC(context);
+                },
               );
             }
           } catch (e) {
@@ -189,10 +198,13 @@ class SettingsAdvancedScreen extends StatelessWidget {
             if (context.mounted) {
               DialogUtils.confirmDialog(
                 context: context,
-                title: "Result",
-                description: '${e.toString()}}',
-                positiveText: 'OK',
-                negativeText: '***',
+                title: "Exception",
+                description: e.toString(),
+                positiveText: 'Retry',
+                negativeText: 'Cancel',
+                positiveCallback: () {
+                  updateCC(context);
+                },
               );
             }
             Buzz.alarm();
