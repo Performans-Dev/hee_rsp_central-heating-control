@@ -46,6 +46,14 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
       arguments: [
         '-u',
         'pi',
+        '/home/pi/Heethings/ccupdate2.sh',
+      ],
+    ),
+    ShellCommand(
+      command: 'runuser',
+      arguments: [
+        '-u',
+        'pi',
         'git',
         'checkout',
         '.',
