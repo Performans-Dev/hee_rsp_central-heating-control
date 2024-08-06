@@ -22,7 +22,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
       arguments: [
         '-u',
         'pi',
-        'whoami',
+        '-c'
+            '\'whoami\'',
       ],
     ),
     ShellCommand(
@@ -98,9 +99,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
       arguments: [
         '-u',
         'pi',
-        'flutter',
-        'doctor',
-        '-v',
+        '-c',
+        '\'flutter doctor -v\'',
       ],
       workingDirectory:
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
