@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:process_run/shell.dart';
 import 'package:window_manager/window_manager.dart';
 
 class SettingsAdvancedScreen extends StatefulWidget {
@@ -172,34 +171,17 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
           ),
         );
         try {
-          // final result =
-          //     await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
-
           //sudo -u pi /home/pi/Heetings/ccupdate.sh
-          final shell = Shell(
-            workingDirectory: '/home/pi/Heetings',
-            runInShell: false,
-            commentVerbose: true,
-          );
-          final results = await shell.run(
-            '''
-              echo "hello"
-            ''',
-            onProcess: (process) {
-              stdOut = process.stdout.toString();
-              stdErr = process.stderr.toString();
-              setState(() {});
-            },
+
+          final result = await Process.run(
+            'ls',
+            ['-al'],
           );
 
-          await Future.delayed(const Duration(seconds: 2));
-          for (final result in results) {
-            if (result.exitCode == 0) {
-              Buzz.success();
-            } else {
-              Buzz.error();
-            }
-            await Future.delayed(const Duration(seconds: 3));
+          if (result.exitCode == 0) {
+            Buzz.success();
+          } else {
+            Buzz.error();
           }
 
           SmartDialog.dismiss(tag: 'update_indicator');
@@ -207,9 +189,9 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
             DialogUtils.confirmDialog(
               context: context,
               title: "Result",
-              description: '${results[0].exitCode}\n'
-                  '${results[0].stderr.toString()}\n'
-                  '${results[0].stdout.toString()}',
+              description: '${result.exitCode}\n'
+                  '${result.stderr.toString()}\n'
+                  '${result.stdout.toString()}',
               positiveText: 'Retry',
               negativeText: 'Cancel',
               positiveCallback: () {
