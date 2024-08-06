@@ -57,7 +57,7 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'chown',
         '-R',
         '\$(whoami)',
-        '/home/pi/Heethings/cc-source',
+        '/home/pi/Heethings/cc-source/',
       ],
       workingDirectory:
           '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
