@@ -6,14 +6,14 @@ import 'package:central_heating_control/app/presentation/widgets/text_input.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HeetingsLogin extends StatefulWidget {
-  const HeetingsLogin({super.key});
+class PinRecoveryLogin extends StatefulWidget {
+  const PinRecoveryLogin({super.key});
 
   @override
-  State<HeetingsLogin> createState() => _HeetingsLoginState();
+  State<PinRecoveryLogin> createState() => _PinRecoveryLoginState();
 }
 
-class _HeetingsLoginState extends State<HeetingsLogin> {
+class _PinRecoveryLoginState extends State<PinRecoveryLogin> {
   late final TextEditingController usernameController;
 
   late final TextEditingController passwordController;
