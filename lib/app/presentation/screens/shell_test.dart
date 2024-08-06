@@ -29,6 +29,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'clean',
         '-fd',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'gh',
@@ -36,6 +38,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'repo',
         'sync',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'sudo',
@@ -44,6 +48,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         '-rf',
         '.dart_tool',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'sudo',
@@ -53,6 +59,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         '\$(whoami)',
         '/home/pi/Heethings/cc-source',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'flutter',
@@ -60,6 +68,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'doctor',
         '-v',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'sudo',
@@ -79,6 +89,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'pub',
         'get',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'sudo',
@@ -90,6 +102,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'linux',
         '--release',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'cp',
@@ -98,6 +112,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control/build/linux/arm64/release/bundle/*',
         '/home/pi/Heethings/cc-app',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
     ShellCommand(
       command: 'sudo',
@@ -105,6 +121,8 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
         'reboot',
         'now',
       ],
+      workingDirectory:
+          '/home/pi/Heethings/cc-source/hee_rsp_central-heating-control',
     ),
   ];
 
