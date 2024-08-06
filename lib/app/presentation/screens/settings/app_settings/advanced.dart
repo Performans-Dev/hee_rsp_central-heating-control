@@ -162,7 +162,8 @@ class SettingsAdvancedScreen extends StatelessWidget {
             ),
           );
           try {
-            final result = await Process.run('flutter', ["upgrade"]);
+            final result =
+                await Process.run('/home/pi/Heetings/ccupdate.sh', [""]);
 
             if (result.exitCode == 0) {
               Buzz.success();
