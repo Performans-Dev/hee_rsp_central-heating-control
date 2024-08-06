@@ -187,6 +187,7 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
             onProcess: (process) {
               stdOut = process.stdout.toString();
               stdErr = process.stderr.toString();
+              setState(() {});
             },
           );
           for (final result in results) {
