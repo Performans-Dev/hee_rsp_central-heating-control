@@ -178,6 +178,8 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
           //sudo -u pi /home/pi/Heetings/ccupdate.sh
           final shell = Shell(
             workingDirectory: '/home/pi/Heetings',
+            runInShell: false,
+            commentVerbose: true,
           );
           final results = await shell.run(
             '''
@@ -190,6 +192,8 @@ class _SettingsAdvancedScreenState extends State<SettingsAdvancedScreen> {
               setState(() {});
             },
           );
+
+          await Future.delayed(const Duration(seconds: 2));
           for (final result in results) {
             if (result.exitCode == 0) {
               Buzz.success();
