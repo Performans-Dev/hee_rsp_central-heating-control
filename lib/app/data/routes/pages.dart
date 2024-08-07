@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/middlewares/user.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/screens/activation/register_device_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/auth/signin/signin_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/command_test.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_recovery_login.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_recovery.dart';
@@ -330,5 +331,9 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.shellTest,
     page: () => const ShellTestScreen(),
+  ),
+  GetPage(
+    name: Routes.commandTest,
+    page: () => const CommandTestScreen(),
   ),
 ];

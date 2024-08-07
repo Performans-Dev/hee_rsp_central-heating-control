@@ -64,4 +64,7 @@ class Routes {
   static const String daySummaryScreen = '/day-summary-screen';
 
   static const String shellTest = '/shell-test';
+  static const String commandTest = '/command-test';
+
+  
 }
