@@ -120,3 +120,12 @@ enum SubscriptionResult {
   free,
   pro,
 }
+
+enum SetupConnectionState {
+  none,
+  checkingEth,
+  checkingWifi,
+  wifiForm,
+  connected,
+  notConnected,
+}

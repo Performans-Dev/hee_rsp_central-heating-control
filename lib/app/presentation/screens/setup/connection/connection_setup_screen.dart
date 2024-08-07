@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
@@ -12,15 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:process_run/shell.dart';
-
-enum SetupConnectionState {
-  none,
-  checkingEth,
-  checkingWifi,
-  wifiForm,
-  connected,
-  notConnected,
-}
 
 class SetupConnectionScreen extends StatefulWidget {
   const SetupConnectionScreen({super.key});
