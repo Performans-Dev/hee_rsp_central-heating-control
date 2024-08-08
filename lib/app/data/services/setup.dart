@@ -18,8 +18,9 @@ class SetupController extends GetxController {
       SetupSequence.timezone(),
       SetupSequence.dateFormat(),
       SetupSequence.theme(),
-      SetupSequence.registerDevice(),
+      SetupSequence.terms(),
       SetupSequence.signIn(),
+      SetupSequence.registerDevice(),
       SetupSequence.activation(),
       SetupSequence.subscriptionResult(),
       SetupSequence.techSupport(),
@@ -27,4 +28,8 @@ class SetupController extends GetxController {
     ]);
     update();
   }
+
+  double get progress =>
+      setupSequenceList.where((e) => e.isCompleted).length /
+      setupSequenceList.length;
 }

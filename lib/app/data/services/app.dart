@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
@@ -37,6 +38,10 @@ class AppController extends GetxController {
     super.onInit();
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+    fetchLanguages();
+    fetchTimezones();
+    fetchDateTimeFormats();
+    fetchThemes();
     checkFlags();
     final t = Box.getString(key: Keys.selectedTheme);
     _selectedTheme.value = t.isEmpty ? StaticProvider.getThemeList.first : t;
@@ -115,13 +120,11 @@ class AppController extends GetxController {
     _didThemeSelected.value = Box.getBool(key: Keys.didThemeSelected);
     _didDeviceInfoCreated.value = deviceInfo != null;
     _didDeviceRegistered.value = Box.getString(key: Keys.deviceId).isNotEmpty;
-    _didSignedIn.value =
-        Account.fromJson(Box.getString(key: Keys.account)).id.isNotEmpty;
+    _didSignedIn.value = Box.account != null && Box.account!.id.isNotEmpty;
     _didActivated.value = Box.getString(key: Keys.activationId).isNotEmpty;
-    _didSubscriptionResultReceived.value = AccountSubscription.fromJson(
-            Box.getString(key: Keys.subscriptionResult))
-        .id
-        .isNotEmpty;
+    _didSubscriptionResultReceived.value = Box.accountSubscription != null &&
+        Box.accountSubscription!.id.isNotEmpty;
+    update();
   }
 
   Future<void> performFactoryReset() async {
@@ -300,7 +303,11 @@ class AppController extends GetxController {
   }
 
   Future<void> onLanguageSelected(int index) async {
-    //TODO:
+    final selectedLang = languages[index];
+    await Box.setBool(key: Keys.didLanguageSelected, value: true);
+    await LocalizationService().changeLocale(selectedLang.languageCode);
+    _didLanguageSelected.value = true;
+    update();
   }
   //#endregion
 
@@ -319,7 +326,16 @@ class AppController extends GetxController {
   }
 
   Future<void> onTimezoneSelected(int index) async {
-    //TODO:
+    final selectedTimezone = timezones[index];
+    await Box.setString(
+      key: Keys.selectedTimezone,
+      value: selectedTimezone.toJson(),
+    );
+    await Box.setBool(key: Keys.didTimezoneSelected, value: true);
+    _didTimezoneSelected.value = true;
+    update();
+
+    //TODO: inform OS to selected timezone
   }
   //#endregion
 
@@ -393,6 +409,7 @@ class AppController extends GetxController {
     _deviceInfo.value?.id = deviceId;
     _didDeviceRegistered.value = true;
     update();
+    await Box.setBool(key: Keys.didRegisteredDevice, value: true);
     return GenericResponse(
       success: response.success,
       statusCode: response.statusCode,

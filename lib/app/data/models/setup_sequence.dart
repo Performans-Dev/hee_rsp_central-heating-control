@@ -9,18 +9,17 @@ import 'package:central_heating_control/app/presentation/screens/setup/sequences
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/signin.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/subscription.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/tech_support.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/terms.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/theme.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/timezone.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SetupSequence {
-  final int listOrder;
   final String title;
   final Widget className;
   final bool isCompleted;
   SetupSequence({
-    required this.listOrder,
     required this.title,
     required this.className,
     required this.isCompleted,
@@ -28,7 +27,6 @@ class SetupSequence {
 
   factory SetupSequence.language() {
     return SetupSequence(
-      listOrder: 1,
       title: 'Language'.tr,
       className: const SetupSequenceLanguageSection(),
       isCompleted: Box.getBool(key: Keys.didLanguageSelected),
@@ -37,7 +35,6 @@ class SetupSequence {
 
   factory SetupSequence.timezone() {
     return SetupSequence(
-      listOrder: 2,
       title: 'Timezone'.tr,
       className: const SetupSequenceTimezoneSection(),
       isCompleted: Box.getBool(key: Keys.didTimezoneSelected),
@@ -46,25 +43,30 @@ class SetupSequence {
 
   factory SetupSequence.dateFormat() {
     return SetupSequence(
-      listOrder: 3,
       title: 'Date Format'.tr,
       className: const SetupSequenceDateFormatSection(),
-      isCompleted: true,
+      isCompleted: Box.getBool(key: Keys.didDateFormatSelected),
     );
   }
 
   factory SetupSequence.theme() {
     return SetupSequence(
-      listOrder: 4,
       title: 'Theme'.tr,
       className: const SetupSequenceThemeSection(),
       isCompleted: Box.getBool(key: Keys.didThemeSelected),
     );
   }
 
+  factory SetupSequence.terms() {
+    return SetupSequence(
+      title: 'Terms of Use'.tr,
+      className: const SetupSequenceTermsOfUseSection(),
+      isCompleted: Box.getBool(key: Keys.didTermsAccepted),
+    );
+  }
+
   factory SetupSequence.registerDevice() {
     return SetupSequence(
-      listOrder: 5,
       title: 'Register Device'.tr,
       className: const SetupSequenceRegisterDeviceSection(),
       isCompleted: Box.getBool(key: Keys.didRegisteredDevice),
@@ -76,17 +78,9 @@ class SetupSequence {
     try {
       account = Account.fromJson(Box.getString(key: Keys.account));
     } on Exception catch (_) {
-      account = Account(
-        id: '',
-        createdAt: '',
-        email: '',
-        displayName: '',
-        status: 0,
-        token: '',
-      );
+      account = Account.empty();
     }
     return SetupSequence(
-      listOrder: 6,
       title: 'Sign In'.tr,
       className: const SetupSequenceSignInSection(),
       isCompleted: account.id.isNotEmpty,
@@ -95,7 +89,6 @@ class SetupSequence {
 
   factory SetupSequence.activation() {
     return SetupSequence(
-      listOrder: 7,
       title: 'Activation'.tr,
       className: const SetupSequenceActivationSection(),
       isCompleted: Box.getBool(key: Keys.didActivated),
@@ -104,7 +97,6 @@ class SetupSequence {
 
   factory SetupSequence.subscriptionResult() {
     return SetupSequence(
-      listOrder: 8,
       title: 'Subscription Result'.tr,
       className: const SetupSequenceSubscriptionResultSection(),
       isCompleted: Box.getBool(key: Keys.didSubscriptionResultReceived),
@@ -113,7 +105,6 @@ class SetupSequence {
 
   factory SetupSequence.techSupport() {
     return SetupSequence(
-      listOrder: 9,
       title: 'Tech Support'.tr,
       className: const SetupSequenceTechSupportSection(),
       isCompleted: Box.getBool(key: Keys.didTechSupportUserCreated),
@@ -122,7 +113,6 @@ class SetupSequence {
 
   factory SetupSequence.adminUser() {
     return SetupSequence(
-      listOrder: 10,
       title: 'Admin User'.tr,
       className: const SetupSequenceAdminUserSection(),
       isCompleted: Box.getBool(key: Keys.didAdminUserCreated),

@@ -50,7 +50,22 @@ class AccountSubscription {
     );
   }
 
+  factory AccountSubscription.empty() {
+    return AccountSubscription(
+      id: '',
+      name: '',
+      type: '',
+      expiresIn: '',
+      status: '',
+      createdAt: '',
+      accountId: '',
+      deviceId: '',
+      activationId: '',
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
-  factory AccountSubscription.fromJson(String source) => AccountSubscription.fromMap(json.decode(source));
+  factory AccountSubscription.fromJson(String source) =>
+      AccountSubscription.fromMap(json.decode(source));
 }

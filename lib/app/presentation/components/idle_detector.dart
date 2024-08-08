@@ -81,16 +81,11 @@ class _IdleDetectorState extends State<IdleDetector> {
                       child: AnimatedOpacity(
                         opacity: _isScreensaverActive ? 1.0 : 0.0,
                         duration: const Duration(seconds: 1),
-                        child: Stack(
+                        child: const Stack(
                           fit: StackFit.expand,
                           children: [
-                            Image.network(
-                              'https://c4.wallpaperflare.com/wallpaper/849/720/847/two-white-5-petaled-flowers-wallpaper-preview.jpg',
-                              fit: BoxFit.cover,
-                              width: Get.width,
-                              height: Get.height,
-                            ),
-                            const Center(
+                            Placeholder(),
+                            Center(
                               child: DateTextWidget(large: true),
                             ),
                           ],

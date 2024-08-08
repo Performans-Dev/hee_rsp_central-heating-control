@@ -51,7 +51,7 @@ final List<GetPage> getPages = [
     name: Routes.setup,
     page: () => const SetupScreen(),
     middlewares: [
-      ConnectionMiddleware(returnRoute: Routes.setup),
+      // ConnectionMiddleware(returnRoute: Routes.setup),
     ],
     transition: Transition.size,
   ),

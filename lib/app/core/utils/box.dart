@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/data/models/account.dart';
+import 'package:central_heating_control/app/data/models/account_subscription_type.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/wifi.dart';
 import 'package:central_heating_control/main.dart';
@@ -145,5 +147,31 @@ class Box {
 
   static DateTime get lastTouchTime =>
       DateTime.fromMicrosecondsSinceEpoch(getInt(key: Keys.lastTouchTime));
+  //#endregion
+
+  //#region Account
+  static Account? get account {
+    final String data = getString(key: Keys.account);
+    if (data.isNotEmpty) {
+      try {
+        return Account.fromJson(json.decode(data));
+      } on Exception catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  static AccountSubscription? get accountSubscription {
+    final String data = getString(key: Keys.subscriptionResult);
+    if (data.isNotEmpty) {
+      try {
+        return AccountSubscription.fromJson(data);
+      } on Exception catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
   //#endregion
 }
