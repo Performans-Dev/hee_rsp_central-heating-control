@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/data/services/screen_saver.dart';
+import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:get/get.dart';
 
 class AppBindings extends Bindings {
@@ -11,6 +12,10 @@ class AppBindings extends Bindings {
   Future<void> dependencies() async {
     await Get.putAsync(
       () async => ScreenSaverController(),
+      permanent: true,
+    );
+    await Get.putAsync(
+      () async => SetupController(),
       permanent: true,
     );
     await Get.putAsync(

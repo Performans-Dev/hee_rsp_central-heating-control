@@ -3,7 +3,6 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,7 +31,7 @@ class SettingsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 onTap: () {
-                  NavController.toZoneDeviceSensorManagement();
+                  //TODO: NavController.toZoneDeviceSensorManagement();
                 },
               ),
               const SizedBox(height: 8),

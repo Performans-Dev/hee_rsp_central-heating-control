@@ -1,64 +1,41 @@
-import 'dart:convert';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 
 class AppUser {
   int id;
-  
+
   String username;
   String pin;
-  bool isAdmin;
+  AppUserLevel level;
   AppUser({
     required this.id,
     required this.username,
     required this.pin,
-    required this.isAdmin,
+    required this.level,
   });
 
   Map<String, dynamic> toMap() {
+    if (id > 0) {
       return {
         'id': id,
         'username': username,
         'pin': pin,
-        'isAdmin': isAdmin,
+        'level': level.value,
       };
-  }
-
-  Map<String, dynamic> toSQL() {
-    if (id>0) {
-    return {
-      'id': id,
-      'username': username,
-      'pin': pin,
-      'isAdmin': isAdmin ? 1 : 0,
-    };
-    }else{
-       return {
-      'username': username,
-      'pin': pin,
-      'isAdmin': isAdmin ? 1 : 0,
-    };
+    } else {
+      return {
+        'username': username,
+        'pin': pin,
+        'level': level.value,
+      };
     }
   }
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
-      id: map['id'] ?? -1,
+      id: map['id']?.toInt() ?? 0,
       username: map['username'] ?? '',
       pin: map['pin'] ?? '',
-      isAdmin: map['isAdmin'] ?? false,
+      level: AppUserLevel.values[map['level']?.toInt() ?? 0],
     );
   }
-
-  factory AppUser.fromSQL(Map<String, dynamic> map) {
-    return AppUser(
-      id: map['id'] ?? 0,
-      username: map['username'] ?? '',
-      pin: map['pin'] ?? '',
-      isAdmin: map['isAdmin'] == 1,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory AppUser.fromJson(String source) =>
-      AppUser.fromMap(json.decode(source));
 }

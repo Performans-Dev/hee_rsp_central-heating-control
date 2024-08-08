@@ -24,58 +24,44 @@ class ZoneItemWidget extends StatelessWidget {
               pc.zoneProcessList.firstWhere((e) => e.zone.id == id);
           final List<HeaterProcess> heaters =
               pc.heaterProcessList.where((e) => e.heater.zoneId == id).toList();
-          return Opacity(
-            opacity: (app.appUser?.isAdmin ?? false) ||
-                    zone.zone.users
-                        .map((e) => e.username)
-                        .contains(app.appUser?.username)
-                ? 1
-                : 0.7,
-            child: Card(
-              margin: const EdgeInsets.all(10),
-              shape: RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
-              child: ClipRRect(
+          return Card(
+            margin: const EdgeInsets.all(10),
+            shape: RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
+            child: ClipRRect(
+              borderRadius: UiDimens.formRadius,
+              child: InkWell(
                 borderRadius: UiDimens.formRadius,
-                child: InkWell(
-                  borderRadius: UiDimens.formRadius,
-                  onTap: (app.appUser?.isAdmin ?? false) ||
-                          zone.zone.users
-                              .map((e) => e.username)
-                              .contains(app.appUser?.username)
-                      ? () {
-                          Get.toNamed(Routes.zone, arguments: [id]);
-                        }
-                      : null,
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: CommonUtils.hexToColor(context, zone.zone.color)
-                          .withOpacity(0.3),
-                    ),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        ZoneCardTitleWidget(
-                          title: zone.zone.name,
-                          subtitle:
-                              '${heaters.length} Heater(s) ${(zone.hasSensor) ? ' with Sensor' : ''}',
-                        ),
-                        if (!heaters.every((e) => e.inputSignal))
-                          const ZoneCardWarningDisplayWidget(),
-                        ZoneCardModeDisplayWidget(
-                          desiredState: zone.selectedState,
-                          currentState: 0,
-                          currentTemperature: zone.currentTemperature,
-                          desiredTemperature: zone.hasThermostat
-                              ? zone.desiredTemperature
-                              : null,
-                          planName: dc.planList
-                              .firstWhereOrNull(
-                                  (e) => e.id == zone.zone.selectedPlan)
-                              ?.name,
-                        ),
-                      ],
-                    ),
+                onTap: () {
+                  Get.toNamed(Routes.zone, arguments: [id]);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: CommonUtils.hexToColor(context, zone.zone.color)
+                        .withOpacity(0.3),
+                  ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ZoneCardTitleWidget(
+                        title: zone.zone.name,
+                        subtitle:
+                            '${heaters.length} Heater(s) ${(zone.hasSensor) ? ' with Sensor' : ''}',
+                      ),
+                      if (!heaters.every((e) => e.inputSignal))
+                        const ZoneCardWarningDisplayWidget(),
+                      ZoneCardModeDisplayWidget(
+                        desiredState: zone.selectedState,
+                        currentState: 0,
+                        currentTemperature: zone.currentTemperature,
+                        desiredTemperature:
+                            zone.hasThermostat ? zone.desiredTemperature : null,
+                        planName: dc.planList
+                            .firstWhereOrNull(
+                                (e) => e.id == zone.zone.selectedPlan)
+                            ?.name,
+                      ),
+                    ],
                   ),
                 ),
               ),

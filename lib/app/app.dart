@@ -38,16 +38,16 @@ class MainApp extends StatelessWidget {
             ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
         return IdleDetector(
           excludedRoutes: const [
-            Routes.setupConnection,
-            Routes.setupDateFormat,
-            Routes.setupLanguage,
-            Routes.setupTimezone,
-            Routes.setupTheme,
-            Routes.activation,
-            Routes.signin,
+            // Routes.setupConnection,
+            // Routes.setupDateFormat,
+            // Routes.setupLanguage,
+            // Routes.setupTimezone,
+            // Routes.setupTheme,
+            // Routes.activation,
+            // Routes.signin,
             Routes.developer,
             Routes.screenSaver,
-            Routes.setupAdminUser,
+            // Routes.setupAdminUser,
           ],
           child: GetMaterialApp(
             scrollBehavior: PiScrollBehavior(),
@@ -83,11 +83,9 @@ class MainApp extends StatelessWidget {
 
     // apply theme from disk
     final AppController appController = Get.find();
-    bool isDarkModeOnDisk = Box.getBool(key: Keys.isDarkMode);
-    bool isDarkModeOnApp = appController.isDarkMode;
-    if (isDarkModeOnApp != isDarkModeOnDisk) {
-      appController.toggleDarkMode();
-    }
+    ThemeMode themeModeOnDisk =
+        ThemeMode.values[Box.getInt(key: Keys.themeMode)];
+    await appController.setThemeMode(themeModeOnDisk);
   }
 }
 

@@ -1,13 +1,11 @@
 import 'dart:developer';
+
 import 'package:central_heating_control/app/core/constants/keys.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -150,7 +148,7 @@ class DbProvider {
     try {
       return await db.insert(
         Keys.tableUsers,
-        user.toSQL(),
+        user.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } on Exception catch (err) {
@@ -190,7 +188,7 @@ class DbProvider {
     try {
       return await db.update(
         Keys.tableUsers,
-        user.toSQL(),
+        user.toMap(),
         where: Keys.queryId,
         whereArgs: [user.id],
       );
@@ -210,7 +208,7 @@ class DbProvider {
       final result = await db.query(Keys.tableUsers);
       if (result.isNotEmpty) {
         for (final item in result) {
-          users.add(AppUser.fromSQL(item));
+          users.add(AppUser.fromMap(item));
         }
       }
     } on Exception catch (err) {
@@ -234,7 +232,7 @@ class DbProvider {
       );
       if (result.isNotEmpty) {
         for (final item in result) {
-          users.add(AppUser.fromSQL(item));
+          users.add(AppUser.fromMap(item));
         }
       }
     } on Exception catch (err) {
@@ -258,7 +256,7 @@ class DbProvider {
       );
       if (result.isNotEmpty) {
         for (final item in result) {
-          users.add(AppUser.fromSQL(item));
+          users.add(AppUser.fromMap(item));
         }
       }
     } on Exception catch (err) {
@@ -283,7 +281,7 @@ class DbProvider {
         whereArgs: [username, pin],
       );
       if (result.isNotEmpty) {
-        return AppUser.fromSQL(result.first);
+        return AppUser.fromMap(result.first);
       }
       return null;
     } on Exception catch (err) {
@@ -649,7 +647,7 @@ class DbProvider {
 
       if (result.isNotEmpty) {
         for (final map in result) {
-          zoneUsers.add(AppUser.fromSQL(map));
+          zoneUsers.add(AppUser.fromMap(map));
         }
       }
       return zoneUsers;
@@ -825,7 +823,7 @@ class DbProvider {
       if (itemsToDelete.isNotEmpty) {
         await removePlanDetails(planDetails: itemsToDelete);
       } else {
-        print('Plan details are empty.');
+        log('Plan details are empty.');
       }
       final int result = await db.delete(
         Keys.tablePlans,
@@ -947,7 +945,7 @@ class DbProvider {
         whereArgs: [username],
       );
       return result;
-    } on Exception catch (err) {
+    } on Exception catch (_) {
       return -2;
     }
   }

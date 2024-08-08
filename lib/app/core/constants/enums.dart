@@ -115,7 +115,7 @@ enum BuzzerType {
   alarm,
 }
 
-enum SubscriptionResult {
+enum SubscriptionType {
   none,
   free,
   pro,
@@ -128,4 +128,15 @@ enum SetupConnectionState {
   wifiForm,
   connected,
   notConnected,
+}
+
+enum AppUserLevel {
+  user(0),
+  admin(1),
+  techSupport(2),
+  manufacturer(3),
+  developer(4);
+
+  final int value;
+  const AppUserLevel(this.value);
 }

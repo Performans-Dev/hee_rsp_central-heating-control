@@ -1,18 +1,29 @@
 import 'package:central_heating_control/app/core/constants/api.dart';
-import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/activation_result.dart';
+import 'package:central_heating_control/app/data/models/app_settings.dart';
 import 'package:central_heating_control/app/data/models/chc_device.dart';
+import 'package:central_heating_control/app/data/models/forgot_password_request.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/language_definition.dart';
+import 'package:central_heating_control/app/data/models/register_request.dart';
 import 'package:central_heating_control/app/data/models/signin_request.dart';
+import 'package:central_heating_control/app/data/models/subscription_result.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/base.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'package:flutter_guid/flutter_guid.dart';
 
 class AppProvider {
-  fetchAppSettings() {}
+  static Future<GenericResponse<AppSettings?>> fetchAppSettings() async {
+    final response = await BaseNetworkProvider.get(Api.appSettings);
+    if (response.success) {
+      final a = AppSettings.fromMap(response.data);
+      return GenericResponse.success(a);
+    }
+    return GenericResponse.error();
+  }
 
   fetchHardwareSettings() {}
 
@@ -29,10 +40,26 @@ class AppProvider {
     return GenericResponse.error();
   }
 
-  static Future<GenericResponse<SubscriptionResult>> checkSubscription() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return GenericResponse.success(SubscriptionResult.free);
+  static Future<GenericResponse<SubscriptionResult>> requestSubscription({
+    required String activationId,
+  }) async {
     //TODO:
+    final response = await BaseNetworkProvider.post(
+      Api.requestSubscription,
+      data: {
+        'activationId': activationId,
+      },
+    );
+    if (response.success) {
+      return GenericResponse.success(
+        SubscriptionResult(
+          expiresOn: response.data['expiresOn'],
+          subscriptionId: Guid.newGuid.toString(),
+          type: response.data['type'],
+        ),
+      );
+    }
+    return GenericResponse.error();
   }
 
   static Future<GenericResponse<ActivationResult?>> checkActivation(
@@ -61,7 +88,7 @@ class AppProvider {
     return GenericResponse.error();
   }
 
-  static Future<GenericResponse<Account?>> userSignin(
+  static Future<GenericResponse<Account?>> accountSignin(
       {required SigninRequest request}) async {
     final response = await BaseNetworkProvider.post(
       Api.signin,
@@ -74,9 +101,19 @@ class AppProvider {
     return GenericResponse.error();
   }
 
-  userForgetPassword() {}
+  static Future<GenericResponse> accountForgotPassword(
+      {required ForgotPasswordRequest request}) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return GenericResponse(
+      message: 'Check your email to continue your password reset request.',
+    );
+  }
 
-  userCreateAccount() {}
+  static Future<GenericResponse> accountRegister(
+      {required RegisterRequest request}) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return GenericResponse.error(message: 'Not implemented yet');
+  }
 
   userValidateAccount() {}
 
@@ -88,7 +125,7 @@ class AppProvider {
       fetchTimezoneList() async {
     final timezones = <TimezoneDefinition>[];
     final response = await BaseNetworkProvider.get(Api.settingsTimezones);
-    final json = response.data ?? StaticProvider.timezones;
+    final json = response.data ?? StaticProvider.getTimezoneList;
     for (final map in json) {
       timezones.add(TimezoneDefinition.fromMap(map));
     }
@@ -98,7 +135,7 @@ class AppProvider {
   static Future<GenericResponse<List<LanguageDefinition>>>
       fetchLanguageList() async {
     final langs = <LanguageDefinition>[];
-    const fallBackLangs = StaticProvider.languages;
+    const fallBackLangs = StaticProvider.getLanguageList;
     final response = await BaseNetworkProvider.get(Api.settingsLanguages);
     final json = response.data ?? fallBackLangs;
     for (final map in json) {

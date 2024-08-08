@@ -33,13 +33,13 @@ class NavController {
     );
   }
 
-  static void toZoneDeviceSensorManagement() async {
-    Buzz.feedback();
-    Future.delayed(
-      Duration.zero,
-      () => Get.toNamed(Routes.settingstZoneDeviceSensorManagement),
-    );
-  }
+  // static void toZoneDeviceSensorManagement() async {
+  //   Buzz.feedback();
+  //   Future.delayed(
+  //     Duration.zero,
+  //     () => Get.toNamed(Routes.settingstZoneDeviceSensorManagement),
+  //   );
+  // }
 
   static void toSettingsUserList() async {
     Buzz.feedback();

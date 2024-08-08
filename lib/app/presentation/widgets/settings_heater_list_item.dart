@@ -33,7 +33,7 @@ class SettingsHeaterListItemWidget extends StatelessWidget {
           onTap: () {
             Buzz.feedback();
             Get.toNamed(
-              Routes.settingsHeaterEdit,
+              Routes.settingsDeviceEdit,
               parameters: {
                 'id': heater.id.toString(),
               },
