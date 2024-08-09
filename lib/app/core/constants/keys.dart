@@ -15,6 +15,7 @@ class Keys {
   static const String didDateFormatSelected = 'didDateFormatSelected';
   static const String didThemeSelected = 'didPickedTheme';
   static const String didTermsAccepted = 'didTermsAccepted';
+  static const String didPrivacyAccepted = 'didPrivacyAccepted';
   static const String didActivated = 'didActivated';
   static const String didRegisteredDevice = 'didRegisteredDevice';
   static const String didSignedIn = 'didSignedIn';

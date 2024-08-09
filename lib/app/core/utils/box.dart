@@ -154,7 +154,7 @@ class Box {
     final String data = getString(key: Keys.account);
     if (data.isNotEmpty) {
       try {
-        return Account.fromJson(json.decode(data));
+        return Account.fromJson(data);
       } on Exception catch (_) {
         return null;
       }

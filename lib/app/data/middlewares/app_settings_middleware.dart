@@ -3,9 +3,9 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class InitializeAppMiddleware extends GetMiddleware {
+class AppSettingsMiddleware extends GetMiddleware {
   @override
-  int? get priority => 30;
+  int? get priority => 1;
 
   @override
   RouteSettings? redirect(String? route) {
@@ -13,14 +13,6 @@ class InitializeAppMiddleware extends GetMiddleware {
 
     if (appController.appSettings == null) {
       return const RouteSettings(name: Routes.splashAppSettings);
-    }
-
-    if (appController.deviceInfo == null) {
-      return const RouteSettings(name: Routes.splashDeviceInfo);
-    }
-
-    if (appController.appUserList.isEmpty) {
-      return const RouteSettings(name: Routes.splashAppUserList);
     }
 
     return null;

@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/data/middlewares/admin_logged_in_middleware.dart';
+import 'package:central_heating_control/app/data/middlewares/app_settings_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/connection_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/pin_reset_account_signed_in_middleware.dart';
@@ -6,6 +7,7 @@ import 'package:central_heating_control/app/data/middlewares/setup_completed_mid
 import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/presentation/screens/__temp/_screen_saver.dart';
 import 'package:central_heating_control/app/presentation/screens/connection/connection_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
@@ -13,7 +15,6 @@ import 'package:central_heating_control/app/presentation/screens/mode/mode_scree
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/pin_reset_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/signin_for_pin_reset_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_screen_saver.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_list_screen.dart';
@@ -40,21 +41,86 @@ import 'package:central_heating_control/app/presentation/screens/settings/prefer
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/users/users_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/users/users_list_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/activation.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/admin.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/date_time.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/device_register.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/language.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/privacy.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/signin.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/subscription.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/tech_support.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/terms.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/theme.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/timezone.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/splash/splash_app_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_user_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_device_info_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
 final List<GetPage> getPages = [
+  //#region MARK: SETUP
   GetPage(
     name: Routes.setup,
     page: () => const SetupScreen(),
     middlewares: [
+      AppSettingsMiddleware(),
       // ConnectionMiddleware(returnRoute: Routes.setup),
     ],
     transition: Transition.size,
   ),
+  GetPage(
+    name: Routes.setupLanguage,
+    page: () => const SetupSequenceLanguageScreen(),
+  ),
+  GetPage(
+    name: Routes.setupTimezone,
+    page: () => const SetupSequenceTimezoneScreen(),
+  ),
+  GetPage(
+    name: Routes.setupDateTime,
+    page: () => const SetupSequenceDateTimeScreen(),
+  ),
+  GetPage(
+    name: Routes.setupTheme,
+    page: () => const SetupSequenceThemeScreen(),
+  ),
+  GetPage(
+    name: Routes.setupTerms,
+    page: () => const SetupSequenceTermsOfUseScreen(),
+  ),
+  GetPage(
+    name: Routes.setupPrivacy,
+    page: () => const SetupSequencePrivacyPolicyScreen(),
+  ),
+  GetPage(
+    name: Routes.setupRegisterDevice,
+    page: () => const SetupSequenceRegisterDeviceScreen(),
+  ),
+  GetPage(
+    name: Routes.setupSignin,
+    page: () => const SetupSequenceSignInScreen(),
+  ),
+  GetPage(
+    name: Routes.setupActivation,
+    page: () => const SetupSequenceActivationScreen(),
+  ),
+  GetPage(
+    name: Routes.setupSubscriptionResult,
+    page: () => const SetupSequenceSubscriptionResultScreen(),
+  ),
+  GetPage(
+    name: Routes.setupTechSupport,
+    page: () => const SetupSequenceTechSupportScreen(),
+  ),
+  GetPage(
+    name: Routes.setupAdminUser,
+    page: () => const SetupSequenceAdminUserScreen(),
+  ),
+
+  //#endregion
   GetPage(
     name: Routes.connection,
     page: () => const ConnectionScreen(),
@@ -302,6 +368,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.splashAppUserList,
     page: () => const SplashAppUserListScreen(),
+  ),
+  GetPage(
+    name: Routes.splashAppSettings,
+    page: () => const SplashAppSettingsScreen(),
   ),
 
   ////////////////////////////////////////////////////////////////////////////////////////////////

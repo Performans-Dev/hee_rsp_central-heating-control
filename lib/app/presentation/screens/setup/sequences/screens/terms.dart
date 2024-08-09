@@ -1,22 +1,24 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 
-class SetupSequenceTermsOfUseSection extends StatefulWidget {
-  const SetupSequenceTermsOfUseSection({super.key});
+class SetupSequenceTermsOfUseScreen extends StatefulWidget {
+  const SetupSequenceTermsOfUseScreen({super.key});
 
   @override
-  State<SetupSequenceTermsOfUseSection> createState() =>
-      _SetupSequenceTermsOfUseSectionState();
+  State<SetupSequenceTermsOfUseScreen> createState() =>
+      _SetupSequenceTermsOfUseScreenState();
 }
 
-class _SetupSequenceTermsOfUseSectionState
-    extends State<SetupSequenceTermsOfUseSection> {
+class _SetupSequenceTermsOfUseScreenState
+    extends State<SetupSequenceTermsOfUseScreen> {
   bool isChecked = false;
 
   @override
@@ -25,9 +27,11 @@ class _SetupSequenceTermsOfUseSectionState
       builder: (sc) {
         return GetBuilder<AppController>(
           builder: (app) {
-            return SetupScaffold(
-              progressValue: sc.progress,
-              label: 'Terms of Use'.tr,
+            String languageCode =
+                Box.getString(key: Keys.localeLang, defaultVal: 'en');
+            final data = app.appSettings?.termsOfUse[languageCode] ?? '';
+            return SetupLayout(
+              title: 'Terms of Use'.tr,
               nextCallback: isChecked
                   ? () async {
                       await Box.setBool(
@@ -36,14 +40,13 @@ class _SetupSequenceTermsOfUseSectionState
                       NavController.toHome();
                     }
                   : null,
-              expandChild: true,
+              isExpanded: true,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text('Terms of Use'.tr),
                   Expanded(
-                    child: Center(child: Text('Terms Content'.tr)),
+                    child: Markdown(data: data),
                   ),
                   CheckboxListTile(
                     value: isChecked,
@@ -52,6 +55,9 @@ class _SetupSequenceTermsOfUseSectionState
                         isChecked = value ?? false;
                       });
                     },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: UiDimens.formRadius,
+                    ),
                     controlAffinity: ListTileControlAffinity.leading,
                     title: Text('I agree to the terms of use'.tr),
                   ),

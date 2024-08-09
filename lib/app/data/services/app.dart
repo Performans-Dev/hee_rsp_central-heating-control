@@ -471,27 +471,38 @@ class AppController extends GetxController {
     return response;
   }
 
-  Future<GenericResponse<ActivationResult?>> activate({
+  Future<GenericResponse<ActivationResult?>> performActivation({
     required String deviceId,
     required String accountId,
   }) async {
-    final response = await AppProvider.activateDevice(
-      request: ActivationRequest(
-        userId: accountId,
-        chcDeviceId: deviceId,
-      ),
-    );
+    // final response = await AppProvider.activateDevice(
+    //   request: ActivationRequest(
+    //     userId: accountId,
+    //     chcDeviceId: deviceId,
+    //   ),
+    // );
+    await Future.delayed(Duration(seconds: 3));
 
-    if (response.success && response.data != null) {
-      ActivationResult activationResult = response.data!;
-      await Box.setString(
-          key: Keys.activationResult, value: activationResult.toJson());
-      _didActivated.value = true;
-    } else {
-      _didActivated.value = false;
-    }
+    // if (response.success && response.data != null) {
+    // ActivationResult activationResult = response.data!;
+    ActivationResult activationResult = ActivationResult(
+      id: Guid.newGuid.toString(),
+      createdAt: DateTime.now().toIso8601String(),
+      chcDeviceId: deviceId,
+      userId: accountId,
+      status: 1,
+      activationTime: DateTime.now().toIso8601String(),
+    );
+    await Box.setString(
+        key: Keys.activationResult, value: activationResult.toJson());
+    await Box.setBool(key: Keys.didActivated, value: true);
+    _didActivated.value = true;
+    // } else {
+    //   await Box.setBool(key: Keys.didActivated, value: false);
+    //   _didActivated.value = false;
+    // }
     update();
-    return response;
+    return GenericResponse.success(activationResult);
   }
 
   Future<GenericResponse<SubscriptionResult?>> requestSubscription({
@@ -516,5 +527,10 @@ class AppController extends GetxController {
   //#region MARK: Pin Reset
   final Rxn<Account> _pinResetAccount = Rxn();
   Account? get pinResetAccount => _pinResetAccount.value;
+  //#endregion
+
+  //#region MARK: Terms-Privacy
+  
+  
   //#endregion
 }

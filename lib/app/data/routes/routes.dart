@@ -2,6 +2,19 @@ class Routes {
   static const String developer = '/dev';
 
   static const String setup = '/setup';
+  static const String setupLanguage = '/setup-language';
+  static const String setupTimezone = '/setup-timezone';
+  static const String setupDateTime = '/setup-date-time';
+  static const String setupTheme = '/setup-theme';
+  static const String setupTerms = '/setup-terms';
+  static const String setupPrivacy = '/setup-privacy';
+  static const String setupRegisterDevice = '/setup-register-device';
+  static const String setupSignin = '/setup-signin';
+  static const String setupActivation = '/setup-activation';
+  static const String setupSubscriptionResult = '/setup-subscription-result';
+  static const String setupTechSupport = '/setup-tech-support';
+  static const String setupAdminUser = '/setup-admin-user';
+
   static const String connection = '/connection';
 
   static const String home = '/home';
@@ -53,6 +66,7 @@ class Routes {
 
   static const String splashDeviceInfo = '/reading-device-info';
   static const String splashAppUserList = '/checking-app-user-list';
+  static const String splashAppSettings = '/loading-app-settings';
 
   // static const String splash = '/initializing';
   // static const String splashFetchSettings = '/fetch-settings';

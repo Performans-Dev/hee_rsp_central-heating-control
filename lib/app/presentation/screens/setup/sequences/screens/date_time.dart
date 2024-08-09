@@ -7,21 +7,22 @@ import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/string.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_layout.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SetupSequenceDateFormatSection extends StatefulWidget {
-  const SetupSequenceDateFormatSection({super.key});
+class SetupSequenceDateTimeScreen extends StatefulWidget {
+  const SetupSequenceDateTimeScreen({super.key});
 
   @override
-  State<SetupSequenceDateFormatSection> createState() =>
-      _SetupSequenceDateFormatSectionState();
+  State<SetupSequenceDateTimeScreen> createState() =>
+      _SetupSequenceDateTimeScreenState();
 }
 
-class _SetupSequenceDateFormatSectionState
-    extends State<SetupSequenceDateFormatSection> {
+class _SetupSequenceDateTimeScreenState
+    extends State<SetupSequenceDateTimeScreen> {
   final AppController appController = Get.find();
   late String _selectedDateFormat;
   late String _selectedTimeFormat;
@@ -45,9 +46,8 @@ class _SetupSequenceDateFormatSectionState
       builder: (sc) {
         return GetBuilder<AppController>(
           builder: (app) {
-            return SetupScaffold(
-              progressValue: sc.progress,
-              label: 'Date Format'.tr,
+            return SetupLayout(
+              title: 'Date/Time'.tr,
               nextCallback: () async {
                 Buzz.feedback();
                 //save dateformat

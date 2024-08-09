@@ -3,22 +3,22 @@ import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_layout.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SetupSequenceSignInSection extends StatefulWidget {
-  const SetupSequenceSignInSection({super.key});
+class SetupSequenceSignInScreen extends StatefulWidget {
+  const SetupSequenceSignInScreen({super.key});
 
   @override
-  State<SetupSequenceSignInSection> createState() =>
-      _SetupSequenceSignInSectionState();
+  State<SetupSequenceSignInScreen> createState() =>
+      _SetupSequenceSignInScreenState();
 }
 
-class _SetupSequenceSignInSectionState
-    extends State<SetupSequenceSignInSection> {
+class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
   late final TextEditingController usernameController;
   late final TextEditingController passwordController;
   bool busy = false;
@@ -43,9 +43,8 @@ class _SetupSequenceSignInSectionState
       builder: (sc) {
         return GetBuilder<AppController>(
           builder: (app) {
-            return SetupScaffold(
-              progressValue: sc.progress,
-              label: 'Date Format'.tr,
+            return SetupLayout(
+              title: 'Sign in'.tr,
               nextLabel: busy ? 'Signing in'.tr : 'Sign in'.tr,
               nextCallback: busy
                   ? null
@@ -93,12 +92,12 @@ class _SetupSequenceSignInSectionState
                           TextInputWidget(
                             controller: usernameController,
                             labelText: "Email",
-                            radius: 0,
                           ),
                           TextInputWidget(
                             controller: passwordController,
                             labelText: "Password",
-                            radius: 0,
+                            obscureText: true,
+                            obscuringCharacter: '*',
                           ),
                           const SizedBox(height: 12),
                           Row(

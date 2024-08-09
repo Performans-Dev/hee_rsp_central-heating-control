@@ -37,6 +37,7 @@ dependencies:
   google_fonts: ^6.2.1
   process_run: ^1.0.0+1
   flutter_smart_dialog: ^4.9.7+9
+  flutter_markdown: ^0.7.3+1
 
 dev_dependencies:
   flutter_test:

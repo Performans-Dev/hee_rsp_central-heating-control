@@ -32,31 +32,33 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      final theme = MaterialTheme(
-          ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
-      return GetMaterialApp(
-        scrollBehavior: PiScrollBehavior(),
-        debugShowCheckedModeBanner: false,
-        title: UiStrings.appName,
-        theme: theme.light(),
-        darkTheme: theme.dark(),
-        highContrastTheme: theme.lightHighContrast(),
-        highContrastDarkTheme: theme.darkHighContrast(),
-        themeMode: Box.getBool(key: Keys.isDarkMode)
-            ? ThemeMode.dark
-            : ThemeMode.light,
-        defaultTransition: Transition.circularReveal,
-        getPages: getPages,
-        initialRoute: Routes.home,
-        initialBinding: AppBindings(),
-        locale: LocalizationService.locale,
-        fallbackLocale: LocalizationService.fallbackLocale,
-        translationsKeys: LocalizationService.keys,
-        onReady: onReady,
-        builder: FlutterSmartDialog.init(),
-      );
-    });
+    return RestartWidget(
+      child: Builder(builder: (context) {
+        final theme = MaterialTheme(
+            ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
+        return GetMaterialApp(
+          scrollBehavior: PiScrollBehavior(),
+          debugShowCheckedModeBanner: false,
+          title: UiStrings.appName,
+          theme: theme.light(),
+          darkTheme: theme.dark(),
+          highContrastTheme: theme.lightHighContrast(),
+          highContrastDarkTheme: theme.darkHighContrast(),
+          themeMode: Box.getBool(key: Keys.isDarkMode)
+              ? ThemeMode.dark
+              : ThemeMode.light,
+          defaultTransition: Transition.circularReveal,
+          getPages: getPages,
+          initialRoute: Routes.home,
+          initialBinding: AppBindings(),
+          locale: LocalizationService.locale,
+          fallbackLocale: LocalizationService.fallbackLocale,
+          translationsKeys: LocalizationService.keys,
+          onReady: onReady,
+          builder: FlutterSmartDialog.init(),
+        );
+      }),
+    );
     /* return RestartWidget(
       child: Builder(builder: (context) {
         final theme = MaterialTheme(

@@ -8,19 +8,20 @@ import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_layout.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SetupSequenceThemeSection extends StatefulWidget {
-  const SetupSequenceThemeSection({super.key});
+class SetupSequenceThemeScreen extends StatefulWidget {
+  const SetupSequenceThemeScreen({super.key});
 
   @override
-  State<SetupSequenceThemeSection> createState() =>
-      _SetupSequenceThemeSectionState();
+  State<SetupSequenceThemeScreen> createState() =>
+      _SetupSequenceThemeScreenState();
 }
 
-class _SetupSequenceThemeSectionState extends State<SetupSequenceThemeSection> {
+class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -28,9 +29,8 @@ class _SetupSequenceThemeSectionState extends State<SetupSequenceThemeSection> {
       builder: (sc) {
         return GetBuilder<AppController>(
           builder: (app) {
-            return SetupScaffold(
-              progressValue: sc.progress,
-              label: 'Select Theme',
+            return SetupLayout(
+              title: 'Select Theme',
               nextCallback: () async {
                 Buzz.feedback();
                 await Box.setBool(key: Keys.didThemeSelected, value: true);
@@ -127,8 +127,12 @@ class _SetupSequenceThemeSectionState extends State<SetupSequenceThemeSection> {
                         .toList(),
                     onPressed: (index) async {
                       await app.setThemeMode(ThemeMode.values[index]);
+                      if (context.mounted) {
+                        RestartWidget.restartApp(context);
+                      }
                     },
                     borderRadius: UiDimens.formRadius,
+                    constraints: BoxConstraints(minWidth: 120, minHeight: 40),
                     children: ThemeMode.values
                         .map((e) => Text(
                               e.name.camelCaseToHumanReadable().tr,

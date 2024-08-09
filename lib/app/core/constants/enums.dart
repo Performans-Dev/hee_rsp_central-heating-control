@@ -140,3 +140,10 @@ enum AppUserLevel {
   final int value;
   const AppUserLevel(this.value);
 }
+
+enum WebViewScreenState {
+  idle,
+  loading,
+  loaded,
+  error,
+}

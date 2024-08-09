@@ -3,28 +3,28 @@ import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_setup/setup_scaffold.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SetupSequenceLanguageSection extends StatefulWidget {
-  const SetupSequenceLanguageSection({super.key});
+class SetupSequenceLanguageScreen extends StatefulWidget {
+  const SetupSequenceLanguageScreen({super.key});
 
   @override
-  State<SetupSequenceLanguageSection> createState() =>
-      _SetupSequenceLanguageSectionState();
+  State<SetupSequenceLanguageScreen> createState() =>
+      _SetupSequenceLanguageScreenState();
 }
 
-class _SetupSequenceLanguageSectionState
-    extends State<SetupSequenceLanguageSection> {
+class _SetupSequenceLanguageScreenState
+    extends State<SetupSequenceLanguageScreen> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SetupController>(builder: (sc) {
       return GetBuilder<AppController>(builder: (app) {
-        return SetupScaffold(
-          progressValue: sc.progress,
-          label: 'Language'.tr,
+        return SetupLayout(
+          title: 'Language'.tr,
+          subtitle: 'Choose your language'.tr,
           nextCallback: () async {
             Buzz.feedback();
             await app.onLanguageSelected(selectedIndex);
@@ -34,8 +34,6 @@ class _SetupSequenceLanguageSectionState
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Choose your language'.tr),
-              Divider(),
               for (int i = 0; i < app.languages.length; i++)
                 ListTile(
                   shape: RoundedRectangleBorder(

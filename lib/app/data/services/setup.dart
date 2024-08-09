@@ -17,14 +17,15 @@ class SetupController extends GetxController {
       SetupSequence.language(),
       SetupSequence.timezone(),
       SetupSequence.dateFormat(),
-      SetupSequence.theme(),
       SetupSequence.terms(),
-      SetupSequence.signIn(),
+      SetupSequence.privacy(),
       SetupSequence.registerDevice(),
+      SetupSequence.signIn(),
       SetupSequence.activation(),
       SetupSequence.subscriptionResult(),
       SetupSequence.techSupport(),
       SetupSequence.adminUser(),
+      SetupSequence.theme(),
     ]);
     update();
   }

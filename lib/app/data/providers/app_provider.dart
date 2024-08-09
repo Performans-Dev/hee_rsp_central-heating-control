@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/api.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/activation_result.dart';
@@ -14,6 +15,7 @@ import 'package:central_heating_control/app/data/models/timezone_definition.dart
 import 'package:central_heating_control/app/data/providers/base.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:flutter_guid/flutter_guid.dart';
+import 'package:get/get.dart';
 
 class AppProvider {
   static Future<GenericResponse<AppSettings?>> fetchAppSettings() async {
@@ -55,7 +57,9 @@ class AppProvider {
         SubscriptionResult(
           expiresOn: response.data['expiresOn'],
           subscriptionId: Guid.newGuid.toString(),
-          type: response.data['type'],
+          type: SubscriptionType.values
+                  .firstWhereOrNull((e) => e.name == response.data['type']) ??
+              SubscriptionType.none,
         ),
       );
     }
@@ -147,4 +151,5 @@ class AppProvider {
   //fetchDateLocaleList() {}
 
   checkUpdates() {}
+
 }
