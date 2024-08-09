@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,22 @@ class SettingsZoneListScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'List of Zones'.tr,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      NavController.toSettingsZoneAdd();
+                    },
+                    label: const Text("Add New Zone"),
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+              ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -52,7 +69,7 @@ class SettingsZoneListScreen extends StatelessWidget {
                 ),
                 itemCount: dc.zoneList.length,
               ),
-              addZoneButton,
+              // addZoneButton,
             ],
           ),
         ),
@@ -65,8 +82,7 @@ class SettingsZoneListScreen extends StatelessWidget {
         alignment: Alignment.bottomRight,
         child: ElevatedButton(
           onPressed: () {
-            Buzz.feedback();
-            Get.toNamed(Routes.settingsZoneAdd);
+            NavController.toSettingsZoneAdd();
           },
           child: const Text("Add New Zone"),
         ),

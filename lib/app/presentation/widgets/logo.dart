@@ -5,9 +5,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class LogoWidget extends StatelessWidget {
-  const LogoWidget({super.key, this.size = 200, this.height = 100});
+  const LogoWidget({
+    super.key,
+    this.size = 200,
+    this.height = 100,
+    this.themeMode = ThemeMode.system,
+  });
   final double size;
   final double height;
+  final ThemeMode themeMode;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +22,13 @@ class LogoWidget extends StatelessWidget {
         height: height,
         width: size,
         child: SvgPicture.asset(
-          app.isDarkMode
-              ? UiAssets.heethingsLogodark
-              : UiAssets.heethingsLogoLight,
+          themeMode == ThemeMode.system
+              ? app.isDarkMode
+                  ? UiAssets.heethingsLogodark
+                  : UiAssets.heethingsLogoLight
+              : themeMode == ThemeMode.light
+                  ? UiAssets.heethingsLogoLight
+                  : UiAssets.heethingsLogodark,
           fit: BoxFit.contain,
         ),
       );

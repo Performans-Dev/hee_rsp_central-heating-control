@@ -6,17 +6,18 @@ import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ScreenSaverScreen extends StatefulWidget {
-  const ScreenSaverScreen({super.key});
+class LockScreen extends StatefulWidget {
+  const LockScreen({super.key});
 
   @override
-  State<ScreenSaverScreen> createState() => _ScreenSaverScreenState();
+  State<LockScreen> createState() => _LockScreenState();
 }
 
-class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
+class _LockScreenState extends State<LockScreen> {
   bool showUserList = true;
   int currentImageIndex = 0;
   Timer? imageChangeTimer;
@@ -39,6 +40,7 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
   @override
   void dispose() {
     imageChangeTimer?.cancel();
+    timeChangeTimer?.cancel();
     super.dispose();
   }
 
@@ -82,18 +84,30 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                   height: Get.height,
                 ),
               ),
-              const Align(
+              Align(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  "LOGO ",
-                  style: TextStyle(color: Colors.orange),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 0, top: 20),
+                  child: const Opacity(
+                    opacity: 0.4,
+                    child: LogoWidget(
+                      themeMode: ThemeMode.dark,
+                      height: 30,
+                    ),
+                  ),
                 ),
               ),
               const Align(
                 alignment: Alignment.topRight,
-                child: Text(
-                  "MARKA ",
-                  style: TextStyle(color: Colors.orange),
+                child: Opacity(
+                  opacity: 0.4,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Central Controller ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
               InkWell(

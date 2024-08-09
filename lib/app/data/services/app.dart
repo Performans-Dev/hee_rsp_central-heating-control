@@ -278,13 +278,21 @@ class AppController extends GetxController {
   AppSettings? get appSettings => _appSettings.value;
 
   Future<void> fetchAppSettings() async {
-    final result = await AppProvider.fetchAppSettings();
-    if (result.success && result.data != null) {
-      await Box.setString(key: Keys.appSettings, value: result.data!.toJson());
-      _appSettings.value = result.data;
+    final data = Box.getString(key: Keys.appSettings);
+    if (didConnected && data.isEmpty) {
+      final result = await AppProvider.fetchAppSettings();
+      if (result.success && result.data != null) {
+        await Box.setString(
+            key: Keys.appSettings, value: result.data!.toJson());
+        _appSettings.value = result.data;
+      }
+      _didSettingsFetched.value = true;
+      update();
+    } else {
+      if (data.isEmpty) return;
+      _appSettings.value = AppSettings.fromJson(data);
+      update();
     }
-    _didSettingsFetched.value = true;
-    update();
   }
   //#endregion
 
@@ -370,6 +378,8 @@ class AppController extends GetxController {
     await Box.setInt(key: Keys.themeMode, value: mode.index);
     Get.changeThemeMode(mode);
     _themeMode.value = mode;
+    _isDarkMode.value = Get.isDarkMode;
+    update();
     _isDarkMode.value = Get.isDarkMode;
     update();
   }
@@ -530,7 +540,6 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Terms-Privacy
-  
-  
+
   //#endregion
 }

@@ -1,4 +1,3 @@
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -32,6 +31,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 onTap: () {
                   //TODO: NavController.toZoneDeviceSensorManagement();
+                  NavController.toSettingsManagement();
                 },
               ),
               const SizedBox(height: 8),
@@ -56,7 +56,7 @@ class SettingsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 onTap: () {
-                  Get.toNamed(Routes.settingsPlanList);
+                  // Get.toNamed(Routes.settingsPlanList);
                 },
               ),
               const SizedBox(height: 8),

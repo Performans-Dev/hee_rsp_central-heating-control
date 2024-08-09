@@ -33,6 +33,46 @@ class NavController {
     );
   }
 
+  static void toSettingsManagement() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsManagement),
+    );
+  }
+
+  static void toSettingsZoneList() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsZoneList),
+    );
+  }
+
+  static void toSettingsZoneAdd() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsZoneAdd),
+    );
+  }
+
+  static void toSettingsDeviceList() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsDeviceList),
+    );
+  }
+
+  static void toSettingsSensorList() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsSensorList),
+    );
+  }
+
   // static void toZoneDeviceSensorManagement() async {
   //   Buzz.feedback();
   //   Future.delayed(
@@ -69,7 +109,7 @@ class NavController {
     Buzz.success();
     AppController appController = Get.find();
     appController.logoutUser();
-    Get.toNamed(Routes.screenSaver);
+    Get.toNamed(Routes.lockScreen);
   }
 
   static Future<bool> showFunctionsDialog(

@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:get/get.dart';
 class SettingsManagementScreen extends StatelessWidget {
   const SettingsManagementScreen({super.key});
 
-  
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -29,8 +29,7 @@ class SettingsManagementScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () {
-                Buzz.feedback();
-                Get.toNamed(Routes.settingsZoneList);
+                NavController.toSettingsZoneList();
               },
             ),
             const SizedBox(height: 8),
@@ -43,8 +42,7 @@ class SettingsManagementScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () {
-                Buzz.feedback();
-                Get.toNamed(Routes.settingsDeviceList);
+                NavController.toSettingsDeviceList();
               },
             ),
             const SizedBox(height: 8),
@@ -57,8 +55,7 @@ class SettingsManagementScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () {
-                Buzz.feedback();
-                Get.toNamed(Routes.settingsSensorsList);
+                NavController.toSettingsSensorList();
               },
             ),
           ],

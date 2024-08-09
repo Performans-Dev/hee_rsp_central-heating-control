@@ -7,10 +7,10 @@ import 'package:central_heating_control/app/data/middlewares/setup_completed_mid
 import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/presentation/screens/__temp/_screen_saver.dart';
 import 'package:central_heating_control/app/presentation/screens/connection/connection_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/lock_screen/lock_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin/pin_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/pin_reset_screen.dart';
@@ -206,7 +206,7 @@ final List<GetPage> getPages = [
     ],
   ),
   GetPage(
-    name: Routes.settingsSensorsList,
+    name: Routes.settingsSensorList,
     page: () => const SettingsSensorListScreen(),
     middlewares: [
       AdminLoggedInMiddleware(),
@@ -332,8 +332,8 @@ final List<GetPage> getPages = [
     ],
   ),
   GetPage(
-    name: Routes.screenSaver,
-    page: () => const ScreenSaverScreen(),
+    name: Routes.lockScreen,
+    page: () => const LockScreen(),
     transition: Transition.fadeIn,
   ),
   GetPage(

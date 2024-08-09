@@ -58,9 +58,11 @@ class AppScaffold extends StatelessWidget {
                   width: 40,
                   height: 40,
                   child: Center(
-                    child: SvgPicture.asset(app.isDarkMode
-                        ? UiAssets.appIconDark
-                        : UiAssets.appIconLight),
+                    child: SvgPicture.asset(
+                      app.themeMode == ThemeMode.dark
+                          ? UiAssets.appIconDark
+                          : UiAssets.appIconLight,
+                    ),
                   ),
                 ),
                 trailing: SizedBox(

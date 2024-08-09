@@ -29,7 +29,7 @@ class Routes {
   static const String settingsDeviceList = '/settings-device-list';
   static const String settingsDeviceAdd = '/settings-device-add';
   static const String settingsDeviceEdit = '/settings-device-edit';
-  static const String settingsSensorsList = '/settings-sensor-list';
+  static const String settingsSensorList = '/settings-sensor-list';
   static const String settingsSensorAdd = '/settings-sensor-add';
   static const String settingsSensorEdit = '/settings-sensor-edit';
   static const String settingsUserList = '/settings-user-list';
@@ -57,7 +57,7 @@ class Routes {
       '/settings-preferences-advanced-diagnostics';
   static const String settingsPreferencesAdvancedUpdates =
       '/settings-preferences-advanced-updates';
-  static const String screenSaver = '/screen-saver';
+  static const String lockScreen = '/locked';
   static const String pin = '/pin';
   static const String pinReset = '/pin-reset';
   static const String signinForPinReset = '/signin-for-pin-reset';
