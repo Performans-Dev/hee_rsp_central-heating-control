@@ -24,7 +24,6 @@ class SettingsPreferencesConnectionScreen extends StatefulWidget {
 
 class _SettingsPreferencesConnectionScreenState
     extends State<SettingsPreferencesConnectionScreen> {
-  late TextEditingController ssidController;
   late TextEditingController passController;
   late TextEditingController ipController;
   List<String> wifiSSids = [];
@@ -36,13 +35,11 @@ class _SettingsPreferencesConnectionScreenState
   @override
   void initState() {
     super.initState();
-    ssidController = TextEditingController();
     passController = TextEditingController();
     ipController = TextEditingController();
-    ssidController.text = Box.getString(key: Keys.wifiSsid);
     passController.text = Box.getString(key: Keys.wifiPass);
     ipController.text = Box.getString(key: Keys.ethIpAddress);
-    selectedSsid = Box.getString(key: Keys.wifiSsid);
+
     _fetchWifiSsids();
   }
 
@@ -62,7 +59,7 @@ class _SettingsPreferencesConnectionScreenState
               Row(
                 children: [
                   Expanded(
-                    child: wifiSSids.length > 1
+                    child: wifiSSids.length > 0
                         ? StringDropdownWidget(
                             data: wifiSSids,
                             value: selectedSsid,
@@ -72,10 +69,7 @@ class _SettingsPreferencesConnectionScreenState
                               });
                             },
                           )
-                        : TextInputWidget(
-                            labelText: 'Wifi SSID',
-                            controller: ssidController,
-                          ),
+                        : Text('Scanning WiFi'),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -87,10 +81,8 @@ class _SettingsPreferencesConnectionScreenState
                   const SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: () async {
-                      var ssid = selectedSsid.isEmpty
-                          ? ssidController.text
-                          : selectedSsid;
-                      var password = passController.text;
+                      final ssid = selectedSsid;
+                      final password = passController.text;
                       await Box.setString(key: Keys.wifiSsid, value: ssid);
                       await Box.setString(key: Keys.wifiPass, value: password);
                       final connectionStatus = await CommonUtils.connectToWifi(
@@ -242,13 +234,22 @@ class _SettingsPreferencesConnectionScreenState
     try {
       var shell = Shell();
       var result = await shell.run('nmcli -t -f SSID dev wifi');
-
+      var list =
+          result.outText.split('\n').where((ssid) => ssid.isNotEmpty).toList();
+      list.insert(0, '');
       setState(() {
-        wifiSSids = result.outText
-            .split('\n')
-            .where((ssid) => ssid.isNotEmpty)
-            .toList();
+        wifiSSids = list;
       });
-    } on Exception catch (_) {}
+      final previousSsid = Box.getString(key: Keys.wifiSsid);
+      if (wifiSSids.contains(previousSsid)) {
+        setState(() {
+          selectedSsid = previousSsid;
+        });
+      }
+    } on Exception catch (_) {
+      setState(() {
+        wifiSSids = ['', 'SampleSSID1', 'SampleSSID2'];
+      });
+    }
   }
 }

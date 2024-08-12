@@ -74,34 +74,23 @@ class AppScaffold extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Icon(
-                                Icons.person,
-                                color: app.isDarkMode
-                                    ? Theme.of(context).highlightColor
-                                    : Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.8),
-                                size: 48,
-                              ),
-                            ),
-                            Center(
-                              child: Text(
-                                app.loggedInAppUser?.username ?? '',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ],
+                      const Divider(height: 8),
+                      Text(
+                        app.loggedInAppUser?.username ?? '',
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.87),
                         ),
                       ),
+                      const Divider(height: 8),
                       const ComIndicatorLedWidget(),
+                      const Divider(height: 8),
                       Text(
                         app.deviceInfo?.appVersion ?? 'N/A',
                         textAlign: TextAlign.center,

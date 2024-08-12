@@ -25,12 +25,14 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: const Text(
                       'Pick a theme',
                       textAlign: TextAlign.start,
                     ),
                   ),
+                  const Divider(),
                   Expanded(
                     child: ListView.builder(
                       itemBuilder: (context, index) => RadioListTile(
@@ -48,17 +50,28 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                     ),
                   ),
                   const Divider(),
-                  ToggleButtons(
-                    isSelected: ThemeMode.values
-                        .map((e) => e == app.themeMode)
-                        .toList(),
-                    onPressed: (index) async {
-                      await app.setThemeMode(ThemeMode.values[index]);
-                    },
-                    borderRadius: UiDimens.formRadius,
-                    children: ThemeMode.values
-                        .map((e) => Text(e.name.camelCaseToHumanReadable().tr))
-                        .toList(),
+                  Container(
+                    padding: const EdgeInsets.only(
+                      bottom: 20,
+                      top: 12,
+                    ),
+                    child: Center(
+                      child: ToggleButtons(
+                        constraints:
+                            const BoxConstraints(minWidth: 80, minHeight: 48),
+                        isSelected: ThemeMode.values
+                            .map((e) => e == app.themeMode)
+                            .toList(),
+                        onPressed: (index) async {
+                          await app.setThemeMode(ThemeMode.values[index]);
+                        },
+                        borderRadius: UiDimens.formRadius,
+                        children: ThemeMode.values
+                            .map((e) =>
+                                Text(e.name.camelCaseToHumanReadable().tr))
+                            .toList(),
+                      ),
+                    ),
                   )
                 ],
               ),
