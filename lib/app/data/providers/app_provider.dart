@@ -54,12 +54,18 @@ class AppProvider {
     );
     if (response.success) {
       return GenericResponse.success(
+        // SubscriptionResult(
+        //   expiresOn: response.data['expiresOn'],
+        //   subscriptionId: Guid.newGuid.toString(),
+        //   type: SubscriptionType.values
+        //           .firstWhereOrNull((e) => e.name == response.data['type']) ??
+        //       SubscriptionType.none,
+        // ),
         SubscriptionResult(
-          expiresOn: response.data['expiresOn'],
+          expiresOn:
+              DateTime.now().add(const Duration(days: 30)).toIso8601String(),
           subscriptionId: Guid.newGuid.toString(),
-          type: SubscriptionType.values
-                  .firstWhereOrNull((e) => e.name == response.data['type']) ??
-              SubscriptionType.none,
+          type: SubscriptionType.pro,
         ),
       );
     }
@@ -151,5 +157,4 @@ class AppProvider {
   //fetchDateLocaleList() {}
 
   checkUpdates() {}
-
 }
