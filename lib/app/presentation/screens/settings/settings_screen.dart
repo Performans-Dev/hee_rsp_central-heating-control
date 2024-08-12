@@ -21,6 +21,7 @@ class SettingsScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 8),
               ListTile(
+                leading: const Icon(Icons.dashboard_rounded),
                 title: const Text('Zone, Heaters, Sensor Management'),
                 subtitle:
                     const Text('Add/Modify/Remove zones, devices and sensors'),
@@ -36,6 +37,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ListTile(
+                leading: const Icon(Icons.functions),
                 title: const Text('Functions'),
                 subtitle: const Text('Define custom functions and triggers'),
                 trailing: const Icon(Icons.chevron_right),
@@ -47,6 +49,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ListTile(
+                leading: const Icon(Icons.add_task),
                 title: const Text('Weekly Plan Settings'),
                 subtitle:
                     const Text('Define rules that runs on weekly schedule'),
@@ -61,6 +64,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ListTile(
+                leading: const Icon(Icons.group),
                 title: const Text('User Management'),
                 subtitle: const Text('Add/Remove/Modify users and admins'),
                 trailing: const Icon(Icons.chevron_right),
@@ -72,6 +76,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ListTile(
+                leading: const Icon(Icons.settings_applications),
                 title: const Text('Preferences'),
                 subtitle: const Text(
                     'Themes, localizations, extension modules, updates'),

@@ -75,6 +75,11 @@ class AppScaffold extends StatelessWidget {
                     children: [
                       const ComIndicatorLedWidget(),
                       Text(
+                        app.loggedInAppUser?.username ?? '',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 10),
+                      ),
+                      Text(
                         app.deviceInfo?.appVersion ?? 'N/A',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(

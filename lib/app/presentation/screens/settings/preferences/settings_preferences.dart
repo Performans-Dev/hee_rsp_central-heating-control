@@ -33,7 +33,7 @@ class SettingsPreferencesScreen extends StatelessWidget {
             ListTile(
               title: const Text('Theme'),
               subtitle: Text(
-                '${Box.getString(key: Keys.selectedTheme)} - ${ThemeMode.values[Box.getInt(key: Keys.themeMode)].name.camelCaseToHumanReadable().tr}',
+                '${Box.getString(key: Keys.selectedTheme).camelCaseToHumanReadable()} - ${ThemeMode.values[Box.getInt(key: Keys.themeMode)].name.camelCaseToHumanReadable().tr}',
               ),
               leading: const Icon(Icons.color_lens),
               trailing: const Icon(Icons.chevron_right),
