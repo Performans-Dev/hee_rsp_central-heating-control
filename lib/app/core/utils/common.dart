@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -64,6 +65,25 @@ class CommonUtils {
         return 'SUN';
       default:
         return '';
+    }
+  }
+
+  static Future<ProcessResult> connectToWifi({
+    required String wifiSsid,
+    required String wifiPassword,
+  }) async {
+    try {
+      final result = await Process.run('nmcli', [
+        'd',
+        'wifi',
+        'connect',
+        wifiSsid,
+        'password',
+        wifiPassword,
+      ]);
+      return result;
+    } on Exception catch (e) {
+      return ProcessResult(0, -99, '', e.toString());
     }
   }
 }

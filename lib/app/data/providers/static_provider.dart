@@ -1,10 +1,10 @@
 class StaticProvider {
-  static const languages = [
+  static const List<Map<String, dynamic>> getLanguageList = [
     {"languageCode": "tr", "countryCode": "TR", "name": "Türkçe"},
     {"languageCode": "en", "countryCode": "US", "name": "English"}
   ];
 
-  static const timezones = [
+  static const List<Map<String, dynamic>> getTimezoneList = [
     {"zone": "Pacific/Midway", "gmt": "(GMT-11:00)", "name": "Midway Island"},
     {"zone": "US/Samoa", "gmt": "(GMT-11:00)", "name": "Samoa"},
     {"zone": "US/Hawaii", "gmt": "(GMT-10:00)", "name": "Hawaii"},
@@ -165,5 +165,33 @@ class StaticProvider {
     {"zone": "Asia/Magadan", "gmt": "(GMT+12:00)", "name": "Magadan"},
     {"zone": "Pacific/Auckland", "gmt": "(GMT+12:00)", "name": "Auckland"},
     {"zone": "Pacific/Fiji", "gmt": "(GMT+12:00)", "name": "Fiji"}
+  ];
+
+  static final List<String> getDateFormatList = [
+    "yyyy-MM-dd", // 2024-06-07
+    "MM/dd/yyyy", // 06/07/2024
+    "dd/MM/yyyy", // 07/06/2024
+    "dd-MM-yyyy", // 07-06-2024
+    "yyyy/MM/dd", // 2024/06/07
+    "EEE, MMM d, yyyy", // Fri, Jun 7, 2024
+    "EEE, MMM d", // Fri, Jun 7
+    "MMMM d, yyyy", // June 7, 2024
+    "MMM d, yyyy", // Jun 7, 2024
+    "dd MMMM yyyy", // 07 June 2024
+    'd MMM, EEE',
+  ];
+
+  static final List<String> getTimeFormatList = [
+    "HH:mm",
+    "hh:mm a",
+    "HH:mm:ss",
+    "hh:mm:ss a",
+  ];
+
+  static final List<String> getThemeList = [
+    'default',
+    'nature',
+    'warmy',
+    'crimson',
   ];
 }

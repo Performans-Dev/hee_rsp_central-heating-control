@@ -29,6 +29,9 @@ Future<void> main() async {
   // shared preferences
   await GetStorage.init();
 
+  // final box = GetStorage();
+  // await box.erase();
+
   // await for flutter widgets bindings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

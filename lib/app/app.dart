@@ -36,18 +36,39 @@ class MainApp extends StatelessWidget {
       child: Builder(builder: (context) {
         final theme = MaterialTheme(
             ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
+        return GetMaterialApp(
+          scrollBehavior: PiScrollBehavior(),
+          debugShowCheckedModeBanner: false,
+          title: UiStrings.appName,
+          theme: theme.light(),
+          darkTheme: theme.dark(),
+          highContrastTheme: theme.lightHighContrast(),
+          highContrastDarkTheme: theme.darkHighContrast(),
+          themeMode: Box.getBool(key: Keys.isDarkMode)
+              ? ThemeMode.dark
+              : ThemeMode.light,
+          defaultTransition: Transition.circularReveal,
+          getPages: getPages,
+          initialRoute: Routes.home,
+          initialBinding: AppBindings(),
+          locale: LocalizationService.locale,
+          fallbackLocale: LocalizationService.fallbackLocale,
+          translationsKeys: LocalizationService.keys,
+          onReady: onReady,
+          builder: FlutterSmartDialog.init(),
+        );
+      }),
+    );
+    /* return RestartWidget(
+      child: Builder(builder: (context) {
+        final theme = MaterialTheme(
+            ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
         return IdleDetector(
           excludedRoutes: const [
-            Routes.setupConnection,
-            Routes.setupDateFormat,
-            Routes.setupLanguage,
-            Routes.setupTimezone,
-            Routes.setupTheme,
-            Routes.activation,
-            Routes.signin,
+            Routes.setup,
             Routes.developer,
             Routes.screenSaver,
-            Routes.setupAdminUser,
+            // Routes.setupAdminUser,
           ],
           child: GetMaterialApp(
             scrollBehavior: PiScrollBehavior(),
@@ -72,7 +93,7 @@ class MainApp extends StatelessWidget {
           ),
         );
       }),
-    );
+    ); */
   }
 
   void onReady() async {
@@ -83,11 +104,9 @@ class MainApp extends StatelessWidget {
 
     // apply theme from disk
     final AppController appController = Get.find();
-    bool isDarkModeOnDisk = Box.getBool(key: Keys.isDarkMode);
-    bool isDarkModeOnApp = appController.isDarkMode;
-    if (isDarkModeOnApp != isDarkModeOnDisk) {
-      appController.toggleDarkMode();
-    }
+    ThemeMode themeModeOnDisk =
+        ThemeMode.values[Box.getInt(key: Keys.themeMode)];
+    await appController.setThemeMode(themeModeOnDisk);
   }
 }
 

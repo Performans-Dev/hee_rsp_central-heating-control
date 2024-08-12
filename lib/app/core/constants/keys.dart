@@ -1,9 +1,11 @@
 class Keys {
+  static const String appSettings = 'appSettings';
   static const String lastTouchTime = 'lastTouchTime';
   static const String localeLang = 'localeLang';
   static const String localeCulture = 'localeCulture';
   static const String isDarkMode = 'isDarkMode';
   static const String selectedTheme = 'selectedTheme';
+  static const String themeMode = 'themeMode';
 
   static const String selectedTimezone = 'selectedTimezone';
   static const String selectedTimeFormat = 'selectedTimeFormat';
@@ -11,19 +13,29 @@ class Keys {
   static const String didLanguageSelected = 'didLanguageSelected';
   static const String didTimezoneSelected = 'didTimezoneSelected';
   static const String didDateFormatSelected = 'didDateFormatSelected';
-  static const String didPickedTheme = 'didPickedTheme';
+  static const String didThemeSelected = 'didPickedTheme';
+  static const String didTermsAccepted = 'didTermsAccepted';
+  static const String didPrivacyAccepted = 'didPrivacyAccepted';
   static const String didActivated = 'didActivated';
   static const String didRegisteredDevice = 'didRegisteredDevice';
   static const String didSignedIn = 'didSignedIn';
-  static const String didCheckedSubscription = 'didCheckedSubscription';
+  static const String didSubscriptionResultReceived =
+      'didSubscriptionResultReceived';
   static const String subscriptionResult = 'subscriptionResult';
+  static const String didTechSupportUserCreated = 'didTechSupportUserCreated';
+  static const String didAdminUserCreated = 'didAdminUserCreated';
 
   static const String sessionKey = 'sessionKey';
   static const String deviceId = 'deviceId';
   static const String accountId = 'accountId';
+  static const String account = 'account';
   static const String activationId = 'activationId';
+  static const String activationResult = 'activationResult';
 
   static const String wifiCredentials = 'wifiCredentials';
+  static const String wifiSsid = 'wifiSsid';
+  static const String wifiPass = 'wifiPass';
+  static const String ethIpAddress = 'ethIpAddress';
   static const String userList = 'userList';
   static const String forgottenPin = 'forgottenPin';
 
@@ -39,7 +51,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 13;
+  static const int databaseVersion = 14;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -69,7 +81,7 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT,
       pin TEXT,
-      isAdmin INTEGER NOT NULL DEFAULT 0
+      level INTEGER NOT NULL DEFAULT 0
     )
   ''';
   static const String dbDropSensors = '''

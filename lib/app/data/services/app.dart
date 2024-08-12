@@ -4,43 +4,53 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
+import 'package:central_heating_control/app/data/models/account_subscription_type.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
+import 'package:central_heating_control/app/data/models/activation_result.dart';
+import 'package:central_heating_control/app/data/models/app_settings.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/chc_device.dart';
+import 'package:central_heating_control/app/data/models/forgot_password_request.dart';
+import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/language_definition.dart';
+import 'package:central_heating_control/app/data/models/register_request.dart';
 import 'package:central_heating_control/app/data/models/signin_request.dart';
+import 'package:central_heating_control/app/data/models/subscription_result.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/services/gpio.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
+import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
-  //#region SUPER
+  //#region MARK: Super
   @override
   void onInit() {
     super.onInit();
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+    fetchLanguages();
+    fetchTimezones();
+    fetchDateTimeFormats();
+    fetchThemes();
     checkFlags();
-    _selectedTheme.value = Box.getString(key: Keys.selectedTheme);
+    final t = Box.getString(key: Keys.selectedTheme);
+    _selectedTheme.value = t.isEmpty ? StaticProvider.getThemeList.first : t;
     update();
   }
 
   @override
   void onReady() {
-    populateUserList();
-    // fetchSettings();
-    logoutUser();
-    readDevice();
-    checkAdminUser();
+    loadAppUserList();
     super.onReady();
   }
 
@@ -51,19 +61,14 @@ class AppController extends GetxController {
   }
   //#endregion
 
-  //#region SESSION
-  final RxString _sessionKey = ''.obs;
-  String get sessionKey => _sessionKey.value;
+  //#region MARK: Flags
 
-  void startSession() {
-    _sessionKey.value = Guid.newGuid.toString();
-    update();
-  }
-  //#endregion
+  final RxBool _didConnectivityResultReceived = false.obs;
+  bool get didConnectivityResultReceived =>
+      _didConnectivityResultReceived.value;
 
-  //#region FLAGS
-  final RxBool _connectivityResultReceived = false.obs;
-  bool get connectivityResultReceived => _connectivityResultReceived.value;
+  final RxBool _didConnected = false.obs;
+  bool get didConnected => _didConnected.value;
 
   final RxBool _didSettingsFetched = false.obs;
   bool get didSettingsFetched => _didSettingsFetched.value;
@@ -77,66 +82,142 @@ class AppController extends GetxController {
   final RxBool _didDateFormatSelected = false.obs;
   bool get didDateFormatSelected => _didDateFormatSelected.value;
 
+  final RxBool _didThemeSelected = false.obs;
+  bool get didThemeSelected => _didThemeSelected.value;
+
+  final RxBool _didDeviceInfoCreated = false.obs;
+  bool get didDeviceInfoCreated => _didDeviceInfoCreated.value;
+
+  final RxBool _didDeviceRegistered = false.obs;
+  bool get didDeviceRegistered => _didDeviceRegistered.value;
+
+  final RxBool _didSignedIn = false.obs;
+  bool get didSignedIn => _didSignedIn.value;
+
   final RxBool _didActivated = false.obs;
   bool get didActivated => _didActivated.value;
 
-  final RxBool _didConnected = false.obs;
-  bool get didConnected => _didConnected.value;
+  final RxBool _didSubscriptionResultReceived = false.obs;
+  bool get didSubscriptionResultReceived =>
+      _didSubscriptionResultReceived.value;
 
-  final RxBool _hasAdminUser = false.obs;
-  bool get hasAdminUser => _hasAdminUser.value;
+  final RxBool _didAppUsersLoaded = false.obs;
+  bool get didAppUsersLoaded => _didAppUsersLoaded.value;
 
-  final RxBool _didPickedTheme = false.obs;
-  bool get didPickedTheme => _didPickedTheme.value;
+  bool get hasAdminUser =>
+      appUserList.where((e) => e.level == AppUserLevel.admin).isNotEmpty;
 
-  final Rxn<String> _token = Rxn();
-  String? get token => _token.value;
-  void deleteToken() {
-    _token.value = null;
-    update();
+  bool setupCompleted() {
+    final SetupController setupController = Get.find();
+    final list = setupController.setupSequenceList;
+    return list.where((e) => !e.isCompleted).isEmpty;
   }
 
-  Future<void> checkFlags() async {
+  void checkFlags() {
     _didLanguageSelected.value = Box.getBool(key: Keys.didLanguageSelected);
     _didTimezoneSelected.value = Box.getBool(key: Keys.didTimezoneSelected);
     _didDateFormatSelected.value = Box.getBool(key: Keys.didDateFormatSelected);
-    _didPickedTheme.value = Box.getBool(key: Keys.didPickedTheme);
-    _didActivated.value = Box.getBool(key: Keys.didActivated);
-    _hasAdminUser.value = (await DbProvider.db.getAdminUsers()).isNotEmpty;
+    _didThemeSelected.value = Box.getBool(key: Keys.didThemeSelected);
+    _didDeviceInfoCreated.value = deviceInfo != null;
+    _didDeviceRegistered.value = Box.getString(key: Keys.deviceId).isNotEmpty;
+    _didSignedIn.value = Box.account != null && Box.account!.id.isNotEmpty;
+    _didActivated.value = Box.getString(key: Keys.activationId).isNotEmpty;
+    _didSubscriptionResultReceived.value = Box.accountSubscription != null &&
+        Box.accountSubscription!.id.isNotEmpty;
     update();
   }
 
-  Future<void> resetFlags() async {
-    _didLanguageSelected.value = false;
-    _didTimezoneSelected.value = false;
-    _didDateFormatSelected.value = false;
-    _didActivated.value = false;
-    _hasAdminUser.value = false;
-    _didPickedTheme.value = false;
-    _didSettingsFetched.value = false;
-    update();
+  Future<void> performFactoryReset() async {
+    final box = GetStorage();
+    await box.erase();
+    await DbProvider.db.resetDb();
+    logoutUser();
+    NavController.toHome();
   }
-
-  Future<void> checkAdminUser() async {
-    final users = await DbProvider.db.getAdminUsers();
-    for (var user in users) {
-      print(" ${user.username}, ${user.isAdmin},  ${user.pin}");
-    }
-    if (users.isEmpty) {
-      print("user yok");
-    }
-    _hasAdminUser.value = (users).isNotEmpty;
-    update();
-  }
-
   //#endregion
 
-  //#region CONECTIVITY
+  //#region MARK: Session
+  final RxString _sessionKey = ''.obs;
+  String get sessionKey => _sessionKey.value;
+
+  void startSession() {
+    _sessionKey.value = Guid.newGuid.toString();
+    update();
+  }
+  //#endregion
+
+  //#region MARK: Users
+  final RxList<AppUser> _appUserList = <AppUser>[].obs;
+  List<AppUser> get appUserList => _appUserList;
+
+  Future<void> loadAppUserList() async {
+    final users = await DbProvider.db.getUsers();
+    _appUserList.assignAll(users);
+    _didAppUsersLoaded.value = true;
+    update();
+  }
+
+  final Rxn<AppUser> _loggedInAppUser = Rxn();
+  AppUser? get loggedInAppUser => _loggedInAppUser.value;
+
+  void setLoggedInAppUser(AppUser? user) {
+    _loggedInAppUser.value = user;
+    update();
+  }
+
+  Future<bool> loginUser({
+    required String username,
+    required String pin,
+  }) async {
+    final user = appUserList
+        .firstWhereOrNull((e) => e.username == username && e.pin == pin);
+    _loggedInAppUser.value = user;
+    update();
+    return loggedInAppUser != null;
+  }
+
+  void logoutUser() {
+    _loggedInAppUser.value = null;
+    update();
+  }
+
+  Future<bool> updateUser({required AppUser user}) async {
+    final result = await DbProvider.db.updateUser(user);
+    await loadAppUserList();
+    return result > 0;
+  }
+
+  Future<bool> deleteUser({required AppUser user}) async {
+    final result = await DbProvider.db.deleteUser(user);
+    await loadAppUserList();
+    return result > 0;
+  }
+
+  Future<bool> addUser({required AppUser user}) async {
+    final result = await DbProvider.db.addUser(user);
+    await loadAppUserList();
+    return result > 0;
+  }
+  //#endregion
+
+  //#region MARK: Connectivity
   late final StreamSubscription<List<ConnectivityResult>>
       _connectivitySubscription;
+
+  final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
+  NetworkIndicator get networkIndicator => _networkIndicator.value;
+
+  final Rxn<String> _networkName = Rxn();
+  String? get networkName => _networkName.value;
+
+  final Rxn<String> _networkIP = Rxn();
+  String? get networkIp => _networkIP.value;
+
+  final Rxn<String> _networkGateway = Rxn();
+  String? get networkGateway => _networkGateway.value;
+
   _onConnectivityChanged(List<ConnectivityResult> results) {
     bool connected = false;
-
     for (final result in results) {
       if (!connected) {
         switch (result) {
@@ -162,16 +243,11 @@ class AppController extends GetxController {
       }
     }
     _didConnected.value = connected;
-    _connectivityResultReceived.value = true;
+    _didConnectivityResultReceived.value = true;
     update();
     getNetworkInfo();
   }
 
-  final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
-  NetworkIndicator get networkIndicator => _networkIndicator.value;
-  //#endregion
-
-  //#region NETWORK
   Future<void> getNetworkInfo() async {
     final info = NetworkInfo();
     final wifiName = await info.getWifiName();
@@ -182,80 +258,60 @@ class AppController extends GetxController {
     _networkGateway.value = wifiGateway;
     update();
   }
-
-  final Rxn<String> _networkName = Rxn();
-  final Rxn<String> _networkIP = Rxn();
-  final Rxn<String> _networkGateway = Rxn();
-  String? get networkName => _networkName.value;
-  String? get networkIp => _networkIP.value;
-  String? get networkGateway => _networkGateway.value;
-
   //#endregion
 
-  //#region USER
-  final Rxn<AppUser> _appUser = Rxn();
-  AppUser? get appUser => _appUser.value;
+  //#region MARK: Device Info
 
-  final RxList<AppUser> _userList = <AppUser>[].obs;
-  List<AppUser> get userList => _userList;
+  final Rxn<ChcDevice> _deviceInfo = Rxn();
+  ChcDevice? get deviceInfo => _deviceInfo.value;
 
-  Future<void> populateUserList() async {
-    final users = await DbProvider.db.getUsers();
-    _userList.assignAll(users);
-    if (users.isEmpty) {
-/*       final defaultUser = AppUser(
-        username: 'Admin User',
-        id: -1,
-        isAdmin: true,
-        pin: '000000',
-      ); */
-      //await DbProvider.db.addUser(defaultUser);
-      await populateUserList();
+  Future<void> readDevice() async {
+    ChcDevice device = await DeviceUtils.createDeviceInfo();
+    _deviceInfo.value = device;
+    _didDeviceInfoCreated.value = true;
+    update();
+  }
+  //#endregion
+
+  //#region MARK: AppSettings
+  final Rxn<AppSettings> _appSettings = Rxn();
+  AppSettings? get appSettings => _appSettings.value;
+
+  Future<void> fetchAppSettings() async {
+    final data = Box.getString(key: Keys.appSettings);
+    if (didConnected && data.isEmpty) {
+      final result = await AppProvider.fetchAppSettings();
+      if (result.success && result.data != null) {
+        await Box.setString(
+            key: Keys.appSettings, value: result.data!.toJson());
+        _appSettings.value = result.data;
+      }
+      _didSettingsFetched.value = true;
+      update();
+    } else {
+      if (data.isEmpty) return;
+      _appSettings.value = AppSettings.fromJson(data);
+      update();
     }
-    update();
-  }
-
-  Future<bool> loginUser({
-    required String username,
-    required String pin,
-  }) async {
-    final user = await DbProvider.db.getUser(username: username, pin: pin);
-    _appUser.value = user;
-    update();
-    return appUser != null;
-  }
-
-  Future<void> logoutUser() async {
-    _appUser.value = null;
-    update();
-  }
-
-  //#endregion
-
-  //#region SETTINGS
-  Future<void> fetchSettings() async {
-    _didSettingsFetched.value = true;
-    update();
-    await populateLanguages();
-    await populateTimezones();
-    // NavController.toHome();
   }
   //#endregion
 
-  //#region LANGUAGES
+  //#region MARK: Languages
   final RxList<LanguageDefinition> _languages = <LanguageDefinition>[].obs;
   List<LanguageDefinition> get languages => _languages;
-  Future<void> populateLanguages() async {
-    final response = await AppProvider.fetchLanguageList();
-    final List<LanguageDefinition> data =
-        response.data as List<LanguageDefinition>;
-    _languages.assignAll(data);
+
+  void fetchLanguages() {
+    final list = <LanguageDefinition>[];
+    const data = StaticProvider.getLanguageList;
+    for (final map in data) {
+      list.add(LanguageDefinition.fromMap(map));
+    }
+    _languages.assignAll(list);
     update();
   }
 
   Future<void> onLanguageSelected(int index) async {
     final selectedLang = languages[index];
-
     await Box.setBool(key: Keys.didLanguageSelected, value: true);
     await LocalizationService().changeLocale(selectedLang.languageCode);
     _didLanguageSelected.value = true;
@@ -263,16 +319,17 @@ class AppController extends GetxController {
   }
   //#endregion
 
-  //#region TIMEZONES
+  //#region MARK: Timezones
   final RxList<TimezoneDefinition> _timezones = <TimezoneDefinition>[].obs;
   List<TimezoneDefinition> get timezones => _timezones;
 
-  Future<void> populateTimezones() async {
-    final response = await AppProvider.fetchTimezoneList();
-    final data = response.data as List<TimezoneDefinition>;
-    _timezones.assignAll(data);
-    final set = _timezones.toSet();
-    _timezones.assignAll(set.toList());
+  void fetchTimezones() {
+    final list = <TimezoneDefinition>[];
+    const data = StaticProvider.getTimezoneList;
+    for (final map in data) {
+      list.add(TimezoneDefinition.fromMap(map));
+    }
+    _timezones.assignAll(list);
     update();
   }
 
@@ -288,157 +345,201 @@ class AppController extends GetxController {
 
     //TODO: inform OS to selected timezone
   }
+  //#endregion
+
+  //#region MARK: DateTime Formats
+  final RxList<String> _dateFormats = <String>[].obs;
+  List<String> get dateFormats => _dateFormats;
+
+  final RxList<String> _timeFormats = <String>[].obs;
+  List<String> get timeFormats => _timeFormats;
+
+  void fetchDateTimeFormats() {
+    _dateFormats.assignAll(StaticProvider.getDateFormatList);
+    _timeFormats.assignAll(StaticProvider.getTimeFormatList);
+    update();
+  }
+  //#endregion
+
+  //#region MARK: Themes
+  final Rx<ThemeMode> _themeMode = ThemeMode.light.obs;
+  ThemeMode get themeMode => _themeMode.value;
+
+  final RxBool _isDarkMode = false.obs;
+  bool get isDarkMode => _isDarkMode.value;
+
+  Future<void> nextThemeMode() async {
+    int index = ThemeMode.values.indexOf(themeMode);
+    final nextTheme = ThemeMode.values[(index + 1) % ThemeMode.values.length];
+    await setThemeMode(nextTheme);
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    await Box.setInt(key: Keys.themeMode, value: mode.index);
+    Get.changeThemeMode(mode);
+    _themeMode.value = mode;
+    _isDarkMode.value = Get.isDarkMode;
+    update();
+    _isDarkMode.value = Get.isDarkMode;
+    update();
+  }
+
+  final RxList<String> _themes = <String>[].obs;
+  List<String> get themes => _themes;
+
+  final Rx<String> _selectedTheme = ''.obs;
+  String get selectedTheme => _selectedTheme.value;
+
+  void fetchThemes() {
+    _themes.assignAll(StaticProvider.getThemeList);
+    update();
+  }
+
+  Future<void> setSelectedTheme(String value) async {
+    _selectedTheme.value = value;
+    _didThemeSelected.value = true;
+    update();
+    await Box.setString(key: Keys.selectedTheme, value: value);
+  }
 
   //#endregion
 
-  //#region ACCOUNT
-  final Rxn<Account> _account = Rxn();
-  Account? get account => _account.value;
+  //#region MARK: Account
+  final Rxn<String> _token = Rxn();
+  String? get token => _token.value;
+  void deleteToken() {
+    _token.value = null;
+    update();
+  }
 
-  Future<Account?> signin({
+  Future<GenericResponse<String?>> registerDevice(ChcDevice device) async {
+    final response = await AppProvider.registerChcDevice(request: device);
+    String deviceId = response.data?.id ?? '';
+    await Box.setString(key: Keys.deviceId, value: deviceId);
+    _deviceInfo.value?.id = deviceId;
+    _didDeviceRegistered.value = true;
+    update();
+    await Box.setBool(key: Keys.didRegisteredDevice, value: true);
+    return GenericResponse(
+      success: response.success,
+      statusCode: response.statusCode,
+      message: response.message,
+      data: response.data?.id,
+    );
+  }
+
+  Future<GenericResponse<Account?>> accountSignin({
     required String email,
     required String password,
   }) async {
-    final response = await AppProvider.userSignin(
+    final response = await AppProvider.accountSignin(
       request: SigninRequest(
         email: email,
         password: password,
       ),
     );
-    _account.value = response.data;
-    if (response.success) {
-      _token.value = response.data?.token ?? '';
-    }
-    update();
-    await Box.setString(key: Keys.accountId, value: account?.id ?? '');
-    await Box.setBool(key: Keys.didSignedIn, value: response.success);
-    return account;
-  }
-  //#endregion
-
-  //#region CHC-DEVICE
-  final Rxn<String> _chcDeviceId = Rxn();
-  String? get chcDeviceId => _chcDeviceId.value;
-
-  Future<String?> registerDevice(ChcDevice device) async {
-    final response = await AppProvider.registerChcDevice(request: device);
-    _chcDeviceId.value = response.data?.id;
-    update();
-    await Box.setString(key: Keys.deviceId, value: chcDeviceId ?? '');
-    await Box.setBool(key: Keys.didRegisteredDevice, value: true);
-    return chcDeviceId;
-  }
-
-  final Rxn<String> _versionName = Rxn();
-  String? get versionName => _versionName.value;
-
-  Future<void> readDevice() async {
-    ChcDevice device = await DeviceUtils.createDeviceInfo();
-    _versionName.value = device.appVersion;
-    update();
-  }
-
-  //#endregion
-//#region  CHECK-SUBSCRIPTION
-  Future<void> checkSubscirption() async {
-    final response = await AppProvider.checkSubscription();
-
-    await Box.setBool(key: Keys.didCheckedSubscription, value: true);
-    await Box.setInt(
-        key: Keys.subscriptionResult, value: response.data?.index ?? 0);
-  }
-//#endregion
-
-  //#region ACTIVATION
-  final Rxn<String> _activationId = Rxn();
-  String? get activationId => _activationId.value;
-
-  Future<String?> checkActivation() async {
-    final response = await AppProvider.checkActivation(
-      request: ActivationRequest(
-        userId: account!.id,
-        chcDeviceId: chcDeviceId ?? '',
-      ),
-    );
-
-    _activationId.value = response.data?.id;
-    update();
-
-    await Box.setString(key: Keys.activationId, value: activationId ?? '');
-    if (activationId != null) {
-      _didActivated.value = true;
-      update();
-      await Box.setBool(key: Keys.didActivated, value: true);
-    }
-
-    return activationId;
-  }
-
-  Future<String?> activateChcDevice() async {
-    final response = await AppProvider.activateDevice(
-      request: ActivationRequest(
-        userId: account!.id,
-        chcDeviceId: chcDeviceId ?? '',
-      ),
-    );
-
-    _activationId.value = response.data?.id;
-    update();
-
-    await Box.setString(key: Keys.activationId, value: activationId ?? '');
-    if (activationId != null) {
-      _didActivated.value = true;
-      update();
-      await Box.setBool(key: Keys.didActivated, value: true);
-    }
-
-    return activationId;
-  }
-  //#endregion
-
-  //#region DARK MODE
-  final RxBool _isDarkMode = Get.isDarkMode.obs;
-  bool get isDarkMode => _isDarkMode.value;
-
-  void toggleDarkMode() async {
-    _isDarkMode.value = !isDarkMode;
-    update();
-    Get.changeThemeMode(isDarkMode ? ThemeMode.dark : ThemeMode.light);
-    await Box.setBool(key: Keys.isDarkMode, value: isDarkMode);
-  }
-
-  //#endregion
-
-  //#region THEME
-  final RxList<String> _themeList = <String>[
-    'default',
-    'nature',
-    'warmy',
-    'crimson',
-  ].obs;
-  List<String> get themeList => _themeList;
-
-  final Rx<String> _selectedTheme = 'nature'.obs;
-  String get selectedTheme => _selectedTheme.value;
-  void setSelectedTheme(String theme) async {
-    _selectedTheme.value = theme;
-    update();
-    await Box.setString(key: Keys.selectedTheme, value: selectedTheme);
-  }
-  //#endregion
-
-/*   Future<void> createAdmin() async {
-    var result = await DbProvider.db.addUser(
-        AppUser(id: -1, username: 'Admin', pin: '000000', isAdmin: true));
-
-    if (result < -1) {
-      Buzz.alarm();
-    } else if (result == -1) {
-      Buzz.error();
-    } else if (result == 0) {
-      Buzz.success();
+    if (response.success && response.data != null) {
+      Account account = response.data!;
+      await Box.setString(key: Keys.account, value: account.toJson());
+      _didSignedIn.value = true;
     } else {
-      Buzz.feedback();
+      _didSignedIn.value = false;
     }
-  } */
+    update();
+    return response;
+  }
+
+  Future<GenericResponse> accountForgotPassword({required String email}) async {
+    final response = await AppProvider.accountForgotPassword(
+      request: ForgotPasswordRequest(
+        email: email,
+      ),
+    );
+    return response;
+  }
+
+  Future<GenericResponse> accountRegister({
+    required String email,
+    required String fullName,
+    required String password,
+  }) async {
+    final response = await AppProvider.accountRegister(
+      request: RegisterRequest(
+        email: email,
+        fullName: fullName,
+        password: password,
+      ),
+    );
+    if (response.success && response.data != null) {
+      Account account = response.data!;
+      await Box.setString(key: Keys.account, value: account.toJson());
+      _didSignedIn.value = true;
+    } else {
+      _didSignedIn.value = false;
+    }
+    update();
+    return response;
+  }
+
+  Future<GenericResponse<ActivationResult?>> performActivation({
+    required String deviceId,
+    required String accountId,
+  }) async {
+    // final response = await AppProvider.activateDevice(
+    //   request: ActivationRequest(
+    //     userId: accountId,
+    //     chcDeviceId: deviceId,
+    //   ),
+    // );
+    await Future.delayed(Duration(seconds: 3));
+
+    // if (response.success && response.data != null) {
+    // ActivationResult activationResult = response.data!;
+    ActivationResult activationResult = ActivationResult(
+      id: Guid.newGuid.toString(),
+      createdAt: DateTime.now().toIso8601String(),
+      chcDeviceId: deviceId,
+      userId: accountId,
+      status: 1,
+      activationTime: DateTime.now().toIso8601String(),
+    );
+    await Box.setString(
+        key: Keys.activationResult, value: activationResult.toJson());
+    await Box.setBool(key: Keys.didActivated, value: true);
+    _didActivated.value = true;
+    // } else {
+    //   await Box.setBool(key: Keys.didActivated, value: false);
+    //   _didActivated.value = false;
+    // }
+    update();
+    return GenericResponse.success(activationResult);
+  }
+
+  Future<GenericResponse<SubscriptionResult?>> requestSubscription({
+    required String activationId,
+  }) async {
+    final response =
+        await AppProvider.requestSubscription(activationId: activationId);
+    if (response.success && response.data != null) {
+      SubscriptionResult subscriptionResult = response.data!;
+      await Box.setString(
+          key: Keys.subscriptionResult, value: subscriptionResult.toJson());
+      _didSubscriptionResultReceived.value = true;
+    } else {
+      _didSubscriptionResultReceived.value = false;
+    }
+    update();
+    return response;
+  }
+
+  //#endregion
+
+  //#region MARK: Pin Reset
+  final Rxn<Account> _pinResetAccount = Rxn();
+  Account? get pinResetAccount => _pinResetAccount.value;
+  //#endregion
+
+  //#region MARK: Terms-Privacy
+
+  //#endregion
 }

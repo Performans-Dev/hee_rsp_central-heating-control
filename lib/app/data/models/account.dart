@@ -38,6 +38,17 @@ class Account {
     );
   }
 
+  factory Account.empty() {
+    return Account(
+      id: '',
+      createdAt: '',
+      email: '',
+      displayName: '',
+      status: 0,
+      token: '',
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
   factory Account.fromJson(String source) =>

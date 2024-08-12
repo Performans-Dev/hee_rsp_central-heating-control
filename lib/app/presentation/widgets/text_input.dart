@@ -10,6 +10,7 @@ class TextInputWidget extends StatelessWidget {
   final double radius;
   final bool obscureText;
   final String? obscuringCharacter;
+  final String? hintText;
   final int? maxLenght;
   final int? minLength;
   final OSKInputType? type;
@@ -24,6 +25,7 @@ class TextInputWidget extends StatelessWidget {
     this.maxLenght,
     this.minLength,
     this.type,
+    this.hintText,
   });
 
   @override
@@ -49,6 +51,7 @@ class TextInputWidget extends StatelessWidget {
             label: labelText,
             minLength: minLength,
             maxLength: maxLenght,
+            hintText: hintText,
             type: type ?? OSKInputType.text,
             feedbackFunction: () {
               Buzz.feedback();

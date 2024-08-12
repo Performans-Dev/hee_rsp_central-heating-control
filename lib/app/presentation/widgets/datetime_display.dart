@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:central_heating_control/app/core/constants/data.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DateTextWidget extends StatefulWidget {
@@ -22,6 +23,7 @@ class DateTextWidget extends StatefulWidget {
 }
 
 class _DateTextWidgetState extends State<DateTextWidget> {
+  final AppController appController = Get.find();
   // late String _currentDateTime;
   String formattedDate = '';
   String formattedTime = '';
@@ -55,8 +57,8 @@ class _DateTextWidgetState extends State<DateTextWidget> {
   ///
   /// This function does not return any value.
   void _updateDateTime() {
-    String df = widget.dateFormat ?? UiData.dateFormats.last;
-    String tf = widget.timeFormat ?? UiData.timeFormats[2];
+    String df = widget.dateFormat ?? appController.dateFormats.last;
+    String tf = widget.timeFormat ?? appController.timeFormats[2];
 
     setState(() {
       DateTime now = DateTime.now();
