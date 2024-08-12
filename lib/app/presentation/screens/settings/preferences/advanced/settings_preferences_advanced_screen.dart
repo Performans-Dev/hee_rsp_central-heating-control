@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/shell_command.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -129,54 +130,39 @@ class _SettingsPreferencesAdvancedScreenState
           children: [
             const SizedBox(height: 8),
             ListTile(
-              leading: const Icon(Icons.minimize),
-              title: const Text('Minimize App'),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: minimizeApp,
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Close App'),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: () => killProcess(context),
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.power_settings_new_rounded),
-              title: const Text('Shutdown'),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: () => shutdownDevice(context),
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.refresh),
-              title: const Text('Reboot'),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: () => rebootDevice(context),
-            ),
-            const SizedBox(height: 8),
-            ListTile(
               leading: const Icon(Icons.update),
-              title: const Text('Update'),
+              title: const Text('Check Updates'),
+              trailing: const Icon(Icons.chevron_right),
               tileColor: Theme.of(context).highlightColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () {
                 updateCC(context);
+              },
+            ),
+            const SizedBox(height: 8),
+            ListTile(
+              leading: const Icon(Icons.hardware),
+              title: const Text('Hardware Config'),
+              trailing: const Icon(Icons.chevron_right),
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onTap: () {},
+            ),
+            const SizedBox(height: 8),
+            ListTile(
+              leading: const Icon(Icons.bug_report),
+              title: const Text('Diagnostics'),
+              trailing: const Icon(Icons.chevron_right),
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onTap: () {
+                Get.toNamed(Routes.developer);
               },
             ),
             const SizedBox(height: 8),
@@ -188,6 +174,64 @@ class _SettingsPreferencesAdvancedScreenState
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () => factoryReset(context),
+            ),
+            const SizedBox(height: 8),
+            const Divider(),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    leading: const Icon(Icons.minimize),
+                    title: const Text('Minimize App'),
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    onTap: minimizeApp,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ListTile(
+                    leading: const Icon(Icons.exit_to_app),
+                    title: const Text('Close App'),
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    onTap: () => killProcess(context),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    leading: const Icon(Icons.power_settings_new_rounded),
+                    title: const Text('Shutdown'),
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    onTap: () => shutdownDevice(context),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ListTile(
+                    leading: const Icon(Icons.refresh),
+                    title: const Text('Reboot'),
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    onTap: () => rebootDevice(context),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -288,7 +332,7 @@ class _SettingsPreferencesAdvancedScreenState
               errors += result.stderr.toString();
               break;
             }
-            await Future.delayed(Duration(seconds: 1));
+            await Future.delayed(const Duration(seconds: 1));
           }
 
           if (counter == 0) {
