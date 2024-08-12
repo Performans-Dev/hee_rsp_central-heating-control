@@ -7,7 +7,7 @@ import 'package:central_heating_control/app/data/middlewares/setup_completed_mid
 import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/presentation/screens/connection/connection_screen.dart';
+
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/lock_screen/lock_screen.dart';
@@ -123,7 +123,7 @@ final List<GetPage> getPages = [
   //#endregion
   GetPage(
     name: Routes.connection,
-    page: () => const ConnectionScreen(),
+    page: () => const SettingsPreferencesConnectionScreen(),
   ),
   GetPage(
     name: Routes.home,

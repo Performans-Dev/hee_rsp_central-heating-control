@@ -29,8 +29,8 @@ Future<void> main() async {
   // shared preferences
   await GetStorage.init();
 
-  final box = GetStorage();
-  await box.erase();
+  // final box = GetStorage();
+  // await box.erase();
 
   // await for flutter widgets bindings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

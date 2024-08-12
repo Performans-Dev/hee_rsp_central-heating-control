@@ -33,6 +33,8 @@ class Keys {
   static const String activationResult = 'activationResult';
 
   static const String wifiCredentials = 'wifiCredentials';
+  static const String wifiSsid = 'wifiSsid';
+  static const String wifiPass = 'wifiPass';
   static const String userList = 'userList';
   static const String forgottenPin = 'forgottenPin';
 

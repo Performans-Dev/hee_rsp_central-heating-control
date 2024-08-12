@@ -1,10 +1,13 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/models/wifi.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
@@ -150,7 +153,23 @@ class SettingsPreferencesScreen extends StatelessWidget {
                     leading: const Icon(Icons.settings_suggest),
                     title: const Text('Advanced'),
                     onTap: () {
-                      Get.toNamed(Routes.settingsPreferencesAdvanced);
+                      final AppController app = Get.find();
+                      if (app.loggedInAppUser?.level == AppUserLevel.user ||
+                          app.loggedInAppUser?.level == AppUserLevel.admin) {
+                        DialogUtils.confirmDialog(
+                          context: context,
+                          title: 'Not Allowed',
+                          description:
+                              'You are not allowed to access advanced settings',
+                          positiveText: 'Enter PIN',
+                          negativeText: 'Back',
+                          positiveCallback: () {
+                            Get.toNamed(Routes.settingsPreferencesAdvanced);
+                          },
+                        );
+                      } else {
+                        Get.toNamed(Routes.settingsPreferencesAdvanced);
+                      }
                     },
                   ),
                   const SizedBox(height: 28),
