@@ -199,9 +199,9 @@ class _SettingsPreferencesConnectionScreenState
                                   : const Icon(Icons.wifi_off)
                           : const Icon(Icons.wifi_off),
                   Text(
-                      'Connection Status:\n${isTesting ? '-' : app.networkIndicator.name.camelCaseToHumanReadable()}'),
+                      'Type:\n${isTesting ? '-' : app.networkIndicator.name.camelCaseToHumanReadable()}'),
                   Text(
-                    'SSID:\n${isTesting ? '-' : app.networkName ?? '-'}',
+                    'Name:\n${isTesting ? '-' : app.networkName ?? '-'}',
                   ),
                   Text(
                     'IP:\n${isTesting ? '-' : app.networkIp}',

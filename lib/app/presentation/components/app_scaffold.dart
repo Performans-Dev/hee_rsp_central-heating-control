@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:central_heating_control/app/core/constants/assets.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
@@ -73,12 +74,34 @@ class AppScaffold extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const ComIndicatorLedWidget(),
-                      Text(
-                        app.loggedInAppUser?.username ?? '',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 10),
+                      Container(
+                        width: double.infinity,
+                        height: 50,
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Icon(
+                                Icons.person,
+                                color: app.isDarkMode
+                                    ? Theme.of(context).highlightColor
+                                    : Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.8),
+                                size: 48,
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                app.loggedInAppUser?.username ?? '',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      const ComIndicatorLedWidget(),
                       Text(
                         app.deviceInfo?.appVersion ?? 'N/A',
                         textAlign: TextAlign.center,
