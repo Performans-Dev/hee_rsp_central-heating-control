@@ -140,7 +140,7 @@ class _SettingsPreferencesAdvancedScreenState
               onTap: () async {
                 // updateCC(context);
                 final result = await Process.run(
-                    '~/Heethings/cc-updater-source/hee-rpi-chc_updater/build/linux/arm64/release/bundle/chc_updater',
+                    '/home/pi/Heethings/cc-updater-source/hee-rpi-chc_updater/build/linux/arm64/release/bundle/chc_updater',
                     []);
                 if (result.exitCode == 0) {
                   Buzz.success();
