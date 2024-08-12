@@ -137,8 +137,23 @@ class _SettingsPreferencesAdvancedScreenState
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              onTap: () {
-                updateCC(context);
+              onTap: () async {
+                // updateCC(context);
+                final result = await Process.run(
+                    '~/Heethings/cc-updater-source/hee-rpi-chc_updater/build/linux/arm64/release/bundle/chc_updater',
+                    []);
+                if (result.exitCode == 0) {
+                  Buzz.success();
+                } else {
+                  if (context.mounted) {
+                    DialogUtils.alertDialog(
+                      context: context,
+                      title: 'Error',
+                      description: result.stderr,
+                      positiveText: 'Ok',
+                    );
+                  }
+                }
               },
             ),
             const SizedBox(height: 8),
