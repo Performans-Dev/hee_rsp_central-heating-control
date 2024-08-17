@@ -41,7 +41,7 @@ class _SetupSequenceRegisterDeviceScreenState
                 child: ElevatedButton(
                   onPressed: runInitTask,
                   child: Text(
-                    'Retry',
+                    'Retry'.tr,
                   ),
                 ),
               )
@@ -63,9 +63,9 @@ class _SetupSequenceRegisterDeviceScreenState
       if (mounted) {
         DialogUtils.alertDialog(
           context: context,
-          title: 'Error',
-          description: 'Beklenmeyen bir hata olustu',
-          positiveText: 'Tekrar Dene',
+          title: 'Error'.tr,
+          description: 'An Unexpected Error Occurred'.tr,
+          positiveText: 'Retry'.tr,
           positiveCallback: runInitTask,
         );
       }

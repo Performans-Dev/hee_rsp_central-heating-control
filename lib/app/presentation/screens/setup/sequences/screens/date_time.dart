@@ -75,7 +75,7 @@ class _SetupSequenceDateTimeScreenState
                     children: [
                       Expanded(
                         child: FormItemComponent(
-                          label: 'Date Format',
+                          label: 'Date Format'.tr,
                           child: StringDropdownWidget(
                             data: app.dateFormats,
                             value: _selectedDateFormat,
@@ -91,7 +91,7 @@ class _SetupSequenceDateTimeScreenState
                       const SizedBox(width: 8),
                       Expanded(
                         child: FormItemComponent(
-                          label: 'Time Format',
+                          label: 'Time Format'.tr,
                           child: StringDropdownWidget(
                             data: app.timeFormats,
                             value: _selectedTimeFormat,
@@ -106,7 +106,7 @@ class _SetupSequenceDateTimeScreenState
                       const SizedBox(width: 8),
                       Expanded(
                         child: FormItemComponent(
-                          label: 'Preview',
+                          label: 'Preview'.tr,
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(

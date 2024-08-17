@@ -29,7 +29,7 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
         return GetBuilder<AppController>(
           builder: (app) {
             return SetupLayout(
-              title: 'Select Theme',
+              title: 'Select Theme'.tr,
               nextCallback: () async {
                 Buzz.feedback();
                 await Box.setBool(key: Keys.didThemeSelected, value: true);
@@ -107,7 +107,7 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                                       children: [
                                         ElevatedButton(
                                             onPressed: () {},
-                                            child: const Text('Sample')),
+                                            child: Text('Sample'.tr)),
                                       ],
                                     ),
                                   ),
@@ -131,7 +131,8 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                       }
                     },
                     borderRadius: UiDimens.formRadius,
-                    constraints: BoxConstraints(minWidth: 120, minHeight: 40),
+                    constraints:
+                        const BoxConstraints(minWidth: 120, minHeight: 40),
                     children: ThemeMode.values
                         .map((e) => Text(
                               e.name.camelCaseToHumanReadable().tr,

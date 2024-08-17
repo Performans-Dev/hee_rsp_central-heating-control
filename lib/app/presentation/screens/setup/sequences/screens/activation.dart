@@ -37,7 +37,7 @@ class _SetupSequenceActivationScreenState
         child: error
             ? ElevatedButton(
                 onPressed: runInitTask,
-                child: Text('Retry'),
+                child: Text('Retry'.tr),
               )
             : LoadingIndicatorWidget(
                 text: 'Activating...'.tr,

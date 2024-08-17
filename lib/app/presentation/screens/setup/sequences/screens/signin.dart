@@ -58,11 +58,10 @@ class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
                         if (context.mounted) {
                           DialogUtils.snackbar(
                             context: context,
-                            message: 'Wrong credentials',
+                            message: 'Incorrect credentials'.tr,
                             type: SnackbarType.error,
                           );
                         }
-                        logger.d('EEEEEEE');
                       } else {
                         sc.refreshSetupSequenceList();
                         NavController.toHome();
@@ -90,11 +89,11 @@ class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
                           const Divider(),
                           TextInputWidget(
                             controller: usernameController,
-                            labelText: "Email",
+                            labelText: "Email".tr,
                           ),
                           TextInputWidget(
                             controller: passwordController,
-                            labelText: "Password",
+                            labelText: "Password".tr,
                             obscureText: true,
                             obscuringCharacter: '*',
                           ),
@@ -104,11 +103,11 @@ class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
                             children: [
                               TextButton(
                                 onPressed: () {},
-                                child: const Text('Forgot Password'),
+                                child:  Text('Forgot Password'.tr),
                               ),
                               TextButton(
                                 onPressed: () {},
-                                child: const Text('Create an account'),
+                                child:  Text('Create an Account'.tr),
                               ),
                             ],
                           ),

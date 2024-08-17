@@ -56,6 +56,8 @@ class _SetupSequenceLanguageScreenState
                     });
                     LocalizationService()
                         .changeLocale(app.languages[i].languageCode);
+                    final SetupController sc = Get.find();
+                    sc.refreshSetupSequenceList();
                   },
                 ),
             ],

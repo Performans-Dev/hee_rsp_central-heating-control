@@ -1,7 +1,7 @@
 class StaticProvider {
   static const List<Map<String, dynamic>> getLanguageList = [
+    {"languageCode": "en", "countryCode": "US", "name": "English"},
     {"languageCode": "tr", "countryCode": "TR", "name": "Türkçe"},
-    {"languageCode": "en", "countryCode": "US", "name": "English"}
   ];
 
   static const List<Map<String, dynamic>> getTimezoneList = [

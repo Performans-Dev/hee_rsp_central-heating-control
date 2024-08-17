@@ -77,7 +77,7 @@ class _SetupSequenceTechSupportScreenState
                         if (context.mounted) {
                           DialogUtils.snackbar(
                             context: context,
-                            message: 'Kullanıcı eklenemedi',
+                            message: 'User creation failed'.tr,
                             type: SnackbarType.error,
                           );
                         }
@@ -97,7 +97,7 @@ class _SetupSequenceTechSupportScreenState
               ),
               const SizedBox(height: 8),
               TextInputWidget(
-                labelText: 'Pin Code'.tr,
+                labelText: 'PIN Code'.tr,
                 controller: pinController,
                 type: OSKInputType.number,
                 obscureText: true,
