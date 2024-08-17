@@ -53,35 +53,35 @@ class _SetupSequenceAdminUserScreenState
           title: 'Admin User'.tr,
           subtitle: 'Please create an admin user'.tr,
           nextLabel: 'Save'.tr,
-          nextCallback:
-              usernameController.text.isEmpty || pinController.text.isEmpty
-                  ? null
-                  : () async {
-                      AppUser user = AppUser(
-                        id: -1,
-                        username: usernameController.text,
-                        pin: pinController.text,
-                        level: AppUserLevel.admin,
+          nextCallback: usernameController.text.isEmpty ||
+                  pinController.text.isEmpty
+              ? null
+              : () async {
+                  AppUser user = AppUser(
+                    id: -1,
+                    username: usernameController.text,
+                    pin: pinController.text,
+                    level: AppUserLevel.admin,
+                  );
+                  final result = await app.addUser(user: user);
+                  if (result.success) {
+                    await app.loadAppUserList();
+                    await Box.setBool(
+                      key: Keys.didAdminUserCreated,
+                      value: true,
+                    );
+                    sc.refreshSetupSequenceList();
+                    NavController.toHome();
+                  } else {
+                    if (context.mounted) {
+                      DialogUtils.snackbar(
+                        context: context,
+                        message: result.message ?? 'User creation failed'.tr,
+                        type: SnackbarType.error,
                       );
-                      final success = await app.addUser(user: user);
-                      if (success) {
-                        await app.loadAppUserList();
-                        await Box.setBool(
-                          key: Keys.didAdminUserCreated,
-                          value: true,
-                        );
-                        sc.refreshSetupSequenceList();
-                        NavController.toHome();
-                      } else {
-                        if (context.mounted) {
-                          DialogUtils.snackbar(
-                            context: context,
-                            message: 'User creation failed'.tr,
-                            type: SnackbarType.error,
-                          );
-                        }
-                      }
-                    },
+                    }
+                  }
+                },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

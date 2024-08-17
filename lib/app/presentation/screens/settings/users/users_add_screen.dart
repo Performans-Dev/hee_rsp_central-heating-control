@@ -168,7 +168,7 @@ class _SettingsUserAddScreenState extends State<SettingsUserAddScreen> {
     AppController app = Get.find();
     final result = await app.addUser(user: appUser);
 
-    if (result) {
+    if (result.success) {
       //success
       if (!mounted) return;
 
@@ -185,7 +185,7 @@ class _SettingsUserAddScreenState extends State<SettingsUserAddScreen> {
           onPressed: onSaveButonPressed,
         ),
         context: context,
-        message: "There was a problem registering the user.",
+        message: result.message ?? "There was a problem registering the user.",
         type: SnackbarType.error,
       );
     }

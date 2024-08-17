@@ -191,10 +191,21 @@ class AppController extends GetxController {
     return result > 0;
   }
 
-  Future<bool> addUser({required AppUser user}) async {
+  Future<GenericResponse> addUser({required AppUser user}) async {
     final result = await DbProvider.db.addUser(user);
     await loadAppUserList();
-    return result > 0;
+    switch (result) {
+      case -3:
+        return GenericResponse.error(message: 'Username already exists'.tr);
+      case -2:
+        return GenericResponse.error(message: 'Couldnot read database'.tr);
+      case -1:
+        return GenericResponse.error(message: 'Database exception'.tr);
+      case 0:
+        return GenericResponse.error(message: 'Unknown error'.tr);
+      default:
+        return GenericResponse.success(user);
+    }
   }
   //#endregion
 

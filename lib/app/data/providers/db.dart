@@ -145,6 +145,9 @@ class DbProvider {
   Future<int> addUser(AppUser user) async {
     final db = await database;
     if (db == null) return -2;
+
+    final existingUser = await getUserByName(username: user.username);
+    if (existingUser != null) return -3;
     try {
       return await db.insert(
         Keys.tableUsers,
@@ -216,6 +219,27 @@ class DbProvider {
       return users;
     }
     return users;
+  }
+  //#endregion
+
+  //#region GET USER BY NAME
+  Future<AppUser?> getUserByName({required String username}) async {
+    final db = await database;
+    if (db == null) return null;
+    try {
+      final result = await db.query(
+        Keys.tableUsers,
+        where: 'username=?',
+        whereArgs: [username],
+      );
+      if (result.isNotEmpty) {
+        return AppUser.fromMap(result.first);
+      }
+      return null;
+    } on Exception catch (err) {
+      log(err.toString());
+      return null;
+    }
   }
   //#endregion
 
