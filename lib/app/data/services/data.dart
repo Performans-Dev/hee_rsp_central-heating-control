@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {
@@ -193,7 +194,9 @@ class DataController extends GetxController {
   Future<int?> copyPlan({required int sourcePlanId}) async {
     final data = await DbProvider.db.getPlanDetails(planId: sourcePlanId);
     if (data.isEmpty) {
-      print('No details to copy for planId: $sourcePlanId');
+      if (kDebugMode) {
+        print('No details to copy for planId: $sourcePlanId');
+      }
       return null;
     }
     final target = await DbProvider.db.addPlanDefinition(

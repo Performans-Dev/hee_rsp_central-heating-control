@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:dart_periphery/dart_periphery.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:rpi_spi/rpi_spi.dart';
 
@@ -262,7 +263,9 @@ class GpioController extends GetxController {
       _serial.value = s;
       update();
     } on Exception catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       Buzz.alarm();
     }
   }

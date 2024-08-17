@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
@@ -58,22 +57,8 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
-  // localization
-  initializeDateFormatting();
-
   // bind services
   await AppBindings().dependencies();
-
-  // Box.setBool(key: Keys.didLanguageSelected, value: false);
-  // Box.setBool(key: Keys.didTimezoneSelected, value: false);
-  // Box.setBool(key: Keys.didDateFormatSelected, value: false);
-  // Box.setBool(key: Keys.didPickedTheme, value: false);
-  // Box.setBool(key: Keys.didRegisteredDevice, value: false);
-  // Box.setBool(key: Keys.didActivated, value: false);
-  // await DbProvider.db.deleteUser(
-  // AppUser(id: 1, username: "Admin User", pin: "0000000", isAdmin: true));
-  // await DbProvider.db
-  //     .deleteUser(AppUser(id: 2, username: "İo", pin: "123456", isAdmin: true));
 
   // run app
   runApp(const MainApp());

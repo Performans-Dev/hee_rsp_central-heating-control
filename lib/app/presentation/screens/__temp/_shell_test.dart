@@ -205,7 +205,7 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           subtitle: Text(
               '${updateCommands[index].output}\n${updateCommands[index].error}'),
           trailing: IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: () async {
               try {
                 final result = await Process.run(
@@ -231,7 +231,7 @@ class _ShellTestScreenState extends State<ShellTestScreen> {
           ),
         ),
         itemCount: updateCommands.length,
-        separatorBuilder: (context, index) => Divider(),
+        separatorBuilder: (context, index) => const Divider(),
       ),
     );
   }

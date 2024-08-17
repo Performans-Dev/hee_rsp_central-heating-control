@@ -6,8 +6,6 @@ import 'package:central_heating_control/app/core/localization/localization_servi
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
-import 'package:central_heating_control/app/data/models/account_subscription_type.dart';
-import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/activation_result.dart';
 import 'package:central_heating_control/app/data/models/app_settings.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
@@ -491,7 +489,7 @@ class AppController extends GetxController {
     //     chcDeviceId: deviceId,
     //   ),
     // );
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     // if (response.success && response.data != null) {
     // ActivationResult activationResult = response.data!;

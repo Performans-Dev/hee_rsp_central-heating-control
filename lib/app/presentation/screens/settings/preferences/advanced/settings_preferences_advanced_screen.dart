@@ -373,8 +373,8 @@ class _SettingsPreferencesAdvancedScreenState
             DialogUtils.confirmDialog(
               context: context,
               title: "Result",
-              description: '${results}\n'
-                  '${errors}',
+              description: '$results\n'
+                  '$errors',
               positiveText: 'Retry',
               negativeText: 'Cancel',
               positiveCallback: () {

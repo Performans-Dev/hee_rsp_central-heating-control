@@ -16,6 +16,7 @@ import 'package:central_heating_control/app/presentation/components/dropdowns/ye
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -291,17 +292,25 @@ class _SettingsPreferencesTimezoneScreenState
                   Duration offset = _selectedTimezone.offset();
                   var utcTime = newTime.subtract(offset);
                   //TODO: save utc time in OS
-                  print(utcTime);
+                  if (kDebugMode) {
+                    print(utcTime);
+                  }
                   //TODO: save timezone in OS
-                  print(_selectedTimezone.zone);
+                  if (kDebugMode) {
+                    print(_selectedTimezone.zone);
+                  }
                 } else if (didDateTimeChanged && !didTimezoneChanged) {
                   var newTime = DateTime(_selectedYear, _selectedMonth,
                       _selectedDay, _selectedHour, _selectedMinute);
                   //TODO: save local time in OS
-                  print(newTime);
+                  if (kDebugMode) {
+                    print(newTime);
+                  }
                 } else if (!didDateTimeChanged && didTimezoneChanged) {
                   //TODO: save only timezone in OS
-                  print(_selectedTimezone.zone);
+                  if (kDebugMode) {
+                    print(_selectedTimezone.zone);
+                  }
                 }
 
                 if (mounted) {

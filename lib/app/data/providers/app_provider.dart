@@ -15,7 +15,6 @@ import 'package:central_heating_control/app/data/models/timezone_definition.dart
 import 'package:central_heating_control/app/data/providers/base.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:flutter_guid/flutter_guid.dart';
-import 'package:get/get.dart';
 
 class AppProvider {
   static Future<GenericResponse<AppSettings?>> fetchAppSettings() async {

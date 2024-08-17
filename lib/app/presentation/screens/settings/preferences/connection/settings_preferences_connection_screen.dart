@@ -59,7 +59,7 @@ class _SettingsPreferencesConnectionScreenState
               Row(
                 children: [
                   Expanded(
-                    child: wifiSSids.length > 0
+                    child: wifiSSids.isNotEmpty
                         ? StringDropdownWidget(
                             data: wifiSSids,
                             value: selectedSsid,
@@ -69,7 +69,7 @@ class _SettingsPreferencesConnectionScreenState
                               });
                             },
                           )
-                        : Text('Scanning WiFi'),
+                        : const Text('Scanning WiFi'),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -127,7 +127,7 @@ class _SettingsPreferencesConnectionScreenState
                 secondary:
                     isEthernetAuto == 0 ? const Text('Obtain from DHCP') : null,
               ),
-              Container(
+              SizedBox(
                 height: 64,
                 child: Row(
                   children: [

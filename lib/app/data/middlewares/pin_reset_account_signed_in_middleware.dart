@@ -12,7 +12,7 @@ class PinResetAccountSignedInMiddleware extends GetMiddleware {
     final AppController appController = Get.find();
 
     if (appController.pinResetAccount == null) {
-      return RouteSettings(name: Routes.signinForPinReset);
+      return const RouteSettings(name: Routes.signinForPinReset);
     }
 
     return null;

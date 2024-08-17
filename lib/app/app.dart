@@ -10,11 +10,12 @@ import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
-import 'package:central_heating_control/app/presentation/components/idle_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+
+import 'package:intl/date_symbol_data_local.dart';
 
 class PiScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -107,6 +108,11 @@ class MainApp extends StatelessWidget {
     ThemeMode themeModeOnDisk =
         ThemeMode.values[Box.getInt(key: Keys.themeMode)];
     await appController.setThemeMode(themeModeOnDisk);
+
+    // localization
+
+    initializeDateFormatting(
+        '${LocalizationService.locale.languageCode}_${LocalizationService.locale.countryCode?.toUpperCase()}');
   }
 }
 

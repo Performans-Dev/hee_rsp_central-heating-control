@@ -66,7 +66,7 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                               RestartWidget.restartApp(context);
                             },
                             title: Text(
-                              app.themes[index].camelCaseToHumanReadable(),
+                              app.themes[index].camelCaseToHumanReadable().tr,
                             ),
                           ),
                         ),

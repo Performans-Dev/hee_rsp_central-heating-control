@@ -33,7 +33,7 @@ class DialogUtils {
                   negativeCallback();
                 }
               },
-              child: Text(negativeText ?? "No"),
+              child: Text(negativeText ?? 'Cancel'.tr),
             ),
             TextButton(
               onPressed: () {
@@ -43,7 +43,7 @@ class DialogUtils {
                   positiveCallback();
                 }
               },
-              child: Text(positiveText ?? "Yes"),
+              child: Text(positiveText ?? 'Ok'.tr),
             ),
           ],
         );
@@ -74,7 +74,7 @@ class DialogUtils {
                   positiveCallback();
                 }
               },
-              child: Text(positiveText ?? "Yes"),
+              child: Text(positiveText ?? 'Ok'.tr),
             ),
           ],
         );
@@ -118,8 +118,6 @@ class DialogUtils {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
-
-  progressDialog() {}
 
   static Future<String?> pinDialog({
     required BuildContext context,
@@ -167,7 +165,8 @@ class DialogUtils {
                                                   fontWeight: FontWeight.w500),
                                         ),
                                         TextSpan(
-                                          text: ' için PIN kodu girişi yapın ',
+                                          text:
+                                              ' için PIN kodu girişi yapın '.tr,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge
@@ -270,12 +269,15 @@ class DialogUtils {
                           ),
                           const SizedBox(height: 8),
                           TextButton(
-                              onPressed: () {
-                                Box.setString(
-                                    key: Keys.forgottenPin, value: username);
-                                Get.toNamed(Routes.pinReset);
-                              },
-                              child: Text("Pin kodumu unuttum"))
+                            onPressed: () {
+                              Box.setString(
+                                key: Keys.forgottenPin,
+                                value: username,
+                              );
+                              Get.toNamed(Routes.pinReset);
+                            },
+                            child: Text('Forgot PIN code'.tr),
+                          )
                         ],
                       ),
                     ),

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ComIndicatorLedWidget extends StatelessWidget {
   const ComIndicatorLedWidget({super.key});

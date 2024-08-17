@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
