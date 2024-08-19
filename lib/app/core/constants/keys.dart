@@ -52,6 +52,7 @@ class Keys {
 
   //#region DATABASE
   static const int databaseVersion = 14;
+  static const int logDatabaseVersion = 1;
   static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
@@ -222,5 +223,25 @@ class Keys {
     INSERT INTO planDetails (planId, hour, day, level) VALUES (1, {H}, {D}, 1)
   ''';
 
+  //#endregion
+
+  //#region LogDb
+  static const String logDbDropLogTable = '''
+    DROP TABLE IF EXISTS logTable
+  ''';
+
+  static const String logDbCreateLogTable = '''
+    CREATE TABLE IF NOT EXISTS logTable (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+       level INTEGER NOT NULL DEFAULT 0,
+       device TEXT,
+       session TEXT,
+       time TEXT,
+       category TEXT,
+       message TEXT,
+       payload TEXT,
+       syncStatus INTEGER NOT NULL DEFAULT 0      
+    )
+  ''';
   //#endregion
 }

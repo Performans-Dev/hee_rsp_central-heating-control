@@ -4,6 +4,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class CommonUtils {
+  static String getCurrentDateFormatted() {
+    final DateTime now = DateTime.now();
+    final String formattedDate =
+        "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}";
+    return formattedDate;
+  }
+
   static Color hexToColor(BuildContext context, String hex) {
     return hex.isEmpty
         ? Theme.of(context).canvasColor
