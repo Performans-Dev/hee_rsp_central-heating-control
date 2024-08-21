@@ -32,10 +32,11 @@ Future<void> main() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
 
   final box = GetStorage();
+  //
 
   box.write(
     Keys.documentsDirectoryPath,
-    isPi ? documentsDirectory.path : Keys.piPath,
+    isPi ? Keys.piPath : documentsDirectory.path,
   );
 
   // await box.erase();
