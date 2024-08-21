@@ -49,7 +49,7 @@ class _LogViewScreenState extends State<LogViewScreen> {
     List<LogDefinition> fetchedLogs =
         await LogService.readLogs(date: selectedDate);
     setState(() {
-      logs = fetchedLogs;
+      logs = fetchedLogs.reversed.toList();
       availableDays = List.generate(
         DateTime(selectedYear, selectedMonth + 1, 0).day,
         (index) => index + 1,
