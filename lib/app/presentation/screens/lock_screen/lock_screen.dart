@@ -69,112 +69,125 @@ class _LockScreenState extends State<LockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppController>(builder: (app) {
-      return Scaffold(
-        body: Container(
-          color: Colors.black,
-          child: Stack(
-            children: [
-              Opacity(
-                opacity: 0.56,
-                child: Image.network(
-                  imageUrls[currentImageIndex],
-                  fit: BoxFit.cover,
-                  width: Get.width,
-                  height: Get.height,
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 0, top: 20),
-                  child: const Opacity(
-                    opacity: 0.4,
-                    child: LogoWidget(
-                      themeMode: ThemeMode.dark,
-                      height: 30,
-                    ),
+    return GetBuilder<AppController>(
+      builder: (app) {
+        return Scaffold(
+          body: Container(
+            color: Colors.black,
+            child: Stack(
+              children: [
+                Opacity(
+                  opacity: 0.56,
+                  child: Image.network(
+                    imageUrls[currentImageIndex],
+                    fit: BoxFit.cover,
+                    width: Get.width,
+                    height: Get.height,
                   ),
                 ),
-              ),
-              const Align(
-                alignment: Alignment.topRight,
-                child: Opacity(
-                  opacity: 0.4,
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "Central Controller ",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () => setState(() {
-                  showUserList = !showUserList;
-                }),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
+                Align(
+                  alignment: Alignment.topLeft,
                   child: Container(
-                    constraints: const BoxConstraints.expand(),
+                    padding: const EdgeInsets.only(left: 0, top: 20),
+                    child: const Opacity(
+                      opacity: 0.4,
+                      child: LogoWidget(
+                        themeMode: ThemeMode.dark,
+                        height: 30,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: timeAlignment,
-                  child: const Opacity(
-                    opacity: 0.83,
-                    child: DateTextWidget(large: true),
+                const Align(
+                  alignment: Alignment.topRight,
+                  child: Opacity(
+                    opacity: 0.4,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Central Controller ",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: AnimatedContainer(
-                  width: 300,
-                  height: showUserList ? (64 * app.appUserList.length) + 32 : 0,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.only(topRight: Radius.circular(20)),
-                    color: Theme.of(context).focusColor.withOpacity(0.3),
+                InkWell(
+                  onTap: () => setState(() {
+                    showUserList = !showUserList;
+                  }),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Container(
+                      constraints: const BoxConstraints.expand(),
+                    ),
                   ),
-                  padding: const EdgeInsets.all(16),
-                  duration: const Duration(milliseconds: 300),
-                  child: showUserList
-                      ? ListView.builder(
-                          shrinkWrap: false,
-                          itemBuilder: (context, index) => ListTile(
-                            leading: CircleAvatar(
-                              child: Text(app.appUserList[index].username
-                                  .getInitials()),
-                            ),
-                            title: Text(
-                              app.appUserList[index].username,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.white.withOpacity(0.83),
-                                  ),
-                            ),
-                            onTap: () async {
-                              final pin = await DialogUtils.pinDialog(
-                                context: context,
-                                username: app.appUserList[index].username,
-                              );
-                              if (pin != null && pin.length == 6) {
-                                final loginResult = await app.loginUser(
-                                    username: app.appUserList[index].username,
-                                    pin: pin);
-                                if (loginResult) {
-                                  NavController.toHome();
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: timeAlignment,
+                    child: const Opacity(
+                      opacity: 0.83,
+                      child: DateTextWidget(large: true),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: AnimatedContainer(
+                    width: 300,
+                    height:
+                        showUserList ? (64 * app.appUserList.length) + 32 : 0,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(20)),
+                      color: Theme.of(context).focusColor.withOpacity(0.3),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    duration: const Duration(milliseconds: 300),
+                    child: showUserList
+                        ? ListView.builder(
+                            shrinkWrap: false,
+                            itemBuilder: (context, index) => ListTile(
+                              leading: CircleAvatar(
+                                child: Text(app.appUserList[index].username
+                                    .getInitials()),
+                              ),
+                              title: Text(
+                                app.appUserList[index].username,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: Colors.white.withOpacity(0.83),
+                                    ),
+                              ),
+                              onTap: () async {
+                                final pin = await DialogUtils.pinDialog(
+                                  context: context,
+                                  username: app.appUserList[index].username,
+                                );
+                                if (pin != null && pin.length == 6) {
+                                  final loginResult = await app.loginUser(
+                                      username: app.appUserList[index].username,
+                                      pin: pin);
+                                  if (loginResult) {
+                                    NavController.toHome();
+                                  } else {
+                                    const snackBar = SnackBar(
+                                      content: Text('Incorrect PIN code.'),
+                                      duration: Duration(seconds: 2),
+                                    );
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                  }
                                 } else {
                                   const snackBar = SnackBar(
-                                    content: Text('Incorrect PIN code.'),
+                                    content: Text(
+                                        'PIN code required, Tap your "Name" and enter your PIN code.'),
                                     duration: Duration(seconds: 2),
                                   );
                                   if (context.mounted) {
@@ -182,28 +195,18 @@ class _LockScreenState extends State<LockScreen> {
                                         .showSnackBar(snackBar);
                                   }
                                 }
-                              } else {
-                                const snackBar = SnackBar(
-                                  content: Text(
-                                      'PIN code required, Tap your "Name" and enter your PIN code.'),
-                                  duration: Duration(seconds: 2),
-                                );
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              }
-                            },
-                          ),
-                          itemCount: app.appUserList.length,
-                        )
-                      : null,
+                              },
+                            ),
+                            itemCount: app.appUserList.length,
+                          )
+                        : null,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

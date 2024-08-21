@@ -18,6 +18,7 @@ import 'package:central_heating_control/app/presentation/screens/pin_reset/signi
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_list_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/logs.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_list_screen.dart';
@@ -141,6 +142,11 @@ final List<GetPage> getPages = [
     middlewares: [
       UserLoggedInMiddleware(),
     ],
+  ),
+  GetPage(
+    name: Routes.logs,
+    page: () => const LogViewScreen(),
+    transition: Transition.zoom,
   ),
   GetPage(
     name: Routes.functions,

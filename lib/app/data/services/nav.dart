@@ -1,4 +1,6 @@
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/main.dart';
@@ -105,11 +107,25 @@ class NavController {
     );
   }
 
-  static void lock() {
+  static void toLogs() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.logs),
+    );
+  }
+
+  static void lock() async {
     Buzz.success();
     AppController appController = Get.find();
+    final user = appController.loggedInAppUser;
     appController.logoutUser();
-    Get.toNamed(Routes.lockScreen);
+    await LogService.addLog(LogDefinition(
+      message: 'Lock Screen (user:${user?.username})',
+    ));
+    Future.delayed(Duration.zero, () {
+      Get.toNamed(Routes.lockScreen);
+    });
   }
 
   static Future<bool> showFunctionsDialog(

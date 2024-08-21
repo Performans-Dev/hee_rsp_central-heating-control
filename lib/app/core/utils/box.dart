@@ -64,6 +64,11 @@ class Box {
   }
   //#endregion
 
+  //#region DB PATH
+  static String get documentsDirectoryPath =>
+      getString(key: Keys.documentsDirectoryPath);
+  //#endregion
+
   //#region FLAGS
   Future<void> markLanguageSelected() async =>
       await setBool(key: Keys.didLanguageSelected, value: true);

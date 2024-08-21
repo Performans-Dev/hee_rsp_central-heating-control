@@ -6,19 +6,23 @@ class DayDropdownWidget extends StatelessWidget {
     super.key,
     this.onChanged,
     this.value,
+    this.items,
+    this.isExpanded = true,
   });
   final Function(int?)? onChanged;
   final int? value;
+  final List<int>? items;
+  final bool isExpanded;
 
   @override
   Widget build(BuildContext context) {
-    final days = List.generate(31, (index) => index + 1);
+    final days = items ?? List.generate(31, (index) => index + 1);
     return ClipRRect(
       borderRadius: UiDimens.formRadius,
       child: DropdownButton<int>(
         borderRadius: UiDimens.formRadius,
         underline: Container(),
-        isExpanded: true,
+        isExpanded: isExpanded,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         items: days
             .map((e) => DropdownMenuItem<int>(

@@ -2,16 +2,16 @@ import 'dart:convert';
 
 class LogDefinition {
   int? id;
-  DateTime time;
+  DateTime? time;
   String message;
-  int level;
+  LogLevel level;
   int type;
   int status;
   LogDefinition({
     this.id,
-    required this.time,
+    this.time,
     required this.message,
-    this.level = 0,
+    this.level = LogLevel.debug,
     this.type = 0,
     this.status = 0,
   });
@@ -19,19 +19,20 @@ class LogDefinition {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'time': time.millisecondsSinceEpoch,
+      'time': (time ?? DateTime.now()).millisecondsSinceEpoch,
       'message': message,
-      'level': level,
+      'level': level.index,
       'type': type,
       'status': status,
     };
   }
 
-  factory LogDefinition.add({required String message, int? level, int? type}) {
+  factory LogDefinition.add(
+      {required String message, LogLevel? level, int? type}) {
     return LogDefinition(
       time: DateTime.now(),
       message: message,
-      level: level ?? 0,
+      level: level ?? LogLevel.debug,
       type: type ?? 0,
     );
   }
@@ -41,7 +42,7 @@ class LogDefinition {
       id: map['id']?.toInt(),
       time: DateTime.fromMillisecondsSinceEpoch(map['time']),
       message: map['message'] ?? '',
-      level: map['level']?.toInt() ?? 0,
+      level: LogLevel.values[map['level']?.toInt() ?? 0],
       type: map['type']?.toInt() ?? 0,
       status: map['status']?.toInt() ?? 0,
     );
@@ -51,4 +52,12 @@ class LogDefinition {
 
   factory LogDefinition.fromJson(String source) =>
       LogDefinition.fromMap(json.decode(source));
+}
+
+enum LogLevel {
+  debug,
+  info,
+  warning,
+  error,
+  critical,
 }

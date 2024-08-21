@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
@@ -57,11 +58,9 @@ class DbProvider {
 
   Future<String?> getDbPath() async {
     try {
-      // final io.Directory appDocumentsDir =
-      //     await getApplicationDocumentsDirectory();
       String dbPath = p.join(
-        // appDocumentsDir.path,
-        'home/pi/Heethins/CC/databases',
+        Box.documentsDirectoryPath,
+        Keys.databasePath,
         Keys.databasePath,
         Keys.databaseName,
       );

@@ -1,4 +1,9 @@
 class Keys {
+  static const String piPath = 'home/pi/Heethins/CC';
+  static const String databasePath = 'databases';
+  static const String logPath = 'logs';
+
+  ///
   static const String appSettings = 'appSettings';
   static const String lastTouchTime = 'lastTouchTime';
   static const String localeLang = 'localeLang';
@@ -6,6 +11,7 @@ class Keys {
   static const String isDarkMode = 'isDarkMode';
   static const String selectedTheme = 'selectedTheme';
   static const String themeMode = 'themeMode';
+  static const String documentsDirectoryPath = 'documentsDirectoryPath';
 
   static const String selectedTimezone = 'selectedTimezone';
   static const String selectedTimeFormat = 'selectedTimeFormat';
@@ -52,8 +58,6 @@ class Keys {
 
   //#region DATABASE
   static const int databaseVersion = 14;
-  static const int logDatabaseVersion = 1;
-  static const String databasePath = 'databases';
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
   static const String tableSensors = 'sensors';

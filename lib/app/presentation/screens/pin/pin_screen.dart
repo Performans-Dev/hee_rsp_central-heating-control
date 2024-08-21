@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,12 +17,7 @@ class _PinScreenState extends State<PinScreen> {
     super.initState();
     username = Get.parameters['username'] ?? '';
     if (username.isEmpty) {
-      Future.delayed(
-        Duration.zero,
-        () {
-          Get.offAndToNamed(Routes.lockScreen);
-        },
-      );
+      NavController.lock();
     }
   }
 
