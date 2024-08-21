@@ -154,6 +154,14 @@ class AppController extends GetxController {
     final users = await DbProvider.db.getUsers();
     _appUserList.assignAll(users);
     _didAppUsersLoaded.value = true;
+    if (_appUserList.isEmpty) {
+      await DbProvider.db.addUser(AppUser(
+        id: -1,
+        username: 'Developer',
+        pin: '111111',
+        level: AppUserLevel.developer,
+      ));
+    }
     update();
   }
 
@@ -176,7 +184,9 @@ class AppController extends GetxController {
     final result = loggedInAppUser != null;
     if (result) {
       LogService.addLog(LogDefinition(
-        message: 'Unlock Screen (user:${user?.username})',
+        message:
+            'Unlock Screen ${user != null ? '${user.username}(${user.level.name})' : ''}',
+        type: LogType.unlockScreenEvent,
       ));
     }
     return result;

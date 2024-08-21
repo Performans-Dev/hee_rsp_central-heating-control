@@ -121,7 +121,8 @@ class NavController {
     final user = appController.loggedInAppUser;
     appController.logoutUser();
     await LogService.addLog(LogDefinition(
-      message: 'Lock Screen (user:${user?.username})',
+      message: 'Lock Screen ${user != null ? '(user:${user.username})' : ''}',
+      type: LogType.lockScreenEvent,
     ));
     Future.delayed(Duration.zero, () {
       Get.toNamed(Routes.lockScreen);

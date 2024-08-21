@@ -1,12 +1,13 @@
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/day.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/month.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/year.dart';
-import 'package:intl/intl.dart';
-import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class LogViewScreen extends StatefulWidget {
   const LogViewScreen({super.key});
@@ -36,10 +37,11 @@ class _LogViewScreenState extends State<LogViewScreen> {
     selectedMonth = now.month;
     selectedDay = now.day;
 
-    // Populate availableYears based on your log data
-    availableYears = [
-      now.year
-    ]; // This should be dynamically loaded based on available logs
+    availableYears = List.generate(
+        now.year + 1 - 2024,
+        (e) =>
+            now.year -
+            e); 
 
     _loadLogsForSelectedDate();
   }
@@ -98,7 +100,7 @@ class _LogViewScreenState extends State<LogViewScreen> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             decoration: BoxDecoration(
               color: Theme.of(context)
                   .colorScheme
@@ -122,7 +124,7 @@ class _LogViewScreenState extends State<LogViewScreen> {
                     items: availableYears,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 // Month Dropdown
                 SizedBox(
                   width: 128,
@@ -136,7 +138,7 @@ class _LogViewScreenState extends State<LogViewScreen> {
                     },
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 // Day Dropdown
                 SizedBox(
                   width: 60,
@@ -153,7 +155,8 @@ class _LogViewScreenState extends State<LogViewScreen> {
                 Expanded(child: Container()),
                 // "Today" Button
                 IconButton(
-                    onPressed: _previousDay, icon: Icon(Icons.chevron_left)),
+                    onPressed: _previousDay,
+                    icon: const Icon(Icons.chevron_left)),
                 TextButton.icon(
                   onPressed: selectedDay == DateTime.now().day &&
                           selectedMonth == DateTime.now().month &&
@@ -161,31 +164,40 @@ class _LogViewScreenState extends State<LogViewScreen> {
                       ? null
                       : _selectToday,
                   label: Text('Show Today'.tr),
-                  icon: Icon(Icons.today),
+                  icon: const Icon(Icons.today),
                 ),
                 IconButton(
-                    onPressed: _nextDay, icon: Icon(Icons.chevron_right)),
-                SizedBox(width: 8),
+                  onPressed: _nextDay,
+                  icon: const Icon(Icons.chevron_right),
+                ),
+                const SizedBox(width: 8),
                 TextButton.icon(
                   onPressed: logs.isEmpty ? null : () {},
                   label: Text('Sync'.tr),
-                  icon: Icon(Icons.sync),
+                  icon: const Icon(Icons.sync),
                 ),
               ],
             ),
           ),
           Expanded(
             child: logs.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text('No logs found'),
                   )
                 : ListView.builder(
                     itemCount: logs.length,
                     itemBuilder: (context, index) {
                       final log = logs[index];
+                      final time = DateFormat('HH:mm:ss.SSS').format(log.time!);
                       return ListTile(
-                        title: Text(log.message),
-                        subtitle: Text('${log.level} - ${log.time}'),
+                        leading: Text(time),
+                        title: Text(log.type.name.camelCaseToHumanReadable()),
+                        subtitle: Text(log.message),
+                        trailing: Text('[${log.level.name[0].toUpperCase()}]'),
+                        dense: true,
+                        tileColor: Get.isDarkMode
+                            ? log.backgroundColorDark
+                            : log.backgroundColorLight,
                       );
                     },
                   ),
