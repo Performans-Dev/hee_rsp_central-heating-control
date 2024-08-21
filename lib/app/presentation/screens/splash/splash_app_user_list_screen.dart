@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/loading_indicator.dart';
@@ -30,7 +31,7 @@ class _SplashAppUserListScreenState extends State<SplashAppUserListScreen> {
     return Scaffold(
       body: Center(
         child: LoadingIndicatorWidget(
-          text: 'Checking Users'.tr,
+          text: 'Checking Users\n${Box.documentsDirectoryPath}'.tr,
         ),
       ),
     );
