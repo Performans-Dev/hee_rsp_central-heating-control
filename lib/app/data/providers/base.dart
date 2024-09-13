@@ -16,7 +16,7 @@ class BaseNetworkProvider {
     final Map<String, String> headers = {
       'Access-Control-Allow-Origin': '*',
       'Accept': '*/*',
-      'X-Api-Key': Secrets.apiKey,
+      'X-Api-Key': 'b75a185c-0cb9-4223-86b9-90a1a85d3b48', //Secrets.apiKey,
     };
     Dio dio = Dio();
     dio.options.receiveTimeout = const Duration(seconds: 10);
