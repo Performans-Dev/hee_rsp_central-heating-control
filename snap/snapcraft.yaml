@@ -1,0 +1,20 @@
+name: heethings-cc
+base: core18
+version: '1.0.27'
+summary: Central HVAC Control by Heethings"
+description: |
+  This app is used to control central heating by Heethings
+
+grade: stable
+confinement: devmode
+
+apps: 
+  heethings-cc:
+    command: central_heating_control
+    extensions: [flutter-stable]
+
+parts: 
+  heethings-cc:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart
