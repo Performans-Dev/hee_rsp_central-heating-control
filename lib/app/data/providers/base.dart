@@ -6,7 +6,6 @@ import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/network.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/main.dart';
-import 'package:central_heating_control/secrets.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
