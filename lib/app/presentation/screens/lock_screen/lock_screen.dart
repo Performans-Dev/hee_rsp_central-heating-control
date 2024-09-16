@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
+import 'package:central_heating_control/app/presentation/widgets/wallpaper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -76,15 +77,7 @@ class _LockScreenState extends State<LockScreen> {
             color: Colors.black,
             child: Stack(
               children: [
-                Opacity(
-                  opacity: 0.56,
-                  child: Image.network(
-                    imageUrls[currentImageIndex],
-                    fit: BoxFit.cover,
-                    width: Get.width,
-                    height: Get.height,
-                  ),
-                ),
+                WallpaperWidget(),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Container(
