@@ -41,7 +41,7 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
   }
 
   Future<void> _loadImages() async {
-    final directory = Directory('~/Pictures');
+    final directory = Directory('/home/pi/Pictures');
     // Directory(path.join(
     //     (await getApplicationDocumentsDirectory()).path, 'Pictures/cc'));
     if (directory.existsSync()) {
