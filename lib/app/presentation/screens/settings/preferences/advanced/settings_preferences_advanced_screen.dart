@@ -138,23 +138,12 @@ class _SettingsPreferencesAdvancedScreenState
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () async {
-                // updateCC(context);
-                final result = await Process.run(
-                    '/home/pi/Heethings/cc-updater-source/hee-rpi-chc_updater/build/linux/arm64/release/bundle/chc_updater',
-                    []);
-                if (result.exitCode == 0) {
-                  Buzz.success();
+                Future.delayed(Duration(seconds: 1), () {
                   Process.killPid(pid);
-                } else {
-                  if (context.mounted) {
-                    DialogUtils.alertDialog(
-                      context: context,
-                      title: 'Error',
-                      description: result.stderr,
-                      positiveText: 'Ok',
-                    );
-                  }
-                }
+                });
+                await Process.run('sudo', [
+                  '/home/pi/Heethings/cc-updater-source/hee-rpi-chc_updater/build/linux/arm64/release/bundle/chc_updater'
+                ]);
               },
             ),
             const SizedBox(height: 8),
