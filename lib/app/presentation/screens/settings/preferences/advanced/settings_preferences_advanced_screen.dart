@@ -177,7 +177,7 @@ class _SettingsPreferencesAdvancedScreenState
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () {
-                Get.toNamed(Routes.developer);
+                Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
               },
             ),
             const SizedBox(height: 8),

@@ -5,7 +5,10 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Diagnostics'),
+      ),
       body: Center(
         child: Text('Settings / Preferences / Advanced / Diagnostics'),
       ),
