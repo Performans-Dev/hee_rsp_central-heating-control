@@ -189,10 +189,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton(
-                          onPressed: () async => await gc.serialSend(),
-                          child: const Text('Serial Send'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () async => await gc.serialSend(),
+                        //   child: const Text('Serial Send'),
+                        // ),
                         ElevatedButton(
                           onPressed: () async => await gc.serialReceive(),
                           child: const Text('Serial Receive'),

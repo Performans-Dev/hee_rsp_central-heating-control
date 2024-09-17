@@ -270,7 +270,7 @@ class GpioController extends GetxController {
     }
   }
 
-  Future<void> serialSend({String? message}) async {
+  Future<void> serialSend(String text, {String? message}) async {
     Buzz.mini();
     if (serial == null) {
       _serialLog.value = 'no-device';
@@ -296,10 +296,10 @@ class GpioController extends GetxController {
     update();
   }
 
-  Future<void> serialReceive() async {
+  Future<String?> serialReceive() async {
     Buzz.mini();
     String message = '';
-    if (serial == null) return;
+    if (serial == null) return null;
     var bytes = 0;
     try {
       for (int i = 0; i < 50; i++) {
@@ -320,6 +320,8 @@ class GpioController extends GetxController {
     Buzz.mini();
     _serialLog.value += message;
     update();
+
+    return message;
   }
 
   //MARK: SPI
@@ -336,7 +338,7 @@ class GpioController extends GetxController {
   }
 
   Future<void> readSpiSensor() async {
-   /*  if (spi == null) return;
+    /*  if (spi == null) return;
     buzz(BuzzerType.feedback);
     // final Mcp3008 mcp3008 = Mcp3008(spi!, 0, 24);
     String response = '';
