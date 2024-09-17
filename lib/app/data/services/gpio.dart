@@ -255,7 +255,9 @@ class GpioController extends GetxController {
 
   void initSerial() {
     try {
-      Serial s = Serial('/dev/serial0', Baudrate.b9600);
+      // Serial s = Serial('/dev/ttyS0', Baudrate.b9600);
+      Serial s = Serial('/dev/ttyUSB0', Baudrate.b9600);
+      // Serial s = Serial('/dev/serial0', Baudrate.b9600);
       s.setBaudrate(Baudrate.b9600);
       s.setParity(Parity.parityNone);
       s.setDataBits(DataBits.db8);
