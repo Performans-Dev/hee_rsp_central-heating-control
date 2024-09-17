@@ -32,7 +32,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
           Expanded(
             child: TextField(
               controller: serialInputController,
-              decoration: const InputDecoration(labelText: 'SerialMessage'),
+              decoration: InputDecoration(labelText: gpio.serialKey),
             ),
           ),
           ElevatedButton(

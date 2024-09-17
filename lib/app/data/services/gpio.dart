@@ -11,6 +11,10 @@ import 'package:rpi_spi/rpi_spi.dart';
 class GpioController extends GetxController {
   Timer? timer;
 
+  // String serialKey = '/dev/ttyUSB0';
+  String serialKey = '/dev/ttyS0';
+  // String serialKey = '/dev/serial0';
+
   @override
   void onInit() {
     if (GetPlatform.isLinux) {
@@ -255,9 +259,7 @@ class GpioController extends GetxController {
 
   void initSerial() {
     try {
-      // Serial s = Serial('/dev/ttyS0', Baudrate.b9600);
-      Serial s = Serial('/dev/ttyUSB0', Baudrate.b9600);
-      // Serial s = Serial('/dev/serial0', Baudrate.b9600);
+      Serial s = Serial(serialKey, Baudrate.b9600);
       s.setBaudrate(Baudrate.b9600);
       s.setParity(Parity.parityNone);
       s.setDataBits(DataBits.db8);
