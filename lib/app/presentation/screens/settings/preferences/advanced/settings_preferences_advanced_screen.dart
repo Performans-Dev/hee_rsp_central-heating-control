@@ -144,6 +144,7 @@ class _SettingsPreferencesAdvancedScreenState
                     []);
                 if (result.exitCode == 0) {
                   Buzz.success();
+                  Process.killPid(pid);
                 } else {
                   if (context.mounted) {
                     DialogUtils.alertDialog(
