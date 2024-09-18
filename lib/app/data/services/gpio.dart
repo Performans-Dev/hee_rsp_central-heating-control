@@ -294,7 +294,7 @@ class GpioController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 100));
     serialPin.write(false);
     await Future.delayed(const Duration(milliseconds: 100));
-    Buzz.mini();
+    Buzz.success();
 
     _serialLog.value = message;
     update();

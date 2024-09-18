@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,9 +31,9 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
       Widget serialConsoleWidget = Row(
         children: [
           Expanded(
-            child: TextField(
+            child: TextInputWidget(
               controller: serialInputController,
-              decoration: InputDecoration(labelText: gpio.serialKey),
+              labelText: gpio.serialKey,
             ),
           ),
           ElevatedButton(
