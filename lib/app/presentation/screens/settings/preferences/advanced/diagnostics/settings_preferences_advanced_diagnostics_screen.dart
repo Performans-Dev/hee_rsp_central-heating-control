@@ -60,6 +60,8 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               serialConsoleWidget,
+              ElevatedButton(onPressed: gpio.txOpen, child: Text('Open TX')),
+              ElevatedButton(onPressed: gpio.txClose, child: Text('Close TX')),
             ],
           ),
         ),
