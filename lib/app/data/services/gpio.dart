@@ -274,14 +274,14 @@ class GpioController extends GetxController {
     }
   }
 
-  txOpen() async {
+  Future<void> txOpen() async {
     var serialPin = outGpios.firstWhere((e) => e.line == 4);
     serialPin.write(true);
     await Future.delayed(const Duration(milliseconds: 100));
     Buzz.success();
   }
 
-  txClose() async {
+  Future<void> txClose() async {
     var serialPin = outGpios.firstWhere((e) => e.line == 4);
     serialPin.write(true);
     await Future.delayed(const Duration(milliseconds: 100));
