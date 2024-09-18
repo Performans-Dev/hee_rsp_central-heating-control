@@ -274,18 +274,28 @@ class GpioController extends GetxController {
     }
   }
 
-  Future<void> txOpen() async {
-    var serialPin = outGpios.firstWhere((e) => e.line == 4);
-    serialPin.write(true);
-    await Future.delayed(const Duration(milliseconds: 100));
-    Buzz.success();
+  Future<String> txOpen() async {
+    try {
+      var serialPin = outGpios.firstWhere((e) => e.line == 4);
+      serialPin.write(true);
+      await Future.delayed(const Duration(milliseconds: 100));
+      Buzz.success();
+      return 'ok';
+    } on Exception catch (e) {
+      return e.toString();
+    }
   }
 
-  Future<void> txClose() async {
-    var serialPin = outGpios.firstWhere((e) => e.line == 4);
-    serialPin.write(true);
-    await Future.delayed(const Duration(milliseconds: 100));
-    Buzz.error();
+  Future<String> txClose() async {
+    try {
+      var serialPin = outGpios.firstWhere((e) => e.line == 4);
+      serialPin.write(false);
+      await Future.delayed(const Duration(milliseconds: 100));
+      Buzz.error();
+      return 'ok';
+    } on Exception catch (e) {
+      return e.toString();
+    }
   }
 
   Future<void> serialSend(String text, {String? message}) async {

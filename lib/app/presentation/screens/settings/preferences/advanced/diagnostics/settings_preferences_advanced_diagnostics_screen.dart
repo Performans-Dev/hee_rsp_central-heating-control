@@ -18,6 +18,8 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
   late TextEditingController serialInputController;
   String serialMessage = '';
   bool busy = false;
+  String txOpenResult = '';
+  String txCloseResult = '';
 
   @override
   void initState() {
@@ -60,8 +62,22 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               serialConsoleWidget,
-              ElevatedButton(onPressed: gpio.txOpen, child: Text('Open TX')),
-              ElevatedButton(onPressed: gpio.txClose, child: Text('Close TX')),
+              ElevatedButton(
+                  onPressed: () async {
+                    setState(() => txOpenResult = 'Opening...');
+                    final s = await gpio.txOpen();
+                    setState(() => txOpenResult = s);
+                  },
+                  child: const Text('Open TX')),
+              Text('TX OPEN RESULT: $txOpenResult'),
+              ElevatedButton(
+                  onPressed: () async {
+                    setState(() => txCloseResult = 'Closing...');
+                    final s = await gpio.txClose();
+                    setState(() => txCloseResult = s);
+                  },
+                  child: const Text('Close TX')),
+              Text('TX CLOSE RESULT: $txCloseResult'),
             ],
           ),
         ),
