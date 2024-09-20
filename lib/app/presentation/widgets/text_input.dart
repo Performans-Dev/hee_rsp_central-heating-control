@@ -14,6 +14,7 @@ class TextInputWidget extends StatelessWidget {
   final int? maxLenght;
   final int? minLength;
   final OSKInputType? type;
+  final GestureTapCallback? showPasswordCallback;
   const TextInputWidget({
     super.key,
     required this.labelText,
@@ -26,6 +27,7 @@ class TextInputWidget extends StatelessWidget {
     this.minLength,
     this.type,
     this.hintText,
+    this.showPasswordCallback,
   });
 
   @override
@@ -35,12 +37,18 @@ class TextInputWidget extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          border: UiDimens.formBorder,
-          /*   border: OutlineInputBorder(
+            border: UiDimens.formBorder,
+            /*   border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
           ), */
-          labelText: labelText,
-        ),
+            labelText: labelText,
+            suffixIcon: showPasswordCallback != null
+                ? IconButton(
+                    icon: Icon(
+                        obscureText ? Icons.remove_red_eye : Icons.password),
+                    onPressed: showPasswordCallback,
+                  )
+                : null),
         keyboardType: keyboardType,
         obscureText: obscureText,
         obscuringCharacter: obscuringCharacter ?? " ",

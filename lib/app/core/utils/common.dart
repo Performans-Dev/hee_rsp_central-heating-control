@@ -93,4 +93,18 @@ class CommonUtils {
       return ProcessResult(0, -99, '', e.toString());
     }
   }
+
+  static String secondsToHumanReadable(int seconds) {
+    Duration duration = Duration(seconds: seconds);
+
+    if (duration.inDays > 0) {
+      return '${duration.inDays} gün ${duration.inHours.remainder(24)} saat ${duration.inMinutes.remainder(60)} dakika';
+    } else if (duration.inHours > 0) {
+      return '${duration.inHours} saat ${duration.inMinutes.remainder(60)} dakika';
+    } else if (duration.inMinutes > 0) {
+      return '${duration.inMinutes} dakika ${duration.inSeconds.remainder(60)} saniye';
+    } else {
+      return '${duration.inSeconds} saniye';
+    }
+  }
 }
