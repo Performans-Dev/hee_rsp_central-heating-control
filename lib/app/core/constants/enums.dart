@@ -113,6 +113,7 @@ enum BuzzerType {
   success,
   error,
   alarm,
+  lock,
 }
 
 enum SubscriptionType {

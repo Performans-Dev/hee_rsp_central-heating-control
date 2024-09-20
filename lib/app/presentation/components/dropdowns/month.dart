@@ -1,5 +1,4 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

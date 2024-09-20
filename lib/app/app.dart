@@ -10,6 +10,7 @@ import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
+import 'package:central_heating_control/app/presentation/components/idle_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -37,26 +38,53 @@ class MainApp extends StatelessWidget {
       child: Builder(builder: (context) {
         final theme = MaterialTheme(
             ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
-        return GetMaterialApp(
-          scrollBehavior: PiScrollBehavior(),
-          debugShowCheckedModeBanner: false,
-          title: UiStrings.appName,
-          theme: theme.light(),
-          darkTheme: theme.dark(),
-          highContrastTheme: theme.lightHighContrast(),
-          highContrastDarkTheme: theme.darkHighContrast(),
-          themeMode: Box.getBool(key: Keys.isDarkMode)
-              ? ThemeMode.dark
-              : ThemeMode.light,
-          defaultTransition: Transition.circularReveal,
-          getPages: getPages,
-          initialRoute: Routes.home,
-          initialBinding: AppBindings(),
-          locale: LocalizationService.locale,
-          fallbackLocale: LocalizationService.fallbackLocale,
-          translationsKeys: LocalizationService.keys,
-          onReady: onReady,
-          builder: FlutterSmartDialog.init(),
+        return IdleDetector(
+          timeoutSeconds:
+              Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 60),
+          excludedRoutes: const [
+            Routes.lockScreen,
+            Routes.developer,
+            Routes.settingsPreferencesAdvancedDiagnostics,
+            Routes.settingsPreferencesAdvancedHardwareConfig,
+            Routes.settingsPreferencesAdvancedUpdates,
+            Routes.settingsPreferencesAdvanced,
+            Routes.signinForPinReset,
+            Routes.pinReset,
+            Routes.setup,
+            Routes.setupActivation,
+            Routes.setupAdminUser,
+            Routes.setupDateTime,
+            Routes.setupLanguage,
+            Routes.setupPrivacy,
+            Routes.setupRegisterDevice,
+            Routes.setupSignin,
+            Routes.setupSubscriptionResult,
+            Routes.setupTechSupport,
+            Routes.setupTerms,
+            Routes.setupTheme,
+            Routes.setupTimezone,
+          ],
+          child: GetMaterialApp(
+            scrollBehavior: PiScrollBehavior(),
+            debugShowCheckedModeBanner: false,
+            title: UiStrings.appName,
+            theme: theme.light(),
+            darkTheme: theme.dark(),
+            highContrastTheme: theme.lightHighContrast(),
+            highContrastDarkTheme: theme.darkHighContrast(),
+            themeMode: Box.getBool(key: Keys.isDarkMode)
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            defaultTransition: Transition.circularReveal,
+            getPages: getPages,
+            initialRoute: Routes.home,
+            initialBinding: AppBindings(),
+            locale: LocalizationService.locale,
+            fallbackLocale: LocalizationService.fallbackLocale,
+            translationsKeys: LocalizationService.keys,
+            onReady: onReady,
+            builder: FlutterSmartDialog.init(),
+          ),
         );
       }),
     );

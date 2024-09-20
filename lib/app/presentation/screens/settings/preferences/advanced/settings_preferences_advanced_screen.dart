@@ -138,7 +138,7 @@ class _SettingsPreferencesAdvancedScreenState
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () async {
-                Future.delayed(Duration(seconds: 1), () {
+                Future.delayed(const Duration(seconds: 1), () {
                   Process.killPid(pid);
                 });
                 await Process.run('sudo', [

@@ -77,7 +77,7 @@ class _LockScreenState extends State<LockScreen> {
             color: Colors.black,
             child: Stack(
               children: [
-                WallpaperWidget(),
+                const WallpaperWidget(),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Container(

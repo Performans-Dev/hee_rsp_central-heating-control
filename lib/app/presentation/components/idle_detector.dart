@@ -1,16 +1,19 @@
 import 'dart:async';
 
-import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IdleDetector extends StatefulWidget {
-  final Widget child;
+  final GetMaterialApp child;
+  final int timeoutSeconds;
   final List<String> excludedRoutes;
 
   const IdleDetector({
     super.key,
     required this.child,
+    this.timeoutSeconds = 60,
     required this.excludedRoutes,
   });
 
@@ -19,84 +22,63 @@ class IdleDetector extends StatefulWidget {
 }
 
 class _IdleDetectorState extends State<IdleDetector> {
-  Timer? _idleTimer;
-  bool _isScreensaverActive = false;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _startIdleTimer();
-  }
-
-  void _startIdleTimer() {
-    _idleTimer?.cancel();
-    _idleTimer = Timer(const Duration(minutes: 5), _showScreensaver);
-  }
-
-  void _showScreensaver() {
-    if (!_isExcludedRoute()) {
-      setState(() {
-        _isScreensaverActive = true;
-      });
-    }
-  }
-
-  void _resetIdleTimer() {
-    if (!_isExcludedRoute()) {
-      _startIdleTimer();
-      if (_isScreensaverActive) {
-        setState(() {
-          _isScreensaverActive = false;
-        });
-        // Get.offAllNamed(Routes.screenSaver); // Navigate to login screen
-      }
-    }
-  }
-
-  bool _isExcludedRoute() {
-    return widget.excludedRoutes.contains(Get.currentRoute);
+    _startTimer();
   }
 
   @override
   void dispose() {
-    _idleTimer?.cancel();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timer.tick == widget.timeoutSeconds && !_isExcludedRoute()) {
+        _lockScreen();
+      }
+    });
+  }
+
+  void _resetTimer() {
+    Buzz.mini();
+    _timer?.cancel();
+    _startTimer();
+  }
+
+  void _lockScreen() {
+    Buzz.lock();
+    Get.toNamed(Routes.lockScreen);
+  }
+
+  bool _isExcludedRoute() {
+    final currentRoute = ModalRoute.of(context)?.settings.name;
+    return widget.excludedRoutes.contains(currentRoute);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: GestureDetector(
-        onTap: _resetIdleTimer,
-        onPanUpdate: (details) => _resetIdleTimer(),
-        child: Stack(
-          children: [
-            widget.child,
-            AnimatedSwitcher(
-              duration: const Duration(seconds: 1),
-              child: _isScreensaverActive
-                  ? GestureDetector(
-                      onTap: _resetIdleTimer, // Handle taps on the screensaver
-                      child: AnimatedOpacity(
-                        opacity: _isScreensaverActive ? 1.0 : 0.0,
-                        duration: const Duration(seconds: 1),
-                        child: const Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Placeholder(),
-                            Center(
-                              child: DateTextWidget(large: true),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ],
-        ),
-      ),
+    return GestureDetector(
+      onTap: _resetTimer,
+      onLongPress: _resetTimer,
+      onHorizontalDragUpdate: (details) {
+        // Handle horizontal swipe
+        if (details.delta.dx.abs() > 100) {
+          _resetTimer();
+        }
+      },
+      onVerticalDragUpdate: (details) {
+        // Handle vertical swipe
+        if (details.delta.dy.abs() > 100) {
+          _resetTimer();
+        }
+      },
+      // Add other touch event listeners as needed
+      child: widget.child,
     );
   }
 }

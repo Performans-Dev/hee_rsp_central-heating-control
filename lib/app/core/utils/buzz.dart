@@ -18,6 +18,11 @@ class Buzz {
     gpio.buzz(BuzzerType.success);
   }
 
+  static void lock() {
+    final GpioController gpio = Get.find();
+    gpio.buzz(BuzzerType.lock);
+  }
+
   static void error() {
     final GpioController gpio = Get.find();
     gpio.buzz(BuzzerType.error);
