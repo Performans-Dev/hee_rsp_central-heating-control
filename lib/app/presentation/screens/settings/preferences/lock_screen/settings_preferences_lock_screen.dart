@@ -91,6 +91,31 @@ class _SettingsPreferencesLockScreenState
                         shape: RoundedRectangleBorder(
                             borderRadius: UiDimens.formRadius),
                       )),
+                  screenSaverType == ScreenSaverType.slidePictures
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Slider Süresi'),
+                                Text(CommonUtils.secondsToHumanReadable(
+                                    selectedSlideTime)),
+                              ],
+                            ),
+                            Slider(
+                              value: selectedSlideTime.toDouble(),
+                              onChanged: (value) {
+                                setState(
+                                    () => selectedSlideTime = value.toInt());
+                              },
+                              min: 10,
+                              max: 30.0,
+                              divisions: 20,
+                            ),
+                          ],
+                        )
+                      : Container(),
                 ],
               ),
             ),
