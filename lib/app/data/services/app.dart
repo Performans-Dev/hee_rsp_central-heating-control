@@ -45,6 +45,9 @@ class AppController extends GetxController {
     checkFlags();
     final t = Box.getString(key: Keys.selectedTheme);
     _selectedTheme.value = t.isEmpty ? StaticProvider.getThemeList.first : t;
+    _idleTimeout.value =
+        Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 60);
+    _slideShowTime.value = Box.getInt(key: Keys.slideShowTimer, defaultVal: 10);
     update();
   }
 
@@ -568,5 +571,23 @@ class AppController extends GetxController {
 
   //#region MARK: Terms-Privacy
 
+  //#endregion
+
+  //#region MARK: Idle Timeout / Screen Saver
+  final Rx<int> _idleTimeout = 500.obs;
+  int get idleTimeout => _idleTimeout.value;
+
+  final Rx<int> _slideShowTime = 10.obs;
+  int get slideShowTime => _slideShowTime.value;
+
+  void setIdleTime(value) {
+    _idleTimeout.value = value;
+    update();
+  }
+
+  void setSlideTime(value) {
+    _slideShowTime.value = value;
+    update();
+  }
   //#endregion
 }

@@ -6,6 +6,8 @@ class Keys {
   ///
   static const String appSettings = 'appSettings';
   static const String idleTimerInSeconds = 'idleTimerInSeconds';
+  static const String slideShowTimer = 'slideShowTimer';
+  static const String screenSaverType = 'screenSaverType';
   static const String lastTouchTime = 'lastTouchTime';
   static const String localeLang = 'localeLang';
   static const String localeCulture = 'localeCulture';
