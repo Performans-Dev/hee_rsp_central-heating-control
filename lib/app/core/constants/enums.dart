@@ -148,3 +148,9 @@ enum WebViewScreenState {
   loaded,
   error,
 }
+
+enum ScreenSaverType {
+  blank,
+  staticPicture,
+  slidePictures,
+}
