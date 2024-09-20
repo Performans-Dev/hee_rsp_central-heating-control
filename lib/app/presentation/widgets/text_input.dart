@@ -22,7 +22,7 @@ class TextInputWidget extends StatelessWidget {
     this.controller,
     this.radius = 16,
     this.obscureText = false,
-    this.obscuringCharacter,
+    this.obscuringCharacter = '*',
     this.maxLenght,
     this.minLength,
     this.type,
