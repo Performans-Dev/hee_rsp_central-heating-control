@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/string.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,7 +37,14 @@ class _SettingsPreferencesLockScreenState
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Kilit Ekranı Süresi'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Kilit Ekranı Süresi'),
+                      Text(CommonUtils.secondsToHumanReadable(
+                          selectedIdleTimeout)),
+                    ],
+                  ),
                   Slider(
                     value: selectedIdleTimeout.toDouble(),
                     onChanged: (value) {
@@ -47,7 +54,7 @@ class _SettingsPreferencesLockScreenState
                     max: 300.0,
                     divisions: 57,
                   ),
-                  Divider(),
+                  const Divider(),
                 ],
               ),
             ),
