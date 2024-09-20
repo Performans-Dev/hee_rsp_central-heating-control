@@ -36,6 +36,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/prefer
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/connection/settings_preferences_connection_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/date_format/settings_preferences_date_format_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/language/settings_preferences_language_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/lock_screen/settings_preferences_lock_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/settings_preferences.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/theme/settings_preferences_theme_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/timezone/settings_preferences_timezone_screen.dart';
@@ -277,6 +278,13 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.settingsPreferencesTheme,
     page: () => const SettingsPreferencesThemeScreen(),
+    middlewares: [
+      AdminLoggedInMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPreferencesLockScreen,
+    page: () => const SettingsPreferencesLockScreen(),
     middlewares: [
       AdminLoggedInMiddleware(),
     ],
