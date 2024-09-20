@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
+import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
@@ -29,26 +30,29 @@ class AppScaffold extends StatelessWidget {
           body: Row(
             children: [
               NavigationRail(
-                destinations: const [
-                  NavigationRailDestination(
+                destinations: [
+                  const NavigationRailDestination(
                     icon: Icon(Icons.dashboard),
                     label: Text('Zones'),
                   ),
-                  NavigationRailDestination(
+                  const NavigationRailDestination(
                     icon: Icon(Icons.access_alarm),
                     label: Text('Functions'),
                   ),
-                  NavigationRailDestination(
+                  const NavigationRailDestination(
                     icon: Icon(Icons.auto_mode),
                     label: Text('Mode'),
                   ),
-                  NavigationRailDestination(
+                  const NavigationRailDestination(
                     icon: Icon(Icons.settings),
                     label: Text('Settings'),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(Icons.lock),
-                    label: Text('Lock'),
+                    icon: Icon(
+                      Icons.lock,
+                      color: _isExcludedRoute(context) ? Colors.red : null,
+                    ),
+                    label: const Text('Lock'),
                   ),
                 ],
                 selectedIndex: selectedIndex,
@@ -144,5 +148,10 @@ class AppScaffold extends StatelessWidget {
         );
       },
     );
+  }
+
+  bool _isExcludedRoute(context) {
+    final currentRoute = ModalRoute.of(context)?.settings.name;
+    return autoLockExcludedRoutes.contains(currentRoute);
   }
 }

@@ -46,6 +46,8 @@ class Routes {
       '/settings-preferences-language';
   static const String settingsPreferencesTimezone =
       '/settings-preferences-timezone';
+  static const String settingsPreferencesLockScreen =
+      '/settings-preferences-lock-screen';
   static const String settingsPreferencesDateFormat =
       '/settings-preferences-date-format';
   static const String settingsPreferencesConnection =

@@ -499,3 +499,27 @@ final List<GetPage> getPages = [
   //   page: () => const CommandTestScreen(),
   // ),
 ];
+
+const List<String> autoLockExcludedRoutes = [
+  Routes.lockScreen,
+  Routes.developer,
+  Routes.settingsPreferencesAdvancedDiagnostics,
+  Routes.settingsPreferencesAdvancedHardwareConfig,
+  Routes.settingsPreferencesAdvancedUpdates,
+  Routes.settingsPreferencesAdvanced,
+  Routes.signinForPinReset,
+  Routes.pinReset,
+  Routes.setup,
+  Routes.setupActivation,
+  Routes.setupAdminUser,
+  Routes.setupDateTime,
+  Routes.setupLanguage,
+  Routes.setupPrivacy,
+  Routes.setupRegisterDevice,
+  Routes.setupSignin,
+  Routes.setupSubscriptionResult,
+  Routes.setupTechSupport,
+  Routes.setupTerms,
+  Routes.setupTheme,
+  Routes.setupTimezone,
+];

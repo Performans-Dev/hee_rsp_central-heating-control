@@ -31,6 +31,7 @@ class _SettingsPreferencesConnectionScreenState
   String selectedSsid = '';
   int isEthernetAuto = 0;
   bool isTesting = false;
+  bool passwordVisible = false;
 
   @override
   void initState() {
@@ -76,6 +77,10 @@ class _SettingsPreferencesConnectionScreenState
                     child: TextInputWidget(
                       labelText: 'Wifi Password',
                       controller: passController,
+                      obscureText: !passwordVisible,
+                      showPasswordCallback: () {
+                        setState(() => passwordVisible = !passwordVisible);
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),

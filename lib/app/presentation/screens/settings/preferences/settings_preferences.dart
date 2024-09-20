@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
@@ -39,6 +40,21 @@ class SettingsPreferencesScreen extends StatelessWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Get.toNamed(Routes.settingsPreferencesTheme);
+              },
+              tileColor: Theme.of(context).highlightColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ListTile(
+              title: const Text('Lock Screen'),
+              subtitle: Text(
+                  '${CommonUtils.secondsToHumanReadable(Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 60))}'),
+              leading: const Icon(Icons.screen_lock_landscape),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Get.toNamed(Routes.settingsPreferencesLockScreen);
               },
               tileColor: Theme.of(context).highlightColor,
               shape: RoundedRectangleBorder(
