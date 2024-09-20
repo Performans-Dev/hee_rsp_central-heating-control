@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
@@ -23,6 +25,7 @@ class _SettingsPreferencesLockScreenState
   late int selectedIdleTimeout;
   late int selectedSlideTime;
   late ScreenSaverType screenSaverType;
+  List<File> images = [];
 
   @override
   void initState() {
@@ -39,6 +42,8 @@ class _SettingsPreferencesLockScreenState
       key: Keys.screenSaverType,
       defaultVal: 2,
     )];
+
+    _loadImages();
   }
 
   @override
@@ -115,7 +120,25 @@ class _SettingsPreferencesLockScreenState
                             ),
                           ],
                         )
-                      : Container(),
+                      : screenSaverType == ScreenSaverType.staticPicture
+                          ? SizedBox(
+                              height: 100,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (c, i) => Container(
+                                  margin: EdgeInsets.all(2),
+                                  width: 120,
+                                  height: 96,
+                                  child: Image.file(
+                                    images[i],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                itemCount: images.length,
+                              ),
+                            )
+                          : Container(),
                 ],
               ),
             ),
@@ -153,4 +176,19 @@ class _SettingsPreferencesLockScreenState
           ],
         ),
       );
+
+  Future<void> _loadImages() async {
+    final directory = Directory('/home/pi/Pictures');
+    // Directory(path.join(
+    //     (await getApplicationDocumentsDirectory()).path, 'Pictures/cc'));
+    if (directory.existsSync()) {
+      final imageFiles = directory.listSync().where((file) =>
+          file.path.endsWith('.jpg') ||
+          file.path.endsWith('.jpeg') ||
+          file.path.endsWith('.png'));
+      setState(() {
+        images = imageFiles.map((file) => File(file.path)).toList();
+      });
+    }
+  }
 }
