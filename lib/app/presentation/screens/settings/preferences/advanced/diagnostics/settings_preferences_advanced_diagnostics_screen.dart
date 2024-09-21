@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -59,13 +60,14 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                             onSelected: (value) {
                               setState(() => selectedSerialDevice = value ?? 1);
                             },
+                            label: const Text('Device'),
                             initialSelection: 0x01,
                           ),
                           DropdownMenu<SerialCommand>(
                             dropdownMenuEntries: SerialCommand.values
                                 .map((e) => DropdownMenuEntry(
                                       value: e,
-                                      label: e.name.camelCaseToHumanReadable(),
+                                      label: CommonUtils.bytesToHex([e.value]),
                                     ))
                                 .toList(),
                             enableSearch: false,
@@ -74,6 +76,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                               setState(() => selectedSerialCommand =
                                   v ?? SerialCommand.test);
                             },
+                            initialSelection: SerialCommand.test,
                           ),
                           DropdownMenu<int>(
                             dropdownMenuEntries: const [
@@ -90,6 +93,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                             onSelected: (v) {
                               setState(() => selectedSerialData1 = v ?? 0x00);
                             },
+                            initialSelection: 0x00,
                           ),
                           DropdownMenu<int>(
                             dropdownMenuEntries: const [
@@ -106,6 +110,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                             onSelected: (v) {
                               setState(() => selectedSerialData1 = v ?? 0x00);
                             },
+                            initialSelection: 0x00,
                           ),
                           Expanded(
                             child: Center(
