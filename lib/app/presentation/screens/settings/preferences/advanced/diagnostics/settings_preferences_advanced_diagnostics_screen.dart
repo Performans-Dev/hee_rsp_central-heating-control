@@ -5,7 +5,6 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,12 +19,8 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatefulWidget {
 class _SettingsPreferencesAdvancedDiagnosticsScreenState
     extends State<SettingsPreferencesAdvancedDiagnosticsScreen> {
   final GpioController gpioController = Get.find();
-  late TextEditingController serialInputController;
-  String serialMessage = '';
-  bool busy = false;
-  String txOpenResult = '';
-  String txCloseResult = '';
-  int selectedSerialDevice = 1;
+
+  int selectedSerialDevice = 0x01;
   SerialCommand selectedSerialCommand = SerialCommand.test;
   int selectedSerialData1 = 0x00;
   int selectedSerialData2 = 0x00;
@@ -33,7 +28,6 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
   @override
   void initState() {
     super.initState();
-    serialInputController = TextEditingController();
   }
 
   @override
@@ -48,6 +42,45 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                //MARK: OUT PINS
+                FormItemComponent(
+                  label: 'OUT PINS',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      for (int i = 0; i < gc.outStates.length; i++)
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: UiDimens.formRadius,
+                          ),
+                          child: InkWell(
+                            onTap: () => gc.onOutTap(i),
+                            borderRadius: UiDimens.formRadius,
+                            child: ClipRRect(
+                              borderRadius: UiDimens.formRadius,
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('${UiData.outPins[i]}'),
+                                    Icon(
+                                      Icons.sunny,
+                                      color: gc.outStates[i]
+                                          ? Colors.red
+                                          : Colors.grey.withOpacity(0.3),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                //MARK: IN PINS
                 FormItemComponent(
                   label: 'IN PINS',
                   child: Row(
@@ -75,6 +108,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                   ),
                 ),
                 const Divider(),
+                //MARK: BUTTONS
                 FormItemComponent(
                   label: 'BUTTONS',
                   child: Row(
@@ -102,6 +136,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                   ),
                 ),
                 const Divider(),
+                //MARK: BUZZER
                 FormItemComponent(
                   label: 'Buzzer',
                   child: Row(
@@ -130,22 +165,24 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                   ),
                 ),
                 const Divider(),
+                //MARK: SERIAL
                 FormItemComponent(
                   label: 'Serial',
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           DropdownMenu(
-                            dropdownMenuEntries: [
-                              DropdownMenuEntry(value: 1, label: 'Device 1')
+                            dropdownMenuEntries: const [
+                              DropdownMenuEntry(value: 0x01, label: 'Device 1'),
+                              DropdownMenuEntry(value: 0x02, label: 'Device 2'),
                             ],
                             enableSearch: false,
                             onSelected: (value) {
                               setState(() => selectedSerialDevice = value ?? 1);
                             },
+                            initialSelection: 0x01,
                           ),
                           DropdownMenu<SerialCommand>(
                             dropdownMenuEntries: SerialCommand.values
@@ -155,14 +192,14 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                                     ))
                                 .toList(),
                             enableSearch: false,
-                            label: Text('Command'),
+                            label: const Text('Command'),
                             onSelected: (v) {
                               setState(() => selectedSerialCommand =
                                   v ?? SerialCommand.test);
                             },
                           ),
                           DropdownMenu<int>(
-                            dropdownMenuEntries: [
+                            dropdownMenuEntries: const [
                               DropdownMenuEntry(value: 0x00, label: '0x00'),
                               DropdownMenuEntry(value: 0x01, label: '0x01'),
                               DropdownMenuEntry(value: 0x02, label: '0x02'),
@@ -172,13 +209,13 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                               DropdownMenuEntry(value: 0x06, label: '0x06'),
                             ],
                             enableSearch: false,
-                            label: Text('Data1'),
+                            label: const Text('Data1'),
                             onSelected: (v) {
                               setState(() => selectedSerialData1 = v ?? 0x00);
                             },
                           ),
                           DropdownMenu<int>(
-                            dropdownMenuEntries: [
+                            dropdownMenuEntries: const [
                               DropdownMenuEntry(value: 0x00, label: '0x00'),
                               DropdownMenuEntry(value: 0x01, label: '0x01'),
                               DropdownMenuEntry(value: 0x02, label: '0x02'),
@@ -188,7 +225,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                               DropdownMenuEntry(value: 0x06, label: '0x06'),
                             ],
                             enableSearch: false,
-                            label: Text('Data2'),
+                            label: const Text('Data2'),
                             onSelected: (v) {
                               setState(() => selectedSerialData1 = v ?? 0x00);
                             },

@@ -19,7 +19,7 @@ class GpioController extends GetxController {
   int startByte = 0x3A;
   List<int> stopBytes = [0x0D, 0x0A];
   SerialMessageHandler handler = SerialMessageHandler();
-  late StreamController serialMessageStreamController;
+  late StreamController<SerialMessage> serialMessageStreamController;
 
   // String serialKey = '/dev/ttyUSB0';
   String serialKey = '/dev/ttyS0';
