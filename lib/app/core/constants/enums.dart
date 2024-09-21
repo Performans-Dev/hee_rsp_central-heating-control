@@ -154,3 +154,16 @@ enum ScreenSaverType {
   staticPicture,
   slidePictures,
 }
+
+enum SerialCommand {
+  test(0x64),
+  restartDevice(0x65),
+  setMultiOut(0x66),
+  readInputs(0x67),
+  setSingleOut(0x68),
+  readOutputs(0x69),
+  readNtc(0x70);
+
+  final int value;
+  const SerialCommand(this.value);
+}

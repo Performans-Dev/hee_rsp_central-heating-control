@@ -19,6 +19,8 @@ enum LogType {
   sendSerialEvent,
   receiveSerialEvent,
   telemetryEvent,
+  error,
+  
 }
 
 enum LogSyncStatus {

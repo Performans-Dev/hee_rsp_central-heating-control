@@ -1,15 +1,25 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/models/serial.dart';
+import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:dart_periphery/dart_periphery.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
 import 'package:rpi_spi/rpi_spi.dart';
 
 class GpioController extends GetxController {
   Timer? timer;
+  int startByte = 0x3A;
+  List<int> stopBytes = [0x0D, 0x0A];
+  SerialMessageHandler handler = SerialMessageHandler();
+  late StreamController serialMessageStreamController;
 
   // String serialKey = '/dev/ttyUSB0';
   String serialKey = '/dev/ttyS0';
@@ -26,6 +36,8 @@ class GpioController extends GetxController {
   @override
   void onReady() {
     if (GetPlatform.isLinux) {
+      serialMessageStreamController =
+          StreamController<SerialMessage>.broadcast();
       initOutPins();
       initInPins();
       initBtnPins();
@@ -43,7 +55,8 @@ class GpioController extends GetxController {
       item.dispose();
     }
     spi?.dispose();
-    serial?.dispose();
+    serialPort?.dispose();
+    serialMessageStreamController.close();
     super.onClose();
   }
 
@@ -264,105 +277,111 @@ class GpioController extends GetxController {
   }
 
   //MARK: SERIAL UART
-  final Rxn<Serial> _serial = Rxn();
-  Serial? get serial => _serial.value;
-
-  final Rx<String> _serialLog = ''.obs;
-  String get serialLog => _serialLog.value;
+  final Rxn<SerialPort> _serialPort = Rxn();
+  SerialPort? get serialPort => _serialPort.value;
 
   void initSerial() {
     try {
-      Serial s = Serial(serialKey, Baudrate.b9600);
-      s.setBaudrate(Baudrate.b9600);
-      s.setParity(Parity.parityNone);
-      s.setDataBits(DataBits.db8);
-
-      _serial.value = s;
+      final portName = SerialPort.availablePorts.first;
+      _serialPort.value = SerialPort(portName);
       update();
+      serialPort!.openReadWrite();
+      serialPort!.config.baudRate = 9600;
+      serialPort!.config.bits = 8;
+      serialPort!.config.parity = SerialPortParity.none;
+      serialPort!.config.stopBits = 1;
+      serialPort!.config.xonXoff = 0;
+      serialPort!.config.rts = 1;
+      serialPort!.config.cts = 0;
+      serialPort!.config.dsr = 0;
+      serialPort!.config.dtr = 1;
+      handler.onMessage.listen((Uint8List message) {
+        List<int> data = CommonUtils.intListToUint8List(message);
+        int crcInt =
+            CommonUtils.serialUartCrc16(CommonUtils.intListToUint8List([
+          data[1],
+          data[2],
+          data[3],
+          data[4],
+        ]));
+        List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
+        if (crcBytes[0] == data[5] && crcBytes[1] == data[6]) {
+          onSerialMessageReceived(CommonUtils.uint8ListToIntList(message));
+        }
+      });
     } on Exception catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      LogService.addLog(
+          LogDefinition(message: e.toString(), type: LogType.error));
       Buzz.alarm();
     }
   }
 
-  Future<String> txOpen() async {
+  Future<void> txOpen() async {
     try {
       var serialPin = outGpios.firstWhere((e) => e.line == 4);
       serialPin.write(true);
-      await Future.delayed(const Duration(milliseconds: 100));
-      Buzz.success();
-      return 'ok';
+      await Future.delayed(const Duration(milliseconds: 10));
     } on Exception catch (e) {
-      return e.toString();
+      LogService.addLog(
+          LogDefinition(message: e.toString(), type: LogType.error));
     }
   }
 
-  Future<String> txClose() async {
+  Future<void> txClose() async {
     try {
       var serialPin = outGpios.firstWhere((e) => e.line == 4);
       serialPin.write(false);
-      await Future.delayed(const Duration(milliseconds: 100));
-      Buzz.error();
-      return 'ok';
+      await Future.delayed(const Duration(milliseconds: 10));
     } on Exception catch (e) {
-      return e.toString();
+      LogService.addLog(
+          LogDefinition(message: e.toString(), type: LogType.error));
     }
   }
 
-  Future<void> serialSend(String text, {String? message}) async {
-    Buzz.mini();
-    if (serial == null) {
-      _serialLog.value = 'no-device';
-      update();
-      return;
+  void onSerialMessageReceived(List<int> message) {
+    SerialMessage m = SerialMessage(
+      deviceId: message[1],
+      command: message[2],
+      data1: message[3],
+      data2: message[4],
+    );
+    int crcInt = CommonUtils.serialUartCrc16(
+        CommonUtils.intListToUint8List(m.toBytes()));
+    List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
+    if (crcBytes[0] == message[5] && crcBytes[1] == message[6]) {
+      serialMessageStreamController.add(m);
     }
-
-    if (message == null || message.isEmpty) {
-      message = DateTime.now().toIso8601String();
-    }
-
-    var serialPin = outGpios.firstWhere((e) => e.line == 4);
-
-    serialPin.write(true);
-    await Future.delayed(const Duration(milliseconds: 100));
-    serial?.writeString(message);
-    await Future.delayed(const Duration(milliseconds: 100));
-    serialPin.write(false);
-    await Future.delayed(const Duration(milliseconds: 100));
-    Buzz.success();
-
-    _serialLog.value = message;
-    update();
   }
 
-  Future<String?> serialReceive() async {
-    Buzz.mini();
-    String message = '';
-    if (serial == null) return null;
-    var bytes = 0;
-    try {
-      for (int i = 0; i < 50; i++) {
-        bytes = serial!.getInputWaiting();
-        if (bytes > 0) break;
-        await (Future.delayed(const Duration(milliseconds: 100)));
-      }
+  List<int> buildSerialMessage({
+    required int id,
+    required SerialCommand command,
+    int data1 = 0x00,
+    int data2 = 0x00,
+  }) {
+    final cycByteData =
+        CommonUtils.intListToUint8List([id, command.value, data1, data2]);
+    final crcInt = CommonUtils.serialUartCrc16(cycByteData);
+    final crcBytes = CommonUtils.getCrcBytes(crcInt);
+    return [
+      startByte,
+      id,
+      command.value,
+      data1,
+      data2,
+      ...crcBytes,
+      ...stopBytes,
+    ];
+  }
 
-      if (bytes > 0) {
-        SerialReadEvent event = serial!.read(bytes, 5000);
-        message = event.toString();
-      } else {
-        message = 'no message received';
-      }
-    } on Exception catch (e) {
-      message = e.toString();
-    }
-    Buzz.mini();
-    _serialLog.value += message;
-    update();
-
-    return message;
+  void sendSerialMessage(List<int> message) async {
+    Uint8List data = Uint8List.fromList(message);
+    await txOpen();
+    serialPort!.write(data);
+    await Future.delayed(const Duration(milliseconds: 10));
+    await txClose();
+    LogService.addLog(LogDefinition(
+        message: 'SerialSent: $message', type: LogType.sendSerialEvent));
   }
 
   //MARK: SPI

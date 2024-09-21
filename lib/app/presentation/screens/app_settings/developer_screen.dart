@@ -193,13 +193,13 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                         //   onPressed: () async => await gc.serialSend(),
                         //   child: const Text('Serial Send'),
                         // ),
-                        ElevatedButton(
-                          onPressed: () async => await gc.serialReceive(),
-                          child: const Text('Serial Receive'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () async => await gc.serialReceive(),
+                        //   child: const Text('Serial Receive'),
+                        // ),
                       ],
                     ),
-                    Text(gc.serialLog),
+                    // Text(gc.serialLog),
                   ],
                 ),
               ),
