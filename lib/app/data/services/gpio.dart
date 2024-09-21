@@ -381,7 +381,10 @@ class GpioController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 10));
     await txClose();
     LogService.addLog(LogDefinition(
-        message: 'SerialSent: $message', type: LogType.sendSerialEvent));
+      message: 'SerialSent: $message',
+      type: LogType.sendSerialEvent,
+    ));
+    Buzz.success();
   }
 
   //MARK: SPI
