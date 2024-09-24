@@ -84,4 +84,7 @@ class LogService {
 
     return [];
   }
+
+  // static Future<List<LogDefinition>> updateLogs(
+  //     {required List<String> logsIds}) async {}
 }

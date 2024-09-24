@@ -1,5 +1,5 @@
 class Keys {
-  static const String piPath = '/home/pi/Heethings/CC';
+  static const String piPath = '/home/pi/Heethings/CC/';
   static const String databasePath = 'databases';
   static const String logPath = 'logs';
 
