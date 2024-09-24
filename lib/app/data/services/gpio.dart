@@ -280,8 +280,15 @@ class GpioController extends GetxController {
   final Rxn<SerialPort> _serialPort = Rxn();
   SerialPort? get serialPort => _serialPort.value;
 
+  final RxList<List<int>> _receivedSerialData = <List<int>>[].obs;
+  List<List<int>> get receivedSerialData => _receivedSerialData;
+
   void initSerial() {
     try {
+      LogService.addLog(LogDefinition(
+        message: 'starting serial port initialization',
+        type: LogType.sendSerialEvent,
+      ));
       final portName = SerialPort.availablePorts.first;
       _serialPort.value = SerialPort(portName);
       update();
@@ -289,10 +296,10 @@ class GpioController extends GetxController {
         message: 'init serial port: $portName',
         type: LogType.sendSerialEvent,
       ));
-      serialPort!.openReadWrite();
+      final openResult = serialPort!.openReadWrite();
 
       LogService.addLog(LogDefinition(
-        message: 'serial port open: $portName',
+        message: 'serial port open $openResult: $portName',
         type: LogType.sendSerialEvent,
       ));
       serialPort!.config.baudRate = 9600;
@@ -306,6 +313,8 @@ class GpioController extends GetxController {
       serialPort!.config.dtr = 1;
       handler.onMessage.listen((Uint8List message) {
         List<int> data = CommonUtils.intListToUint8List(message);
+        _receivedSerialData.add(data);
+        update();
         int crcInt =
             CommonUtils.serialUartCrc16(CommonUtils.intListToUint8List([
           data[1],

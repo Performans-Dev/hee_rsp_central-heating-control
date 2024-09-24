@@ -25,6 +25,15 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
   SerialCommand selectedSerialCommand = SerialCommand.test;
   int selectedSerialData1 = 0x00;
   int selectedSerialData2 = 0x00;
+  List<int> serialDataPresets = [
+    0x00,
+    0x01,
+    0x02,
+    0x03,
+    0x04,
+    0x05,
+    0x06,
+  ];
 
   @override
   void initState() {
@@ -46,103 +55,102 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                 //MARK: SERIAL
                 FormItemComponent(
                   label: 'Serial',
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Row(
                     children: [
-                      Row(
-                        children: [
-                          DropdownMenu(
-                            dropdownMenuEntries: const [
-                              DropdownMenuEntry(value: 0x01, label: 'Device 1'),
-                              DropdownMenuEntry(value: 0x02, label: 'Device 2'),
-                            ],
-                            enableSearch: false,
-                            onSelected: (value) {
-                              setState(() => selectedSerialDevice = value ?? 1);
-                            },
-                            label: const Text('Device'),
-                            initialSelection: 0x01,
-                          ),
-                          DropdownMenu<SerialCommand>(
-                            dropdownMenuEntries: SerialCommand.values
-                                .map((e) => DropdownMenuEntry(
-                                      value: e,
-                                      label: CommonUtils.bytesToHex([e.value]),
-                                    ))
-                                .toList(),
-                            enableSearch: false,
-                            label: const Text('Command'),
-                            onSelected: (v) {
-                              setState(() => selectedSerialCommand =
-                                  v ?? SerialCommand.test);
-                            },
-                            initialSelection: SerialCommand.test,
-                          ),
-                          DropdownMenu<int>(
-                            dropdownMenuEntries: const [
-                              DropdownMenuEntry(value: 0x00, label: '0x00'),
-                              DropdownMenuEntry(value: 0x01, label: '0x01'),
-                              DropdownMenuEntry(value: 0x02, label: '0x02'),
-                              DropdownMenuEntry(value: 0x03, label: '0x03'),
-                              DropdownMenuEntry(value: 0x04, label: '0x04'),
-                              DropdownMenuEntry(value: 0x05, label: '0x05'),
-                              DropdownMenuEntry(value: 0x06, label: '0x06'),
-                            ],
-                            enableSearch: false,
-                            label: const Text('Data1'),
-                            onSelected: (v) {
-                              setState(() => selectedSerialData1 = v ?? 0x00);
-                            },
-                            initialSelection: 0x00,
-                          ),
-                          DropdownMenu<int>(
-                            dropdownMenuEntries: const [
-                              DropdownMenuEntry(value: 0x00, label: '0x00'),
-                              DropdownMenuEntry(value: 0x01, label: '0x01'),
-                              DropdownMenuEntry(value: 0x02, label: '0x02'),
-                              DropdownMenuEntry(value: 0x03, label: '0x03'),
-                              DropdownMenuEntry(value: 0x04, label: '0x04'),
-                              DropdownMenuEntry(value: 0x05, label: '0x05'),
-                              DropdownMenuEntry(value: 0x06, label: '0x06'),
-                            ],
-                            enableSearch: false,
-                            label: const Text('Data2'),
-                            onSelected: (v) {
-                              setState(() => selectedSerialData1 = v ?? 0x00);
-                            },
-                            initialSelection: 0x00,
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text('${gc.buildSerialMessage(
-                                id: selectedSerialDevice,
-                                command: selectedSerialCommand,
-                                data1: selectedSerialData1,
-                                data2: selectedSerialData2,
-                              )}'),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ToggleButtons(
+                              isSelected: [
+                                selectedSerialDevice == 0x01,
+                                selectedSerialDevice != 0x01,
+                              ],
+                              onPressed: (v) {
+                                setState(() {
+                                  selectedSerialDevice = v == 0 ? 0x01 : 0x02;
+                                });
+                              },
+                              children: const [
+                                Text('Device 1'),
+                                Text('Device 2'),
+                              ],
                             ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () =>
-                                gc.sendSerialMessage(gc.buildSerialMessage(
+                            ToggleButtons(
+                              isSelected: SerialCommand.values
+                                  .map((e) => selectedSerialCommand == e)
+                                  .toList(),
+                              onPressed: (v) {
+                                setState(() {
+                                  selectedSerialCommand =
+                                      SerialCommand.values[v];
+                                });
+                              },
+                              children: SerialCommand.values
+                                  .map((e) =>
+                                      Text(CommonUtils.bytesToHex([e.value])))
+                                  .toList(),
+                            ),
+                            ToggleButtons(
+                              isSelected: serialDataPresets
+                                  .map((e) => e == selectedSerialData1)
+                                  .toList(),
+                              onPressed: (v) {
+                                setState(() {
+                                  selectedSerialData1 = serialDataPresets[v];
+                                });
+                              },
+                              children: serialDataPresets
+                                  .map((e) => Text(CommonUtils.bytesToHex([e])))
+                                  .toList(),
+                            ),
+                            ToggleButtons(
+                              isSelected: serialDataPresets
+                                  .map((e) => e == selectedSerialData2)
+                                  .toList(),
+                              onPressed: (v) {
+                                setState(() {
+                                  selectedSerialData2 = serialDataPresets[v];
+                                });
+                              },
+                              children: serialDataPresets
+                                  .map((e) => Text(CommonUtils.bytesToHex([e])))
+                                  .toList(),
+                            ),
+                            Text(CommonUtils.bytesToHex(gc.buildSerialMessage(
                               id: selectedSerialDevice,
                               command: selectedSerialCommand,
                               data1: selectedSerialData1,
                               data2: selectedSerialData2,
-                            )),
-                            child: const Text('Send'),
-                          ),
-                        ],
+                            ))),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  gc.sendSerialMessage(gc.buildSerialMessage(
+                                id: selectedSerialDevice,
+                                command: selectedSerialCommand,
+                                data1: selectedSerialData1,
+                                data2: selectedSerialData2,
+                              )),
+                              child: const Text('Send'),
+                            ),
+                          ],
+                        ),
                       ),
-                      StreamBuilder(
-                          stream: gc.serialMessageStreamController.stream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Text(snapshot.data.toString());
-                            }
-                            return Container();
-                          }),
-                      // Text(gc.serialLog),
+                      const VerticalDivider(width: 1),
+                      Expanded(
+                        flex: 1,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) => ListTile(
+                            title: Text(
+                              CommonUtils.uint8ListToHex(
+                                  CommonUtils.intListToUint8List(
+                                      gc.receivedSerialData[index])),
+                            ),
+                          ),
+                          itemCount: gc.receivedSerialData.length,
+                        ),
+                      )
                     ],
                   ),
                 ),
