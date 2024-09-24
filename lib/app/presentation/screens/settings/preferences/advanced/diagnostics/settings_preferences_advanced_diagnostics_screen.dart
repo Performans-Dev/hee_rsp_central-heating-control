@@ -56,6 +56,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                 FormItemComponent(
                   label: 'Serial',
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         flex: 2,
@@ -141,6 +142,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                       Expanded(
                         flex: 1,
                         child: ListView.builder(
+                          shrinkWrap: true,
                           itemBuilder: (context, index) => ListTile(
                             title: Text(
                               CommonUtils.uint8ListToHex(
