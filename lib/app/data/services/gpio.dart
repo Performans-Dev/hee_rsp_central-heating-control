@@ -285,7 +285,16 @@ class GpioController extends GetxController {
       final portName = SerialPort.availablePorts.first;
       _serialPort.value = SerialPort(portName);
       update();
+      LogService.addLog(LogDefinition(
+        message: 'init serial port: $portName',
+        type: LogType.sendSerialEvent,
+      ));
       serialPort!.openReadWrite();
+
+      LogService.addLog(LogDefinition(
+        message: 'serial port open: $portName',
+        type: LogType.sendSerialEvent,
+      ));
       serialPort!.config.baudRate = 9600;
       serialPort!.config.bits = 8;
       serialPort!.config.parity = SerialPortParity.none;
@@ -309,6 +318,11 @@ class GpioController extends GetxController {
           onSerialMessageReceived(CommonUtils.uint8ListToIntList(message));
         }
       });
+
+      LogService.addLog(LogDefinition(
+        message: 'registered listener: $portName',
+        type: LogType.sendSerialEvent,
+      ));
     } on Exception catch (e) {
       LogService.addLog(
           LogDefinition(message: e.toString(), type: LogType.error));
