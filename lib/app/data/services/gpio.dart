@@ -320,6 +320,8 @@ class GpioController extends GetxController {
     try {
       var serialPin = outGpios.firstWhere((e) => e.line == 4);
       serialPin.write(true);
+      LogService.addLog(
+          LogDefinition(message: 'tx open', type: LogType.sendSerialEvent));
       await Future.delayed(const Duration(milliseconds: 10));
     } on Exception catch (e) {
       LogService.addLog(
@@ -331,6 +333,8 @@ class GpioController extends GetxController {
     try {
       var serialPin = outGpios.firstWhere((e) => e.line == 4);
       serialPin.write(false);
+      LogService.addLog(
+          LogDefinition(message: 'tx close', type: LogType.sendSerialEvent));
       await Future.delayed(const Duration(milliseconds: 10));
     } on Exception catch (e) {
       LogService.addLog(
@@ -379,15 +383,11 @@ class GpioController extends GetxController {
     LogService.addLog(LogDefinition(
         message: 'sending serial: $message', type: LogType.sendSerialEvent));
     await txOpen();
-    LogService.addLog(
-        LogDefinition(message: 'tx open', type: LogType.sendSerialEvent));
     final result = serialPort!.write(data);
     await Future.delayed(const Duration(milliseconds: 10));
     LogService.addLog(LogDefinition(
         message: 'serial write: $result', type: LogType.sendSerialEvent));
     await txClose();
-    LogService.addLog(
-        LogDefinition(message: 'tx close', type: LogType.sendSerialEvent));
     LogService.addLog(LogDefinition(
       message: 'SerialSent: $message',
       type: LogType.sendSerialEvent,
