@@ -7,7 +7,7 @@ import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:path/path.dart' as path;
 
 class LogService {
-  static Future<String> _getLogFilePath({DateTime? date}) async {
+  static Future<String> getLogFilePath({DateTime? date}) async {
     final now = date ?? DateTime.now();
     final logDir = path.join(
         Box.documentsDirectoryPath,
@@ -23,7 +23,7 @@ class LogService {
   }
 
   static Future<void> log(LogDefinition logEntry) async {
-    final logFilePath = await _getLogFilePath();
+    final logFilePath = await getLogFilePath();
     final logFile = File(logFilePath);
 
     List<LogDefinition> logs = [];
@@ -45,7 +45,7 @@ class LogService {
   }
 
   static Future<void> addLog(LogDefinition logEntry) async {
-    final logFilePath = await _getLogFilePath();
+    final logFilePath = await getLogFilePath();
     final logFile = File(logFilePath);
 
     List<LogDefinition> logs = [];
@@ -69,7 +69,7 @@ class LogService {
   }
 
   static Future<List<LogDefinition>> readLogs({DateTime? date}) async {
-    final logFilePath = await _getLogFilePath(date: date);
+    final logFilePath = await getLogFilePath(date: date);
     final logFile = File(logFilePath);
 
     if (await logFile.exists()) {
