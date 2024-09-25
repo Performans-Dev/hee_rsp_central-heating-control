@@ -28,7 +28,7 @@ Future<void> main() async {
   ///
 
   // shared preferences
-  await GetStorage.init('CC_prefs');
+  await GetStorage.init();
   final documentsDirectory = await getApplicationDocumentsDirectory();
 
   final box = GetStorage();
