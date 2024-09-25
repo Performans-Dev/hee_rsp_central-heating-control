@@ -38,8 +38,12 @@ class _IdleDetectorState extends State<IdleDetector> {
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timer.tick == widget.timeoutSeconds && !_isExcludedRoute()) {
-        _lockScreen();
+      if (timer.tick == widget.timeoutSeconds) {
+        if (!_isExcludedRoute()) {
+          _lockScreen();
+        } else {
+          _resetTimer();
+        }
       }
     });
   }

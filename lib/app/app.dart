@@ -40,7 +40,7 @@ class MainApp extends StatelessWidget {
             ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
         return IdleDetector(
           timeoutSeconds:
-              Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 60),
+              Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 180),
           excludedRoutes: autoLockExcludedRoutes,
           child: GetMaterialApp(
             scrollBehavior: PiScrollBehavior(),
