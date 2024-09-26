@@ -40,6 +40,7 @@ extension InitialsExtension on String {
 
 extension CamelCaseConverter on String {
   String camelCaseToHumanReadable() {
+    if (isEmpty) return this;
     // Use a regular expression to insert spaces before uppercase letters
     String withSpaces = replaceAllMapped(
       RegExp(r'([a-z])([A-Z])'),
