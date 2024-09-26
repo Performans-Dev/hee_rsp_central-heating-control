@@ -141,9 +141,8 @@ class _SettingsPreferencesAdvancedScreenState
                 Future.delayed(const Duration(seconds: 1), () {
                   Process.killPid(pid);
                 });
-                await Process.run('sudo', [
-                  '/home/pi/Heethings/cc-updater-source/hee-rpi-chc_updater/build/linux/arm64/release/bundle/chc_updater'
-                ]);
+                await Process.run(
+                    'sudo', ['/home/pi/Heethings/CC/elevator/app/chc_updater']);
               },
             ),
             const SizedBox(height: 8),
