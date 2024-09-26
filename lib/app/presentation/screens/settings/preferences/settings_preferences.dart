@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
@@ -20,8 +21,14 @@ class SettingsPreferencesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = LocalizationService.locale;
-    TimezoneDefinition currentTimezone =
-        TimezoneDefinition.fromJson(Box.getString(key: Keys.selectedTimezone));
+    late TimezoneDefinition currentTimezone;
+    try {
+      currentTimezone = TimezoneDefinition.fromJson(
+          Box.getString(key: Keys.selectedTimezone));
+    } on Exception catch (e) {
+      print('cant parse timezone: $e');
+      Buzz.alarm();
+    }
 
     return AppScaffold(
       title: 'Preferences',
@@ -49,8 +56,8 @@ class SettingsPreferencesScreen extends StatelessWidget {
             const SizedBox(height: 8),
             ListTile(
               title: const Text('Lock Screen'),
-              subtitle: Text(
-                  '${CommonUtils.secondsToHumanReadable(Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 60))}'),
+              subtitle: Text(CommonUtils.secondsToHumanReadable(
+                  Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 180))),
               leading: const Icon(Icons.screen_lock_landscape),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
