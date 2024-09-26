@@ -20,37 +20,21 @@ class LockScreen extends StatefulWidget {
 
 class _LockScreenState extends State<LockScreen> {
   bool showUserList = true;
-  int currentImageIndex = 0;
-  Timer? imageChangeTimer;
   Timer? timeChangeTimer;
   AlignmentGeometry timeAlignment = Alignment.center;
   double x = 0;
   double y = 0;
-  final List<String> imageUrls = List.generate(
-      12,
-      (e) =>
-          'https://static.api2.run/pi/wallpaper/wp${('0${e + 1}'.right(2))}.jpg');
 
   @override
   void initState() {
     super.initState();
-    startImageChangeTimer();
     startTimeChangeTimer();
   }
 
   @override
   void dispose() {
-    imageChangeTimer?.cancel();
     timeChangeTimer?.cancel();
     super.dispose();
-  }
-
-  void startImageChangeTimer() {
-    imageChangeTimer = Timer.periodic(const Duration(seconds: 31), (timer) {
-      setState(() {
-        currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
-      });
-    });
   }
 
   void startTimeChangeTimer() {
