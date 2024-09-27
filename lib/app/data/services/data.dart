@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
+import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
@@ -233,4 +234,16 @@ class DataController extends GetxController {
     return result != null;
   }
   //#endregion
+
+  //MARK: HARDWARE CONFIG
+
+  final RxList<HardwareExtension> _hardwareExtensionList =
+      <HardwareExtension>[].obs;
+  List<HardwareExtension> get hardwareExtensionList => _hardwareExtensionList;
+
+  Future<void> loadHardwareExtensions() async {
+    final result = await DbProvider.db.getHardwareExtensions();
+    _hardwareExtensionList.assignAll(result);
+    update();
+  }
 }

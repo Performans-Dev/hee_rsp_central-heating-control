@@ -30,6 +30,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/manage
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/diagnostics/settings_preferences_advanced_diagnostics_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/hardware_config/settings_preferences_advanced_hardware_addnew_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/hardware_config/settings_preferences_advanced_hardware_config_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/settings_preferences_advanced_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/updates/settings_preferences_advanced_updates_screen.dart';
@@ -327,6 +328,13 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.settingsPreferencesAdvancedHardwareConfig,
     page: () => const SettingsPreferencesAdvancedHardwareConfigScreen(),
+    middlewares: [
+      TechSupportLoggedInMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPreferencesAdvancedHardwareConfigAddNew,
+    page: () => const SettingsPreferencesAdvancedHardwareConfigAddNewScreen(),
     middlewares: [
       TechSupportLoggedInMiddleware(),
     ],

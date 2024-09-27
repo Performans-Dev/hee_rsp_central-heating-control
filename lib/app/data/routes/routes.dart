@@ -56,6 +56,8 @@ class Routes {
       '/settings-preferences-advanced';
   static const String settingsPreferencesAdvancedHardwareConfig =
       '/settings-preferences-advanced-hardware-config';
+  static const String settingsPreferencesAdvancedHardwareConfigAddNew =
+      '/settings-preferences-advanced-hardware-config-add-new';
   static const String settingsPreferencesAdvancedDiagnostics =
       '/settings-preferences-advanced-diagnostics';
   static const String settingsPreferencesAdvancedUpdates =
