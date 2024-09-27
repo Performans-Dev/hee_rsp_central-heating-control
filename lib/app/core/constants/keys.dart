@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 14;
+  static const int databaseVersion = 15;
   static const String databaseName = 'chcDb.db';
   static const String tableUsers = 'users';
   static const String tableSensors = 'sensors';
@@ -72,6 +72,7 @@ class Keys {
   static const String tableHardwareParameters = 'hardwareParameters';
   static const String tablePlans = 'plans';
   static const String tablePlanDetails = 'planDetails';
+  static const String tableHardwareExtensions = 'hardwareExtensions';
 
   static const String queryId = 'id=?';
   static const String queryUsername = 'username=?';
@@ -248,6 +249,34 @@ class Keys {
        message TEXT,
        payload TEXT,
        syncStatus INTEGER NOT NULL DEFAULT 0      
+    )
+  ''';
+  //#endregion
+
+  //#region Hardware Extensions
+  static const String dbDropHardwareExtensionsDropTable = '''
+    DROP TABLE IF EXISTS hardwareExtensions
+  ''';
+
+  static const String dbCreateHardwareExtensionsCreateTable = '''
+    CREATE TABLE IF NOT EXISTS hardwareExtensions (
+      id INTEGER NOT NULL DEFAULT 0,
+      modelName TEXT,
+      diCount INTEGER NOT NULL DEFAULT 0,
+      doCount INTEGER NOT NULL DEFAULT 0,
+      adcCount INTEGER NOT NULL DEFAULT 0,
+      dacCount INTEGER NOT NULL DEFAULT 0,
+      hardwareVersion TEXT,
+      firmwareVersion TEXT,
+      serialNumber TEXT,
+      manufacturer TEXT,
+      description TEXT,
+      connectionType TEXT,
+      hwProfileUart TEXT,
+      hwProfileWifi TEXT,
+      hwProfileEthernet TEXT,
+      hwProfileBle TEXT,
+      isExtension INTEGER NOT NULL DEFAULT 1
     )
   ''';
   //#endregion

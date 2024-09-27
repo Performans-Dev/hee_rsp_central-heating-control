@@ -1,3 +1,5 @@
+import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+
 class StaticProvider {
   static const List<Map<String, dynamic>> getLanguageList = [
     {"languageCode": "en", "countryCode": "US", "name": "English"},
@@ -193,5 +195,36 @@ class StaticProvider {
     'nature',
     'warmy',
     'crimson',
+  ];
+
+  static final List<HardwareExtension> availableHardwareExtensions = [
+    HardwareExtension(
+      id: 0,
+      modelName: '2041.01-V1.00',
+      diCount: 6,
+      doCount: 6,
+      adcCount: 0,
+      dacCount: 1,
+      hardwareVersion: '1.0.0',
+      firmwareVersion: '1.0.0',
+      serialNumber: 'N/A',
+      manufacturer: 'MYSIA',
+      description: 'Serial Extension Board',
+      connectionType: [HwConnectionType.uartSerial],
+      uartProfile: HwProfileUart(
+        baudrate: 9600,
+        bits: 8,
+        stopBits: 1,
+        parity: 0,
+        xonXoff: 0,
+        rts: 1,
+        cts: 0,
+        dsr: 0,
+        dtr: 1,
+      ),
+      bleProfile: null,
+      wifiProfile: null,
+      ethernetProfile: null,
+    ),
   ];
 }

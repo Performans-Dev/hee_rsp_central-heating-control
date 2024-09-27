@@ -3,10 +3,13 @@ import 'dart:developer';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -122,6 +125,9 @@ class DbProvider {
             .replaceAll('{D}', d.toString()));
       }
     }
+
+    await db.execute(Keys.dbDropHardwareExtensionsDropTable);
+    await db.execute(Keys.dbCreateHardwareExtensionsCreateTable);
   }
 
   Future<void> resetDb() async {
@@ -154,7 +160,11 @@ class DbProvider {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -177,7 +187,11 @@ class DbProvider {
         whereArgs: [user.username],
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -195,7 +209,11 @@ class DbProvider {
         whereArgs: [user.id],
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -214,7 +232,11 @@ class DbProvider {
         }
       }
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return users;
     }
     return users;
@@ -236,7 +258,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -259,7 +285,11 @@ class DbProvider {
         }
       }
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return users;
     }
     return users;
@@ -283,7 +313,11 @@ class DbProvider {
         }
       }
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return users;
     }
     return users;
@@ -308,7 +342,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -327,7 +365,11 @@ class DbProvider {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -344,7 +386,11 @@ class DbProvider {
         whereArgs: [sensor.id],
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -362,7 +408,11 @@ class DbProvider {
         whereArgs: [sensor.id],
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -381,7 +431,11 @@ class DbProvider {
         }
       }
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return sensors;
     }
     return sensors;
@@ -403,7 +457,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -422,7 +480,11 @@ class DbProvider {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -439,7 +501,11 @@ class DbProvider {
         whereArgs: [heater.id],
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -457,7 +523,11 @@ class DbProvider {
         whereArgs: [heater.id],
       );
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -477,7 +547,11 @@ class DbProvider {
         }
       }
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return heaters;
     }
     return heaters;
@@ -499,7 +573,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -526,7 +604,11 @@ class DbProvider {
 
       return id;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -551,7 +633,11 @@ class DbProvider {
       log('Deleting zone #${zone.id}, with $zoneUsersToDelete users, $zoneSensorsToDelete sensors, $zoneHeatersToDelete heaters with result $result');
       return result;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -588,7 +674,11 @@ class DbProvider {
 
       return updateResult + zoneUsersToDelete;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return -1;
     }
   }
@@ -614,7 +704,11 @@ class DbProvider {
         return zone;
       }
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
     return null;
@@ -637,7 +731,11 @@ class DbProvider {
       }
       return zones;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return zones;
     }
   }
@@ -675,7 +773,11 @@ class DbProvider {
       }
       return zoneUsers;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return zoneUsers;
     }
   }
@@ -706,7 +808,11 @@ class DbProvider {
   //     }
   //     return zoneSensors;
   //   } on Exception catch (err) {
-  //     log(err.toString());
+  //     LogService.addLog(LogDefinition(
+  //   message: err.toString(),
+  //   level: LogLevel.error,
+  //   type: LogType.database,
+  // ));
   //     return zoneSensors;
   //   }
   // }
@@ -734,13 +840,15 @@ class DbProvider {
   //     }
   //     return zoneHeaters;
   //   } on Exception catch (err) {
-  //     log(err.toString());
+  //     LogService.addLog(LogDefinition(
+  //   message: err.toString(),
+  //   level: LogLevel.error,
+  //   type: LogType.database,
+  // ));
   //     return zoneHeaters;
   //   }
   // }
   //#endregion
-
-  //MARK: HARDWARE
 
   //MARK: PLANS
 
@@ -756,7 +864,11 @@ class DbProvider {
       }
       return plans;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return plans;
     }
   }
@@ -776,7 +888,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -802,7 +918,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -829,7 +949,11 @@ class DbProvider {
       }
       return null;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return null;
     }
   }
@@ -855,7 +979,11 @@ class DbProvider {
       );
       return result > 0;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return false;
     }
   }
@@ -879,7 +1007,11 @@ class DbProvider {
       }
       return planDetails;
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return planDetails;
     }
   }
@@ -906,7 +1038,11 @@ class DbProvider {
       }
       return getPlanDetails(planId: planDetails.first.planId);
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return result;
     }
   }
@@ -926,7 +1062,11 @@ class DbProvider {
       }
       return getPlanDetails(planId: planDetails.first.planId);
     } on Exception catch (err) {
-      log(err.toString());
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
       return result;
     }
   }
@@ -956,6 +1096,77 @@ class DbProvider {
   }
   //#endregion
 
+  //MARK: HARDWARE CONFIG
+
+  //#region HARDWARE LIST
+  Future<List<HardwareExtension>> getHardwareExtensions() async {
+    final hwExtList = <HardwareExtension>[];
+    final db = await database;
+    if (db == null) return hwExtList;
+    try {
+      final data = await db.query(Keys.tableHardwareExtensions);
+      for (final map in data) {
+        final ext = HardwareExtension.fromDb(map);
+        hwExtList.add(ext);
+      }
+      return hwExtList;
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return hwExtList;
+    }
+  }
+  //#endregion
+
+  //#region HARDWARE ADD
+  Future<int> addHardwareExtension(HardwareExtension hwExt) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      final int id = await db.insert(
+        Keys.tableHardwareExtensions,
+        hwExt.toDb(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      return id;
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region HARDWARE DELETE
+  Future<int> deleteHardwareExtension(HardwareExtension hwExt) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.delete(
+        Keys.tableHardwareExtensions,
+        where: Keys.queryId,
+        whereArgs: [hwExt.id],
+      );
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region HARDWARE UPDATE
+
+  //#endregion
   Future<int> savePin(String newPin, String username) async {
     final db = await database;
     if (db == null) return -1;

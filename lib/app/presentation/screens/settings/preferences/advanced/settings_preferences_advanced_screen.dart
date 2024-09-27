@@ -154,7 +154,9 @@ class _SettingsPreferencesAdvancedScreenState
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(Routes.settingsPreferencesAdvancedHardwareConfig);
+              },
             ),
             const SizedBox(height: 8),
             ListTile(

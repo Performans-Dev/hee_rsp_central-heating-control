@@ -20,7 +20,7 @@ enum LogType {
   receiveSerialEvent,
   telemetryEvent,
   error,
-  
+  database,
 }
 
 enum LogSyncStatus {

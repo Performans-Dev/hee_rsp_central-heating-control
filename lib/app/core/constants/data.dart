@@ -3,8 +3,6 @@ import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
 
 class UiData {
-  
-
   static final List<Channel> channels = [
     Channel(
         name: 'CHO-1',

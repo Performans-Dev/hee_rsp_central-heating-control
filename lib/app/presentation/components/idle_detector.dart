@@ -13,7 +13,7 @@ class IdleDetector extends StatefulWidget {
   const IdleDetector({
     super.key,
     required this.child,
-    this.timeoutSeconds = 60,
+    this.timeoutSeconds = 180,
     required this.excludedRoutes,
   });
 
