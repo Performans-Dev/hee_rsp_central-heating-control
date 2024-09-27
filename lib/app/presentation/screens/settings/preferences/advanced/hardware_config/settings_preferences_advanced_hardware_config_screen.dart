@@ -16,9 +16,24 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('List of installed hardwares'),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Get.toNamed(
+                        Routes.settingsPreferencesAdvancedHardwareConfigAddNew);
+                  },
+                  label: const Text('Add new hardware'),
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            ),
             Expanded(
               child: dc.hardwareExtensionList.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text('no hardware installed'),
                     )
                   : ListView.builder(
@@ -27,19 +42,6 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                       ),
                       itemCount: dc.hardwareExtensionList.length,
                     ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Get.toNamed(
-                      Routes.settingsPreferencesAdvancedHardwareConfigAddNew);
-                },
-                label: Text('Add new hardware'),
-                icon: Icon(Icons.add),
-              ),
             ),
           ],
         ),

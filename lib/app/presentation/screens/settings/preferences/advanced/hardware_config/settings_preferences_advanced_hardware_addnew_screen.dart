@@ -1,10 +1,13 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/screens/lock_screen/lock_screen.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SettingsPreferencesAdvancedHardwareConfigAddNewScreen
     extends StatefulWidget {
@@ -19,6 +22,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     extends State<SettingsPreferencesAdvancedHardwareConfigAddNewScreen> {
   HardwareExtension? selectedHardwareExtension;
   late TextEditingController serialNumberController;
+  bool busy = false;
 
   @override
   void initState() {
@@ -43,23 +47,23 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
           DropdownMenu<HardwareExtension>(
             enableFilter: false,
             enableSearch: false,
-            expandedInsets: EdgeInsets.all(1),
-            leadingIcon: Icon(Icons.hardware),
+            expandedInsets: const EdgeInsets.all(8),
+            leadingIcon: const Icon(Icons.hardware),
             dropdownMenuEntries: StaticProvider.availableHardwareExtensions
                 .map((e) => DropdownMenuEntry<HardwareExtension>(
                     label: e.modelName, value: e))
                 .toList(),
-            label: Text('Available Hardware Profiles'),
+            label: const Text('Available Hardware Profiles'),
             onSelected: (value) {
               setState(() {
                 selectedHardwareExtension = value;
               });
             },
           ),
-          Divider(),
+          const Divider(),
           Expanded(
             child: selectedHardwareExtension == null
-                ? Center(
+                ? const Center(
                     child: Text('Select a hardware profile from list'),
                   )
                 : PiScrollView(
@@ -67,44 +71,72 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
-                          title: Text(
+                          subtitle: Text(
                               '${selectedHardwareExtension?.manufacturer}'),
-                          trailing:
+                          title:
                               Text('${selectedHardwareExtension?.modelName}'),
                         ),
                         ListTile(
-                          title: Text('Input/Output Count'),
-                          trailing: Row(
+                          title: const Text('Input/Output Count'),
+                          subtitle: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('DI: ${selectedHardwareExtension?.diCount}'),
-                              VerticalDivider(),
+                              const VerticalDivider(),
                               Text('DO: ${selectedHardwareExtension?.doCount}'),
-                              VerticalDivider(),
+                              const VerticalDivider(),
                               Text(
                                   'ADC: ${selectedHardwareExtension?.adcCount}'),
-                              VerticalDivider(),
+                              const VerticalDivider(),
                               Text(
                                   'DAC: ${selectedHardwareExtension?.dacCount}'),
                             ],
                           ),
                         ),
                         ListTile(
-                          title: Text('Connection'),
+                          title: const Text('Connection'),
                           subtitle: Text(selectedHardwareExtension!
                               .connectionType
                               .map((e) => e.name)
                               .toList()
                               .join(', ')),
                         ),
-                        Divider(),
+                        const Divider(),
                         TextInputWidget(
                           controller: serialNumberController,
                           labelText: 'Serial number',
                         ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Confirm Adding Hardware'),
+                        Container(
+                          width: double.infinity,
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: busy
+                                ? null
+                                : () async {
+                                    final DataController dataController =
+                                        Get.find();
+                                    setState(() => busy = true);
+                                    final result =
+                                        await dataController.addNewHardware(
+                                            selectedHardwareExtension!);
+                                    setState(() => busy = false);
+                                    if (context.mounted) {
+                                      if (result > 0) {
+                                        DialogUtils.snackbar(
+                                            context: context,
+                                            message:
+                                                'Hardware Extension Profile saved',
+                                            type: SnackbarType.success);
+                                      } else {
+                                        DialogUtils.snackbar(
+                                            context: context,
+                                            message: 'An error occured',
+                                            type: SnackbarType.error);
+                                      }
+                                    }
+                                  },
+                            child: Text(busy ? 'Saving...' : 'Save'),
+                          ),
                         ),
                       ],
                     ),

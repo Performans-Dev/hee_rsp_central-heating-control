@@ -246,4 +246,10 @@ class DataController extends GetxController {
     _hardwareExtensionList.assignAll(result);
     update();
   }
+
+  Future<int> addNewHardware(HardwareExtension data) async {
+    final result = await DbProvider.db.addHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
 }
