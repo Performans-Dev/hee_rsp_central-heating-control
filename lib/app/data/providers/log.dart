@@ -72,6 +72,7 @@ class LogService {
 
       // Write the updated list back to the file
       final encodedLogs = jsonEncode(logs.map((log) => log.toMap()).toList());
+      await logFile.writeAsString('', mode: FileMode.write); // Clear the file
       await logFile.writeAsString(encodedLogs, mode: FileMode.write);
     } on Exception catch (_) {}
   }
