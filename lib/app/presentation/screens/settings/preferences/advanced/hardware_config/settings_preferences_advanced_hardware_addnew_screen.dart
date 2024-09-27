@@ -43,6 +43,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
           DropdownMenu<HardwareExtension>(
             enableFilter: false,
             enableSearch: false,
+            expandedInsets: EdgeInsets.all(1),
             leadingIcon: Icon(Icons.hardware),
             dropdownMenuEntries: StaticProvider.availableHardwareExtensions
                 .map((e) => DropdownMenuEntry<HardwareExtension>(
