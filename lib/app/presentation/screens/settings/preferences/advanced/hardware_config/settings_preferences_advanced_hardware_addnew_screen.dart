@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/models/hardware_extension.dart'
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/screens/lock_screen/lock_screen.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 
@@ -65,28 +66,34 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
-                          title: Text('Manufacturer'),
-                          trailing: Text(
+                          title: Text(
                               '${selectedHardwareExtension?.manufacturer}'),
-                        ),
-                        ListTile(
-                          title: Text('Model'),
                           trailing:
                               Text('${selectedHardwareExtension?.modelName}'),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('ADC: ${selectedHardwareExtension?.adcCount}'),
-                            Text('DAC: ${selectedHardwareExtension?.dacCount}'),
-                            Text('DI: ${selectedHardwareExtension?.diCount}'),
-                            Text('DO: ${selectedHardwareExtension?.doCount}'),
-                          ],
+                        ListTile(
+                          title: Text('Input/Output Count'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('DI: ${selectedHardwareExtension?.diCount}'),
+                              VerticalDivider(),
+                              Text('DO: ${selectedHardwareExtension?.doCount}'),
+                              VerticalDivider(),
+                              Text(
+                                  'ADC: ${selectedHardwareExtension?.adcCount}'),
+                              VerticalDivider(),
+                              Text(
+                                  'DAC: ${selectedHardwareExtension?.dacCount}'),
+                            ],
+                          ),
                         ),
                         ListTile(
                           title: Text('Connection'),
                           subtitle: Text(selectedHardwareExtension!
                               .connectionType
+                              .map((e) => e.name)
+                              .toList()
                               .join(', ')),
                         ),
                         Divider(),
