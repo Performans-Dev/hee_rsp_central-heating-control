@@ -57,7 +57,7 @@ class _IdleDetectorState extends State<IdleDetector> {
   void _lockScreen() {
     Buzz.lock();
     _timer?.cancel();
-    Get.toNamed(Routes.lockScreen);
+    // Get.toNamed(Routes.lockScreen);
   }
 
   bool _isExcludedRoute() {
