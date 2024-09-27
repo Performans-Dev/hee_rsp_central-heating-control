@@ -38,7 +38,7 @@ class _IdleDetectorState extends State<IdleDetector> {
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timer.tick == widget.timeoutSeconds) {
+      if (timer.tick >= widget.timeoutSeconds) {
         if (!_isExcludedRoute()) {
           _lockScreen();
         } else {
@@ -56,6 +56,7 @@ class _IdleDetectorState extends State<IdleDetector> {
 
   void _lockScreen() {
     Buzz.lock();
+    _timer?.cancel();
     Get.toNamed(Routes.lockScreen);
   }
 
