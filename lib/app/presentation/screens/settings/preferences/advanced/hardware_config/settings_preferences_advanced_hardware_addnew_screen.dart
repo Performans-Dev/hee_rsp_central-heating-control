@@ -115,7 +115,11 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                 : () async {
                                     final DataController dataController =
                                         Get.find();
-                                    setState(() => busy = true);
+                                    setState(() {
+                                      selectedHardwareExtension!.serialNumber =
+                                          serialNumberController.text;
+                                      busy = true;
+                                    });
                                     final result =
                                         await dataController.addNewHardware(
                                             selectedHardwareExtension!);
