@@ -31,6 +31,7 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              alignment: Alignment.centerRight,
               child: ElevatedButton.icon(
                 onPressed: () {
                   Get.toNamed(
