@@ -59,8 +59,8 @@ class HardwareExtension {
       'connectionType': connectionType.map((x) => x.name).toList(),
       'hwProfileUart': uartProfile?.toMap(),
       'hwProfileWifi': wifiProfile?.toMap(),
-      'ethernetProfile': ethernetProfile?.toMap(),
-      'bleProfile': bleProfile?.toMap(),
+      'hwProfileEthernet': ethernetProfile?.toMap(),
+      'hwProfileBle': bleProfile?.toMap(),
     };
   }
 
@@ -85,8 +85,8 @@ class HardwareExtension {
             'connectionType': json.encode(conType),
             'hwProfileUart': uartProfile?.toJson(),
             'hwProfileWifi': wifiProfile?.toJson(),
-            'ethernetProfile': ethernetProfile?.toJson(),
-            'bleProfile': bleProfile?.toJson(),
+            'hwProfileEthernet': ethernetProfile?.toJson(),
+            'hwProfileBle': bleProfile?.toJson(),
           }
         : {
             'modelName': modelName,
@@ -102,8 +102,8 @@ class HardwareExtension {
             'connectionType': json.encode(conType),
             'hwProfileUart': uartProfile?.toJson(),
             'hwProfileWifi': wifiProfile?.toJson(),
-            'ethernetProfile': ethernetProfile?.toJson(),
-            'bleProfile': bleProfile?.toJson(),
+            'hwProfileEthernet': ethernetProfile?.toJson(),
+            'hwProfileBle': bleProfile?.toJson(),
           };
   }
 
@@ -139,11 +139,11 @@ class HardwareExtension {
       wifiProfile: map['hwProfileWifi'] != null
           ? HwProfileWifi.fromMap(map['hwProfileWifi'])
           : null,
-      ethernetProfile: map['ethernetProfile'] != null
-          ? HwProfileEthernet.fromMap(map['ethernetProfile'])
+      ethernetProfile: map['hwProfileEthernet'] != null
+          ? HwProfileEthernet.fromMap(map['hwProfileEthernet'])
           : null,
-      bleProfile: map['bleProfile'] != null
-          ? HwProfileBle.fromMap(map['bleProfile'])
+      bleProfile: map['hwProfileBle'] != null
+          ? HwProfileBle.fromMap(map['hwProfileBle'])
           : null,
     );
   }
@@ -180,11 +180,11 @@ class HardwareExtension {
       wifiProfile: map['hwProfileWifi'] != null
           ? HwProfileWifi.fromJson(map['hwProfileWifi'])
           : null,
-      ethernetProfile: map['ethernetProfile'] != null
-          ? HwProfileEthernet.fromJson(map['ethernetProfile'])
+      ethernetProfile: map['hwProfileEthernet'] != null
+          ? HwProfileEthernet.fromJson(map['hwProfileEthernet'])
           : null,
-      bleProfile: map['bleProfile'] != null
-          ? HwProfileBle.fromJson(map['bleProfile'])
+      bleProfile: map['hwProfileBle'] != null
+          ? HwProfileBle.fromJson(map['hwProfileBle'])
           : null,
     );
   }
