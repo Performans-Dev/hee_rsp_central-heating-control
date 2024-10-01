@@ -9,6 +9,7 @@ enum HwConnectionType {
 
 class HardwareExtension {
   int id;
+  int deviceId;
   String modelName;
   int diCount;
   int doCount;
@@ -26,6 +27,7 @@ class HardwareExtension {
   HwProfileBle? bleProfile;
   HardwareExtension({
     required this.id,
+    required this.deviceId,
     required this.modelName,
     required this.diCount,
     required this.doCount,
@@ -46,6 +48,7 @@ class HardwareExtension {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'deviceId': deviceId,
       'modelName': modelName,
       'diCount': diCount,
       'doCount': doCount,
@@ -72,6 +75,7 @@ class HardwareExtension {
     return id > 0
         ? {
             'id': id,
+            'deviceId': deviceId,
             'modelName': modelName,
             'diCount': diCount,
             'doCount': doCount,
@@ -89,6 +93,7 @@ class HardwareExtension {
             'hwProfileBle': bleProfile?.toJson(),
           }
         : {
+            'deviceId': deviceId,
             'modelName': modelName,
             'diCount': diCount,
             'doCount': doCount,
@@ -122,6 +127,7 @@ class HardwareExtension {
     }
     return HardwareExtension(
       id: map['id']?.toInt() ?? 0,
+      deviceId: map['deviceId']?.toInt() ?? 0,
       modelName: map['modelName'] ?? '',
       diCount: map['diCount']?.toInt() ?? 0,
       doCount: map['doCount']?.toInt() ?? 0,
@@ -163,6 +169,7 @@ class HardwareExtension {
     }
     return HardwareExtension(
       id: map['id']?.toInt() ?? 0,
+      deviceId: map['deviceId']?.toInt() ?? 0,
       modelName: map['modelName'] ?? '',
       diCount: map['diCount']?.toInt() ?? 0,
       doCount: map['doCount']?.toInt() ?? 0,

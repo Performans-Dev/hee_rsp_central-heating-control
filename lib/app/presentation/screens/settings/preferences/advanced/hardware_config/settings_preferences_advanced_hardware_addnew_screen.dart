@@ -22,17 +22,20 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     extends State<SettingsPreferencesAdvancedHardwareConfigAddNewScreen> {
   HardwareExtension? selectedHardwareExtension;
   late TextEditingController serialNumberController;
+  late TextEditingController deviceIdController;
   bool busy = false;
 
   @override
   void initState() {
     super.initState();
     serialNumberController = TextEditingController();
+    deviceIdController = TextEditingController();
   }
 
   @override
   void dispose() {
     serialNumberController.dispose();
+    deviceIdController.dispose();
     super.dispose();
   }
 
@@ -102,9 +105,21 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                               .join(', ')),
                         ),
                         const Divider(),
-                        TextInputWidget(
-                          controller: serialNumberController,
-                          labelText: 'Serial number',
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextInputWidget(
+                                controller: serialNumberController,
+                                labelText: 'Serial number',
+                              ),
+                            ),
+                            Expanded(
+                              child: TextInputWidget(
+                                controller: deviceIdController,
+                                labelText: 'ID',
+                              ),
+                            ),
+                          ],
                         ),
                         Container(
                           width: double.infinity,
@@ -118,6 +133,8 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                     setState(() {
                                       selectedHardwareExtension!.serialNumber =
                                           serialNumberController.text;
+                                      selectedHardwareExtension!.deviceId =
+                                          int.parse(deviceIdController.text);
                                       busy = true;
                                     });
                                     final result =

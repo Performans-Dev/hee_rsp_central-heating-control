@@ -60,8 +60,8 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 15;
-  static const String databaseName = 'chcDb.db';
+  static const int databaseVersion = 16;
+  static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
   static const String tableUsers = 'users';
   static const String tableSensors = 'sensors';
@@ -262,6 +262,7 @@ class Keys {
   static const String dbCreateHardwareExtensionsCreateTable = '''
     CREATE TABLE IF NOT EXISTS hardwareExtensions (
       id INTEGER NOT NULL DEFAULT 0,
+      deviceId INTEGER NOT NULL DEFAULT 0,
       modelName TEXT,
       diCount INTEGER NOT NULL DEFAULT 0,
       doCount INTEGER NOT NULL DEFAULT 0,

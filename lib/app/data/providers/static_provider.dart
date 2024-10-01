@@ -200,6 +200,7 @@ class StaticProvider {
   static final List<HardwareExtension> availableHardwareExtensions = [
     HardwareExtension(
       id: 0,
+      deviceId: 0,
       modelName: '2041.01-V1.00',
       diCount: 6,
       doCount: 6,
