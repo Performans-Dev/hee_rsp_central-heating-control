@@ -44,7 +44,9 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                               Text(dc.hardwareExtensionList[index].modelName),
                           leading: const Icon(Icons.hardware),
                           subtitle: Text(
-                              'ID: ${dc.hardwareExtensionList[index].deviceId} Serial: ${dc.hardwareExtensionList[index].serialNumber}'),
+                              'ID: ${dc.hardwareExtensionList[index].id}'
+                              'deviceId: ${dc.hardwareExtensionList[index].deviceId} '
+                              'Serial: ${dc.hardwareExtensionList[index].serialNumber}'),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

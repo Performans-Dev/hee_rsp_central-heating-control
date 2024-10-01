@@ -33,6 +33,7 @@ class DataController extends GetxController {
     await getSensorListFromDb();
     await getPlanListFromDb();
     await getPlanDetailsFromDb();
+    await loadHardwareExtensions();
   }
   //#endregion
 
