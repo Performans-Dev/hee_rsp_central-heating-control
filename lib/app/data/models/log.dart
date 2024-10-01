@@ -92,6 +92,7 @@ class LogDefinition {
     LogType? type,
   }) {
     return LogDefinition(
+      id: 0,
       time: DateTime.now(),
       message: message,
       level: level ?? LogLevel.debug,
