@@ -57,8 +57,8 @@ class HardwareExtension {
       'manufacturer': manufacturer,
       'description': description,
       'connectionType': connectionType.map((x) => x.name).toList(),
-      'uartProfile': uartProfile?.toMap(),
-      'wifiProfile': wifiProfile?.toMap(),
+      'hwProfileUart': uartProfile?.toMap(),
+      'hwProfileWifi': wifiProfile?.toMap(),
       'ethernetProfile': ethernetProfile?.toMap(),
       'bleProfile': bleProfile?.toMap(),
     };
@@ -83,8 +83,8 @@ class HardwareExtension {
             'manufacturer': manufacturer,
             'description': description,
             'connectionType': json.encode(conType),
-            'uartProfile': uartProfile?.toJson(),
-            'wifiProfile': wifiProfile?.toJson(),
+            'hwProfileUart': uartProfile?.toJson(),
+            'hwProfileWifi': wifiProfile?.toJson(),
             'ethernetProfile': ethernetProfile?.toJson(),
             'bleProfile': bleProfile?.toJson(),
           }
@@ -100,8 +100,8 @@ class HardwareExtension {
             'manufacturer': manufacturer,
             'description': description,
             'connectionType': json.encode(conType),
-            'uartProfile': uartProfile?.toJson(),
-            'wifiProfile': wifiProfile?.toJson(),
+            'hwProfileUart': uartProfile?.toJson(),
+            'hwProfileWifi': wifiProfile?.toJson(),
             'ethernetProfile': ethernetProfile?.toJson(),
             'bleProfile': bleProfile?.toJson(),
           };
@@ -133,11 +133,11 @@ class HardwareExtension {
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
       connectionType: conTypes,
-      uartProfile: map['uartProfile'] != null
-          ? HwProfileUart.fromMap(map['uartProfile'])
+      uartProfile: map['hwProfileUart'] != null
+          ? HwProfileUart.fromMap(map['hwProfileUart'])
           : null,
-      wifiProfile: map['wifiProfile'] != null
-          ? HwProfileWifi.fromMap(map['wifiProfile'])
+      wifiProfile: map['hwProfileWifi'] != null
+          ? HwProfileWifi.fromMap(map['hwProfileWifi'])
           : null,
       ethernetProfile: map['ethernetProfile'] != null
           ? HwProfileEthernet.fromMap(map['ethernetProfile'])
@@ -174,11 +174,11 @@ class HardwareExtension {
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
       connectionType: conTypes,
-      uartProfile: map['uartProfile'] != null
-          ? HwProfileUart.fromJson(map['uartProfile'])
+      uartProfile: map['hwProfileUart'] != null
+          ? HwProfileUart.fromJson(map['hwProfileUart'])
           : null,
-      wifiProfile: map['wifiProfile'] != null
-          ? HwProfileWifi.fromJson(map['wifiProfile'])
+      wifiProfile: map['hwProfileWifi'] != null
+          ? HwProfileWifi.fromJson(map['hwProfileWifi'])
           : null,
       ethernetProfile: map['ethernetProfile'] != null
           ? HwProfileEthernet.fromJson(map['ethernetProfile'])
