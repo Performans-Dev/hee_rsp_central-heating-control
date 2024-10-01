@@ -65,6 +65,10 @@ class HardwareExtension {
   }
 
   Map<String, dynamic> toDb() {
+    List<String> conType = [];
+    for (final item in connectionType) {
+      conType.add(item.name);
+    }
     return id > 0
         ? {
             'id': id,
@@ -78,7 +82,7 @@ class HardwareExtension {
             'serialNumber': serialNumber,
             'manufacturer': manufacturer,
             'description': description,
-            'connectionType': connectionType.map((x) => x.name).toList(),
+            'connectionType': json.encode(conType),
             'uartProfile': uartProfile?.toJson(),
             'wifiProfile': wifiProfile?.toJson(),
             'ethernetProfile': ethernetProfile?.toJson(),
@@ -95,7 +99,7 @@ class HardwareExtension {
             'serialNumber': serialNumber,
             'manufacturer': manufacturer,
             'description': description,
-            'connectionType': connectionType.map((x) => x.name).toList(),
+            'connectionType': json.encode(conType),
             'uartProfile': uartProfile?.toJson(),
             'wifiProfile': wifiProfile?.toJson(),
             'ethernetProfile': ethernetProfile?.toJson(),
@@ -104,6 +108,18 @@ class HardwareExtension {
   }
 
   factory HardwareExtension.fromMap(Map<String, dynamic> map) {
+    var conTypeStr = map['connectionType'];
+    late List<dynamic> conTypeList;
+    if (conTypeStr != null) {
+      conTypeList = json.decode(conTypeStr) as List;
+    }
+    List<HwConnectionType> conTypes = [];
+    for (final item in conTypeList) {
+      final conType = HwConnectionType
+          .values[HwConnectionType.values.indexWhere((e) => e.name == item)];
+
+      conTypes.add(conType);
+    }
     return HardwareExtension(
       id: map['id']?.toInt() ?? 0,
       modelName: map['modelName'] ?? '',
@@ -116,9 +132,7 @@ class HardwareExtension {
       serialNumber: map['serialNumber'] ?? '',
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
-      connectionType: List<HwConnectionType>.from(map['connectionType']?.map(
-          (x) => HwConnectionType
-              .values[HwConnectionType.values.indexWhere((e) => e.name == x)])),
+      connectionType: conTypes,
       uartProfile: map['uartProfile'] != null
           ? HwProfileUart.fromMap(map['uartProfile'])
           : null,
@@ -135,6 +149,18 @@ class HardwareExtension {
   }
 
   factory HardwareExtension.fromDb(Map<String, dynamic> map) {
+    var conTypeStr = map['connectionType'];
+    late List<dynamic> conTypeList;
+    if (conTypeStr != null) {
+      conTypeList = json.decode(conTypeStr) as List;
+    }
+    List<HwConnectionType> conTypes = [];
+    for (final item in conTypeList) {
+      final conType = HwConnectionType
+          .values[HwConnectionType.values.indexWhere((e) => e.name == item)];
+
+      conTypes.add(conType);
+    }
     return HardwareExtension(
       id: map['id']?.toInt() ?? 0,
       modelName: map['modelName'] ?? '',
@@ -147,9 +173,7 @@ class HardwareExtension {
       serialNumber: map['serialNumber'] ?? '',
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
-      connectionType: List<HwConnectionType>.from(map['connectionType']?.map(
-          (x) => HwConnectionType
-              .values[HwConnectionType.values.indexWhere((e) => e.name == x)])),
+      connectionType: conTypes,
       uartProfile: map['uartProfile'] != null
           ? HwProfileUart.fromJson(map['uartProfile'])
           : null,
