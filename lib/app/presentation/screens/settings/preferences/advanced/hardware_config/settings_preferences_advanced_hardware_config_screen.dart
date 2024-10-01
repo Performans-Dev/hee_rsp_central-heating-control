@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -39,6 +40,24 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                   : ListView.builder(
                       itemBuilder: (context, index) => ListTile(
                         title: Text(dc.hardwareExtensionList[index].modelName),
+                        leading: const Icon(Icons.hardware),
+                        subtitle: Text(
+                            'ID: ${dc.hardwareExtensionList[index].deviceId} Serial: ${dc.hardwareExtensionList[index].serialNumber}'),
+                        trailing: IconButton(
+                            onPressed: () {
+                              DialogUtils.confirmDialog(
+                                  context: context,
+                                  title: 'Delete Hardware',
+                                  description:
+                                      'Are you sure you want to delete this hardware extension?',
+                                  positiveText: 'Delete',
+                                  negativeText: 'Cancel',
+                                  positiveCallback: () async {
+                                    await dc.deleteHardware(
+                                        dc.hardwareExtensionList[index]);
+                                  });
+                            },
+                            icon: const Icon(Icons.delete)),
                       ),
                       itemCount: dc.hardwareExtensionList.length,
                     ),

@@ -252,4 +252,10 @@ class DataController extends GetxController {
     await loadHardwareExtensions();
     return result;
   }
+
+  Future<int> deleteHardware(HardwareExtension data) async {
+    final result = await DbProvider.db.deleteHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
 }

@@ -148,6 +148,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                             message:
                                                 'Hardware Extension Profile saved',
                                             type: SnackbarType.success);
+                                        Get.back();
                                       } else {
                                         DialogUtils.snackbar(
                                             context: context,
