@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:path/path.dart' as path;
 
@@ -74,7 +75,9 @@ class LogService {
       final encodedLogs = jsonEncode(logs.map((log) => log.toMap()).toList());
       await logFile.writeAsString('', mode: FileMode.write); // Clear the file
       await logFile.writeAsString(encodedLogs, mode: FileMode.write);
-    } on Exception catch (_) {}
+    } on Exception catch (_) {
+      Buzz.error();
+    }
   }
 
   static Future<List<LogDefinition>> readLogs({DateTime? date}) async {
