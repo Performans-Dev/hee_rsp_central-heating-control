@@ -24,7 +24,7 @@ class _LogViewScreenState extends State<LogViewScreen> {
   List<int> availableMonths = List.generate(12, (index) => index + 1);
   List<int> availableDays = [];
   List<LogDefinition> logs = [];
-  String path = '';
+  // String path = '';
 
   @override
   void initState() {
@@ -45,16 +45,17 @@ class _LogViewScreenState extends State<LogViewScreen> {
 
   void _loadLogsForSelectedDate() async {
     DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
-    List<LogDefinition> fetchedLogs =
-        await LogService.readLogs(date: selectedDate);
-    final _path = await LogService.getLogFilePath(date: selectedDate);
+    // List<LogDefinition> fetchedLogs =
+    //     await LogService.readLogs(date: selectedDate);
+    // final _path = await LogService.getLogFilePath(date: selectedDate);
+    final fetchedLogs = await LogService.readLogs(date: selectedDate);
     setState(() {
       logs = fetchedLogs.reversed.toList();
       availableDays = List.generate(
         DateTime(selectedYear, selectedMonth + 1, 0).day,
         (index) => index + 1,
       );
-      path = _path;
+      // path = _path;
     });
   }
 
@@ -178,10 +179,10 @@ class _LogViewScreenState extends State<LogViewScreen> {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Text(path),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.all(8),
+          //   child: Text(path),
+          // ),
           const Divider(),
           Expanded(
             child: logs.isEmpty
