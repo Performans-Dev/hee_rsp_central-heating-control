@@ -62,6 +62,7 @@ class Keys {
   //#region DATABASE
   static const int databaseVersion = 15;
   static const String databaseName = 'chcDb.db';
+  static const String logDatabaseName = 'logs.db';
   static const String tableUsers = 'users';
   static const String tableSensors = 'sensors';
   static const String tableHeaters = 'heaters';

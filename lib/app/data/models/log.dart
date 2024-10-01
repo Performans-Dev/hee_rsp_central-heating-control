@@ -30,27 +30,50 @@ enum LogSyncStatus {
 }
 
 class LogDefinition {
+  int id;
   DateTime? time;
+  int? yearValue;
+  int? monthValue;
+  int? dayValue;
   String message;
   LogLevel level;
   LogType type;
   LogSyncStatus status;
   LogDefinition({
+    this.id = 0,
     this.time,
     required this.message,
     this.level = LogLevel.debug,
     this.type = LogType.generic,
     this.status = LogSyncStatus.notSynced,
+    this.yearValue,
+    this.monthValue,
+    this.dayValue,
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'time': (time ?? DateTime.now()).millisecondsSinceEpoch,
-      'message': message,
-      'level': level.index,
-      'type': type.index,
-      'status': status.index,
-    };
+    return id > 0
+        ? {
+            'id': id,
+            'time': (time ?? DateTime.now()).millisecondsSinceEpoch,
+            'message': message,
+            'level': level.index,
+            'type': type.index,
+            'status': status.index,
+            'yearValue': yearValue,
+            'monthValue': monthValue,
+            'dayValue': dayValue,
+          }
+        : {
+            'time': (time ?? DateTime.now()).millisecondsSinceEpoch,
+            'message': message,
+            'level': level.index,
+            'type': type.index,
+            'status': status.index,
+            'yearValue': yearValue ?? (time ?? DateTime.now()).year,
+            'monthValue': monthValue ?? (time ?? DateTime.now()).month,
+            'dayValue': dayValue ?? (time ?? DateTime.now()).day,
+          };
   }
 
   Color get backgroundColorLight {
@@ -89,20 +112,28 @@ class LogDefinition {
     LogType? type,
   }) {
     return LogDefinition(
+      id: 0,
       time: DateTime.now(),
       message: message,
       level: level ?? LogLevel.debug,
       type: type ?? LogType.generic,
+      yearValue: DateTime.now().year,
+      monthValue: DateTime.now().month,
+      dayValue: DateTime.now().day,
     );
   }
 
   factory LogDefinition.fromMap(Map<String, dynamic> map) {
     return LogDefinition(
+      id: map['id']?.toInt(),
       time: DateTime.fromMillisecondsSinceEpoch(map['time']),
       message: map['message'] ?? '',
       level: LogLevel.values[map['level']?.toInt() ?? 0],
       type: LogType.values[map['type']?.toInt() ?? 0],
       status: LogSyncStatus.values[map['status']?.toInt() ?? 0],
+      yearValue: map['yearValue']?.toInt(),
+      monthValue: map['monthValue']?.toInt(),
+      dayValue: map['dayValue']?.toInt(),
     );
   }
 

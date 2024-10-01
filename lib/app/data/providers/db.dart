@@ -64,7 +64,6 @@ class DbProvider {
       String dbPath = p.join(
         Box.documentsDirectoryPath,
         Keys.databasePath,
-        Keys.databasePath,
         Keys.databaseName,
       );
       return dbPath;

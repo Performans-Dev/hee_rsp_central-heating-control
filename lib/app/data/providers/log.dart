@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/providers/log_db.dart';
 import 'package:path/path.dart' as path;
 
 class LogService {
@@ -52,51 +53,57 @@ class LogService {
   }
 
   static Future<void> addLog(LogDefinition logEntry) async {
-    try {
-      final logFilePath = await getLogFilePath();
-      final logFile = File(logFilePath);
+    await LogDbProvider.db.addLog(logEntry);
+    // try {
+    //   final logFilePath = await getLogFilePath();
+    //   final logFile = File(logFilePath);
 
-      List<LogDefinition> logs = [];
+    //   List<LogDefinition> logs = [];
 
-      if (await logFile.exists()) {
-        final content = await logFile.readAsString();
-        if (content.isNotEmpty) {
-          final decoded = jsonDecode(content);
-          logs = List<Map<String, dynamic>>.from(decoded)
-              .map((map) => LogDefinition.fromMap(map))
-              .toList();
-        }
-      }
+    //   if (await logFile.exists()) {
+    //     final content = await logFile.readAsString();
+    //     if (content.isNotEmpty) {
+    //       final decoded = jsonDecode(content);
+    //       logs = List<Map<String, dynamic>>.from(decoded)
+    //           .map((map) => LogDefinition.fromMap(map))
+    //           .toList();
+    //     }
+    //   }
 
-      // Append the new log entry to the existing list
-      logs.add(logEntry);
+    //   // Append the new log entry to the existing list
+    //   logs.add(logEntry);
 
-      // Write the updated list back to the file
-      final encodedLogs = jsonEncode(logs.map((log) => log.toMap()).toList());
-      await logFile.writeAsString('', mode: FileMode.write); // Clear the file
-      await logFile.writeAsString(encodedLogs, mode: FileMode.write);
-    } on Exception catch (_) {
-      Buzz.error();
-    }
+    //   // Write the updated list back to the file
+    //   final encodedLogs = jsonEncode(logs.map((log) => log.toMap()).toList());
+    //   await logFile.writeAsString('', mode: FileMode.write); // Clear the file
+    //   await logFile.writeAsString(encodedLogs, mode: FileMode.write);
+    // } on Exception catch (_) {
+    //   Buzz.error();
+    // }
   }
 
   static Future<List<LogDefinition>> readLogs({DateTime? date}) async {
-    try {
-      final logFilePath = await getLogFilePath(date: date);
-      final logFile = File(logFilePath);
+    return await LogDbProvider.db.getLogs(
+      year: date?.year,
+      month: date?.month,
+      day: date?.day,
+    );
+    // try {
+    //   final logFilePath = await getLogFilePath(date: date);
+    //   final logFile = File(logFilePath);
 
-      if (await logFile.exists()) {
-        final content = await logFile.readAsString();
-        if (content.isNotEmpty) {
-          final decoded = jsonDecode(content);
-          return List<Map<String, dynamic>>.from(decoded)
-              .map((map) => LogDefinition.fromMap(map))
-              .toList();
-        }
-      }
-    } on Exception catch (_) {}
+    //   if (await logFile.exists()) {
+    //     final content = await logFile.readAsString();
+    //     if (content.isNotEmpty) {
+    //       final decoded = jsonDecode(content);
+    //       return List<Map<String, dynamic>>.from(decoded)
+    //           .map((map) => LogDefinition.fromMap(map))
+    //           .toList();
+    //     }
+    //   }
+    // } on Exception catch (_) {}
 
-    return [];
+    // return [];
   }
 
   // static Future<List<LogDefinition>> updateLogs(
