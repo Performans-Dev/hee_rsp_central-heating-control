@@ -30,14 +30,12 @@ enum LogSyncStatus {
 }
 
 class LogDefinition {
-  int? id;
   DateTime? time;
   String message;
   LogLevel level;
   LogType type;
   LogSyncStatus status;
   LogDefinition({
-    this.id,
     this.time,
     required this.message,
     this.level = LogLevel.debug,
@@ -47,7 +45,6 @@ class LogDefinition {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'time': (time ?? DateTime.now()).millisecondsSinceEpoch,
       'message': message,
       'level': level.index,
@@ -92,7 +89,6 @@ class LogDefinition {
     LogType? type,
   }) {
     return LogDefinition(
-      id: 0,
       time: DateTime.now(),
       message: message,
       level: level ?? LogLevel.debug,
@@ -102,7 +98,6 @@ class LogDefinition {
 
   factory LogDefinition.fromMap(Map<String, dynamic> map) {
     return LogDefinition(
-      id: map['id']?.toInt(),
       time: DateTime.fromMillisecondsSinceEpoch(map['time']),
       message: map['message'] ?? '',
       level: LogLevel.values[map['level']?.toInt() ?? 0],
