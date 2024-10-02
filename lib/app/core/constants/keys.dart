@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region DATABASE
-  static const int databaseVersion = 16;
+  static const int databaseVersion = 17;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
   static const String tableUsers = 'users';
@@ -241,7 +241,7 @@ class Keys {
 
   static const String logDbCreateLogTable = '''
     CREATE TABLE IF NOT EXISTS logTable (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+       id INTEGER PRIMARY KEY AUTOINCREMENT,
        level INTEGER NOT NULL DEFAULT 0,
        device TEXT,
        session TEXT,
@@ -261,7 +261,7 @@ class Keys {
 
   static const String dbCreateHardwareExtensionsCreateTable = '''
     CREATE TABLE IF NOT EXISTS hardwareExtensions (
-      id INTEGER NOT NULL DEFAULT 0,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       deviceId INTEGER NOT NULL DEFAULT 0,
       modelName TEXT,
       diCount INTEGER NOT NULL DEFAULT 0,
