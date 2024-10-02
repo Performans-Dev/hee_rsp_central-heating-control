@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
@@ -56,14 +57,17 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                 ],
               ),
               body: PiScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child: Wrap(
                   children: sc.stateList
                       .map((e) => Card(
                             margin: const EdgeInsets.all(2),
                             child: Container(
                               padding: const EdgeInsets.all(10),
                               child: Column(children: [
+                                Text(
+                                    '${e.hardwareType.name.camelCaseToHumanReadable()}'),
+                                Text(
+                                    '${e.pinType.name.camelCaseToHumanReadable()}'),
                                 Text('${e.title}'),
                                 e.pinType == PinType.analogInput ||
                                         e.pinType == PinType.analogOutput
