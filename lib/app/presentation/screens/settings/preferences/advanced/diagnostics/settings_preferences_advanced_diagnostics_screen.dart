@@ -58,10 +58,30 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
               ),
               body: PiScrollView(
                 child: Wrap(
-                  children: [
-                    Text('//TODO: bunlari gruplama yapalim'),
-                    ...sc.stateList.map((e) => stateCard(e))
-                  ],
+                  children: sc.stateList
+                      .map((e) => Card(
+                            margin: const EdgeInsets.all(2),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(children: [
+                                Text(
+                                    e.hardwareType.name.camelCaseToHumanReadable()),
+                                Text(
+                                    e.pinType.name.camelCaseToHumanReadable()),
+                                Text('${e.title}'),
+                                e.pinType == PinType.analogInput ||
+                                        e.pinType == PinType.analogOutput
+                                    ? Text('${e.pinValue}')
+                                    : Icon(
+                                        Icons.sunny,
+                                        color: e.pinValue
+                                            ? Colors.green
+                                            : Colors.grey,
+                                      ),
+                              ]),
+                            ),
+                          ))
+                      .toList(),
 /*                 
                  [
                   //MARK: SERIAL
@@ -303,26 +323,6 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
           },
         );
       },
-    );
-  }
-
-  Widget stateCard(s) {
-    return Card(
-      margin: const EdgeInsets.all(2),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(children: [
-          Text('${s.hardwareType.name.camelCaseToHumanReadable()}'),
-          Text('${s.pinType.name.camelCaseToHumanReadable()}'),
-          Text('${s.title}'),
-          s.pinType == PinType.analogInput || s.pinType == PinType.analogOutput
-              ? Text('${s.pinValue}')
-              : Icon(
-                  Icons.sunny,
-                  color: s.pinValue ? Colors.green : Colors.grey,
-                ),
-        ]),
-      ),
     );
   }
 }
