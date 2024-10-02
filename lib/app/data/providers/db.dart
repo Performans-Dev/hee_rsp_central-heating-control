@@ -1164,8 +1164,27 @@ class DbProvider {
   //#endregion
 
   //#region HARDWARE UPDATE
-
+  Future<int> updateHardwareExtension(HardwareExtension hwExt) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.update(
+        Keys.tableHardwareExtensions,
+        hwExt.toDb(),
+        where: Keys.queryId,
+        whereArgs: [hwExt.id],
+      );
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return -1;
+    }
+  }
   //#endregion
+
   Future<int> savePin(String newPin, String username) async {
     final db = await database;
     if (db == null) return -1;

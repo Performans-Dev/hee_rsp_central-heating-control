@@ -47,6 +47,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
+          const SizedBox(height: 8),
           DropdownMenu<HardwareExtension>(
             enableFilter: false,
             enableSearch: false,
@@ -113,6 +114,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                 labelText: 'Serial number',
                               ),
                             ),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: TextInputWidget(
                                 controller: deviceIdController,
@@ -124,7 +126,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                         Container(
                           width: double.infinity,
                           alignment: Alignment.centerRight,
-                          child: ElevatedButton(
+                          child: ElevatedButton.icon(
                             onPressed: busy
                                 ? null
                                 : () async {
@@ -157,7 +159,17 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                       }
                                     }
                                   },
-                            child: Text(busy ? 'Saving...' : 'Save'),
+                            label: Text(busy ? 'Saving...' : 'Save'),
+                            icon: busy
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : const Icon(
+                                    Icons.save_alt,
+                                    size: 24,
+                                  ),
                           ),
                         ),
                       ],

@@ -259,4 +259,19 @@ class DataController extends GetxController {
     await loadHardwareExtensions();
     return result;
   }
+
+  Future<int> changeDeviceId(HardwareExtension data, int deviceId) async {
+    data.deviceId = deviceId;
+    final result = await DbProvider.db.updateHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
+
+  Future<int> changeDeviceSerial(
+      HardwareExtension data, String serialNumber) async {
+    data.serialNumber = serialNumber;
+    final result = await DbProvider.db.updateHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
 }
