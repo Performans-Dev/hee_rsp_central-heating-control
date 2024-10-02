@@ -5,9 +5,11 @@ import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
@@ -461,4 +463,7 @@ class GpioController extends GetxController {
     update();
     buzz(BuzzerType.success); */
   }
+
+  //#region MARK: HARDWARE
+  //#endregion
 }

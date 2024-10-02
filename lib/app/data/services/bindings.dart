@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/data/services/screen_saver.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
+import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:get/get.dart';
 
 class AppBindings extends Bindings {
@@ -36,6 +37,10 @@ class AppBindings extends Bindings {
     );
     await Get.putAsync(
       () async => ProcessController(),
+      permanent: true,
+    );
+    await Get.putAsync(
+      () async => StateController(),
       permanent: true,
     );
   }
