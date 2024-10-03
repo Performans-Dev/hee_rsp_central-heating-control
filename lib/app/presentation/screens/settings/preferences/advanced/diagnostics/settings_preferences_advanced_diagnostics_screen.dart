@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:dart_periphery/dart_periphery.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +46,9 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
       builder: (gc) {
         return GetBuilder<StateController>(
           builder: (sc) {
-            final typeList = sc.stateList.map((e) => e.hardwareType).toList();
+            final typeList =
+                sc.stateList.map((e) => e.hardwareType).toSet().toList();
+
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Diagnostics'),
@@ -61,7 +64,22 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ...typeList.map((e) => Text(e.name)),
+                    ...typeList.map(
+                      (e) {
+                        final data = sc.stateList
+                            .where((d) => d.hardwareType == e)
+                            .toSet()
+                            .toList();
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(e.name),
+                            ...data.map((f) => Text('${f.title}')).toSet(),
+                            Divider(),
+                          ],
+                        );
+                      },
+                    ),
                     Divider(),
                     Wrap(
                       children: sc.stateList
