@@ -1,7 +1,6 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -18,22 +17,22 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatefulWidget {
 
 class _SettingsPreferencesAdvancedDiagnosticsScreenState
     extends State<SettingsPreferencesAdvancedDiagnosticsScreen> {
-  final GpioController gpioController = Get.find();
-  final DataController dataController = Get.find();
+  // final GpioController gpioController = Get.find();
+  // final DataController dataController = Get.find();
 
-  int selectedSerialDevice = 0x01;
-  SerialCommand selectedSerialCommand = SerialCommand.test;
-  int selectedSerialData1 = 0x00;
-  int selectedSerialData2 = 0x00;
-  List<int> serialDataPresets = [
-    0x00,
-    0x01,
-    0x02,
-    0x03,
-    0x04,
-    0x05,
-    0x06,
-  ];
+  // int selectedSerialDevice = 0x01;
+  // SerialCommand selectedSerialCommand = SerialCommand.test;
+  // int selectedSerialData1 = 0x00;
+  // int selectedSerialData2 = 0x00;
+  // List<int> serialDataPresets = [
+  //   0x00,
+  //   0x01,
+  //   0x02,
+  //   0x03,
+  //   0x04,
+  //   0x05,
+  //   0x06,
+  // ];
 
   @override
   void initState() {
@@ -88,8 +87,15 @@ class DiagnosticSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            margin: const EdgeInsets.only(top: 12),
             padding: const EdgeInsets.all(4),
-            color: Theme.of(context).colorScheme.primaryContainer,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+            ),
             child: Row(
               children: [
                 Text(
@@ -108,7 +114,7 @@ class DiagnosticSectionWidget extends StatelessWidget {
                     },
                     child: const Text('Read NTC'),
                   ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 if (hwId > 0)
                   ElevatedButton(
                     onPressed: () {
@@ -119,7 +125,7 @@ class DiagnosticSectionWidget extends StatelessWidget {
                     },
                     child: const Text('Read All Inputs'),
                   ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 if (hwId > 0)
                   ElevatedButton(
                     onPressed: () {
@@ -130,7 +136,7 @@ class DiagnosticSectionWidget extends StatelessWidget {
                     },
                     child: const Text('Read All Outputs'),
                   ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 if (hwId > 0)
                   ElevatedButton(
                     onPressed: () {
@@ -141,7 +147,7 @@ class DiagnosticSectionWidget extends StatelessWidget {
                     },
                     child: const Text('Test'),
                   ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 if (hwId > 0)
                   ElevatedButton(
                     onPressed: () {
@@ -152,7 +158,7 @@ class DiagnosticSectionWidget extends StatelessWidget {
                     },
                     child: const Text('Restart'),
                   ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
               ],
             ),
           ),
@@ -195,6 +201,7 @@ class DiagnosticHardwareTypeWidget extends StatelessWidget {
           hwId > 0
               ? Row(
                   mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
@@ -234,21 +241,18 @@ class DiagnosticPinTypeWidget extends StatelessWidget {
         hardwareType: hardwareType,
         pinType: pinType,
       );
-      return Expanded(
-        flex: list.length,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(pinType.name.camelCaseToHumanReadable()),
-            Row(
-              children: list
-                  .map((e) => DiagnosticStateWidget(
-                      stateModel: e, index: list.indexOf(e)))
-                  .toList(),
-            ),
-          ],
-        ),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(pinType.name.camelCaseToHumanReadable()),
+          Row(
+            children: list
+                .map((e) => DiagnosticStateWidget(
+                    stateModel: e, index: list.indexOf(e)))
+                .toList(),
+          ),
+        ],
       );
     });
   }
