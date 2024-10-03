@@ -5,12 +5,8 @@ import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
-import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
-import 'package:central_heating_control/app/data/services/data.dart';
-import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
@@ -20,8 +16,6 @@ class GpioController extends GetxController {
   Timer? timer;
   int startByte = 0x3A;
   List<int> stopBytes = [0x0D, 0x0A];
-  SerialMessageHandler handler = SerialMessageHandler();
-  late StreamController<SerialMessage> serialMessageStreamController;
 
   // String serialKey = '/dev/ttyUSB0';
   String serialKey = '/dev/ttyS0';
@@ -38,8 +32,6 @@ class GpioController extends GetxController {
   @override
   void onReady() {
     if (GetPlatform.isLinux) {
-      serialMessageStreamController =
-          StreamController<SerialMessage>.broadcast();
       initOutPins();
       initInPins();
       initBtnPins();
@@ -58,7 +50,7 @@ class GpioController extends GetxController {
     }
     spi?.dispose();
     serialPort?.dispose();
-    serialMessageStreamController.close();
+    
     super.onClose();
   }
 
@@ -313,22 +305,22 @@ class GpioController extends GetxController {
       serialPort!.config.cts = 0;
       serialPort!.config.dsr = 0;
       serialPort!.config.dtr = 1;
-      handler.onMessage.listen((Uint8List message) {
-        List<int> data = CommonUtils.intListToUint8List(message);
-        _receivedSerialData.add(data);
-        update();
-        int crcInt =
-            CommonUtils.serialUartCrc16(CommonUtils.intListToUint8List([
-          data[1],
-          data[2],
-          data[3],
-          data[4],
-        ]));
-        List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
-        if (crcBytes[0] == data[5] && crcBytes[1] == data[6]) {
-          onSerialMessageReceived(CommonUtils.uint8ListToIntList(message));
-        }
-      });
+      // handler.onMessage.listen((Uint8List message) {
+      //   List<int> data = CommonUtils.intListToUint8List(message);
+      //   _receivedSerialData.add(data);
+      //   update();
+      //   int crcInt =
+      //       CommonUtils.serialUartCrc16(CommonUtils.intListToUint8List([
+      //     data[1],
+      //     data[2],
+      //     data[3],
+      //     data[4],
+      //   ]));
+      //   List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
+      //   if (crcBytes[0] == data[5] && crcBytes[1] == data[6]) {
+      //     onSerialMessageReceived(CommonUtils.uint8ListToIntList(message));
+      //   }
+      // });
 
       LogService.addLog(LogDefinition(
         message: 'registered listener: $portName',
@@ -367,20 +359,20 @@ class GpioController extends GetxController {
     }
   }
 
-  void onSerialMessageReceived(List<int> message) {
-    SerialMessage m = SerialMessage(
-      deviceId: message[1],
-      command: message[2],
-      data1: message[3],
-      data2: message[4],
-    );
-    int crcInt = CommonUtils.serialUartCrc16(
-        CommonUtils.intListToUint8List(m.toBytes()));
-    List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
-    if (crcBytes[0] == message[5] && crcBytes[1] == message[6]) {
-      serialMessageStreamController.add(m);
-    }
-  }
+  // void onSerialMessageReceived(List<int> message) {
+  //   SerialMessage m = SerialMessage(
+  //     deviceId: message[1],
+  //     command: message[2],
+  //     data1: message[3],
+  //     data2: message[4],
+  //   );
+  //   int crcInt = CommonUtils.serialUartCrc16(
+  //       CommonUtils.intListToUint8List(m.toBytes()));
+  //   List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
+  //   if (crcBytes[0] == message[5] && crcBytes[1] == message[6]) {
+  //     serialMessageStreamController.add(m);
+  //   }
+  // }
 
   List<int> buildSerialMessage({
     required int id,
