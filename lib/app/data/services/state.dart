@@ -90,7 +90,7 @@ class StateController extends GetxController {
 
     for (final item in gpioController.btnGpios) {
       StateModel model = StateModel(
-        hwId: -1,
+        hwId: 0,
         pinIndex: item.line,
         pinType: PinType.digitalInput,
         hardwareType: HardwareType.buttonPin,
