@@ -87,13 +87,22 @@ class DiagnosticSectionWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(hwId.toString()),
+          Text(hardwareName(hwId)),
           ...hardwareTypeList.map(
               (e) => DiagnosticHardwareTypeWidget(hardwareType: e, hwId: hwId)),
           const Divider(),
         ],
       );
     });
+  }
+
+  String hardwareName(int id) {
+    switch (id) {
+      case 0:
+        return 'Onboard';
+      default:
+        return 'Serial Uart #$id';
+    }
   }
 }
 
@@ -185,7 +194,7 @@ class DiagnosticStateWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(index.toString()),
+                Text((index + 1).toString()),
                 stateModel.pinType == PinType.analogInput
                     ? Text('${stateModel.analogValue}')
                     : Icon(
