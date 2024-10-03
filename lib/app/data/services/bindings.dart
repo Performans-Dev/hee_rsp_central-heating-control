@@ -43,5 +43,9 @@ class AppBindings extends Bindings {
       () async => StateController(),
       permanent: true,
     );
+    await Get.putAsync(
+      () async => StateController(),
+      permanent: true,
+    );
   }
 }

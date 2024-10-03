@@ -87,7 +87,74 @@ class DiagnosticSectionWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(hardwareName(hwId)),
+          Container(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            child: Row(
+              children: [
+                Text(
+                  hardwareName(hwId),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                if (hwId > 0)
+                  ElevatedButton(
+                    onPressed: () {
+                      sc.sendSerialCommand(
+                        id: hwId,
+                        command: SerialCommand.readNtc,
+                      );
+                    },
+                    child: const Text('Read NTC'),
+                  ),
+                SizedBox(width: 8),
+                if (hwId > 0)
+                  ElevatedButton(
+                    onPressed: () {
+                      sc.sendSerialCommand(
+                        id: hwId,
+                        command: SerialCommand.readInputs,
+                      );
+                    },
+                    child: const Text('Read All Inputs'),
+                  ),
+                SizedBox(width: 8),
+                if (hwId > 0)
+                  ElevatedButton(
+                    onPressed: () {
+                      sc.sendSerialCommand(
+                        id: hwId,
+                        command: SerialCommand.readOutputs,
+                      );
+                    },
+                    child: const Text('Read All Outputs'),
+                  ),
+                SizedBox(width: 8),
+                if (hwId > 0)
+                  ElevatedButton(
+                    onPressed: () {
+                      sc.sendSerialCommand(
+                        id: hwId,
+                        command: SerialCommand.test,
+                      );
+                    },
+                    child: const Text('Test'),
+                  ),
+                SizedBox(width: 8),
+                if (hwId > 0)
+                  ElevatedButton(
+                    onPressed: () {
+                      sc.sendSerialCommand(
+                        id: hwId,
+                        command: SerialCommand.restartDevice,
+                      );
+                    },
+                    child: const Text('Restart'),
+                  ),
+                SizedBox(width: 8),
+              ],
+            ),
+          ),
           ...hardwareTypeList.map(
               (e) => DiagnosticHardwareTypeWidget(hardwareType: e, hwId: hwId)),
           const Divider(),
@@ -149,7 +216,10 @@ class DiagnosticPinTypeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<StateController>(builder: (sc) {
       final list = sc.getStateList(
-          hwId: hwId, hardwareType: hardwareType, pinType: pinType);
+        hwId: hwId,
+        hardwareType: hardwareType,
+        pinType: pinType,
+      );
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,34 +248,46 @@ class DiagnosticStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: UiDimens.formRadius,
-      ),
-      margin: const EdgeInsets.all(2),
-      child: InkWell(
-        borderRadius: UiDimens.formRadius,
-        onTap: stateModel.pinType == PinType.digitalOutput ? () {} : null,
-        child: ClipRRect(
+    return GetBuilder<StateController>(builder: (sc) {
+      return Card(
+        shape: RoundedRectangleBorder(
           borderRadius: UiDimens.formRadius,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text((index + 1).toString()),
-                stateModel.pinType == PinType.analogInput
-                    ? Text('${stateModel.analogValue}')
-                    : Icon(
-                        Icons.sunny,
-                        color: stateModel.pinValue ? Colors.green : Colors.grey,
-                      ),
-              ],
+        ),
+        margin: const EdgeInsets.all(2),
+        child: InkWell(
+          borderRadius: UiDimens.formRadius,
+          onTap: stateModel.pinType == PinType.digitalOutput
+              ? () {
+                  sc.sendSerialCommand(
+                    id: stateModel.hwId,
+                    command: SerialCommand.setSingleOut,
+                    data1: (index + 1),
+                    data2: stateModel.pinValue ? 0 : 1,
+                  );
+                }
+              : null,
+          child: ClipRRect(
+            borderRadius: UiDimens.formRadius,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text((index + 1).toString()),
+                  stateModel.pinType == PinType.analogInput
+                      ? Text('${stateModel.analogValue}')
+                      : Icon(
+                          Icons.sunny,
+                          color:
+                              stateModel.pinValue ? Colors.green : Colors.grey,
+                        ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

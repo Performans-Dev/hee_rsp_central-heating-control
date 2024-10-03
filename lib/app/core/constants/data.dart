@@ -3,6 +3,9 @@ import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
 
 class UiData {
+  static int serialStartByte = 0x3A;
+  static List<int> serialStopBytes = [0x0D, 0x0A];
+
   static final List<Channel> channels = [
     Channel(
         name: 'CHO-1',

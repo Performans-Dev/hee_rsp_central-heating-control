@@ -1,8 +1,21 @@
+import 'package:central_heating_control/app/core/constants/data.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/data/services/communication.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:get/get.dart';
 
 class StateController extends GetxController {
+  //#region MARK: SUPER
+  @override
+  void onReady() {
+    //TODO: register stream listener from CommController both for sent messages and received messages
+    super.onReady();
+  }
+  //#endregion
+
+  //#region MARK: STATE
   final RxList<StateModel> _stateList = <StateModel>[].obs;
   List<StateModel> get stateList => _stateList;
   List<StateModel> get extensionStateList =>
@@ -51,7 +64,9 @@ class StateController extends GetxController {
             ?.analogValue ??
         0.0;
   }
+  //#endregion
 
+  //#region MARK: METHODS
   void updatePinValue(
       {required int hwId, required int pinIndex, required bool value}) {
     final index =
@@ -71,7 +86,9 @@ class StateController extends GetxController {
     }
     update();
   }
+  //#endregion
 
+  //#region MARK: POPULATE
   Future<void> populateList() async {
     final GpioController gpioController = Get.find();
     final DataController dataController = Get.find();
@@ -164,8 +181,39 @@ class StateController extends GetxController {
 
     update();
   }
+  //#endregion
+
+  //#region MARK: SENDING COMMAND
+  void sendSerialCommand({
+    required int id,
+    required SerialCommand command,
+    int data1 = 0x00,
+    int data2 = 0x00,
+  }) {
+    final cycByteData =
+        CommonUtils.intListToUint8List([id, command.value, data1, data2]);
+    final crcInt = CommonUtils.serialUartCrc16(cycByteData);
+    final crcBytes = CommonUtils.getCrcBytes(crcInt);
+
+    final message = [
+      UiData.serialStartByte,
+      id,
+      command.value,
+      data1,
+      data2,
+      ...crcBytes,
+      ...UiData.serialStopBytes,
+    ];
+    final CommController cc = Get.find();
+    cc.sendMessage(message);
+  }
+  //#endregion
 }
 
+/// MARK: STATE MODEL
+/// Represents a state model for a hardware pin.
+///
+/// This class encapsulates the properties of a hardware pin, including its ID, index, type, and value.
 class StateModel {
   int hwId;
   int pinIndex;
@@ -185,6 +233,7 @@ class StateModel {
   });
 }
 
+/// MARK: PIN TYPE
 enum PinType {
   none,
   digitalInput,
@@ -193,6 +242,7 @@ enum PinType {
   analogOutput,
 }
 
+/// MARK: HARDWARE TYPE
 enum HardwareType {
   none,
   onboardPin,
