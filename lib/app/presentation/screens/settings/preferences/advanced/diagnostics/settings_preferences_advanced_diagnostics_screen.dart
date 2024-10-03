@@ -1,10 +1,10 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:dart_periphery/dart_periphery.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,9 +46,6 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
       builder: (gc) {
         return GetBuilder<StateController>(
           builder: (sc) {
-            final typeList =
-                sc.stateList.map((e) => e.hardwareType).toSet().toList();
-
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Diagnostics'),
@@ -65,7 +62,9 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ...typeList.map(
+                    ...sc.stateDeviceIds
+                        .map((e) => DiagnosticSectionWidget(hwId: e)),
+                    /* ...typeList.map(
                       (e) {
                         final typeListData = sc.stateList
                             .where((d) => d.hardwareType == e)
@@ -81,6 +80,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                                   .where((x) =>
                                       x.hardwareType == e &&
                                       x.pinType == f.pinType)
+                                  .toSet()
                                   .toList();
 
                               return Column(
@@ -128,9 +128,9 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                           ],
                         );
                       },
-                    ),
-                    Divider(),
-                    Divider(),
+                    ), */
+                    const Divider(),
+                    const Divider(),
                     Wrap(
                       children: sc.stateList
                           .map((e) => Card(
@@ -399,6 +399,125 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
           },
         );
       },
+    );
+  }
+}
+
+class DiagnosticSectionWidget extends StatelessWidget {
+  const DiagnosticSectionWidget({super.key, required this.hwId});
+  final int hwId;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<StateController>(builder: (sc) {
+      final hardwareTypeList = sc.hardwareTypes(hwId: hwId);
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(hwId.toString()),
+          ...hardwareTypeList.map(
+              (e) => DiagnosticHardwareTypeWidget(hardwareType: e, hwId: hwId)),
+          const Divider(),
+        ],
+      );
+    });
+  }
+}
+
+class DiagnosticHardwareTypeWidget extends StatelessWidget {
+  const DiagnosticHardwareTypeWidget({
+    super.key,
+    required this.hardwareType,
+    required this.hwId,
+  });
+
+  final HardwareType hardwareType;
+  final int hwId;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<StateController>(builder: (sc) {
+      final pinTypeList = sc.pinTypes(hwId: hwId, hardwareType: hardwareType);
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(hardwareType.name.camelCaseToHumanReadable()),
+          ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
+              pinType: e, hwId: hwId, hardwareType: hardwareType)),
+        ],
+      );
+    });
+  }
+}
+
+class DiagnosticPinTypeWidget extends StatelessWidget {
+  const DiagnosticPinTypeWidget({
+    super.key,
+    required this.pinType,
+    required this.hwId,
+    required this.hardwareType,
+  });
+
+  final PinType pinType;
+  final int hwId;
+  final HardwareType hardwareType;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<StateController>(builder: (sc) {
+      final list = sc.getStateList(
+          hwId: hwId, hardwareType: hardwareType, pinType: pinType);
+      return Row(
+        children: list
+            .map((e) =>
+                DiagnosticStateWidget(stateModel: e, index: list.indexOf(e)))
+            .toList(),
+      );
+    });
+  }
+}
+
+class DiagnosticStateWidget extends StatelessWidget {
+  const DiagnosticStateWidget({
+    super.key,
+    required this.stateModel,
+    required this.index,
+  });
+  final StateModel stateModel;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: UiDimens.formRadius,
+      ),
+      margin: const EdgeInsets.all(2),
+      child: InkWell(
+        borderRadius: UiDimens.formRadius,
+        onTap: stateModel.pinType == PinType.digitalOutput ? () {} : null,
+        child: ClipRRect(
+          borderRadius: UiDimens.formRadius,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(stateModel.title ?? index.toString()),
+                stateModel.pinType == PinType.analogInput
+                    ? Text('${stateModel.analogValue}')
+                    : Icon(
+                        Icons.sunny,
+                        color: stateModel.pinValue ? Colors.green : Colors.grey,
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

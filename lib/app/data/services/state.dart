@@ -8,6 +8,36 @@ class StateController extends GetxController {
   List<StateModel> get extensionStateList =>
       stateList.where((e) => e.hwId > 0).toList();
 
+  List<int> get stateDeviceIds => stateList.map((e) => e.hwId).toSet().toList();
+
+  List<HardwareType> hardwareTypes({required int hwId}) => stateList
+      .where((e) => e.hwId == hwId)
+      .map((e) => e.hardwareType)
+      .toSet()
+      .toList();
+
+  List<PinType> pinTypes({
+    required int hwId,
+    required HardwareType hardwareType,
+  }) =>
+      stateList
+          .where((e) => e.hardwareType == hardwareType && e.hwId == hwId)
+          .map((e) => e.pinType)
+          .toSet()
+          .toList();
+
+  List<StateModel> getStateList({
+    required int hwId,
+    required HardwareType hardwareType,
+    required PinType pinType,
+  }) =>
+      stateList
+          .where((e) =>
+              e.hardwareType == hardwareType &&
+              e.pinType == pinType &&
+              e.hwId == hwId)
+          .toList();
+
   bool getPinValue({required int hwId, required int pinIndex}) {
     return stateList
             .firstWhereOrNull((e) => e.hwId == hwId && e.pinIndex == pinIndex)

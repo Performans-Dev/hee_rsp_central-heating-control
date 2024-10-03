@@ -59,7 +59,7 @@ class Keys {
   static const String data = 'data';
   static const String http = 'http';
 
-  //#region DATABASE
+  //#region MARK: DATABASE
   static const int databaseVersion = 17;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
