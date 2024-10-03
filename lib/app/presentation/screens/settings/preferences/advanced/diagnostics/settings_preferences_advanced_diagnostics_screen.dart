@@ -62,24 +62,74 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
               ),
               body: PiScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ...typeList.map(
                       (e) {
-                        final data = sc.stateList
+                        final typeListData = sc.stateList
                             .where((d) => d.hardwareType == e)
                             .toSet()
                             .toList();
                         return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(e.name),
-                            ...data.map((f) => Text('${f.title}')).toSet(),
+                            ...typeListData.map((f) {
+                              final typeDataWithDirection = sc.stateList
+                                  .where((x) =>
+                                      x.hardwareType == e &&
+                                      x.pinType == f.pinType)
+                                  .toList();
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('${f.title}'),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      ...typeDataWithDirection.map(
+                                        (z) => Card(
+                                          margin: const EdgeInsets.all(2),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text('${z.title}'),
+                                                z.pinType ==
+                                                            PinType
+                                                                .analogInput ||
+                                                        z.pinType ==
+                                                            PinType.analogOutput
+                                                    ? Text('${z.pinValue}')
+                                                    : Icon(
+                                                        Icons.sunny,
+                                                        color: z.pinValue
+                                                            ? Colors.green
+                                                            : Colors.grey,
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            }).toSet(),
                             Divider(),
                           ],
                         );
                       },
                     ),
+                    Divider(),
                     Divider(),
                     Wrap(
                       children: sc.stateList
