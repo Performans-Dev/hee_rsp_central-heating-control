@@ -192,8 +192,14 @@ class DiagnosticHardwareTypeWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(hardwareType.name.camelCaseToHumanReadable()),
-          ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
-              pinType: e, hwId: hwId, hardwareType: hardwareType)),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
+                  pinType: e, hwId: hwId, hardwareType: hardwareType)),
+            ],
+          ),
         ],
       );
     });
@@ -220,18 +226,21 @@ class DiagnosticPinTypeWidget extends StatelessWidget {
         hardwareType: hardwareType,
         pinType: pinType,
       );
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(pinType.name.camelCaseToHumanReadable()),
-          Row(
-            children: list
-                .map((e) => DiagnosticStateWidget(
-                    stateModel: e, index: list.indexOf(e)))
-                .toList(),
-          ),
-        ],
+      return Expanded(
+        flex: list.length,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(pinType.name.camelCaseToHumanReadable()),
+            Row(
+              children: list
+                  .map((e) => DiagnosticStateWidget(
+                      stateModel: e, index: list.indexOf(e)))
+                  .toList(),
+            ),
+          ],
+        ),
       );
     });
   }
