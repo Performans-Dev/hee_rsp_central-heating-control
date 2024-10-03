@@ -87,7 +87,7 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('${f.title}'),
+                                  Text(f.pinType.name),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
