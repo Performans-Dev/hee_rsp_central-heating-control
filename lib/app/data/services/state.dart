@@ -117,6 +117,18 @@ class StateController extends GetxController {
       _stateList.add(model);
     }
 
+    for (var i = 1; i < 5; i++) {
+      StateModel model = StateModel(
+        hwId: 0,
+        pinIndex: i,
+        pinType: PinType.analogInput,
+        hardwareType: HardwareType.onboardPin,
+        title: 'Pin $i',
+        analogValue: 0.0,
+      );
+      _stateList.add(model);
+    }
+
     for (var i = 1; i < 9; i++) {
       StateModel model = StateModel(
         hwId: 0,
