@@ -88,6 +88,7 @@ class DiagnosticSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            padding: const EdgeInsets.all(4),
             color: Theme.of(context).colorScheme.primaryContainer,
             child: Row(
               children: [
@@ -157,7 +158,6 @@ class DiagnosticSectionWidget extends StatelessWidget {
           ),
           ...hardwareTypeList.map(
               (e) => DiagnosticHardwareTypeWidget(hardwareType: e, hwId: hwId)),
-          const Divider(),
         ],
       );
     });
