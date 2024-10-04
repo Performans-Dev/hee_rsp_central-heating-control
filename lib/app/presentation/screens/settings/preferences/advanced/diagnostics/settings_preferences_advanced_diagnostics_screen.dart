@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/data/models/serial.dart';
+import 'package:central_heating_control/app/data/services/communication.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -17,6 +21,8 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatefulWidget {
 
 class _SettingsPreferencesAdvancedDiagnosticsScreenState
     extends State<SettingsPreferencesAdvancedDiagnosticsScreen> {
+  final StateController stateController = Get.find();
+  final CommController commController = Get.find();
   // final GpioController gpioController = Get.find();
   // final DataController dataController = Get.find();
 
@@ -34,9 +40,22 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
   //   0x06,
   // ];
 
+  late StreamSubscription _streamSubscription;
+  final serialMessages = <SerialMessage>[];
+
   @override
   void initState() {
     super.initState();
+    _streamSubscription = commController.serialMessageStreamController.stream
+        .listen((SerialMessage data) {
+      setState(() => serialMessages.add(data));
+    });
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -193,28 +212,14 @@ class DiagnosticHardwareTypeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<StateController>(builder: (sc) {
       final pinTypeList = sc.pinTypes(hwId: hwId, hardwareType: hardwareType);
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      return ExpansionTile(
+        title: Text(hardwareType.name.camelCaseToHumanReadable()),
         children: [
-          Text(hardwareType.name.camelCaseToHumanReadable()),
-          hwId > 0
-              ? Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
-                        pinType: e, hwId: hwId, hardwareType: hardwareType)),
-                  ],
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
-                        pinType: e, hwId: hwId, hardwareType: hardwareType)),
-                  ],
-                ),
+          ...pinTypeList.map((e) => DiagnosticPinTypeWidget(
+                pinType: e,
+                hwId: hwId,
+                hardwareType: hardwareType,
+              )),
         ],
       );
     });
