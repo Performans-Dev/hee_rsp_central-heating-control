@@ -1,10 +1,6 @@
-import 'dart:async';
-
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/data/models/serial.dart';
-import 'package:central_heating_control/app/data/services/communication.dart';
 import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -21,8 +17,8 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatefulWidget {
 
 class _SettingsPreferencesAdvancedDiagnosticsScreenState
     extends State<SettingsPreferencesAdvancedDiagnosticsScreen> {
-  final StateController stateController = Get.find();
-  final CommController commController = Get.find();
+  // final StateController stateController = Get.find();
+  // final CommController commController = Get.find();
   // final GpioController gpioController = Get.find();
   // final DataController dataController = Get.find();
 
@@ -40,21 +36,21 @@ class _SettingsPreferencesAdvancedDiagnosticsScreenState
   //   0x06,
   // ];
 
-  late StreamSubscription _streamSubscription;
-  final serialMessages = <SerialMessage>[];
+  // late StreamSubscription _streamSubscription;
+  // final serialMessages = <SerialMessage>[];
 
   @override
   void initState() {
     super.initState();
-    _streamSubscription = commController.serialMessageStreamController.stream
-        .listen((SerialMessage data) {
-      serialMessages.add(data);
-    });
+    // _streamSubscription = commController.serialMessageStreamController.stream
+    //     .listen((SerialMessage data) {
+    //   serialMessages.add(data);
+    // });
   }
 
   @override
   void dispose() {
-    _streamSubscription.cancel();
+    // _streamSubscription.cancel();
     super.dispose();
   }
 
