@@ -1,7 +1,5 @@
 
 
-Here's a work plan for each team based on your project description:
-
 ### 1. **Hardware Team (Raspberry Pi Integration Board)**
 
 **Tasks:**
@@ -115,7 +113,7 @@ Here's a work plan for each team based on your project description:
 
 **Dependencies:** Work closely with the Flutter Team for app communication and OTA updates, as well as with the OS Team for platform integration.
 
----
+
 
 
 
@@ -764,10 +762,6 @@ This updated subtask integrates the emergency input pin monitoring into the core
      3. Work with the OS team to ensure the app starts automatically on Raspberry Pi boot.
 
 ---
-
-These are the subtasks for **Flutter Task #1**. Let me know if you'd like to dive deeper into a specific subtask or move to another main task!
-
-
 
 ### **Flutter Task #8: Setup Process Implementation**
 
