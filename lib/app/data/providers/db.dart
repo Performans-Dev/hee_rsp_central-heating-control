@@ -127,6 +127,8 @@ class DbProvider {
 
     await db.execute(Keys.dbDropHardwareExtensionsDropTable);
     await db.execute(Keys.dbCreateHardwareExtensionsCreateTable);
+    //TODO: yeni tablo ekle
+    //TODO: yeni model ekle 
   }
 
   Future<void> resetDb() async {
@@ -1201,4 +1203,9 @@ class DbProvider {
       return -2;
     }
   }
+
+
+//TODO: yeni fonksiyonlar
+
+
 }

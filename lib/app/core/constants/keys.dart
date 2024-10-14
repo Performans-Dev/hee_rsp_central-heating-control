@@ -258,7 +258,7 @@ class Keys {
   static const String dbDropHardwareExtensionsDropTable = '''
     DROP TABLE IF EXISTS hardwareExtensions
   ''';
-
+//TODO: 3 alan ilave
   static const String dbCreateHardwareExtensionsCreateTable = '''
     CREATE TABLE IF NOT EXISTS hardwareExtensions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
