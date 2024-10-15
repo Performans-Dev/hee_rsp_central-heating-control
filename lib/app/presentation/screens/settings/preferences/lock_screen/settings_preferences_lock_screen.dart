@@ -77,7 +77,7 @@ class _SettingsPreferencesLockScreenState
                     divisions: 57,
                   ),
                   const Divider(),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Screen Saver'),
@@ -127,7 +127,7 @@ class _SettingsPreferencesLockScreenState
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (c, i) => Container(
-                                  margin: EdgeInsets.all(2),
+                                  margin: const EdgeInsets.all(2),
                                   width: 120,
                                   height: 96,
                                   child: Image.file(

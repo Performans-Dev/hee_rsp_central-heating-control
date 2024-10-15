@@ -11,9 +11,12 @@ import 'package:central_heating_control/app/data/models/language_definition.dart
 import 'package:central_heating_control/app/data/models/register_request.dart';
 import 'package:central_heating_control/app/data/models/signin_request.dart';
 import 'package:central_heating_control/app/data/models/subscription_result.dart';
+import 'package:central_heating_control/app/data/models/temperature_value.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/base.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 
 class AppProvider {
@@ -155,5 +158,21 @@ class AppProvider {
 
   //fetchDateLocaleList() {}
 
-  checkUpdates() {}
+  static Future<GenericResponse> downloadTemperatureValues() async {
+    final url = "https://static.api2.run/temperature_values.json";
+    List<TemperatureValue> list = [];
+    final response = await Dio().get(url);
+    if (response.statusCode == 200) {
+      final json = response.data;
+      for (var item in json) {
+        list.add(TemperatureValue.fromMap(item));
+      }
+      await DbProvider.db.deleteTemperatureValues();
+
+      await DbProvider.db.insertTemperatureValues(list);
+
+      return GenericResponse.success(null);
+    }
+    return GenericResponse.error();
+  }
 }

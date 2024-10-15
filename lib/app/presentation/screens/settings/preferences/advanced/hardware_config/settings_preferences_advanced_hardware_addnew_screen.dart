@@ -140,7 +140,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                           serialNumberController.text;
                                       selectedHardwareExtension!.deviceId =
                                           int.parse(deviceIdController.text);
-                                          //TODO: add temperatureVALUENAME+ COEFFİCİENT+GAP
+                                      //TODO: add temperatureVALUENAME+ COEFFİCİENT+GAP
                                       busy = true;
                                     });
                                     final result =

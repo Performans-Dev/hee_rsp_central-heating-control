@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -31,6 +32,14 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                 ///TODO: app providera yaz
                 /// DOwnload temperature json buton (bu buton jsonu db ye yazacak.
                 ///  yazmadan önce haliyle boşaltacak. eski değerleri silip yenisini yazacak.)
+                ElevatedButton.icon(
+                  onPressed: () async{
+                   await AppProvider.downloadTemperatureValues();
+                   //
+                  },
+                  label: const Text('Download'),
+                  icon: const Icon(Icons.download),
+                ),
                 ElevatedButton.icon(
                   onPressed: () {
                     Get.toNamed(
