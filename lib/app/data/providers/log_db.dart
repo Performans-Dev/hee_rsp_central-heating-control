@@ -31,7 +31,7 @@ class LogDbProvider {
           }
         },
         singleInstance: true,
-        version: Keys.databaseVersion,
+        version: Keys.logDatabaseVersion,
       ),
     );
   }
@@ -57,7 +57,7 @@ class LogDbProvider {
         'yearValue INTEGER NOT NULL DEFAULT 0,'
         'monthValue INTEGER NOT NULL DEFAULT 0,'
         'dayValue INTEGER NOT NULL DEFAULT 0,'
-        'time TEXT,'
+        'time INTEGER NOT NULL DEFAULT 0,'
         'message TEXT,'
         'level INTEGER NOT NULL DEFAULT 0,'
         'type INTEGER NOT NULL DEFAULT 0,'
@@ -88,13 +88,13 @@ class LogDbProvider {
       String? query;
       List<String> arguments = [];
       if (year != null) {
-        query = 'yearValue = {0}';
+        query = 'yearValue = ?';
         arguments.add(year.toString());
         if (month != null) {
-          query += ' AND monthValue = {1}';
+          query += ' AND monthValue = ?';
           arguments.add(month.toString());
           if (day != null) {
-            query += ' AND dayValue = {2}';
+            query += ' AND dayValue = ?';
             arguments.add(day.toString());
           }
         }
@@ -110,7 +110,8 @@ class LogDbProvider {
           logs.add(LogDefinition.fromMap(map));
         }
       }
-    } catch (_) {
+    } catch (e) {
+      print(e);
       return logs;
     }
     return logs;

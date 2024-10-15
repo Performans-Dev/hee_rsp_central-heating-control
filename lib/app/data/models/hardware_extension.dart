@@ -6,7 +6,7 @@ enum HwConnectionType {
   ethernet,
   ble,
 }
-
+//TODO: 3 alan ilave
 class HardwareExtension {
   int id;
   int deviceId;

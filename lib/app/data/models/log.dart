@@ -124,9 +124,11 @@ class LogDefinition {
   }
 
   factory LogDefinition.fromMap(Map<String, dynamic> map) {
+    int t = map['time']?.toInt();
+    DateTime d = DateTime.fromMillisecondsSinceEpoch(t);
     return LogDefinition(
       id: map['id']?.toInt(),
-      time: DateTime.fromMillisecondsSinceEpoch(map['time']),
+      time: d ?? DateTime.now(),
       message: map['message'] ?? '',
       level: LogLevel.values[map['level']?.toInt() ?? 0],
       type: LogType.values[map['type']?.toInt() ?? 0],

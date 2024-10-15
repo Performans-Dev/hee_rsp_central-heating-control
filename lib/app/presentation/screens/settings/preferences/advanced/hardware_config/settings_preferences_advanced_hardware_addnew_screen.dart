@@ -121,6 +121,9 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                 labelText: 'ID',
                               ),
                             ),
+                            //TODO: temperature value name dropdown
+                            //TODO: gap
+                            //TODO: coefficient
                           ],
                         ),
                         Container(
@@ -137,6 +140,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                           serialNumberController.text;
                                       selectedHardwareExtension!.deviceId =
                                           int.parse(deviceIdController.text);
+                                          //TODO: add temperatureVALUENAME+ COEFFİCİENT+GAP
                                       busy = true;
                                     });
                                     final result =
