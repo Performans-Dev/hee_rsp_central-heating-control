@@ -61,6 +61,7 @@ class Keys {
 
   //#region MARK: DATABASE
   static const int databaseVersion = 17;
+  static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
   static const String tableUsers = 'users';

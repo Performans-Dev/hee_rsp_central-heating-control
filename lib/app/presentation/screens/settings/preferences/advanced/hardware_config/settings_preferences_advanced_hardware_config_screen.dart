@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
+  //TODO: controllerda kontrol et db de temperaturevalues boş ise içerik gösterme download butonunu göster.
   const SettingsPreferencesAdvancedHardwareConfigScreen({super.key});
 
   @override
@@ -27,7 +28,9 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
               children: [
                 const Text(
                     'List of installed hardwares'), //TODO: Apply title style here
-                    //TODO:DOwnload temperature json buton (bu buton jsonu db ye yazacak. yazmadan önce haliyle boşaltacak. eski değerleri silip yenisini yazacak.)
+                ///TODO: app providera yaz
+                /// DOwnload temperature json buton (bu buton jsonu db ye yazacak.
+                ///  yazmadan önce haliyle boşaltacak. eski değerleri silip yenisini yazacak.)
                 ElevatedButton.icon(
                   onPressed: () {
                     Get.toNamed(
