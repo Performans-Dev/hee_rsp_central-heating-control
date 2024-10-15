@@ -110,8 +110,7 @@ class LogDbProvider {
           logs.add(LogDefinition.fromMap(map));
         }
       }
-    } catch (e) {
-      print(e);
+    } catch (_) {
       return logs;
     }
     return logs;

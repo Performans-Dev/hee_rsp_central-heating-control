@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log_db.dart';
 import 'package:path/path.dart' as path;

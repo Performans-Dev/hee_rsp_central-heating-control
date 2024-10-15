@@ -108,3 +108,8 @@ or
 sudo ./build/linux/arm64/release/bundle/central_heating_control
 ```
 
+
+
+## Misc
+`ip route | grep default | cut -d' ' -f3` gives the router ip
+

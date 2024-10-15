@@ -181,7 +181,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                 ),
               ),
               const Divider(),
-              FormItemComponent(
+              const FormItemComponent(
                 label: 'Serial',
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
