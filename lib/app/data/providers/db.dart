@@ -131,7 +131,6 @@ class DbProvider {
 
     await db.execute(Keys.dbDropTemperatureValues);
     await db.execute(Keys.dbCreateTemperatureValues);
-    //TODO: yeni tablo ekle
   }
 
   Future<void> resetDb() async {
@@ -1209,8 +1208,6 @@ class DbProvider {
 
 //#region TEMPERATURE VALUES
 
-//TODO: yeni fonksiyonlar
-
   Future<int> insertTemperatureValues(
       List<TemperatureValue> temperatureValues) async {
     final db = await database;
@@ -1240,6 +1237,24 @@ class DbProvider {
     try {
       final data = await db.query(Keys.tableTemperatureValues,
           where: Keys.queryName, whereArgs: [name]);
+      return data.map((map) => TemperatureValue.fromMap(map)).toList();
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return [];
+    }
+  }
+
+  Future<List<TemperatureValue>> getAllTemperatureValues() async {
+    final db = await database;
+    if (db == null) return [];
+    try {
+      final data = await db.query(
+        Keys.tableTemperatureValues,
+      );
       return data.map((map) => TemperatureValue.fromMap(map)).toList();
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(

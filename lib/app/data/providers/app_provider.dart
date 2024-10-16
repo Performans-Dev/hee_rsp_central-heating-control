@@ -47,7 +47,7 @@ class AppProvider {
   static Future<GenericResponse<SubscriptionResult>> requestSubscription({
     required String activationId,
   }) async {
-    //TODO:
+  
     final response = await BaseNetworkProvider.post(
       Api.requestSubscription,
       data: {
@@ -159,7 +159,7 @@ class AppProvider {
   //fetchDateLocaleList() {}
 
   static Future<GenericResponse> downloadTemperatureValues() async {
-    final url = "https://static.api2.run/temperature_values.json";
+    const url = "https://static.api2.run/temperature_values.json";
     List<TemperatureValue> list = [];
     final response = await Dio().get(url);
     if (response.statusCode == 200) {

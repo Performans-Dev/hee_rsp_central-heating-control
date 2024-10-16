@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 19;
+  static const int databaseVersion = 20;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -261,7 +261,7 @@ class Keys {
   static const String dbDropHardwareExtensionsDropTable = '''
     DROP TABLE IF EXISTS hardwareExtensions
   ''';
-//TODO: 3 alan ilave
+
   static const String dbCreateHardwareExtensionsCreateTable = '''
     CREATE TABLE IF NOT EXISTS hardwareExtensions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -282,7 +282,7 @@ class Keys {
       hwProfileEthernet TEXT,
       hwProfileBle TEXT,
       tempValueName TEXT,
-      cofficient REAL NOT NULL DEFAULT 0,
+      coefficient REAL NOT NULL DEFAULT 0,
       gap REAL NOT NULL DEFAULT 0,
       isExtension INTEGER NOT NULL DEFAULT 1
     )

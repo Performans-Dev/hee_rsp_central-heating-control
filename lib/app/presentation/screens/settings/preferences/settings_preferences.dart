@@ -12,6 +12,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,7 +27,9 @@ class SettingsPreferencesScreen extends StatelessWidget {
       currentTimezone = TimezoneDefinition.fromJson(
           Box.getString(key: Keys.selectedTimezone));
     } on Exception catch (e) {
-      print('cant parse timezone: $e');
+      if (kDebugMode) {
+        print('cant parse timezone: $e');
+      }
       Buzz.alarm();
     }
 

@@ -4,7 +4,9 @@ import 'package:central_heating_control/app/data/models/hardware_extension.dart'
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/temperature_value.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:flutter/foundation.dart';
@@ -270,6 +272,49 @@ class DataController extends GetxController {
   Future<int> changeDeviceSerial(
       HardwareExtension data, String serialNumber) async {
     data.serialNumber = serialNumber;
+    final result = await DbProvider.db.updateHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
+
+  final RxList<TemperatureValue> _temperatureValues = <TemperatureValue>[].obs;
+  List<TemperatureValue> get temperatureValues => _temperatureValues;
+
+  Future<void> loadTemperatureValues() async {
+    final result = await DbProvider.db.getAllTemperatureValues();
+    if (result.isEmpty) {
+      var downloadResult = await AppProvider.downloadTemperatureValues();
+      if (downloadResult.success) {
+        loadTemperatureValues();
+      } else {
+        print("Failed to download temperature values");
+      }
+    } else {
+      result.insert(
+          0, TemperatureValue(name: "", temperature: -100, rawValue: -100));
+      _temperatureValues.assignAll(result);
+      update();
+    }
+  }
+
+  Future<int> changeTemperatureValueName(
+      HardwareExtension data, String temperature) async {
+    data.tempValueName = temperature;
+    final result = await DbProvider.db.updateHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
+
+  Future<int> changeCoefficientValue(
+      HardwareExtension data, double coefficient) async {
+    data.coefficient = coefficient;
+    final result = await DbProvider.db.updateHardwareExtension(data);
+    await loadHardwareExtensions();
+    return result;
+  }
+
+  Future<int> changeGapValue(HardwareExtension data, double gap) async {
+    data.gap = gap;
     final result = await DbProvider.db.updateHardwareExtension(data);
     await loadHardwareExtensions();
     return result;
