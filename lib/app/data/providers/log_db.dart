@@ -111,10 +111,9 @@ class LogDbProvider {
           logs.add(LogDefinition.fromMap(map));
         }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+
+    } catch (_) {
+
       return logs;
     }
     return logs;

@@ -26,10 +26,10 @@ class SettingsPreferencesScreen extends StatelessWidget {
     try {
       currentTimezone = TimezoneDefinition.fromJson(
           Box.getString(key: Keys.selectedTimezone));
-    } on Exception catch (e) {
-      if (kDebugMode) {
-        print('cant parse timezone: $e');
-      }
+
+    } on Exception catch (_) {
+      // print('cant parse timezone: $e');
+
       Buzz.alarm();
     }
 

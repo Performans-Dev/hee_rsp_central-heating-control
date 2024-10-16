@@ -128,7 +128,7 @@ class LogDefinition {
     DateTime d = DateTime.fromMillisecondsSinceEpoch(t);
     return LogDefinition(
       id: map['id']?.toInt(),
-      time: d ?? DateTime.now(),
+      time: d,
       message: map['message'] ?? '',
       level: LogLevel.values[map['level']?.toInt() ?? 0],
       type: LogType.values[map['type']?.toInt() ?? 0],
