@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 17;
+  static const int databaseVersion = 20;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -75,8 +75,10 @@ class Keys {
   static const String tablePlans = 'plans';
   static const String tablePlanDetails = 'planDetails';
   static const String tableHardwareExtensions = 'hardwareExtensions';
+  static const String tableTemperatureValues = 'temperatureValues';
 
   static const String queryId = 'id=?';
+  static const String queryName = 'name=?';
   static const String queryUsername = 'username=?';
   static const String queryIsAdmin = 'isAdmin=?';
   static const String queryZoneId = 'zoneId=?';
@@ -259,7 +261,7 @@ class Keys {
   static const String dbDropHardwareExtensionsDropTable = '''
     DROP TABLE IF EXISTS hardwareExtensions
   ''';
-//TODO: 3 alan ilave
+
   static const String dbCreateHardwareExtensionsCreateTable = '''
     CREATE TABLE IF NOT EXISTS hardwareExtensions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -279,7 +281,26 @@ class Keys {
       hwProfileWifi TEXT,
       hwProfileEthernet TEXT,
       hwProfileBle TEXT,
+      tempValueName TEXT,
+      coefficient REAL NOT NULL DEFAULT 0,
+      gap REAL NOT NULL DEFAULT 0,
       isExtension INTEGER NOT NULL DEFAULT 1
+    )
+  ''';
+
+  //#endregion
+
+  //#region Temperature Value
+  static const String dbDropTemperatureValues = '''
+    DROP TABLE IF EXISTS temperatureValues
+  ''';
+  static const String dbCreateTemperatureValues = '''
+    CREATE TABLE IF NOT EXISTS temperatureValues (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      temperature REAL NOT NULL DEFAULT 0,
+      raw REAL NOT NULL DEFAULT 0
+
     )
   ''';
   //#endregion

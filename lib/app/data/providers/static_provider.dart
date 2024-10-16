@@ -226,6 +226,9 @@ class StaticProvider {
       bleProfile: null,
       wifiProfile: null,
       ethernetProfile: null,
+      tempValueName: '',
+      coefficient: 1,
+      gap: 0,
     ),
   ];
 }

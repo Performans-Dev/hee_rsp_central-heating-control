@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
 
@@ -110,7 +111,9 @@ class LogDbProvider {
           logs.add(LogDefinition.fromMap(map));
         }
       }
+
     } catch (_) {
+
       return logs;
     }
     return logs;

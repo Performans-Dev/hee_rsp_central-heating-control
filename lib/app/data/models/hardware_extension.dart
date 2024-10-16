@@ -6,7 +6,7 @@ enum HwConnectionType {
   ethernet,
   ble,
 }
-//TODO: 3 alan ilave
+
 class HardwareExtension {
   int id;
   int deviceId;
@@ -25,6 +25,9 @@ class HardwareExtension {
   HwProfileWifi? wifiProfile;
   HwProfileEthernet? ethernetProfile;
   HwProfileBle? bleProfile;
+  String tempValueName;
+  double coefficient;
+  double gap;
   HardwareExtension({
     required this.id,
     required this.deviceId,
@@ -39,6 +42,9 @@ class HardwareExtension {
     required this.manufacturer,
     required this.description,
     required this.connectionType,
+    required this.tempValueName,
+    this.coefficient = 1.0,
+    this.gap = 0.0,
     this.uartProfile,
     this.wifiProfile,
     this.ethernetProfile,
@@ -64,6 +70,9 @@ class HardwareExtension {
       'hwProfileWifi': wifiProfile?.toMap(),
       'hwProfileEthernet': ethernetProfile?.toMap(),
       'hwProfileBle': bleProfile?.toMap(),
+      'tempValueName': tempValueName,
+      'coefficient': coefficient,
+      'gap': gap,
     };
   }
 
@@ -91,6 +100,9 @@ class HardwareExtension {
             'hwProfileWifi': wifiProfile?.toJson(),
             'hwProfileEthernet': ethernetProfile?.toJson(),
             'hwProfileBle': bleProfile?.toJson(),
+            'tempValueName': tempValueName,
+            'coefficient': coefficient,
+            'gap': gap,
           }
         : {
             'deviceId': deviceId,
@@ -109,6 +121,9 @@ class HardwareExtension {
             'hwProfileWifi': wifiProfile?.toJson(),
             'hwProfileEthernet': ethernetProfile?.toJson(),
             'hwProfileBle': bleProfile?.toJson(),
+            'tempValueName': tempValueName,
+            'coefficient': coefficient,
+            'gap': gap,
           };
   }
 
@@ -139,6 +154,9 @@ class HardwareExtension {
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
       connectionType: conTypes,
+      tempValueName: map['tempValueName'] ?? '',
+      coefficient: map['coefficient']?.toDouble() ?? 0.0,
+      gap: map['gap']?.toDouble() ?? 0.0,
       uartProfile: map['hwProfileUart'] != null
           ? HwProfileUart.fromMap(map['hwProfileUart'])
           : null,
@@ -181,6 +199,9 @@ class HardwareExtension {
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
       connectionType: conTypes,
+      tempValueName: map['tempValueName'] ?? '',
+      coefficient: map['coefficient']?.toDouble() ?? 0.0,
+      gap: map['gap']?.toDouble() ?? 0.0,
       uartProfile: map['hwProfileUart'] != null
           ? HwProfileUart.fromJson(map['hwProfileUart'])
           : null,

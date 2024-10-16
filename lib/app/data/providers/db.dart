@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/temperature_value.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:path/path.dart' as p;
@@ -127,8 +128,9 @@ class DbProvider {
 
     await db.execute(Keys.dbDropHardwareExtensionsDropTable);
     await db.execute(Keys.dbCreateHardwareExtensionsCreateTable);
-    //TODO: yeni tablo ekle
-    //TODO: yeni model ekle 
+
+    await db.execute(Keys.dbDropTemperatureValues);
+    await db.execute(Keys.dbCreateTemperatureValues);
   }
 
   Future<void> resetDb() async {
@@ -1204,8 +1206,104 @@ class DbProvider {
     }
   }
 
+//#region TEMPERATURE VALUES
 
-//TODO: yeni fonksiyonlar
+  Future<int> insertTemperatureValues(
+      List<TemperatureValue> temperatureValues) async {
+    final db = await database;
+    if (db == null) return -2;
+    try {
+      for (var item in temperatureValues) {
+        await db.insert(
+          Keys.tableTemperatureValues,
+          item.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+      return temperatureValues.length;
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return -1;
+    }
+  }
 
+  Future<List<TemperatureValue>> getTemperatureValues(String name) async {
+    final db = await database;
+    if (db == null) return [];
+    try {
+      final data = await db.query(Keys.tableTemperatureValues,
+          where: Keys.queryName, whereArgs: [name]);
+      return data.map((map) => TemperatureValue.fromMap(map)).toList();
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return [];
+    }
+  }
 
+  Future<List<TemperatureValue>> getAllTemperatureValues() async {
+    final db = await database;
+    if (db == null) return [];
+    try {
+      final data = await db.query(
+        Keys.tableTemperatureValues,
+      );
+      return data.map((map) => TemperatureValue.fromMap(map)).toList();
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return [];
+    }
+  }
+
+  Future<List<String>> getTemperatureValueNames() async {
+    final db = await database;
+    if (db == null) return [];
+    try {
+      final data = await db.query(
+        Keys.tableTemperatureValues,
+        groupBy: "name",
+        having: "count(name) > 0",
+        columns: ["name"],
+        distinct: true,
+      );
+      return data.map((e) => e['name'].toString()).toList();
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return [];
+    }
+  }
+
+  Future<int> deleteTemperatureValues() async {
+    final db = await database;
+    if (db == null) return -2;
+    try {
+      return await db.delete(
+        Keys.tableTemperatureValues,
+      );
+    } on Exception catch (err) {
+      LogService.addLog(LogDefinition(
+        message: err.toString(),
+        level: LogLevel.error,
+        type: LogType.database,
+      ));
+      return -1;
+    }
+  }
+
+  //#endregion
 }
