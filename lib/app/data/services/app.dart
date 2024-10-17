@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
@@ -24,6 +25,7 @@ import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
@@ -135,7 +137,11 @@ class AppController extends GetxController {
     await box.erase();
     await DbProvider.db.resetDb();
     logoutUser();
-    NavController.toHome();
+    if (isPi) {
+      Process.run('sudo', ['reboot', 'now']);
+    } else {
+      Process.killPid(pid);
+    }
   }
   //#endregion
 
@@ -157,14 +163,20 @@ class AppController extends GetxController {
     final users = await DbProvider.db.getUsers();
     _appUserList.assignAll(users);
     _didAppUsersLoaded.value = true;
-    if (_appUserList.isEmpty) {
+    final isDeveloperUserExists = _appUserList.any((user) =>
+        user.username.toLowerCase() == 'developer' &&
+        user.level == AppUserLevel.developer);
+    if (_appUserList.isEmpty || !isDeveloperUserExists) {
       await DbProvider.db.addUser(AppUser(
         id: -1,
         username: 'Developer',
         pin: '111111',
         level: AppUserLevel.developer,
       ));
+      final updatedUsers = await DbProvider.db.getUsers();
+      _appUserList.assignAll(updatedUsers);
     }
+
     update();
   }
 
