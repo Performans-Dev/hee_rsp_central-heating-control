@@ -96,6 +96,7 @@ class _SetupSequenceAdminUserScreenState
               ),
               const SizedBox(height: 8),
               TextInputWidget(
+                isPin: true,
                 labelText: 'PIN Code'.tr,
                 controller: pinController,
                 type: OSKInputType.number,

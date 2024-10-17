@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/core/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
@@ -15,6 +16,7 @@ class TextInputWidget extends StatelessWidget {
   final int? minLength;
   final OSKInputType? type;
   final GestureTapCallback? showPasswordCallback;
+  final bool isPin;
   const TextInputWidget({
     super.key,
     required this.labelText,
@@ -28,6 +30,7 @@ class TextInputWidget extends StatelessWidget {
     this.type,
     this.hintText,
     this.showPasswordCallback,
+    this.isPin = false,
   });
 
   @override
@@ -53,19 +56,23 @@ class TextInputWidget extends StatelessWidget {
         obscureText: obscureText,
         obscuringCharacter: obscuringCharacter ?? " ",
         onTap: () async {
-          final result = await OnScreenKeyboard.show(
-            context: context,
-            initialValue: controller?.text,
-            label: labelText,
-            minLength: minLength,
-            maxLength: maxLenght,
-            hintText: hintText,
-            type: type ?? OSKInputType.text,
-            feedbackFunction: () {
-              Buzz.feedback();
-            },
-          );
-          controller?.text = result;
+          if (context.mounted) {
+            final result = isPin
+                ? await  Nav.toPin(context: context, username: "")
+                : await OnScreenKeyboard.show(
+                    context: context,
+                    initialValue: controller?.text,
+                    label: labelText,
+                    minLength: minLength,
+                    maxLength: maxLenght,
+                    hintText: hintText,
+                    type: type ?? OSKInputType.text,
+                    feedbackFunction: () {
+                      Buzz.feedback();
+                    },
+                  );
+            controller?.text = result;
+          }
         },
       ),
     );

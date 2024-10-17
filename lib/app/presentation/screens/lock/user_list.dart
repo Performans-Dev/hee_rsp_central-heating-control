@@ -64,10 +64,6 @@ class UserListScreen extends StatelessWidget {
                           ),
                           title: Text(
                             app.appUserList[index].username,
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Colors.white.withOpacity(0.83),
-                                    ),
                           ),
                           onTap: () async {
                             var result = await Nav.toPin(
