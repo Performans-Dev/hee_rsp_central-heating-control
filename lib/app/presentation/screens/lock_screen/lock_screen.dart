@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/core/utils/nav.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
@@ -89,9 +91,9 @@ class _LockScreenState extends State<LockScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () => setState(() {
-                    showUserList = !showUserList;
-                  }),
+                  onTap: () {
+                    Nav.toUserList(context: context);
+                  },
                   child: SizedBox(
                     width: double.infinity,
                     height: double.infinity,
@@ -108,75 +110,6 @@ class _LockScreenState extends State<LockScreen> {
                       opacity: 0.83,
                       child: DateTextWidget(large: true),
                     ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: AnimatedContainer(
-                    width: 300,
-                    height:
-                        showUserList ? (64 * app.appUserList.length) + 32 : 0,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(20)),
-                      color: Theme.of(context).focusColor.withOpacity(0.3),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    duration: const Duration(milliseconds: 300),
-                    child: showUserList
-                        ? ListView.builder(
-                            shrinkWrap: false,
-                            itemBuilder: (context, index) => ListTile(
-                              leading: CircleAvatar(
-                                child: Text(app.appUserList[index].username
-                                    .getInitials()),
-                              ),
-                              title: Text(
-                                app.appUserList[index].username,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: Colors.white.withOpacity(0.83),
-                                    ),
-                              ),
-                              onTap: () async {
-                                final pin = await DialogUtils.pinDialog(
-                                  context: context,
-                                  username: app.appUserList[index].username,
-                                );
-                                if (pin != null && pin.length == 6) {
-                                  final loginResult = await app.loginUser(
-                                      username: app.appUserList[index].username,
-                                      pin: pin);
-                                  if (loginResult) {
-                                    NavController.toHome();
-                                  } else {
-                                    const snackBar = SnackBar(
-                                      content: Text('Incorrect PIN code.'),
-                                      duration: Duration(seconds: 2),
-                                    );
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                    }
-                                  }
-                                } else {
-                                  const snackBar = SnackBar(
-                                    content: Text(
-                                        'PIN code required, Tap your "Name" and enter your PIN code.'),
-                                    duration: Duration(seconds: 2),
-                                  );
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                }
-                              },
-                            ),
-                            itemCount: app.appUserList.length,
-                          )
-                        : null,
                   ),
                 ),
               ],

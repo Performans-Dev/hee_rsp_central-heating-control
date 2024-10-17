@@ -12,10 +12,10 @@ class AdminLoggedInMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
 
-    if (appController.loggedInAppUser == null ||
+/*     if (appController.loggedInAppUser == null ||
         appController.loggedInAppUser!.level == AppUserLevel.user) {
       return const RouteSettings(name: Routes.pin);
-    }
+    } */
 
     return null;
   }

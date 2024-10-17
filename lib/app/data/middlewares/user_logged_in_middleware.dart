@@ -11,9 +11,9 @@ class UserLoggedInMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
 
-    if (appController.loggedInAppUser == null) {
+ /*    if (appController.loggedInAppUser == null) {
       return const RouteSettings(name: Routes.pin);
-    }
+    } */
 
     return null;
   }
