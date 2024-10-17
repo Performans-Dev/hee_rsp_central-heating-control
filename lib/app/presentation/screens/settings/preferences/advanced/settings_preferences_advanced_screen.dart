@@ -167,8 +167,14 @@ class _SettingsPreferencesAdvancedScreenState
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              onTap: () {
-                Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
+              onTap: () async {
+                //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
+                //TODO: write hardware to json file in disk
+                Future.delayed(const Duration(seconds: 1), () {
+                  Process.killPid(pid);
+                });
+                await Process.run('sudo',
+                    ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose']);
               },
             ),
             const SizedBox(height: 8),
