@@ -31,10 +31,7 @@ class AppBindings extends Bindings {
       () async => GpioController(),
       permanent: true,
     );
-    await Get.putAsync(
-      () async => PinController(),
-      permanent: true,
-    );
+
     await Get.putAsync(
       () async => ProcessController(),
       permanent: true,

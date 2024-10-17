@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 
 class WallpaperWidget extends StatefulWidget {
@@ -41,9 +42,10 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
   }
 
   Future<void> _loadImages() async {
-    final directory = Directory('/home/pi/Pictures');
-    // Directory(path.join(
-    //     (await getApplicationDocumentsDirectory()).path, 'Pictures/cc'));
+    final directory = isPi
+        ? Directory('/home/pi/Pictures')
+        : Directory('/home/ozge/Desktop/pi_wallpaper');
+
     if (directory.existsSync()) {
       final imageFiles = directory.listSync().where((file) =>
           file.path.endsWith('.jpg') ||

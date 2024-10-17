@@ -63,7 +63,9 @@ class Routes {
   static const String settingsPreferencesAdvancedUpdates =
       '/settings-preferences-advanced-updates';
   static const String lockScreen = '/locked';
-  static const String pin = '/pin';
+  static const String lockUserListScreen = '/locked-user-list';
+
+
   static const String pinReset = '/pin-reset';
   static const String signinForPinReset = '/signin-for-pin-reset';
   static const String onScreenKeyboard = '/oskb';
