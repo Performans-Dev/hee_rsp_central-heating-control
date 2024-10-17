@@ -55,5 +55,6 @@ class Nav {
       );
       return result;
     }
+    return null;
   }
 }

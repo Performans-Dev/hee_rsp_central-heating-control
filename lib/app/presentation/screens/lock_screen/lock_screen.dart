@@ -1,12 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/core/utils/nav.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/wallpaper.dart';

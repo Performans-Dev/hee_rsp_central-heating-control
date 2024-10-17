@@ -10,7 +10,6 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/lock/pin.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
 import 'package:central_heating_control/app/presentation/screens/lock_screen/lock_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';

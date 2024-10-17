@@ -23,7 +23,6 @@ import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
-import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';

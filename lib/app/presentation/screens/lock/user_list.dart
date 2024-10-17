@@ -1,15 +1,11 @@
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/core/utils/nav.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
-import 'package:central_heating_control/app/data/providers/log_db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class UserListScreen extends StatelessWidget {
   UserListScreen({super.key});
@@ -24,7 +20,7 @@ class UserListScreen extends StatelessWidget {
             onTap: () => Get.back(),
             child: Container(
               color: Theme.of(context).colorScheme.surface.withOpacity(0.4),
-              constraints: BoxConstraints.expand(),
+              constraints: const BoxConstraints.expand(),
             ),
           ),
           Center(
