@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:screen_saver/screen_saver_screen.dart';
 
 class NavController {
   //

@@ -30,6 +30,8 @@ dependencies:
   window_manager: ^0.3.8
   on_screen_keyboard_tr:
     path: modules/on_screen_keyboard_tr/
+  screen_saver:
+    path: modules/screen_saver/
   network_info_plus: ^5.0.3
   rpi_spi: 
     path: modules/rpi_spi/

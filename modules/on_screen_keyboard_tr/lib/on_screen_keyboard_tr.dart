@@ -1415,7 +1415,7 @@ class _OSKController extends GetxController {
         Get.back(result: currentText);
         break;
       case _KeyType.hideKeyboard:
-        Get.back(result: "");
+        Get.back(result: currentText);
         break;
       case _KeyType.backspace:
         if (currentText.isNotEmpty) {

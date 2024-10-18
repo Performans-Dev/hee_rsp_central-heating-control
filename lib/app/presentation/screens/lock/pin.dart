@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PinScreen extends StatefulWidget {
-  const PinScreen({super.key, required this.username});
+  const PinScreen({super.key, required this.username, this.isNewUser = false});
 
   final String username;
+  final bool isNewUser;
 
   @override
   State<PinScreen> createState() => _PinScreenState();
@@ -81,8 +82,9 @@ class _PinScreenState extends State<PinScreen> {
                                                           FontWeight.w500),
                                             ),
                                             TextSpan(
-                                              text:
-                                                  ' için PIN kodu girişi yapın '
+                                              text: widget.isNewUser
+                                                  ? 'Pin kodu giriniz'
+                                                  : ' için PIN kodu girişi yapın '
                                                       .tr,
                                               style: Theme.of(context)
                                                   .textTheme

@@ -33,6 +33,7 @@ class Nav {
   static Future<String?> toPin({
     required BuildContext context,
     required String username,
+    bool isNewUser = false,
   }) async {
     if (context.mounted) {
       final result = await Navigator.of(context).push(
@@ -49,6 +50,7 @@ class Nav {
           barrierDismissible: true,
           opaque: false,
           pageBuilder: (_, __, ___) => PinScreen(
+            isNewUser: isNewUser,
             username: username,
           ),
         ),

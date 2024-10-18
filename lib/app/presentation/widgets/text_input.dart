@@ -17,6 +17,8 @@ class TextInputWidget extends StatelessWidget {
   final OSKInputType? type;
   final GestureTapCallback? showPasswordCallback;
   final bool isPin;
+  final bool isNewUser;
+
   const TextInputWidget({
     super.key,
     required this.labelText,
@@ -31,6 +33,7 @@ class TextInputWidget extends StatelessWidget {
     this.hintText,
     this.showPasswordCallback,
     this.isPin = false,
+    this.isNewUser = false,
   });
 
   @override
@@ -58,7 +61,8 @@ class TextInputWidget extends StatelessWidget {
         onTap: () async {
           if (context.mounted) {
             final result = isPin
-                ? await  Nav.toPin(context: context, username: "")
+                ? await Nav.toPin(
+                    context: context, username: "", isNewUser: isNewUser)
                 : await OnScreenKeyboard.show(
                     context: context,
                     initialValue: controller?.text,
