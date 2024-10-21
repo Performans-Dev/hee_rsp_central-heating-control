@@ -1,5 +1,5 @@
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/nav.dart';
+
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
@@ -7,9 +7,20 @@ import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class UserListScreen extends StatelessWidget {
+class UserListScreen extends StatefulWidget {
   UserListScreen({super.key});
+
+  @override
+  State<UserListScreen> createState() => _UserListScreenState();
+}
+
+class _UserListScreenState extends State<UserListScreen> {
   final AppController app = Get.find();
+
+  int tapCount = 0;
+
+  bool showDeveloper = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,9 +51,20 @@ class UserListScreen extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            "Select user to unlock",
-                            style: Theme.of(context).textTheme.titleMedium,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                tapCount++;
+                                if (tapCount >= 5) {
+                                  showDeveloper = true;
+                                  tapCount = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "Select user to unlock",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
                           ),
                         ),
                         Container(
@@ -57,27 +79,30 @@ class UserListScreen extends StatelessWidget {
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: false,
-                        itemBuilder: (context, index) => ListTile(
-                          leading: CircleAvatar(
-                            child: Text(
-                                app.appUserList[index].username.getInitials()),
-                          ),
-                          title: Text(
-                            app.appUserList[index].username,
-                          ),
-                          onTap: () async {
-                            var result = await Nav.toPin(
-                                context: context,
-                                username: app.appUserList[index].username);
-                            if (result != null &&
-                                app.appUserList[index].pin == result) {
-                              LogService.addLog(LogDefinition(
-                                  message:
-                                      "${app.appUserList[index].username} unlocked"));
-                              NavController.toHome();
-                            }
-                          },
-                        ),
+                        itemBuilder: (context, index) {
+                          final user = app.appUserList[index];
+                          if (user.username.toLowerCase() == 'developer' &&
+                              !showDeveloper) {
+                            return const SizedBox();
+                          }
+                          return ListTile(
+                            leading: CircleAvatar(
+                              child: Text(user.username.getInitials()),
+                            ),
+                            title: Text(
+                              user.username,
+                            ),
+                            onTap: () async {
+                              var result = await NavController.toPin(
+                                  context: context, username: user.username);
+                              if (result != null && user.pin == result) {
+                                LogService.addLog(LogDefinition(
+                                    message: "${user.username} unlocked"));
+                                NavController.toHome();
+                              }
+                            },
+                          );
+                        },
                         itemCount: app.appUserList.length,
                       ),
                     ),

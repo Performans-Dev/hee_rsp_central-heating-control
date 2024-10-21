@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -51,50 +52,24 @@ class _SettingsUserAddScreenState extends State<SettingsUserAddScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 12),
-                    TextField(
+                    TextInputWidget(
+                      labelText: 'Name, Surname',
                       controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Name, Surname',
-                        border: UiDimens.formBorder,
-                      ),
-                      onTap: () async {
-                        Buzz.feedback();
-                        final result = await OnScreenKeyboard.show(
-                          context: context,
-                          label: 'Name, Surname',
-                          initialValue: nameController.text,
-                          type: OSKInputType.name,
-                        );
-                        if (result != null) {
-                          setState(() {
-                            nameController.text = result;
-                          });
-                        }
-                      },
+                      type: OSKInputType.name,
+                      minLength: 3,
+                      maxLenght: 28,
                     ),
                     const SizedBox(height: 12),
-                    TextField(
+                    TextInputWidget(
+                      isNewUser: true,
+                      isPin: true,
+                      labelText: 'PIN Code'.tr,
                       controller: pinController,
-                      decoration: InputDecoration(
-                        labelText: 'Pin Code',
-                        border: UiDimens.formBorder,
-                      ),
-                      onTap: () async {
-                        Buzz.feedback();
-                        final result = await OnScreenKeyboard.show(
-                          context: context,
-                          label: 'Pin Code',
-                          initialValue: pinController.text,
-                          minLength: 6,
-                          maxLength: 6,
-                          type: OSKInputType.number,
-                        );
-                        if (result != null) {
-                          setState(() {
-                            pinController.text = result;
-                          });
-                        }
-                      },
+                      type: OSKInputType.number,
+                      obscureText: true,
+                      obscuringCharacter: '*',
+                      minLength: 6,
+                      maxLenght: 6,
                     ),
                     const SizedBox(height: 12),
                     SwitchListTile(

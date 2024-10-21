@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
-import 'package:central_heating_control/app/core/utils/nav.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
+
 import 'package:flutter/material.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
@@ -17,6 +18,8 @@ class TextInputWidget extends StatelessWidget {
   final OSKInputType? type;
   final GestureTapCallback? showPasswordCallback;
   final bool isPin;
+  final bool isNewUser;
+
   const TextInputWidget({
     super.key,
     required this.labelText,
@@ -31,6 +34,7 @@ class TextInputWidget extends StatelessWidget {
     this.hintText,
     this.showPasswordCallback,
     this.isPin = false,
+    this.isNewUser = false,
   });
 
   @override
@@ -58,7 +62,8 @@ class TextInputWidget extends StatelessWidget {
         onTap: () async {
           if (context.mounted) {
             final result = isPin
-                ? await  Nav.toPin(context: context, username: "")
+                ? await NavController.toPin(
+                    context: context, username: "", isNewUser: isNewUser)
                 : await OnScreenKeyboard.show(
                     context: context,
                     initialValue: controller?.text,
