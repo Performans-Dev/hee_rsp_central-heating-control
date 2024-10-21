@@ -33,7 +33,7 @@ final screenSaverDefinition = ScreenSaverDefinition(
     height: 30,
   ),
   content: const WallpaperWidget(),
-  target: UserListScreen(),
+  target: const UserListScreen(),
 );
 
 class PiScrollBehavior extends MaterialScrollBehavior {

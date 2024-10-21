@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:screen_saver/screen_saver_definition.dart';
 import 'package:screen_saver/screen_saver_screen.dart';

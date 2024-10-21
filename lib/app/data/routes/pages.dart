@@ -357,7 +357,7 @@ final List<GetPage> getPages = [
 
   GetPage(
     name: Routes.lockUserListScreen,
-    page: () => UserListScreen(),
+    page: () => const UserListScreen(),
     transition: Transition.fadeIn,
   ),
 
