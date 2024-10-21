@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/core/utils/nav.dart';
+
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -84,7 +84,7 @@ class SettingsUserListScreen extends StatelessWidget {
                                 maxLength: 6,
                                 minLength: 6,
                               ); */
-                              final result = await Nav.toPin(
+                              final result = await NavController.toPin(
                                   context: context,
                                   username: app.appUserList[index].username);
                               if (result != null) {

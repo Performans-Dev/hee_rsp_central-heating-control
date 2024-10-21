@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:screen_saver/screen_saver_definition.dart';
 import 'package:screen_saver/screen_saver_timer.dart';
 
 class ScreenSaverWrapper extends StatefulWidget {
   final Widget child;
-  final Widget content;
-
-  final List<String> routes;
-
-
+  final List<String> excludedRoutes;
   final int timerDuration;
-  final Function(String) onUserSelect;
-
+  final ScreenSaverDefinition definition;
   const ScreenSaverWrapper({
     super.key,
     required this.child,
-    required this.content,
-    required this.routes,
-  
-    required this.onUserSelect,
+    required this.excludedRoutes,
+    required this.definition,
     this.timerDuration = 10,
   });
 
@@ -31,11 +25,10 @@ class _ScreenSaverWrapperState extends State<ScreenSaverWrapper> {
   void initState() {
     super.initState();
     timerSingleton.init(
-        content: widget.content,
-      
-        excludedRoutes: widget.routes,
-        timerDuration: widget.timerDuration,
-        onUserSelect: widget.onUserSelect);
+      definition: widget.definition,
+      excludedRoutes: widget.excludedRoutes,
+      timerDuration: widget.timerDuration,
+    );
   }
 
   @override

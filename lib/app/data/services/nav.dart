@@ -1,8 +1,15 @@
+import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/presentation/screens/lock/pin.dart';
+import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
+import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:central_heating_control/app/presentation/widgets/logo.dart';
+import 'package:central_heating_control/app/presentation/widgets/wallpaper.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,7 +123,7 @@ class NavController {
     );
   }
 
-  static void lock() async {
+  static void lock(BuildContext context) async {
     Buzz.success();
     AppController appController = Get.find();
     final user = appController.loggedInAppUser;
@@ -126,12 +133,44 @@ class NavController {
       type: LogType.lockScreenEvent,
     ));
     Future.delayed(Duration.zero, () {
-      Get.toNamed(Routes.lockScreen);
+      Get.to(ScreenSaverScreen(
+        definition: screenSaverDefinition,
+      ));
     });
   }
 
   static Future<bool> showFunctionsDialog(
       {required BuildContext context}) async {
     return false;
+  }
+
+  static Future<String?> toPin({
+    required BuildContext context,
+    required String username,
+    bool isNewUser = false,
+  }) async {
+    if (context.mounted) {
+      final result = await Navigator.of(context).push(
+        PageRouteBuilder(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+          barrierColor: Colors.black.withOpacity(0.3),
+          barrierDismissible: true,
+          opaque: false,
+          pageBuilder: (_, __, ___) => PinScreen(
+            isNewUser: isNewUser,
+            username: username,
+          ),
+        ),
+      );
+      return result;
+    }
+    return null;
   }
 }

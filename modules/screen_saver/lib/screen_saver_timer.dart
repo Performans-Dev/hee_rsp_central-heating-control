@@ -2,22 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:screen_saver/screen_saver_definition.dart';
 import 'package:screen_saver/screen_saver_screen.dart';
-
 
 class ScreenSaverTimer {
   static final ScreenSaverTimer _instance = ScreenSaverTimer._internal();
   Timer? _timer;
   bool isActive = false;
-  late Widget _content;
-  late List<String> _excludedRoutes;
-  late dynamic _userlist;
 
-  Widget get content => _content;
+  late List<String> _excludedRoutes;
+
   List<String> get excludedRoutes => _excludedRoutes;
-  dynamic get userlist => _userlist;
+
   int _timerDuration = 10;
-  late Function(String) _onUserSelect;
+  late ScreenSaverDefinition _definition;
 
   factory ScreenSaverTimer() {
     return _instance;
@@ -26,17 +24,15 @@ class ScreenSaverTimer {
   ScreenSaverTimer._internal();
 
   void init({
-    required Widget content,
     dynamic userlist,
     required List<String> excludedRoutes,
     required int timerDuration,
-    required Function(String) onUserSelect,
+    required ScreenSaverDefinition definition,
   }) {
-    _content = content;
-    _userlist = userlist;
     _excludedRoutes = excludedRoutes;
     _timerDuration = timerDuration;
-    _onUserSelect = onUserSelect;
+    _definition = definition;
+
     startTimer();
   }
 
@@ -54,9 +50,7 @@ class ScreenSaverTimer {
       startTimer();
     } else {
       Get.to(() => ScreenSaverScreen(
-            userlist: userlist,
-            onUserSelect: _onUserSelect,
-            child: content,
+            definition: _definition,
           ));
     }
   }

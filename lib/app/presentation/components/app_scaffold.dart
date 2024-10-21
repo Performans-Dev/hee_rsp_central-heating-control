@@ -117,14 +117,13 @@ class AppScaffold extends StatelessWidget {
                       // Get.toNamed(Routes.daySummaryScreen);
                       break;
                     case 2:
-              
                       app.nextThemeMode();
                       break;
                     case 3:
                       NavController.toSettings();
                       break;
                     case 4:
-                      NavController.lock();
+                      NavController.lock(context);
                       break;
                     default:
                       break;

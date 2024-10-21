@@ -1,5 +1,5 @@
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/nav.dart';
+
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
@@ -93,7 +93,7 @@ class _UserListScreenState extends State<UserListScreen> {
                               user.username,
                             ),
                             onTap: () async {
-                              var result = await Nav.toPin(
+                              var result = await NavController.toPin(
                                   context: context, username: user.username);
                               if (result != null && user.pin == result) {
                                 LogService.addLog(LogDefinition(

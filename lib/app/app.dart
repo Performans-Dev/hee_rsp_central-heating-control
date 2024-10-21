@@ -5,18 +5,36 @@ import 'package:central_heating_control/app/core/constants/strings.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/theme/theme.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+
 import 'package:central_heating_control/app/core/utils/theme.dart';
 import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:central_heating_control/app/presentation/components/idle_detector.dart';
+import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
+import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:central_heating_control/app/presentation/widgets/logo.dart';
+import 'package:central_heating_control/app/presentation/widgets/wallpaper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:screen_saver/screen_saver_definition.dart';
+import 'package:screen_saver/screen_saver_observer.dart';
+import 'package:screen_saver/screen_saver_wrapper.dart';
+
+final screenSaverDefinition = ScreenSaverDefinition(
+  date: const DateTextWidget(large: true),
+  logo: const LogoWidget(
+    themeMode: ThemeMode.dark,
+    height: 30,
+  ),
+  content: const WallpaperWidget(),
+  target: UserListScreen(),
+);
 
 class PiScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -34,38 +52,49 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RestartWidget(
-      child: Builder(builder: (context) {
-        final theme = MaterialTheme(
-            ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
-        return IdleDetector(
-          timeoutSeconds:
-              Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 180),
-          excludedRoutes: autoLockExcludedRoutes,
-          child: GetMaterialApp(
-            scrollBehavior: PiScrollBehavior(),
-            debugShowCheckedModeBanner: false,
-            title: UiStrings.appName,
-            theme: theme.light(),
-            darkTheme: theme.dark(),
-            highContrastTheme: theme.lightHighContrast(),
-            highContrastDarkTheme: theme.darkHighContrast(),
-            themeMode: Box.getBool(key: Keys.isDarkMode)
-                ? ThemeMode.dark
-                : ThemeMode.light,
-            defaultTransition: Transition.circularReveal,
-            getPages: getPages,
-            initialRoute: Routes.home,
-            initialBinding: AppBindings(),
-            locale: LocalizationService.locale,
-            fallbackLocale: LocalizationService.fallbackLocale,
-            translationsKeys: LocalizationService.keys,
-            onReady: onReady,
-            builder: FlutterSmartDialog.init(),
-          ),
-        );
-      }),
-    );
+    return Builder(builder: (context) {
+      return ScreenSaverWrapper(
+        definition: screenSaverDefinition,
+        excludedRoutes: autoLockExcludedRoutes,
+        timerDuration: 30,
+        child: RestartWidget(
+          child: Builder(builder: (context) {
+            final theme = MaterialTheme(
+                ThemeUtils.createTextTheme(context, "Roboto", "Roboto Flex"));
+            return IdleDetector(
+              timeoutSeconds:
+                  Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 180),
+              excludedRoutes: autoLockExcludedRoutes,
+              child: GetMaterialApp(
+                navigatorObservers: [
+                  ScreenSaverObserver(
+                      autoLockExcludedRoutes: autoLockExcludedRoutes)
+                ],
+                scrollBehavior: PiScrollBehavior(),
+                debugShowCheckedModeBanner: false,
+                title: UiStrings.appName,
+                theme: theme.light(),
+                darkTheme: theme.dark(),
+                highContrastTheme: theme.lightHighContrast(),
+                highContrastDarkTheme: theme.darkHighContrast(),
+                themeMode: Box.getBool(key: Keys.isDarkMode)
+                    ? ThemeMode.dark
+                    : ThemeMode.light,
+                defaultTransition: Transition.circularReveal,
+                getPages: getPages,
+                initialRoute: Routes.home,
+                initialBinding: AppBindings(),
+                locale: LocalizationService.locale,
+                fallbackLocale: LocalizationService.fallbackLocale,
+                translationsKeys: LocalizationService.keys,
+                onReady: onReady,
+                builder: FlutterSmartDialog.init(),
+              ),
+            );
+          }),
+        ),
+      );
+    });
     /* return RestartWidget(
       child: Builder(builder: (context) {
         final theme = MaterialTheme(
