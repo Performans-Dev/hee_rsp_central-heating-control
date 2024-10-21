@@ -159,23 +159,56 @@ class _SettingsPreferencesAdvancedScreenState
               },
             ),
             const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.bug_report),
-              title: const Text('Diagnostics'),
-              trailing: const Icon(Icons.chevron_right),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: () async {
-                //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
-                //TODO: write hardware to json file in disk
-                Future.delayed(const Duration(seconds: 1), () {
-                  Process.killPid(pid);
-                });
-                await Process.run('sudo',
-                    ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose']);
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    leading: const Icon(Icons.bug_report),
+                    title: const Text('Diagnostics'),
+                    trailing: const Icon(Icons.chevron_right),
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    onTap: () async {
+                      //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
+                      //TODO: write hardware to json file in disk
+                      Future.delayed(const Duration(seconds: 1), () {
+                        Process.killPid(pid);
+                      });
+                      await Process.run(
+                        'sudo',
+                        // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
+                        ['/home/pi/Heethings/ccdownload.sh'],
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: ListTile(
+                    leading: const Icon(Icons.bug_report),
+                    title: const Text('Diagnostics'),
+                    trailing: const Icon(Icons.chevron_right),
+                    tileColor: Theme.of(context).highlightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    onTap: () async {
+                      //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
+                      //TODO: write hardware to json file in disk
+                      Future.delayed(const Duration(seconds: 1), () {
+                        Process.killPid(pid);
+                      });
+                      await Process.run(
+                        'sudo',
+                        // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
+                        ['/home/pi/Heethings/ccdiagnose.sh'],
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             ListTile(
