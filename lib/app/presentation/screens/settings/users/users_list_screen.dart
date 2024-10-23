@@ -11,6 +11,18 @@ import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsUserListScreen extends StatelessWidget {
   const SettingsUserListScreen({super.key});
+  bool canAccess(AppUserLevel loggedInUserLevel, AppUserLevel targetUserLevel) {
+    if (loggedInUserLevel == AppUserLevel.techSupport) {
+      return true;
+    }
+    if (loggedInUserLevel == AppUserLevel.admin) {
+      return targetUserLevel == AppUserLevel.user;
+    }
+    if (loggedInUserLevel == AppUserLevel.user) {
+      return false;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,48 +47,55 @@ class SettingsUserListScreen extends StatelessWidget {
                     title: Text(app.appUserList[index].username),
                     subtitle: Text(app.appUserList[index].level.name
                         .camelCaseToHumanReadable()),
-                    trailing: PopupMenuButton(
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Change Name"),
-                                Icon(Icons.drive_file_rename_outline),
-                              ],
-                            ),
-                            onTap: () async {
-                              final result = await OnScreenKeyboard.show(
-                                context: context,
-                                label: 'Name, Surname',
-                                initialValue: app.appUserList[index].username,
-                                type: OSKInputType.name,
-                              );
-                              if (result != null) {
-                                var u = app.appUserList[index];
-                                u.username = result;
-                                await app.updateUser(user: u);
-                                if (context.mounted) {
-                                  DialogUtils.snackbar(
-                                    type: SnackbarType.success,
-                                    context: context,
-                                    message: 'Username updated',
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                          PopupMenuItem(
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Change Password"),
-                                Icon(Icons.key),
-                              ],
-                            ),
-                            onTap: () async {
-                              /*   final result = await OnScreenKeyboard.show(
+                    trailing: !canAccess(
+                            app.loggedInAppUser?.level ?? AppUserLevel.user,
+                            app.appUserList[index].level)
+                        ? null
+                        : PopupMenuButton(
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Change Name"),
+                                      Icon(Icons.drive_file_rename_outline),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    final result = await OnScreenKeyboard.show(
+                                      context: context,
+                                      label: 'Name, Surname',
+                                      initialValue:
+                                          app.appUserList[index].username,
+                                      type: OSKInputType.name,
+                                    );
+                                    if (result != null) {
+                                      var u = app.appUserList[index];
+                                      u.username = result;
+                                      await app.updateUser(user: u);
+                                      if (context.mounted) {
+                                        DialogUtils.snackbar(
+                                          type: SnackbarType.success,
+                                          context: context,
+                                          message: 'Username updated',
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
+                                PopupMenuItem(
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Change Password"),
+                                      Icon(Icons.key),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    /*   final result = await OnScreenKeyboard.show(
                                 context: context,
                                 label: 'Password',
                                 initialValue: app.appUserList[index].pin,
@@ -84,40 +103,42 @@ class SettingsUserListScreen extends StatelessWidget {
                                 maxLength: 6,
                                 minLength: 6,
                               ); */
-                              final result = await NavController.toPin(
-                                  context: context,
-                                  username: app.appUserList[index].username);
-                              if (result != null) {
-                                var u = app.appUserList[index];
-                                u.pin = result;
-                                await app.updateUser(user: u);
-                                if (context.mounted) {
-                                  DialogUtils.snackbar(
-                                    type: SnackbarType.success,
+                                    final result = await NavController.toPin(
+                                        context: context,
+                                        username:
+                                            app.appUserList[index].username);
+                                    if (result != null) {
+                                      var u = app.appUserList[index];
+                                      u.pin = result;
+                                      await app.updateUser(user: u);
+                                      if (context.mounted) {
+                                        DialogUtils.snackbar(
+                                          type: SnackbarType.success,
+                                          context: context,
+                                          message: 'Password updated',
+                                        );
+                                      }
+                                    }
+                                    //
+                                  },
+                                ),
+                                PopupMenuItem(
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Delete"),
+                                      Icon(Icons.delete),
+                                    ],
+                                  ),
+                                  onTap: () => onDeleteUserPressed(
                                     context: context,
-                                    message: 'Password updated',
-                                  );
-                                }
-                              }
-                              //
+                                    index: index,
+                                  ),
+                                ),
+                              ];
                             },
                           ),
-                          PopupMenuItem(
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Delete"),
-                                Icon(Icons.delete),
-                              ],
-                            ),
-                            onTap: () => onDeleteUserPressed(
-                              context: context,
-                              index: index,
-                            ),
-                          ),
-                        ];
-                      },
-                    ),
                   ),
                 ),
                 itemCount: app.appUserList.length,
