@@ -105,6 +105,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                 //MARK: HEATER TYPE
                 WizardPageContentWidget(
                   title: 'Select Type',
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   children: [
                     FormItemComponent(
                       label: 'What is the type of your Heater',

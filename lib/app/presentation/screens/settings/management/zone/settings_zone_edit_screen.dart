@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -44,6 +45,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
           body: PiScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 12),
                 TextField(
@@ -71,13 +73,13 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                const Text('LABEL: Select Zone color'),
+                const LabelWidget(text: 'LABEL: Select Zone color'),
                 ColorPickerWidget(
                   onSelected: (v) => setState(() => zone.color = v),
                   selectedValue: zone.color,
                 ),
                 const SizedBox(height: 20),
-                const Text('LABEL: Select USers'),
+                const LabelWidget(text: 'LABEL: Select USers'),
                 for (final user in app.appUserList
                     .where((e) => e.level == AppUserLevel.user))
                   SwitchListTile(
