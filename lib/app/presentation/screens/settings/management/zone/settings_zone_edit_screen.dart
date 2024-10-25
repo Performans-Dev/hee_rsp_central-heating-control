@@ -48,6 +48,20 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 12),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      deleteButton,
+                      Expanded(child: Container()),
+                      cancelButton,
+                      const SizedBox(width: 12),
+                      saveButton,
+                    ],
+                  ),
+                ),
                 TextField(
                   controller: nameController,
                   decoration: InputDecoration(
@@ -92,20 +106,6 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
                             ? zone.users.add(user)
                             : zone.users.remove(user)),
                   ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      deleteButton,
-                      Expanded(child: Container()),
-                      cancelButton,
-                      const SizedBox(width: 12),
-                      saveButton,
-                    ],
-                  ),
-                ),
               ],
             ),
           ),

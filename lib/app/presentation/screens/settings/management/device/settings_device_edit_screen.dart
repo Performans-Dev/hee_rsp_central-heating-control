@@ -80,6 +80,19 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    cancelButton,
+                    const SizedBox(width: 12),
+                    saveButton,
+                  ],
+                ),
+              ),
+
               //MARK: NAME
               FormItemComponent(
                 label: 'Name',
@@ -107,6 +120,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 12),
+
               Row(
                 children: [
                   //MARK: TYPE-CONNECTION-ZONE
@@ -127,6 +142,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   ),
                   //#endregion
                   const SizedBox(width: 8),
+
                   //#region CONNECTION
                   Expanded(
                     child: FormItemComponent(
@@ -162,6 +178,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   //#endregion
                 ],
               ),
+              const SizedBox(height: 12),
+
               //MARK: IP
               if (heater.connectionType == HeaterDeviceConnectionType.ethernet)
                 //#region IP ADDRESS
@@ -366,6 +384,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                     ),
                   ],
                 ),
+              const SizedBox(height: 12),
+
               FormItemComponent(
                 label: 'Display Color',
                 child: Container(
@@ -385,19 +405,9 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 12),
+
               //
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    cancelButton,
-                    const SizedBox(width: 12),
-                    saveButton,
-                  ],
-                ),
-              ),
             ],
           ),
         ),
