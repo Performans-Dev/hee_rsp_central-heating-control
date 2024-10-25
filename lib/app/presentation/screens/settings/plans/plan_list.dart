@@ -26,6 +26,10 @@ class SettingsPlanListScreen extends StatelessWidget {
               ListView.builder(
                 itemBuilder: (context, index) {
                   final plan = dc.planList[index];
+                  if (dc.planList.isEmpty) {
+                    return Center(child: Text('Plan bulunamadı'));
+                  }
+
                   return plan.id <= 0
                       ? Container()
                       : ListTile(

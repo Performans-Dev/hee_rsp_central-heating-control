@@ -30,6 +30,8 @@ import 'package:central_heating_control/app/presentation/screens/settings/manage
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_list_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/plans/plan_detail.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/plans/plan_list.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/diagnostics/settings_preferences_advanced_diagnostics_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/hardware_config/settings_preferences_advanced_hardware_addnew_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/hardware_config/settings_preferences_advanced_hardware_config_screen.dart';
@@ -354,7 +356,20 @@ final List<GetPage> getPages = [
       TechSupportLoggedInMiddleware(),
     ],
   ),
-
+  GetPage(
+    name: Routes.settingsPlanList,
+    page: () => const SettingsPlanListScreen(),
+    middlewares: [
+      AdminLoggedInMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPlanDetail,
+    page: () => const SettingsPlanDetailScreen(),
+    middlewares: [
+      AdminLoggedInMiddleware(),
+    ],
+  ),
   GetPage(
     name: Routes.lockUserListScreen,
     page: () => const UserListScreen(),
@@ -484,20 +499,7 @@ final List<GetPage> getPages = [
   //     AdminMiddleware(),
   //   ],
   // ),
-  // GetPage(
-  //   name: Routes.settingsPlanList,
-  //   page: () => const SettingsPlanListScreen(),
-  //   middlewares: [
-  //     AdminMiddleware(),
-  //   ],
-  // ),
-  // GetPage(
-  //   name: Routes.settingsPlanDetail,
-  //   page: () => const SettingsPlanDetailScreen(),
-  //   middlewares: [
-  //     AdminMiddleware(),
-  //   ],
-  // ),
+
   // //#endregion
 
   // GetPage(

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -58,9 +59,7 @@ class SettingsScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                onTap: () {
-                  // Get.toNamed(Routes.settingsPlanList);
-                },
+                onTap: () => NavController.toSettingsWeeklySchedule(),
               ),
               const SizedBox(height: 8),
               ListTile(

@@ -111,6 +111,14 @@ class NavController {
     );
   }
 
+  static void toSettingsWeeklySchedule() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsPlanList),
+    );
+  }
+
   static void toLogs() async {
     Buzz.feedback();
     Future.delayed(
