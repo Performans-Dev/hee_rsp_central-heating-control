@@ -18,11 +18,15 @@ class LevelTypeDropdownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
       builder: (dc) {
-        return ClipRRect(
-          borderRadius: UiDimens.formRadius,
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: UiDimens.formRadius,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: DropdownButton<HeaterDeviceLevel>(
             underline: Container(), isExpanded: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
             items: HeaterDeviceLevel.values
                 .map((e) => DropdownMenuItem<HeaterDeviceLevel>(
                       value: e,

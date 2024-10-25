@@ -30,13 +30,7 @@ class SettingsZoneListScreen extends StatelessWidget {
                   LabelWidget(
                     text: 'List of Zones'.tr,
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      NavController.toSettingsZoneAdd();
-                    },
-                    label: const Text("Add New Zone"),
-                    icon: const Icon(Icons.add),
-                  ),
+                  addZoneButton,
                 ],
               ),
               ListView.builder(
@@ -80,11 +74,12 @@ class SettingsZoneListScreen extends StatelessWidget {
   Widget get addZoneButton => Container(
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: () {
             NavController.toSettingsZoneAdd();
           },
-          child: const Text("Add New Zone"),
+          label: const Text("Add New Zone"),
+          icon: const Icon(Icons.add),
         ),
       );
 }

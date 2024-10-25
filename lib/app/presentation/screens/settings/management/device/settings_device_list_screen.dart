@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:central_heating_control/app/presentation/widgets/settings_heater_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,15 @@ class SettingsDeviceListScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  LabelWidget(
+                    text: 'List of Heaters'.tr,
+                  ),
+                  addHeaterButton,
+                ],
+              ),
               // const BreadcrumbWidget(title: 'Settings / Heaters'),
               ListView.builder(
                 itemBuilder: (context, index) =>
@@ -29,7 +39,6 @@ class SettingsDeviceListScreen extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
               ),
-              addHeaterButton,
             ],
           ),
         ),
@@ -40,12 +49,13 @@ class SettingsDeviceListScreen extends StatelessWidget {
   Widget get addHeaterButton => Container(
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: () {
             Buzz.feedback();
             Get.toNamed(Routes.settingsDeviceAdd);
           },
-          child: const Text("Add New Heater"),
+          label: const Text("Add New Heater"),
+          icon: const Icon(Icons.add),
         ),
       );
 }

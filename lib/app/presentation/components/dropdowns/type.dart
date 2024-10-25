@@ -18,21 +18,27 @@ class TypeDropdownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
       builder: (dc) {
-        return ClipRRect(
-          borderRadius: UiDimens.formRadius,
-          child: DropdownButton<HeaterDeviceType>(
-            underline: Container(), isExpanded: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            items: HeaterDeviceType.values
-                .map((e) => DropdownMenuItem<HeaterDeviceType>(
-                      value: e,
-                      child: Text(e.name.camelCaseToHumanReadable()),
-                    ))
-                .toList(),
-            onChanged: onChanged,
-            value: value,
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
             borderRadius: UiDimens.formRadius,
-            // decoration: InputDecoration(border: UiDimens.formBorder),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<HeaterDeviceType>(
+              isExpanded: true,
+              underline: Container(),
+              items: HeaterDeviceType.values
+                  .map((e) => DropdownMenuItem<HeaterDeviceType>(
+                        value: e,
+                        child: Text(e.name.camelCaseToHumanReadable()),
+                      ))
+                  .toList(),
+              onChanged: onChanged,
+              value: value,
+              borderRadius: UiDimens.formRadius,
+            ),
           ),
         );
       },
