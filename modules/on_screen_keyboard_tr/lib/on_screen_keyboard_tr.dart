@@ -1515,7 +1515,7 @@ class _KeyWidget extends StatelessWidget {
     switch (model.keyType) {
       case _KeyType.enter:
       case _KeyType.hideKeyboard:
-        width = 90;
+        width = 85;
         height = 57;
         color = Theme.of(ctx).hoverColor.withOpacity(0.3);
       case _KeyType.shift:
@@ -1532,14 +1532,14 @@ class _KeyWidget extends StatelessWidget {
 
         break;
       case _KeyType.space:
-        width = 410;
+        width = 400;
         height = 57;
         color = Get.isDarkMode
             ? Theme.of(ctx).dividerColor.withOpacity(0.7)
             : Theme.of(context).dividerColor.withOpacity(0.2);
         break;
       case _KeyType.character:
-        width = 60.5;
+        width = 56.5;
         height = 57;
         color = Get.isDarkMode
             ? Theme.of(ctx).dividerColor.withOpacity(0.7)
