@@ -27,7 +27,7 @@ class SettingsPlanListScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final plan = dc.planList[index];
                   if (dc.planList.isEmpty) {
-                    return Center(child: Text('Plan bulunamadı'));
+                    return const Center(child: Text('Plan bulunamadı'));
                   }
 
                   return plan.id <= 0

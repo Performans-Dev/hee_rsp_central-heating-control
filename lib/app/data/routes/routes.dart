@@ -65,9 +65,10 @@ class Routes {
   static const String lockScreen = '/locked';
   static const String lockUserListScreen = '/locked-user-list';
 
-
-  static const String pinReset = '/pin-reset';
-  static const String signinForPinReset = '/signin-for-pin-reset';
+  static const String pinResetInfo = '/pin-reset-info';
+  static const String pinResetSignin = '/pin-reset-signin';
+  static const String pinResetEntry = '/pin-reset-entry';
+  static const String pinResetResult = '/pin-reset-result';
   static const String onScreenKeyboard = '/oskb';
   static const String mode = '/mode';
 

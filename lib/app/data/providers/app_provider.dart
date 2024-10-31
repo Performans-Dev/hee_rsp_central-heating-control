@@ -47,7 +47,6 @@ class AppProvider {
   static Future<GenericResponse<SubscriptionResult>> requestSubscription({
     required String activationId,
   }) async {
-  
     final response = await BaseNetworkProvider.post(
       Api.requestSubscription,
       data: {

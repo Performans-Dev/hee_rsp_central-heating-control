@@ -152,6 +152,7 @@ class NavController {
     required BuildContext context,
     required String username,
     bool isNewUser = false,
+    bool isNewPin = false,
   }) async {
     if (context.mounted) {
       final result = await Navigator.of(context).push(
@@ -170,6 +171,7 @@ class NavController {
           pageBuilder: (_, __, ___) => PinScreen(
             isNewUser: isNewUser,
             username: username,
+            isNewPin: isNewPin,
           ),
         ),
       );

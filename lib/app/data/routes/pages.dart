@@ -13,9 +13,11 @@ import 'package:central_heating_control/app/presentation/screens/home/home_scree
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
 
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/entry.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/info.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/result.dart';
 
-import 'package:central_heating_control/app/presentation/screens/pin_reset/pin_reset_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/pin_reset/signin_for_pin_reset_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/signin.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_list_screen.dart';
@@ -376,20 +378,24 @@ final List<GetPage> getPages = [
     transition: Transition.fadeIn,
   ),
 
+  //
   GetPage(
-    name: Routes.pinReset,
-    page: () => const PinResetScreen(),
-    middlewares: [
-      PinResetAccountSignedInMiddleware(),
-    ],
+    name: Routes.pinResetInfo,
+    page: () => const PinResetInfoScreen(),
   ),
   GetPage(
-    name: Routes.signinForPinReset,
-    page: () => const SigninForPinResetScreen(),
-    middlewares: [
-      ConnectionMiddleware(returnRoute: Routes.signinForPinReset),
-    ],
+    name: Routes.pinResetSignin,
+    page: () => const PinResetSigninScreen(),
   ),
+  GetPage(
+    name: Routes.pinResetEntry,
+    page: () => const PinResetEntryScreen(),
+  ),
+  GetPage(
+    name: Routes.pinResetResult,
+    page: () => const PinResetResultScreen(),
+  ),
+  //
   GetPage(
     name: Routes.mode,
     page: () => const ModeScreen(),
@@ -524,8 +530,10 @@ const List<String> autoLockExcludedRoutes = [
   Routes.settingsPreferencesAdvancedHardwareConfig,
   Routes.settingsPreferencesAdvancedUpdates,
   Routes.settingsPreferencesAdvanced,
-  Routes.signinForPinReset,
-  Routes.pinReset,
+  Routes.pinResetSignin,
+  Routes.pinResetInfo,
+  Routes.pinResetEntry,
+  Routes.pinResetResult,
   Routes.setup,
   Routes.setupActivation,
   Routes.setupAdminUser,
