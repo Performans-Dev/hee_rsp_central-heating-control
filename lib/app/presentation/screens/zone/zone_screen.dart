@@ -48,7 +48,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const LabelWidget(text: 'Title: Zone Controls'),
+              const LabelWidget(text: 'Zone Controls'),
               ZoneStateControlWidget(
                 zoneState: zone.selectedState,
                 stateCallback: (v) {
@@ -85,7 +85,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                     : null,
               ),
               const Divider(),
-              const LabelWidget(text: 'Title Heaters'),
+              const LabelWidget(text: 'Heaters'),
               ListView.builder(
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
@@ -138,7 +138,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                 physics: const NeverScrollableScrollPhysics(),
               ),
               const Divider(),
-              const LabelWidget(text: 'Title Sensors'),
+              const LabelWidget(text: 'Sensors'),
               ListView.builder(
                 itemBuilder: (context, index) => const ListTile(
                   title: Text('Sample Sensor'),

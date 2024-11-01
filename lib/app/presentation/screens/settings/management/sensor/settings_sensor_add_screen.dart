@@ -47,17 +47,6 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
                 const LabelWidget(
                   text: 'Settings / Sensors / Add Sensor',
                 ),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      cancelButton,
-                      const SizedBox(width: 12),
-                      saveButton,
-                    ],
-                  ),
-                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -117,6 +106,19 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
                     const SizedBox(height: 8),
                   ],
                 ),
+              ),
+            ),
+            Container(
+              height: 50,
+              color: Colors.transparent,
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  cancelButton,
+                  const SizedBox(width: 12),
+                  saveButton,
+                ],
               ),
             ),
           ],

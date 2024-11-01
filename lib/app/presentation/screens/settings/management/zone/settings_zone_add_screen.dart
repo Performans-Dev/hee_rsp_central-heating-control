@@ -69,14 +69,14 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              const LabelWidget(text: 'LABEL: Select Zone color'),
+              const LabelWidget(text: 'Select Zone color'),
               ColorPickerWidget(
                 onSelected: (v) => setState(() => zone.color = v),
                 selectedValue: zone.color,
               ),
 
               const SizedBox(height: 20),
-              const LabelWidget(text: 'LABEL: Select Users'),
+              const LabelWidget(text: 'Select Users'),
               for (final user
                   in app.appUserList.where((e) => e.level == AppUserLevel.user))
                 SwitchListTile(

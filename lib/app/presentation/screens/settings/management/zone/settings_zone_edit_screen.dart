@@ -42,72 +42,79 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
         return AppScaffold(
           title: 'Edit Zone',
           selectedIndex: 3,
-          body: PiScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 12),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      deleteButton,
-                      Expanded(child: Container()),
-                      cancelButton,
-                      const SizedBox(width: 12),
-                      saveButton,
-                    ],
-                  ),
+          body: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        labelText: 'Zone Name',
+                      ),
+                      onTap: () async {
+                        final result = await OnScreenKeyboard.show(
+                          context: context,
+                          initialValue: nameController.text,
+                          label: 'Zone Name',
+                          hintText: 'Type a zone name here',
+                          maxLength: 16,
+                          minLength: 1,
+                          type: OSKInputType.name,
+                        );
+                        if (result != null) {
+                          nameController.text = result;
+                        }
+                        setState(() {
+                          zone.name = nameController.text;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    const LabelWidget(text: 'Select Zone color'),
+                    ColorPickerWidget(
+                      onSelected: (v) => setState(() => zone.color = v),
+                      selectedValue: zone.color,
+                    ),
+                    const SizedBox(height: 20),
+                    const LabelWidget(text: 'Select Users'),
+                    for (final user in app.appUserList
+                        .where((e) => e.level == AppUserLevel.user))
+                      SwitchListTile(
+                        title: Text(user.username),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        value: zone.users.map((e) => e.id).contains(user.id),
+                        selected: zone.users.map((e) => e.id).contains(user.id),
+                        onChanged: (value) => setState(() =>
+                            !zone.users.contains(user)
+                                ? zone.users.add(user)
+                                : zone.users.remove(user)),
+                      ),
+                  ],
                 ),
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    border: UiDimens.formBorder,
-                    labelText: 'Zone Name',
-                  ),
-                  onTap: () async {
-                    final result = await OnScreenKeyboard.show(
-                      context: context,
-                      initialValue: nameController.text,
-                      label: 'Zone Name',
-                      hintText: 'Type a zone name here',
-                      maxLength: 16,
-                      minLength: 1,
-                      type: OSKInputType.name,
-                    );
-                    if (result != null) {
-                      nameController.text = result;
-                    }
-                    setState(() {
-                      zone.name = nameController.text;
-                    });
-                  },
+              ),
+              Container(
+                height: 50,
+                color: Colors.transparent,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    deleteButton,
+                    Expanded(child: Container()),
+                    cancelButton,
+                    const SizedBox(width: 12),
+                    saveButton,
+                  ],
                 ),
-                const SizedBox(height: 20),
-                const LabelWidget(text: 'LABEL: Select Zone color'),
-                ColorPickerWidget(
-                  onSelected: (v) => setState(() => zone.color = v),
-                  selectedValue: zone.color,
-                ),
-                const SizedBox(height: 20),
-                const LabelWidget(text: 'LABEL: Select USers'),
-                for (final user in app.appUserList
-                    .where((e) => e.level == AppUserLevel.user))
-                  SwitchListTile(
-                    title: Text(user.username),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: zone.users.map((e) => e.id).contains(user.id),
-                    selected: zone.users.map((e) => e.id).contains(user.id),
-                    onChanged: (value) => setState(() =>
-                        !zone.users.contains(user)
-                            ? zone.users.add(user)
-                            : zone.users.remove(user)),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       });

@@ -91,6 +91,8 @@ class SettingsSensorEditScreen extends StatelessWidget {
             ),
           ),
           Container(
+            height: 50,
+            color: Colors.transparent,
             padding: const EdgeInsets.all(12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
