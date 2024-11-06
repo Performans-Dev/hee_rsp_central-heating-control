@@ -219,7 +219,7 @@ class UiData {
       id: 'IN6',
       title: 'In-7',
       pinNumber: GpioPin.gpio26,
-      direction: GpioDirection.pinIn,
+      direction: GpioDirection.pinIn,////////////////////////////////
       group: GpioGroup.inPin,
     ),
     ComPort(
