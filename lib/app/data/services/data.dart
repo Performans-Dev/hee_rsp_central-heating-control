@@ -195,18 +195,18 @@ class DataController extends GetxController {
   //#endregion
 
   //#region PLAN COPY
-  Future<int?> copyPlan({required int sourcePlanId}) async {
+  Future<int?> copyPlan({required int sourcePlanId, String? name}) async {
     final data = await DbProvider.db.getPlanDetails(planId: sourcePlanId);
     if (data.isEmpty) {
-      if (kDebugMode) {
-        print('No details to copy for planId: $sourcePlanId');
-      }
-      return null;
+      print('Plan ID: $sourcePlanId ile herhangi bir veri bulunamadı.');
+    } else {
+      print('Plan ID: $sourcePlanId için ${data.length} adet detay bulundu.');
     }
+
     final target = await DbProvider.db.addPlanDefinition(
       plan: PlanDefinition(
         id: 0,
-        name: 'New Plan',
+        name: name ?? 'New Plan{$sourcePlanId}',
         isDefault: 0,
         isActive: 0,
       ),

@@ -197,6 +197,7 @@ class AppController extends GetxController {
     update();
     final result = loggedInAppUser != null;
     if (result) {
+      setLoggedInAppUser(user);
       LogService.addLog(LogDefinition(
         message:
             'Unlock Screen ${user != null ? '${user.username}(${user.level.name})' : ''}',

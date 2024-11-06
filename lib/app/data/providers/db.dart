@@ -993,7 +993,9 @@ class DbProvider {
   //#endregion
 
   //#region PLAN DETAILS
-  Future<List<PlanDetail>> getPlanDetails({int? planId}) async {
+  Future<List<PlanDetail>> getPlanDetails({
+    int? planId,
+  }) async {
     final planDetails = <PlanDetail>[];
     final db = await database;
     if (db == null) return planDetails;
@@ -1029,8 +1031,8 @@ class DbProvider {
       for (var item in planDetails) {
         await db.delete(
           Keys.tablePlanDetails,
-          where: Keys.queryDayAndHour,
-          whereArgs: [item.day, item.hour],
+          where: Keys.queryDayAndHourAndPlanId,
+          whereArgs: [item.day, item.hour, item.planId],
         );
 
         await db.insert(

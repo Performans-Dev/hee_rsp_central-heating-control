@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/presentation/widgets/keypad.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class PinScreen extends StatefulWidget {
@@ -186,7 +187,9 @@ class _PinScreenState extends State<PinScreen> {
                                     value: '>',
                                     callback: pc.pin.length == 6
                                         ? () async {
-                                            Get.back(result: pc.pin);
+                                            Get.back(
+                                                result: pc.pin,
+                                                closeOverlays: true);
                                           }
                                         : null,
                                   ),

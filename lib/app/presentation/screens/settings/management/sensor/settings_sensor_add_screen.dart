@@ -1,12 +1,16 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/models/com_port.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/dropdown.dart';
+import 'package:central_heating_control/app/presentation/components/form_item.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsSensorAddScreen extends StatefulWidget {
   const SettingsSensorAddScreen({super.key});
@@ -18,7 +22,7 @@ class SettingsSensorAddScreen extends StatefulWidget {
 
 class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
   final DataController dataController = Get.find();
-
+  late TextEditingController nameController;
   String? selectedSensorName;
   String? selectedColor;
   ZoneDefinition? selectedZone;
@@ -31,7 +35,9 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
   void initState() {
     super.initState();
 
-    dataController.getZoneListFromDb();
+    dataController.getSensorListFromDb();
+
+    nameController = TextEditingController();
   }
 
   @override
@@ -41,43 +47,44 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const LabelWidget(
+                LabelWidget(
                   text: 'Settings / Sensors / Add Sensor',
                 ),
               ],
             ),
-            const SizedBox(height: 20),
             Expanded(
               child: PiScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DropdownWidget<String>(
-                      data: sensorNames,
-                      labelText: "Sensor Name",
-                      hintText: "Select Name",
-                      selectedValue: selectedSensorName,
-                      onSelected: (value) {
-                        setState(() {
-                          selectedSensorName = value;
-                        });
-                      },
-                    ),
                     const SizedBox(height: 8),
-                    DropdownWidget<String>(
-                      data: colorOptions,
-                      labelText: "Color",
-                      hintText: "Select Color",
-                      selectedValue: selectedColor,
-                      onSelected: (value) {
-                        setState(() {
-                          selectedColor = value;
-                        });
-                      },
+                    FormItemComponent(
+                      label: 'Name',
+                      child: TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          border: UiDimens.formBorder,
+                        ),
+                        onTap: () async {
+                          final result = await OnScreenKeyboard.show(
+                            context: context,
+                            initialValue: nameController.text,
+                            label: 'Heater Name',
+                            hintText: 'Type a name for your heater',
+                            maxLength: 16,
+                            minLength: 1,
+                            type: OSKInputType.name,
+                          );
+                          if (result != null) {
+                            nameController.text = result;
+                            setState(() {});
+                          }
+                        },
+                      ),
                     ),
                     const SizedBox(height: 8),
                     DropdownWidget<ComPort>(
@@ -104,6 +111,25 @@ class _SettingsSensorAddScreenState extends State<SettingsSensorAddScreen> {
                       },
                     ),
                     const SizedBox(height: 8),
+                    FormItemComponent(
+                      label: 'Display Color',
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Theme.of(context)
+                                .inputDecorationTheme
+                                .border
+                                ?.borderSide
+                                .color,
+                            borderRadius: UiDimens.formRadius),
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.all(4),
+                        child: ColorPickerWidget(
+                          onSelected: (v) => setState(() => selectedColor = v),
+                          selectedValue: selectedColor,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -31,6 +31,14 @@ class NavController {
     );
   }
 
+  static void toConnection() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.offAllNamed(Routes.connection),
+    );
+  }
+
   static void toSettings() async {
     Buzz.feedback();
     Future.delayed(

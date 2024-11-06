@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/loading_indicator.dart';
@@ -21,6 +22,10 @@ class _SplashAppSettingsScreenState extends State<SplashAppSettingsScreen> {
 
   Future<void> runInitTask() async {
     final AppController appController = Get.find();
+/*     if (!appController.didConnected) {
+      NavController.toConnection();
+      return;
+    } */
     await appController.fetchAppSettings();
     NavController.toHome();
   }
