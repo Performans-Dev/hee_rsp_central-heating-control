@@ -1,6 +1,6 @@
 import 'package:central_heating_control/app/data/middlewares/admin_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/app_settings_middleware.dart';
-import 'package:central_heating_control/app/data/middlewares/connection_middleware.dart';
+
 import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/pin_reset_account_signed_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/setup_completed_middleware.dart';
@@ -51,6 +51,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/users/
 import 'package:central_heating_control/app/presentation/screens/settings/users/users_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/activation.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/admin.dart';
+import 'package:central_heating_control/app/presentation/screens/connection/connection.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/date_time.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/device_register.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/language.dart';
@@ -127,10 +128,14 @@ final List<GetPage> getPages = [
     name: Routes.setupAdminUser,
     page: () => const SetupSequenceAdminUserScreen(),
   ),
+  GetPage(
+    name: Routes.connection,
+    page: () => const ConnectionScreen(),
+  ),
 
   //#endregion
   GetPage(
-    name: Routes.connection,
+    name: Routes.settingsConnection,
     page: () => const SettingsPreferencesConnectionScreen(),
   ),
   GetPage(

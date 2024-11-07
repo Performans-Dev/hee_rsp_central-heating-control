@@ -14,8 +14,9 @@ class Routes {
   static const String setupSubscriptionResult = '/setup-subscription-result';
   static const String setupTechSupport = '/setup-tech-support';
   static const String setupAdminUser = '/setup-admin-user';
+  static const String connection = '/setup-connection';
 
-  static const String connection = '/connection';
+  static const String settingsConnection = '/connection';
 
   static const String home = '/home';
   static const String zone = '/zone';

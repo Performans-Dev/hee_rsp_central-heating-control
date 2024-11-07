@@ -33,7 +33,7 @@ class Keys {
   static const String subscriptionResult = 'subscriptionResult';
   static const String didTechSupportUserCreated = 'didTechSupportUserCreated';
   static const String didAdminUserCreated = 'didAdminUserCreated';
-
+  static const String didConnected = 'didConnected';
   static const String sessionKey = 'sessionKey';
   static const String deviceId = 'deviceId';
   static const String accountId = 'accountId';

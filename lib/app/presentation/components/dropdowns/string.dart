@@ -14,8 +14,11 @@ class StringDropdownWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: UiDimens.formRadius,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).dividerColor),
+        borderRadius: UiDimens.formRadius,
+      ),
       child: DropdownButton<String>(
         borderRadius: UiDimens.formRadius,
         underline: Container(),
