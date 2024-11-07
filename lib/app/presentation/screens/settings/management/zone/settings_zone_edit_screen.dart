@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/zone/widget/select_user.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
                       controller: nameController,
@@ -83,18 +85,17 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
                     ),
                     const SizedBox(height: 20),
                     const LabelWidget(text: 'Select Users'),
-                    for (final user in app.appUserList
-                        .where((e) => e.level == AppUserLevel.user))
-                      SwitchListTile(
-                        title: Text(user.username),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: zone.users.map((e) => e.id).contains(user.id),
-                        selected: zone.users.map((e) => e.id).contains(user.id),
-                        onChanged: (value) => setState(() =>
-                            !zone.users.contains(user)
-                                ? zone.users.add(user)
-                                : zone.users.remove(user)),
-                      ),
+                    MultiSelectUserWidget(
+                      onSelected: (p0) {
+                        setState(() {
+                          zone.users = p0;
+                        });
+                      },
+                      selectedUsers: zone.users,
+                      users: app.appUserList
+                          .where((e) => e.level == AppUserLevel.user)
+                          .toList(),
+                    ),
                   ],
                 ),
               ),
