@@ -33,7 +33,7 @@ class Keys {
   static const String subscriptionResult = 'subscriptionResult';
   static const String didTechSupportUserCreated = 'didTechSupportUserCreated';
   static const String didAdminUserCreated = 'didAdminUserCreated';
-
+  static const String didConnected = 'didConnected';
   static const String sessionKey = 'sessionKey';
   static const String deviceId = 'deviceId';
   static const String accountId = 'accountId';
@@ -84,7 +84,8 @@ class Keys {
   static const String queryZoneId = 'zoneId=?';
   static const String queryPlanId = 'planId=?';
   static const String queryIdIn = 'id IN (?)';
-  static const String queryDayAndHour = 'day=? AND hour=?';
+  static const String queryDayAndHourAndPlanId =
+      'day=? AND hour=? AND planId=?';
 
   static const String dbDropUsers = '''
     DROP TABLE IF EXISTS users

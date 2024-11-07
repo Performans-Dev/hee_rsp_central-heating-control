@@ -197,6 +197,7 @@ class AppController extends GetxController {
     update();
     final result = loggedInAppUser != null;
     if (result) {
+      setLoggedInAppUser(user);
       LogService.addLog(LogDefinition(
         message:
             'Unlock Screen ${user != null ? '${user.username}(${user.level.name})' : ''}',
@@ -295,8 +296,8 @@ class AppController extends GetxController {
     final wifiIp = await info.getWifiIP();
     final wifiGateway = await info.getWifiGatewayIP();
     _networkName.value = wifiName;
-    _networkIP.value = wifiIp;
-    _networkGateway.value = wifiGateway;
+    _networkIP.value = wifiIp ?? "-";
+    _networkGateway.value = wifiGateway ?? "-";
     update();
   }
   //#endregion
@@ -318,7 +319,7 @@ class AppController extends GetxController {
   final Rxn<AppSettings> _appSettings = Rxn();
   AppSettings? get appSettings => _appSettings.value;
 
-  Future<void> fetchAppSettings() async {
+  Future<bool> fetchAppSettings() async {
     final data = Box.getString(key: Keys.appSettings);
     if (didConnected && data.isEmpty) {
       final result = await AppProvider.fetchAppSettings();
@@ -330,10 +331,11 @@ class AppController extends GetxController {
       _didSettingsFetched.value = true;
       update();
     } else {
-      if (data.isEmpty) return;
+      if (data.isEmpty) return false;
       _appSettings.value = AppSettings.fromJson(data);
       update();
     }
+    return true;
   }
   //#endregion
 

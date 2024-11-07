@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,17 +27,10 @@ class SettingsZoneListScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'List of Zones'.tr,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  LabelWidget(
+                    text: 'List of Zones'.tr,
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      NavController.toSettingsZoneAdd();
-                    },
-                    label: const Text("Add New Zone"),
-                    icon: const Icon(Icons.add),
-                  ),
+                  addZoneButton,
                 ],
               ),
               ListView.builder(
@@ -80,11 +74,12 @@ class SettingsZoneListScreen extends StatelessWidget {
   Widget get addZoneButton => Container(
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: () {
             NavController.toSettingsZoneAdd();
           },
-          child: const Text("Add New Zone"),
+          label: const Text("Add New Zone"),
+          icon: const Icon(Icons.add),
         ),
       );
 }

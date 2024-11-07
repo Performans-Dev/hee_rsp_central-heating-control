@@ -5,13 +5,20 @@ import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/presentation/widgets/keypad.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class PinScreen extends StatefulWidget {
-  const PinScreen({super.key, required this.username, this.isNewUser = false});
+  const PinScreen({
+    super.key,
+    required this.username,
+    this.isNewUser = false,
+    this.isNewPin = false,
+  });
 
   final String username;
   final bool isNewUser;
+  final bool isNewPin;
 
   @override
   State<PinScreen> createState() => _PinScreenState();
@@ -84,7 +91,7 @@ class _PinScreenState extends State<PinScreen> {
                                             TextSpan(
                                               text: widget.isNewUser
                                                   ? 'Pin kodu giriniz'
-                                                  : ' için PIN kodu girişi yapın '
+                                                  : ' için ${widget.isNewPin ? "yeni bir" : ""} PIN kodu girişi yapın '
                                                       .tr,
                                               style: Theme.of(context)
                                                   .textTheme
@@ -180,23 +187,37 @@ class _PinScreenState extends State<PinScreen> {
                                     value: '>',
                                     callback: pc.pin.length == 6
                                         ? () async {
-                                            Get.back(result: pc.pin);
+                                            Get.back(
+                                                result: pc.pin,
+                                                closeOverlays: true);
                                           }
                                         : null,
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              TextButton(
-                                onPressed: () {
-                                  Box.setString(
-                                    key: Keys.forgottenPin,
-                                    value: widget.username,
-                                  );
-                                  Get.toNamed(Routes.pinReset);
-                                },
-                                child: Text('Forgot PIN code'.tr),
-                              )
+                              if (!widget.isNewPin)
+                                TextButton(
+                                  onPressed: () async {
+                                    await Box.setString(
+                                      key: Keys.forgottenPin,
+                                      value: widget.username,
+                                    );
+
+                                    Future.delayed(
+                                      Duration.zero,
+                                      () {
+                                        Get.offAndToNamed(
+                                          Routes.pinResetInfo,
+                                          parameters: {
+                                            'username': widget.username
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text('Forgot PIN code'.tr),
+                                )
                             ],
                           ),
                         ),

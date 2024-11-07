@@ -16,6 +16,7 @@ import 'package:central_heating_control/app/data/models/timezone_definition.dart
 import 'package:central_heating_control/app/data/providers/base.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 
@@ -26,6 +27,7 @@ class AppProvider {
       final a = AppSettings.fromMap(response.data);
       return GenericResponse.success(a);
     }
+
     return GenericResponse.error();
   }
 
@@ -47,7 +49,6 @@ class AppProvider {
   static Future<GenericResponse<SubscriptionResult>> requestSubscription({
     required String activationId,
   }) async {
-  
     final response = await BaseNetworkProvider.post(
       Api.requestSubscription,
       data: {
@@ -102,6 +103,15 @@ class AppProvider {
 
   static Future<GenericResponse<Account?>> accountSignin(
       {required SigninRequest request}) async {
+/*     final account = Account(
+      status: 1, displayName: "a", createdAt: "", token: "",
+      id: "1", // Sabit id değeri
+
+      email: 'ilkerr@okutman.com', 
+  
+    );
+
+    return GenericResponse.success(account); */
     final response = await BaseNetworkProvider.post(
       Api.signin,
       data: request.toMap(),

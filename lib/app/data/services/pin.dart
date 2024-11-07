@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class PinController extends GetxController {
@@ -37,7 +37,9 @@ class PinController extends GetxController {
 
   void onDigitTapped(String digit) {
     if (digit == '>') {
-      Get.back(result: pin);
+      Future.delayed(const Duration(milliseconds: 150), () {
+        Get.back(result: pin, closeOverlays: true);
+      });
     } else if (digit == 'x') {
       deleteLast();
     } else {
@@ -60,7 +62,9 @@ class PinController extends GetxController {
       _digits.assignAll(newDigits);
       update();
       if (newDigits.last != '') {
-        Get.back(result: pin);
+        Future.delayed(const Duration(milliseconds: 100), () {
+          Get.back(result: pin, closeOverlays: true);
+        });
       }
     }
   }
@@ -73,10 +77,5 @@ class PinController extends GetxController {
       }
     }
     update();
-  }
-
-  Future<int> savePin(String newPin, String username) async {
-    final result = await DbProvider.db.savePin(newPin, username);
-    return result;
   }
 }

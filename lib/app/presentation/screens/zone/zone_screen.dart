@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_state_control.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,8 +46,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
           padding: EdgeInsets.zero,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Title: Zone Controls'),
+              const LabelWidget(text: 'Zone Controls'),
               ZoneStateControlWidget(
                 zoneState: zone.selectedState,
                 stateCallback: (v) {
@@ -83,7 +85,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                     : null,
               ),
               const Divider(),
-              const Text('Title Heaters'),
+              const LabelWidget(text: 'Heaters'),
               ListView.builder(
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
@@ -136,7 +138,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                 physics: const NeverScrollableScrollPhysics(),
               ),
               const Divider(),
-              const Text('Title Sensors'),
+              const LabelWidget(text: 'Sensors'),
               ListView.builder(
                 itemBuilder: (context, index) => const ListTile(
                   title: Text('Sample Sensor'),

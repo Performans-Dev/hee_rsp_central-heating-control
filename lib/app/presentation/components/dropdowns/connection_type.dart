@@ -19,11 +19,16 @@ class ConnectionTypeDropdownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
       builder: (dc) {
-        return ClipRRect(
-          borderRadius: UiDimens.formRadius,
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: UiDimens.formRadius,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: DropdownButton<HeaterDeviceConnectionType>(
-            underline: Container(), isExpanded: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            isExpanded: true,
+            underline: Container(),
             items: HeaterDeviceConnectionType.values
                 .map((e) => DropdownMenuItem<HeaterDeviceConnectionType>(
                       value: e,

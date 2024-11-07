@@ -385,6 +385,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
   }
 
   //MARK: FETCH
+
   void fetchData() async {
     planDetails =
         dataController.planDetails.where((e) => e.planId == planId).toList();

@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,9 +28,8 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: const Text(
-                      'Pick a theme',
-                      textAlign: TextAlign.start,
+                    child: const LabelWidget(
+                      text: 'Pick a theme',
                     ),
                   ),
                   const Divider(),

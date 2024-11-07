@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,7 +63,9 @@ class _SettingsPreferencesLockScreenState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Kilit Ekranı Süresi'),
+                      const LabelWidget(
+                        text: "Lock Screen Duration",
+                      ),
                       Text(CommonUtils.secondsToHumanReadable(
                           selectedIdleTimeout)),
                     ],
@@ -80,7 +83,7 @@ class _SettingsPreferencesLockScreenState
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Screen Saver'),
+                      LabelWidget(text: 'Screen Saver'),
                     ],
                   ),
                   ...ScreenSaverType.values.map((e) => RadioListTile(
@@ -103,7 +106,7 @@ class _SettingsPreferencesLockScreenState
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('Slider Süresi'),
+                                const LabelWidget(text: 'Slider Time'),
                                 Text(CommonUtils.secondsToHumanReadable(
                                     selectedSlideTime)),
                               ],
