@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,9 +43,8 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 30),
-                  Text(
-                    'Pick a theme'.tr,
-                    style: Theme.of(context).textTheme.titleLarge,
+                  LabelWidget(
+                    text: 'Pick a theme'.tr,
                   ),
                   Row(
                     children: [

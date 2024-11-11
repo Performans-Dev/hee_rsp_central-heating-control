@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Bu import yolu kendi projenize göre güncellenmelidir.
 
@@ -26,10 +27,15 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
               width: double.infinity,
               // color: Theme.of(context).focusColor,
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                'Settings / Sensors',
-                style: Theme.of(context).textTheme.titleSmall,
+
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const LabelWidget(
+                    text: 'Settings / Sensors',
+                  ),
+                  addSensorButon,
+                ],
               ),
             ),
             Expanded(
@@ -70,7 +76,6 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
                       },
                     ),
             ),
-            addSensorButon,
           ],
         ),
       );
@@ -80,9 +85,10 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
   Widget get addSensorButon => Container(
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: () => Get.toNamed(Routes.settingsSensorAdd),
-          child: const Text("Add New Sensor"),
+          label: const Text("Add New Sensor"),
+          icon: const Icon(Icons.add),
         ),
       );
 }

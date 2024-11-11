@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
@@ -68,14 +69,14 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              const Text('LABEL: Select Zone color'),
+              const LabelWidget(text: 'Select Zone color'),
               ColorPickerWidget(
                 onSelected: (v) => setState(() => zone.color = v),
                 selectedValue: zone.color,
               ),
 
               const SizedBox(height: 20),
-              const Text('LABEL: Select Users'),
+              const LabelWidget(text: 'Select Users'),
               for (final user
                   in app.appUserList.where((e) => e.level == AppUserLevel.user))
                 SwitchListTile(

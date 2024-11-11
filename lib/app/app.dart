@@ -56,7 +56,7 @@ class MainApp extends StatelessWidget {
       return ScreenSaverWrapper(
         definition: screenSaverDefinition,
         excludedRoutes: autoLockExcludedRoutes,
-        timerDuration: 30,
+        timerDuration: 120,
         child: RestartWidget(
           child: Builder(builder: (context) {
             final theme = MaterialTheme(

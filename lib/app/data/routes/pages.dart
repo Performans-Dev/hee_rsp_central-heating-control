@@ -1,6 +1,6 @@
 import 'package:central_heating_control/app/data/middlewares/admin_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/app_settings_middleware.dart';
-import 'package:central_heating_control/app/data/middlewares/connection_middleware.dart';
+
 import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/pin_reset_account_signed_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/setup_completed_middleware.dart';
@@ -13,9 +13,11 @@ import 'package:central_heating_control/app/presentation/screens/home/home_scree
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
 
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/entry.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/info.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/result.dart';
 
-import 'package:central_heating_control/app/presentation/screens/pin_reset/pin_reset_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/pin_reset/signin_for_pin_reset_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/pin_reset/signin.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_list_screen.dart';
@@ -30,6 +32,8 @@ import 'package:central_heating_control/app/presentation/screens/settings/manage
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_list_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/plans/plan_detail.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/plans/plan_list.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/diagnostics/settings_preferences_advanced_diagnostics_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/hardware_config/settings_preferences_advanced_hardware_addnew_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/advanced/hardware_config/settings_preferences_advanced_hardware_config_screen.dart';
@@ -47,6 +51,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/users/
 import 'package:central_heating_control/app/presentation/screens/settings/users/users_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/activation.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/admin.dart';
+import 'package:central_heating_control/app/presentation/screens/connection/connection.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/date_time.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/device_register.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/language.dart';
@@ -123,10 +128,14 @@ final List<GetPage> getPages = [
     name: Routes.setupAdminUser,
     page: () => const SetupSequenceAdminUserScreen(),
   ),
+  GetPage(
+    name: Routes.connection,
+    page: () => const ConnectionScreen(),
+  ),
 
   //#endregion
   GetPage(
-    name: Routes.connection,
+    name: Routes.settingsConnection,
     page: () => const SettingsPreferencesConnectionScreen(),
   ),
   GetPage(
@@ -354,27 +363,44 @@ final List<GetPage> getPages = [
       TechSupportLoggedInMiddleware(),
     ],
   ),
-
+  GetPage(
+    name: Routes.settingsPlanList,
+    page: () => const SettingsPlanListScreen(),
+    middlewares: [
+      AdminLoggedInMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.settingsPlanDetail,
+    page: () => const SettingsPlanDetailScreen(),
+    middlewares: [
+      AdminLoggedInMiddleware(),
+    ],
+  ),
   GetPage(
     name: Routes.lockUserListScreen,
     page: () => const UserListScreen(),
     transition: Transition.fadeIn,
   ),
 
+  //
   GetPage(
-    name: Routes.pinReset,
-    page: () => const PinResetScreen(),
-    middlewares: [
-      PinResetAccountSignedInMiddleware(),
-    ],
+    name: Routes.pinResetInfo,
+    page: () => const PinResetInfoScreen(),
   ),
   GetPage(
-    name: Routes.signinForPinReset,
-    page: () => const SigninForPinResetScreen(),
-    middlewares: [
-      ConnectionMiddleware(returnRoute: Routes.signinForPinReset),
-    ],
+    name: Routes.pinResetSignin,
+    page: () => const PinResetSigninScreen(),
   ),
+  GetPage(
+    name: Routes.pinResetEntry,
+    page: () => const PinResetEntryScreen(),
+  ),
+  GetPage(
+    name: Routes.pinResetResult,
+    page: () => const PinResetResultScreen(),
+  ),
+  //
   GetPage(
     name: Routes.mode,
     page: () => const ModeScreen(),
@@ -484,20 +510,7 @@ final List<GetPage> getPages = [
   //     AdminMiddleware(),
   //   ],
   // ),
-  // GetPage(
-  //   name: Routes.settingsPlanList,
-  //   page: () => const SettingsPlanListScreen(),
-  //   middlewares: [
-  //     AdminMiddleware(),
-  //   ],
-  // ),
-  // GetPage(
-  //   name: Routes.settingsPlanDetail,
-  //   page: () => const SettingsPlanDetailScreen(),
-  //   middlewares: [
-  //     AdminMiddleware(),
-  //   ],
-  // ),
+
   // //#endregion
 
   // GetPage(
@@ -522,8 +535,10 @@ const List<String> autoLockExcludedRoutes = [
   Routes.settingsPreferencesAdvancedHardwareConfig,
   Routes.settingsPreferencesAdvancedUpdates,
   Routes.settingsPreferencesAdvanced,
-  Routes.signinForPinReset,
-  Routes.pinReset,
+  Routes.pinResetSignin,
+  Routes.pinResetInfo,
+  Routes.pinResetEntry,
+  Routes.pinResetResult,
   Routes.setup,
   Routes.setupActivation,
   Routes.setupAdminUser,

@@ -1,4 +1,6 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
@@ -53,13 +55,15 @@ class _UserListScreenState extends State<UserListScreen> {
                           padding: const EdgeInsets.all(12.0),
                           child: InkWell(
                             onTap: () {
-                              setState(() {
-                                tapCount++;
-                                if (tapCount >= 5) {
-                                  showDeveloper = true;
-                                  tapCount = 0;
-                                }
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  tapCount++;
+                                  if (tapCount >= 5) {
+                                    showDeveloper = true;
+                                    tapCount = 0;
+                                  }
+                                });
+                              }
                             },
                             child: Text(
                               "Select user to unlock",
@@ -95,10 +99,21 @@ class _UserListScreenState extends State<UserListScreen> {
                             onTap: () async {
                               var result = await NavController.toPin(
                                   context: context, username: user.username);
-                              if (result != null && user.pin == result) {
-                                LogService.addLog(LogDefinition(
-                                    message: "${user.username} unlocked"));
+                              await Future.delayed(
+                                  const Duration(milliseconds: 200));
+                              final loginResult = await app.loginUser(
+                                  username: user.username, pin: result ?? "");
+
+                              if (loginResult) {
                                 NavController.toHome();
+                              } else {
+                                if (context.mounted) {
+                                  DialogUtils.snackbar(
+                                    context: context,
+                                    message: "Hatalı pin kodu",
+                                    type: SnackbarType.error,
+                                  );
+                                }
                               }
                             },
                           );

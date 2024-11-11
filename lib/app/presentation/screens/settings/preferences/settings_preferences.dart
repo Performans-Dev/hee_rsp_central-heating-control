@@ -25,7 +25,6 @@ class SettingsPreferencesScreen extends StatelessWidget {
     try {
       currentTimezone = TimezoneDefinition.fromJson(
           Box.getString(key: Keys.selectedTimezone));
-
     } on Exception catch (_) {
       // print('cant parse timezone: $e');
 
@@ -116,7 +115,7 @@ class SettingsPreferencesScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () {
-                Get.toNamed(Routes.connection);
+                Get.toNamed(Routes.settingsConnection);
               },
             ),
             const SizedBox(height: 8),

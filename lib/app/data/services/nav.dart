@@ -111,6 +111,14 @@ class NavController {
     );
   }
 
+  static void toSettingsWeeklySchedule() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsPlanList),
+    );
+  }
+
   static void toLogs() async {
     Buzz.feedback();
     Future.delayed(
@@ -144,6 +152,7 @@ class NavController {
     required BuildContext context,
     required String username,
     bool isNewUser = false,
+    bool isNewPin = false,
   }) async {
     if (context.mounted) {
       final result = await Navigator.of(context).push(
@@ -162,6 +171,7 @@ class NavController {
           pageBuilder: (_, __, ___) => PinScreen(
             isNewUser: isNewUser,
             username: username,
+            isNewPin: isNewPin,
           ),
         ),
       );

@@ -119,7 +119,7 @@ class DialogUtils {
     }
   }
 
-  static Future<String?> pinDialog({
+  /* static Future<String?> pinDialog({
     required BuildContext context,
     required String username,
   }) async {
@@ -290,5 +290,5 @@ class DialogUtils {
       },
     );
     return result;
-  }
+  } */
 }

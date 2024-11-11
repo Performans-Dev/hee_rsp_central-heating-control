@@ -76,10 +76,14 @@ class Box {
       await setBool(key: Keys.didTimezoneSelected, value: true);
   Future<void> markActivated() async =>
       await setBool(key: Keys.didActivated, value: true);
+  Future<void> markConnected() async =>
+      await setBool(key: Keys.didConnected, value: true);
 
   bool get didLanguageSelected => getBool(key: Keys.didLanguageSelected);
   bool get didTimezoneSelected => getBool(key: Keys.didTimezoneSelected);
   bool get didActivated => getBool(key: Keys.didActivated);
+  bool get didconnected => getBool(key: Keys.didConnected);
+
   //#endregion
 
   //#region THEME

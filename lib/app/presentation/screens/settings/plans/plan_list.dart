@@ -1,12 +1,15 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
+import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsPlanListScreen extends StatelessWidget {
   const SettingsPlanListScreen({super.key});
@@ -22,24 +25,22 @@ class SettingsPlanListScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BreadcrumbWidget(title: 'Settings / Plan List'),
+              const LabelWidget(text: 'Settings / Plan List'),
               ListView.builder(
                 itemBuilder: (context, index) {
                   final plan = dc.planList[index];
+                  if (dc.planList.isEmpty) {
+                    return const Center(child: Text('Plan bulunamadı'));
+                  }
+
                   return plan.id <= 0
                       ? Container()
                       : ListTile(
                           title: Text(plan.name),
-                          leading: Icon(
-                            Icons.check,
-                            color: plan.isActive == 1
-                                ? Colors.green
-                                : Colors.grey.withOpacity(0.3),
-                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              IconButton(
+                              OutlinedButton.icon(
                                 onPressed: plan.isDefault == 1
                                     ? null
                                     : () {
@@ -56,39 +57,71 @@ class SettingsPlanListScreen extends StatelessWidget {
                                         );
                                       },
                                 icon: const Icon(Icons.delete),
+                                label: Text("Delete"),
                               ),
-                              IconButton(
+                              OutlinedButton.icon(
                                 onPressed: () async {
-                                  final newPlanId =
-                                      await dc.copyPlan(sourcePlanId: plan.id);
-                                  if (newPlanId != null) {
-                                    if (context.mounted) {
-                                      DialogUtils.snackbar(
-                                        context: context,
-                                        message: 'Copied to new plan',
-                                        type: SnackbarType.success,
-                                      );
+                                  String? newPlanName =
+                                      await OnScreenKeyboard.show(
+                                    context: context,
+                                    hintText: "Enter new plan name",
+                                    type: OSKInputType.name,
+                                    minLength: 3,
+                                    maxLength: 15,
+                                  );
+
+                                  if (newPlanName != null &&
+                                      newPlanName.isNotEmpty) {
+                                    final isDuplicate = dc.planList.any(
+                                        (plan) => plan.name == newPlanName);
+                                    if (isDuplicate) {
+                                      if (context.mounted) {
+                                        DialogUtils.snackbar(
+                                          context: context,
+                                          message:
+                                              'A plan with this name already exists. Choose another name.',
+                                          type: SnackbarType.warning,
+                                        );
+                                      }
+                                      return;
                                     }
-                                    Get.toNamed(
-                                      Routes.settingsPlanDetail,
-                                      parameters: {
-                                        'planId': newPlanId.toString(),
-                                      },
+                                    //db bak aynı isimden varsa uyarı ver
+                                    final newPlanId = await dc.copyPlan(
+                                      sourcePlanId: plan.id,
+                                      name: newPlanName,
                                     );
-                                  } else {
-                                    if (context.mounted) {
-                                      DialogUtils.snackbar(
-                                        context: context,
-                                        message:
-                                            'Could not able to copy plan details',
-                                        type: SnackbarType.error,
+                                    if (newPlanId != null) {
+                                      if (context.mounted) {
+                                        DialogUtils.snackbar(
+                                          context: context,
+                                          message: 'Copied to new plan',
+                                          type: SnackbarType.success,
+                                        );
+                                      }
+                                      Get.toNamed(
+                                        Routes.settingsPlanDetail,
+                                        parameters: {
+                                          'planId': newPlanId.toString(),
+                                        },
                                       );
+                                    } else {
+                                      if (context.mounted) {
+                                        DialogUtils.snackbar(
+                                          context: context,
+                                          message:
+                                              'Could not copy plan details',
+                                          type: SnackbarType.error,
+                                        );
+                                      }
                                     }
                                   }
                                 },
                                 icon: const Icon(Icons.copy),
+                                label: const Text(
+                                  "Copy",
+                                ),
                               ),
-                              IconButton(
+                              OutlinedButton.icon(
                                 onPressed: () {
                                   Get.toNamed(
                                     Routes.settingsPlanDetail,
@@ -97,7 +130,8 @@ class SettingsPlanListScreen extends StatelessWidget {
                                     },
                                   );
                                 },
-                                icon: const Icon(Icons.zoom_in),
+                                icon: const Icon(Icons.edit),
+                                label: Text("View/Edit"),
                               ),
                             ],
                           ),
@@ -105,14 +139,6 @@ class SettingsPlanListScreen extends StatelessWidget {
                 },
                 itemCount: dc.planList.length,
                 shrinkWrap: true,
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Add New Plan'),
-                ),
               ),
             ],
           ),
