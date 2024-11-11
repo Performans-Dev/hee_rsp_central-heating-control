@@ -1,14 +1,14 @@
 name: central_heating_control
 description: "Central Heating Control by Heethings"
 publish_to: 'none'
-version: 1.0.37+1037
+version: 1.0.38+1038
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
   connectivity_plus: ^6.0.3
-  dart_periphery: ^0.9.5
+  dart_periphery: ^0.9.6
   device_info_plus: ^10.1.0
   dio: ^5.4.3+1
   flutter:
