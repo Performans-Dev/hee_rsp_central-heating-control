@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/chc_device.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -37,6 +39,9 @@ class DeviceUtils {
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
+    final serialNumberResult = await Process.start(
+        'cat', ['/sys/firmware/devicetree/base/serial-number']);
+
     deviceData['appName'] = packageInfo.appName;
     deviceData['packageName'] = packageInfo.packageName;
     deviceData['appVersion'] = packageInfo.version;
@@ -53,7 +58,8 @@ class DeviceUtils {
       os: deviceData['os'],
       osVersion: deviceData['osVersion'],
       osVersionSdk: deviceData['osVersionSdk'].toString(),
-      serialNumber: deviceData['serialNumber'],
+      serialNumber:
+          serialNumberResult.stdout.toString(), //deviceData['serialNumber'],
       appName: deviceData['appName'],
       packageName: deviceData['packageName'],
       appVersion: deviceData['appVersion'],
