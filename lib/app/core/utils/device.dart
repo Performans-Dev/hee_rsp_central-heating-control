@@ -8,6 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class DeviceUtils {
+  static Future<String> cpuSerialNumber() async {
+    final serialNumberResult = await Process.run(
+        'cat', ['/sys/firmware/devicetree/base/serial-number']);
+    return serialNumberResult.stdout.toString();
+  }
+
   static Future<ChcDevice> createDeviceInfo() async {
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     var deviceData = <String, dynamic>{};
@@ -39,8 +45,7 @@ class DeviceUtils {
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-    final serialNumberResult = await Process.start(
-        'cat', ['/sys/firmware/devicetree/base/serial-number']);
+    final cpuSerial = await cpuSerialNumber();
 
     deviceData['appName'] = packageInfo.appName;
     deviceData['packageName'] = packageInfo.packageName;
@@ -58,8 +63,7 @@ class DeviceUtils {
       os: deviceData['os'],
       osVersion: deviceData['osVersion'],
       osVersionSdk: deviceData['osVersionSdk'].toString(),
-      serialNumber:
-          serialNumberResult.stdout.toString(), //deviceData['serialNumber'],
+      serialNumber: cpuSerial, //deviceData['serialNumber'],
       appName: deviceData['appName'],
       packageName: deviceData['packageName'],
       appVersion: deviceData['appVersion'],
