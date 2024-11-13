@@ -128,38 +128,39 @@ class _PiInfoScreenState extends State<PiInfoScreen> {
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemBuilder: (context, index) => ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text('${index + 1}'),
-                                  ),
-                                  title: const Text(
-                                    'HT2041.01',
-                                    style: style,
-                                  ),
-                                  subtitle: Text(
-                                    '2041.01.100.25$index',
-                                    style: style,
-                                  ),
-                                  trailing: IconButton(
-                                    onPressed: () => setState(() =>
-                                        qrCodeData = '2041.01.100.25$index'),
-                                    icon: const Icon(Icons.qr_code),
-                                  ),
+                                itemBuilder: (context, index) =>
+                                    // ListTile(
+                                    //   // leading: CircleAvatar(
+                                    //   //   child: Text('${index + 1}'),
+                                    //   // ),
+                                    //   title: const Text(
+                                    //     'HT2041.01',
+                                    //     style: style,
+                                    //   ),
+                                    //   subtitle: Text(
+                                    //     '2041.01.100.25$index',
+                                    //     style: style,
+                                    //   ),
+                                    //   trailing: IconButton(
+                                    //     onPressed: () => setState(() =>
+                                    //         qrCodeData = '2041.01.100.25$index'),
+                                    //     icon: const Icon(Icons.qr_code),
+                                    //   ),
+                                    // ),
+                                    Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    infoLabelValueWidget(
+                                      label: 'Model',
+                                      value: 'HT2041.01',
+                                    ),
+                                    infoLabelValueWidget(
+                                      label: 'S/N',
+                                      qr: '2041.01.100.25$index',
+                                    ),
+                                    const Divider(),
+                                  ],
                                 ),
-                                // Column(
-                                //   mainAxisSize: MainAxisSize.min,
-                                //   children: [
-                                //     infoLabelValueWidget(
-                                //       label: 'Model',
-                                //       value: 'HT2041.01',
-                                //     ),
-                                //     infoLabelValueWidget(
-                                //       label: 'S/N',
-                                //       qr: '2041.01.100.25$index',
-                                //     ),
-                                //     const Divider(),
-                                //   ],
-                                // ),
                                 itemCount: 8,
                               ),
                             )
