@@ -18,7 +18,7 @@ class PiInfoScreen extends StatelessWidget {
               return Material(
                 child: Center(
                   child: Container(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withOpacity(0.9),
                     margin: EdgeInsets.symmetric(horizontal: 60, vertical: 50),
                     padding: EdgeInsets.all(20),
                     child: Column(
@@ -46,6 +46,8 @@ class PiInfoScreen extends StatelessWidget {
                             children: [
                               Container(
                                 color: Colors.white,
+                                height: double.infinity,
+                                alignment: Alignment.topCenter,
                                 padding: EdgeInsets.all(4),
                                 margin: EdgeInsets.all(4),
                                 child: Column(
@@ -80,17 +82,21 @@ class PiInfoScreen extends StatelessWidget {
                               ),
                               Container(
                                 color: Colors.white,
+                                height: double.infinity,
+                                alignment: Alignment.topCenter,
                                 padding: EdgeInsets.all(4),
                                 margin: EdgeInsets.all(4),
-                              child: Column(mainAxisSize: MainAxisSize.min, children: [
-
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
                                     Text(
                                       'Connectivity',
                                       style: TextStyle(color: Colors.black),
                                     ),
                                     Text('eth0:'),
                                     Text('wifi:'),
-                              ],),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
