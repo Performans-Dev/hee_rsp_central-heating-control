@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class PiInfoScreen extends StatelessWidget {
+class PiInfoScreen extends StatefulWidget {
   const PiInfoScreen({super.key});
+
+  @override
+  State<PiInfoScreen> createState() => _PiInfoScreenState();
+}
+
+class _PiInfoScreenState extends State<PiInfoScreen> {
+  String? qrCodeData;
 
   @override
   Widget build(BuildContext context) {
@@ -30,194 +37,228 @@ class PiInfoScreen extends StatelessWidget {
       ),
       body: GetBuilder<AppController>(
         builder: (app) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 20,
-                  child: Container(
-                    color: Colors.white,
-                    height: double.infinity,
-                    alignment: Alignment.topCenter,
-                    padding: const EdgeInsets.all(4),
-                    margin: const EdgeInsets.all(4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const InfoLabelValueWidget(
-                          label: 'Product',
-                          value: 'Heethings CC',
-                          action: IconButton(
-                              onPressed: null,
-                              icon: Icon(Icons.developer_board)),
-                          titleLevel: 2,
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'S/N',
-                          value: '${app.deviceInfo?.serialNumber}',
-                        ),
-                        Center(
-                          child: QrImageView(
-                            data: app.deviceInfo?.serialNumber ?? 'N/A',
-                            version: QrVersions.auto,
-                            size: 100.0,
-                            backgroundColor: Colors.white,
-                            eyeStyle: const QrEyeStyle(
-                              color: Colors.black87,
-                              eyeShape: QrEyeShape.square,
+          return Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 20,
+                      child: Container(
+                        color: Colors.white,
+                        height: double.infinity,
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.all(4),
+                        margin: const EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            infoLabelValueWidget(
+                              label: 'Product',
+                              value: 'Heethings CC',
+                              action: const IconButton(
+                                  onPressed: null,
+                                  icon: Icon(Icons.developer_board)),
+                              titleLevel: 2,
                             ),
-                            dataModuleStyle: const QrDataModuleStyle(
-                              color: Colors.black87,
-                              dataModuleShape: QrDataModuleShape.square,
+                            infoLabelValueWidget(
+                                label: 'S/N',
+                                qr: '${app.deviceInfo?.serialNumber}'),
+                            infoLabelValueWidget(
+                              label: 'ID',
+                              qr: '${app.deviceInfo?.installationId}',
                             ),
-                          ),
+                            infoLabelValueWidget(
+                              label: 'Model',
+                              value: '${app.deviceInfo?.model}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Software',
+                              value: '${app.deviceInfo?.appName}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Package',
+                              value: '${app.deviceInfo?.packageName}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Version',
+                              value: '${app.deviceInfo?.appVersion}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Build',
+                              value: '${app.deviceInfo?.appBuild}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'OS',
+                              value: '${app.deviceInfo?.os}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'OS Version',
+                              value: '${app.deviceInfo?.osVersion}',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'OS SDK',
+                              value: '${app.deviceInfo?.osVersionSdk}',
+                            ),
+                          ],
                         ),
-                        const Divider(),
-                        InfoLabelValueWidget(
-                          label: 'Software',
-                          value: '${app.deviceInfo?.appName}',
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'Version',
-                          value: '${app.deviceInfo?.appVersion}',
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'Build',
-                          value: '${app.deviceInfo?.appBuild}',
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'ID',
-                          value: '${app.deviceInfo?.installationId}',
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  flex: 12,
-                  child: Container(
-                    color: Colors.white,
-                    height: double.infinity,
-                    alignment: Alignment.topCenter,
-                    padding: const EdgeInsets.all(4),
-                    margin: const EdgeInsets.all(4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const InfoLabelValueWidget(
-                          label: 'Installed Hardware',
-                          action: IconButton(
-                            onPressed: null,
-                            icon: Icon(Icons.refresh),
-                          ),
-                          titleLevel: 2,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemBuilder: (context, index) => Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const InfoLabelValueWidget(
-                                    label: 'Model',
-                                    value: 'HT2041.01',
-                                  ),
-                                  InfoLabelValueWidget(
-                                    label: 'S/N',
-                                    value: '2041.01.100.25$index',
-                                  ),
-                                  QrImageView(
-                                    data: '2041.01.100.25$index',
-                                    size: 100,
-                                  ),
-                                  const Divider(),
-                                ],
+                    Expanded(
+                      flex: 14,
+                      child: Container(
+                        color: Colors.white,
+                        height: double.infinity,
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.all(4),
+                        margin: const EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            infoLabelValueWidget(
+                              label: 'Installed Hardware',
+                              action: const IconButton(
+                                onPressed: null,
+                                icon: Icon(Icons.refresh),
                               ),
+                              titleLevel: 2,
                             ),
-                            itemCount: 8,
-                          ),
-                        )
-                      ],
+                            Expanded(
+                              child: ListView.builder(
+                                itemBuilder: (context, index) => Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    infoLabelValueWidget(
+                                      label: 'Model',
+                                      value: 'HT2041.01',
+                                    ),
+                                    infoLabelValueWidget(
+                                      label: 'S/N',
+                                      qr: '2041.01.100.25$index',
+                                    ),
+                                    const Divider(),
+                                  ],
+                                ),
+                                itemCount: 8,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      flex: 12,
+                      child: Container(
+                        color: Colors.white,
+                        height: double.infinity,
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.all(4),
+                        margin: const EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            infoLabelValueWidget(
+                              label: 'Connectivity',
+                              action: IconButton(
+                                onPressed: app.getNetworkInfo,
+                                icon: const Icon(Icons.refresh),
+                              ),
+                              titleLevel: 2,
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Status',
+                              value: app.didConnected
+                                  ? 'Connected'
+                                  : 'Disconnected',
+                            ),
+                            infoLabelValueWidget(
+                              label: 'IP Address',
+                              value: app.networkIp,
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Gateway',
+                              value: app.networkGateway,
+                            ),
+                            infoLabelValueWidget(
+                              label: 'Network Name',
+                              value: app.networkName,
+                            ),
+                            const Divider(),
+                            infoLabelValueWidget(
+                              label: 'Mac Addresses',
+                              titleLevel: 2,
+                            ),
+                            const SizedBox(height: 12),
+                            infoLabelValueWidget(
+                                label: 'eth0', qr: app.eth0Mac),
+                            infoLabelValueWidget(
+                                label: 'wifi', qr: app.wlan0Mac),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 16,
+              ),
+              if (qrCodeData != null && qrCodeData!.isNotEmpty)
+                InkWell(
+                  onTap: () => setState(() => qrCodeData = null),
                   child: Container(
-                    color: Colors.white,
-                    height: double.infinity,
-                    alignment: Alignment.topCenter,
-                    padding: const EdgeInsets.all(4),
-                    margin: const EdgeInsets.all(4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InfoLabelValueWidget(
-                          label: 'Connectivity',
-                          action: IconButton(
-                            onPressed: app.getNetworkInfo,
-                            icon: const Icon(Icons.refresh),
+                    constraints: const BoxConstraints.expand(),
+                    color: Colors.black38,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        color: Colors.white,
+                        child: IgnorePointer(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                qrCodeData!,
+                                style: const TextStyle(
+                                    color: Colors.black87, fontSize: 20),
+                              ),
+                              QrImageView(
+                                data: qrCodeData!,
+                                size: 300,
+                                version: QrVersions.auto,
+                                backgroundColor: Colors.white,
+                                eyeStyle: const QrEyeStyle(
+                                  color: Colors.black87,
+                                  eyeShape: QrEyeShape.square,
+                                ),
+                                dataModuleStyle: const QrDataModuleStyle(
+                                  color: Colors.black87,
+                                  dataModuleShape: QrDataModuleShape.square,
+                                ),
+                              ),
+                            ],
                           ),
-                          titleLevel: 2,
                         ),
-                        InfoLabelValueWidget(
-                          label: 'Status',
-                          value:
-                              app.didConnected ? 'Connected' : 'Disconnected',
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'IP Address',
-                          value: app.networkIp,
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'Gateway',
-                          value: app.networkGateway,
-                        ),
-                        InfoLabelValueWidget(
-                          label: 'Network Name',
-                          value: app.networkName,
-                        ),
-                        const Divider(),
-                        const InfoLabelValueWidget(
-                          label: 'Mac Addresses',
-                          titleLevel: 2,
-                        ),
-                        const SizedBox(height: 12),
-                        InfoLabelValueWidget(label: 'eth0', value: app.eth0Mac),
-                        InfoLabelValueWidget(
-                            label: 'wifi', value: app.wlan0Mac),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
+            ],
           );
         },
       ),
     );
   }
-}
 
-class InfoLabelValueWidget extends StatelessWidget {
-  const InfoLabelValueWidget({
-    super.key,
-    required this.label,
-    this.value,
-    this.action,
-    this.titleLevel = 3,
-  });
-  final String label;
-  final String? value;
-  final Widget? action;
-  final int titleLevel;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget infoLabelValueWidget({
+    required String label,
+    String? value,
+    Widget? action,
+    int titleLevel = 3,
+    String? qr,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -231,12 +272,27 @@ class InfoLabelValueWidget extends StatelessWidget {
               fontWeight: titleLevel == 3 ? null : FontWeight.bold,
             ),
           ),
-          if (value != null)
-            Text(
-              value!,
-              style: const TextStyle(color: Colors.black87),
-            ),
-          if (action != null) action!,
+          qr != null
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      qr,
+                      style: const TextStyle(color: Colors.black87),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.qr_code),
+                      onPressed: () => setState(() => qrCodeData = qr),
+                    ),
+                  ],
+                )
+              : action ??
+                  (value != null
+                      ? Text(
+                          value,
+                          style: const TextStyle(color: Colors.black87),
+                        )
+                      : Container()),
         ],
       ),
     );
