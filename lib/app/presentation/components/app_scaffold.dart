@@ -69,43 +69,47 @@ class AppScaffold extends StatelessWidget {
                     ),
                   ),
                 ),
-                trailing: SizedBox(
-                  width: 56,
-                  height: 100,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Divider(height: 8),
-                      Text(
-                        app.loggedInAppUser?.username ?? '',
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.87),
+                trailing: InkWell(
+                  onTap: () => NavController.toInfo(context),
+                  child: SizedBox(
+                    width: 56,
+                    height: 100,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Divider(height: 8),
+                        Text(
+                          app.loggedInAppUser?.username ?? '',
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.87),
+                          ),
                         ),
-                      ),
-                      const Divider(height: 8),
-                      const ComIndicatorLedWidget(),
-                      const Divider(height: 8),
-                      Text(
-                        app.deviceInfo?.appVersion ?? 'N/A',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.color
-                                  ?.withOpacity(0.4),
-                            ),
-                      ),
-                    ],
+                        const Divider(height: 8),
+                        const ComIndicatorLedWidget(),
+                        const Divider(height: 8),
+                        Text(
+                          app.deviceInfo?.appVersion ?? 'N/A',
+                          textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.color
+                                        ?.withOpacity(0.4),
+                                  ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 onDestinationSelected: (value) async {

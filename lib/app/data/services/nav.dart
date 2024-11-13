@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/pin.dart';
+import 'package:central_heating_control/app/presentation/screens/misc/pi_info/pi_info_screen.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -178,5 +179,18 @@ class NavController {
       return result;
     }
     return null;
+  }
+
+  static void toInfo(BuildContext context) {
+    if (context.mounted) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => const PiInfoScreen(),
+          barrierColor: Colors.black.withOpacity(0.3),
+          barrierDismissible: true,
+          opaque: false,
+        ),
+      );
+    }
   }
 }
