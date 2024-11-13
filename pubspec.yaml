@@ -40,6 +40,7 @@ dependencies:
   process_run: ^1.0.0+1
   flutter_smart_dialog: ^4.9.7+9
   flutter_markdown: ^0.7.3+1
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

@@ -186,9 +186,6 @@ class NavController {
       Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (_, __, ___) => const PiInfoScreen(),
-          barrierColor: Colors.black.withOpacity(0.3),
-          barrierDismissible: true,
-          opaque: false,
         ),
       );
     }
