@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PiInfoScreen extends StatelessWidget {
   const PiInfoScreen({super.key});
@@ -19,7 +20,13 @@ class PiInfoScreen extends StatelessWidget {
                   child: Container(
                     color: Colors.white,
                     child: Column(
-                      children: [Text('test')],
+                      children: [
+                        Text('test'),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () => Get.back(),
+                        ),
+                      ],
                     ),
                   ),
                 ),
