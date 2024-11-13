@@ -18,9 +18,9 @@ class PiInfoScreen extends StatelessWidget {
               return Material(
                 child: Center(
                   child: Container(
-                    color: Colors.white,
-                    width: 400,
-                    height: 300,
+                    color: Colors.white.withOpacity(0.1),
+                    margin: EdgeInsets.symmetric(horizontal: 60, vertical: 50),
+                    padding: EdgeInsets.all(20),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -41,14 +41,59 @@ class PiInfoScreen extends StatelessWidget {
                           ],
                         ),
                         Divider(),
-                        QrImageView(
-                          data: app.deviceInfo?.serialNumber ?? 'N/A',
-                          version: QrVersions.auto,
-                          size: 200.0,
-                          backgroundColor: Colors.white,
-                          eyeStyle: QrEyeStyle(color: Colors.black87),
-                          dataModuleStyle:
-                              QrDataModuleStyle(color: Colors.black87),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(4),
+                                margin: EdgeInsets.all(4),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Serial Number',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    QrImageView(
+                                      data:
+                                          app.deviceInfo?.serialNumber ?? 'N/A',
+                                      version: QrVersions.auto,
+                                      size: 200.0,
+                                      backgroundColor: Colors.white,
+                                      eyeStyle: QrEyeStyle(
+                                        color: Colors.black87,
+                                        eyeShape: QrEyeShape.square,
+                                      ),
+                                      dataModuleStyle: QrDataModuleStyle(
+                                        color: Colors.black87,
+                                        dataModuleShape:
+                                            QrDataModuleShape.square,
+                                      ),
+                                    ),
+                                    Text(
+                                      app.deviceInfo?.serialNumber ?? 'N/A',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(4),
+                                margin: EdgeInsets.all(4),
+                              child: Column(mainAxisSize: MainAxisSize.min, children: [
+
+                                    Text(
+                                      'Connectivity',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    Text('eth0:'),
+                                    Text('wifi:'),
+                              ],),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

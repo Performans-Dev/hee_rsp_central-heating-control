@@ -182,12 +182,13 @@ class NavController {
   }
 
   static void toInfo(BuildContext context) {
-    if (context.mounted) {
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const PiInfoScreen(),
-        ),
-      );
-    }
+    // if (context.mounted) {
+    //   Navigator.of(context).push(
+    //     PageRouteBuilder(
+    //       pageBuilder: (_, __, ___) => const PiInfoScreen(),
+    //     ),
+    //   );
+    // }
+    Get.toNamed(Routes.piInfo);
   }
 }

@@ -11,6 +11,7 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
+import 'package:central_heating_control/app/presentation/screens/misc/pi_info/pi_info_screen.dart';
 
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/entry.dart';
@@ -420,6 +421,9 @@ final List<GetPage> getPages = [
     name: Routes.splashAppSettings,
     page: () => const SplashAppSettingsScreen(),
   ),
+  ///
+  ///
+  GetPage(name: Routes.piInfo, page: () => const PiInfoScreen()),
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // GetPage(
@@ -552,4 +556,5 @@ const List<String> autoLockExcludedRoutes = [
   Routes.setupTerms,
   Routes.setupTheme,
   Routes.setupTimezone,
+  Routes.piInfo
 ];
