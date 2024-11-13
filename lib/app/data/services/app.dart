@@ -258,6 +258,12 @@ class AppController extends GetxController {
   final Rxn<String> _networkGateway = Rxn();
   String? get networkGateway => _networkGateway.value;
 
+  final Rxn<String> _eth0Mac = Rxn();
+  String? get eth0Mac => _eth0Mac.value;
+
+  final Rxn<String> _wlan0Mac = Rxn();
+  String? get wlan0Mac => _wlan0Mac.value;
+
   _onConnectivityChanged(List<ConnectivityResult> results) {
     bool connected = false;
     for (final result in results) {
@@ -290,7 +296,43 @@ class AppController extends GetxController {
     getNetworkInfo();
   }
 
+  Future<void> getMacAddresses() async {
+    // Run the 'ip link' command and get the output
+    final processResult = await Process.run('ip', ['link']);
+    final ipLinkOutput = processResult.stdout as String;
+
+    // Define regular expression pattern to match interface name and MAC address
+    final macPattern =
+        RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
+
+    String? ethMac;
+    String? wifiMac;
+
+    // Iterate through all matches
+    for (final match in macPattern.allMatches(ipLinkOutput)) {
+      final interface = match.group(1);
+      final macAddress = match.group(2);
+
+      // Identify Ethernet and Wi-Fi interfaces by their names
+      if (interface != null && interface.contains(RegExp(r'enp|eth'))) {
+        ethMac = macAddress;
+      } else if (interface != null && interface.contains(RegExp(r'wl|wlan'))) {
+        wifiMac = macAddress;
+      }
+    }
+    _eth0Mac.value = ethMac;
+    _wlan0Mac.value = wifiMac;
+    update();
+  }
+
   Future<void> getNetworkInfo() async {
+    _networkName.value = '';
+    _networkIP.value = '';
+    _networkGateway.value = '';
+    _eth0Mac.value = '';
+    _wlan0Mac.value = '';
+    update();
+    await getMacAddresses();
     final info = NetworkInfo();
     final wifiName = await info.getWifiName();
     final wifiIp = await info.getWifiIP();
@@ -298,6 +340,7 @@ class AppController extends GetxController {
     _networkName.value = wifiName;
     _networkIP.value = wifiIp ?? "-";
     _networkGateway.value = wifiGateway ?? "-";
+
     update();
   }
   //#endregion

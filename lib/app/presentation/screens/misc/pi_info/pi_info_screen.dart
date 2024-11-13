@@ -8,17 +8,16 @@ class PiInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final b87 = Colors.black87;
-    final style = TextStyle(color: b87);
-    final styleT = TextStyle(color: b87, fontWeight: FontWeight.bold);
+    const b87 = Colors.black87;
+    const style = TextStyle(color: b87);
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
         backgroundColor: Colors.white.withOpacity(0.8),
         automaticallyImplyLeading: false,
         actionsIconTheme: const IconThemeData(color: Colors.black87),
-        title: Text(
-          'Pi Info',
+        title: const Text(
+          'Device Information',
           style: style,
         ),
         actions: [
@@ -26,7 +25,7 @@ class PiInfoScreen extends StatelessWidget {
             icon: const Icon(Icons.close),
             onPressed: () => Get.back(),
           ),
-          SizedBox(width: 8)
+          const SizedBox(width: 8)
         ],
       ),
       body: GetBuilder<AppController>(
@@ -36,6 +35,7 @@ class PiInfoScreen extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
+                  flex: 20,
                   child: Container(
                     color: Colors.white,
                     height: double.infinity,
@@ -46,36 +46,57 @@ class PiInfoScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Product', style: styleT),
-                        QrImageView(
-                          data: app.deviceInfo?.serialNumber ?? 'N/A',
-                          version: QrVersions.auto,
-                          size: 200.0,
-                          backgroundColor: Colors.white,
-                          eyeStyle: const QrEyeStyle(
-                            color: Colors.black87,
-                            eyeShape: QrEyeShape.square,
-                          ),
-                          dataModuleStyle: const QrDataModuleStyle(
-                            color: Colors.black87,
-                            dataModuleShape: QrDataModuleShape.square,
+                        const InfoLabelValueWidget(
+                          label: 'Product',
+                          value: 'Heethings CC',
+                          action: IconButton(
+                              onPressed: null,
+                              icon: Icon(Icons.developer_board)),
+                          titleLevel: 2,
+                        ),
+                        InfoLabelValueWidget(
+                          label: 'S/N',
+                          value: '${app.deviceInfo?.serialNumber}',
+                        ),
+                        Center(
+                          child: QrImageView(
+                            data: app.deviceInfo?.serialNumber ?? 'N/A',
+                            version: QrVersions.auto,
+                            size: 100.0,
+                            backgroundColor: Colors.white,
+                            eyeStyle: const QrEyeStyle(
+                              color: Colors.black87,
+                              eyeShape: QrEyeShape.square,
+                            ),
+                            dataModuleStyle: const QrDataModuleStyle(
+                              color: Colors.black87,
+                              dataModuleShape: QrDataModuleShape.square,
+                            ),
                           ),
                         ),
-                        Text(
-                          'Serial Number:\n'
-                          '${app.deviceInfo?.serialNumber}',
-                          style: style,
+                        const Divider(),
+                        InfoLabelValueWidget(
+                          label: 'Software',
+                          value: '${app.deviceInfo?.appName}',
                         ),
-                        Divider(),
-                        Text(
-                          'Software Version:\n${app.deviceInfo?.appVersion}',
-                          style: style,
-                        )
+                        InfoLabelValueWidget(
+                          label: 'Version',
+                          value: '${app.deviceInfo?.appVersion}',
+                        ),
+                        InfoLabelValueWidget(
+                          label: 'Build',
+                          value: '${app.deviceInfo?.appBuild}',
+                        ),
+                        InfoLabelValueWidget(
+                          label: 'ID',
+                          value: '${app.deviceInfo?.installationId}',
+                        ),
                       ],
                     ),
                   ),
                 ),
                 Expanded(
+                  flex: 12,
                   child: Container(
                     color: Colors.white,
                     height: double.infinity,
@@ -86,24 +107,33 @@ class PiInfoScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Text('Hardware', style: styleT),
+                        const InfoLabelValueWidget(
+                          label: 'Installed Hardware',
+                          action: IconButton(
+                            onPressed: null,
+                            icon: Icon(Icons.refresh),
+                          ),
+                          titleLevel: 2,
+                        ),
                         Expanded(
                           child: ListView.builder(
                             itemBuilder: (context, index) => Container(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    'Expansion #${index + 1}\n'
-                                    '2041.01.100.25$index',
-                                    textAlign: TextAlign.center,
-                                    style: style,
+                                  const InfoLabelValueWidget(
+                                    label: 'Model',
+                                    value: 'HT2041.01',
+                                  ),
+                                  InfoLabelValueWidget(
+                                    label: 'S/N',
+                                    value: '2041.01.100.25$index',
                                   ),
                                   QrImageView(
                                     data: '2041.01.100.25$index',
                                     size: 100,
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                 ],
                               ),
                             ),
@@ -115,6 +145,7 @@ class PiInfoScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  flex: 16,
                   child: Container(
                     color: Colors.white,
                     height: double.infinity,
@@ -125,24 +156,40 @@ class PiInfoScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Connectivity', style: styleT),
-                        Text(
-                          'Status: ${app.didConnected ? 'Connected' : 'Disconnected'}',
-                          style: style,
+                        InfoLabelValueWidget(
+                          label: 'Connectivity',
+                          action: IconButton(
+                            onPressed: app.getNetworkInfo,
+                            icon: const Icon(Icons.refresh),
+                          ),
+                          titleLevel: 2,
                         ),
-                        Text(
-                          'IP Address',
-                          style: style,
+                        InfoLabelValueWidget(
+                          label: 'Status',
+                          value:
+                              app.didConnected ? 'Connected' : 'Disconnected',
                         ),
-                        Text(
-                          'Gateway',
-                          style: style,
+                        InfoLabelValueWidget(
+                          label: 'IP Address',
+                          value: app.networkIp,
                         ),
-                        Text(
-                          'Network Name',
-                          style: style,
+                        InfoLabelValueWidget(
+                          label: 'Gateway',
+                          value: app.networkGateway,
                         ),
-                        Text('eth0:\nMac address:', style: style),
+                        InfoLabelValueWidget(
+                          label: 'Network Name',
+                          value: app.networkName,
+                        ),
+                        const Divider(),
+                        const InfoLabelValueWidget(
+                          label: 'Mac Addresses',
+                          titleLevel: 2,
+                        ),
+                        const SizedBox(height: 12),
+                        InfoLabelValueWidget(label: 'eth0', value: app.eth0Mac),
+                        InfoLabelValueWidget(
+                            label: 'wifi', value: app.wlan0Mac),
                       ],
                     ),
                   ),
@@ -151,6 +198,46 @@ class PiInfoScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class InfoLabelValueWidget extends StatelessWidget {
+  const InfoLabelValueWidget({
+    super.key,
+    required this.label,
+    this.value,
+    this.action,
+    this.titleLevel = 3,
+  });
+  final String label;
+  final String? value;
+  final Widget? action;
+  final int titleLevel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: titleLevel == 1 ? 18 : null,
+              fontWeight: titleLevel == 3 ? null : FontWeight.bold,
+            ),
+          ),
+          if (value != null)
+            Text(
+              value!,
+              style: const TextStyle(color: Colors.black87),
+            ),
+          if (action != null) action!,
+        ],
       ),
     );
   }
