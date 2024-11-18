@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 20;
+  static const int databaseVersion = 21;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -104,11 +104,11 @@ class Keys {
   static const String dbCreateSensors = '''
     CREATE TABLE IF NOT EXISTS sensors (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      minValue DOUBLE,
-      maxValue DOUBLE,
-      comportId INTEGER,
-      zoneId INTEGER
+      device INTEGER,
+      sensorIndex INTEGER,
+      zoneId INTEGER,
+      color TEXT,
+      name TEXT
     )
   ''';
   static const String dbDropHeaters = '''
@@ -304,5 +304,11 @@ class Keys {
 
     )
   ''';
-  //#endregion
+  //#endregions
+
+  static const String dbInsertSensor = '''
+    INSERT INTO sensors 
+    (device, sensorIndex,zoneId,color,name) VALUES 
+    (0, {INDEX},NULL,NULL,NULL)
+  ''';
 }

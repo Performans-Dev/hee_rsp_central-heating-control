@@ -151,6 +151,15 @@ class DataController extends GetxController {
     _sensorList.assignAll(data);
     update();
   }
+  void updateSensor(SensorDevice updatedSensor) {
+  final index = sensorList.indexWhere((sensor) => sensor.id == updatedSensor.id);
+  if (index != -1) {
+    sensorList[index] = updatedSensor;
+    DbProvider.db.updateSensor(updatedSensor); // Veritabanına güncelleme işlemi
+    update();
+  }
+}
+
   //#endregion
 
   //#region SENSORS ADD

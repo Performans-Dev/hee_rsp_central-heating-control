@@ -24,18 +24,13 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
               width: double.infinity,
               // color: Theme.of(context).focusColor,
               alignment: Alignment.centerLeft,
 
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const LabelWidget(
-                    text: 'Settings / Sensors',
-                  ),
-                  addSensorButon,
-                ],
+              child: const LabelWidget(
+                text: 'List of Sensors',
               ),
             ),
             Expanded(
@@ -44,34 +39,35 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
                       child: Text('No sensor found'),
                     )
                   : ListView.builder(
+                      physics: const BouncingScrollPhysics(),
                       itemCount: dc.sensorList.length,
                       itemBuilder: (_, index) {
                         final SensorDevice sensorDevice = dc.sensorList[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ListTile(
-                            dense: true,
-                            trailing: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Get.toNamed(Routes.settingsSensorEdit);
-                                    },
-                                    icon: const Icon(Icons.edit)),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.delete)),
-                              ],
-                            ),
-                            title: Text(sensorDevice.name),
-                            subtitle: Text(
-                              'Min Value: ${sensorDevice.minValue}, Max Value: ${sensorDevice.maxValue}',
-                            ),
+                        return ListTile(
+                          dense: true,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Get.toNamed(Routes.settingsSensorEdit,
+                                        arguments: sensorDevice);
+                                  },
+                                  icon: const Icon(Icons.edit)),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.delete)),
+                            ],
                           ),
+                          title: Text(
+                              "Sensor ${sensorDevice.device} ${sensorDevice.index}"),
+                          /*    subtitle: Text(
+                            'Min Value: ${sensorDevice.minValue}, Max Value: ${sensorDevice.maxValue}',
+                          ), */
                         );
                       },
                     ),
@@ -81,14 +77,4 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
       );
     });
   }
-
-  Widget get addSensorButon => Container(
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.bottomRight,
-        child: ElevatedButton.icon(
-          onPressed: () => Get.toNamed(Routes.settingsSensorAdd),
-          label: const Text("Add New Sensor"),
-          icon: const Icon(Icons.add),
-        ),
-      );
 }

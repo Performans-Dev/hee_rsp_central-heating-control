@@ -1,91 +1,68 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/widgets/breadcrumb.dart';
-import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-
-class SettingsSensorEditScreen extends StatelessWidget {
+class SettingsSensorEditScreen extends StatefulWidget {
   SettingsSensorEditScreen({super.key});
 
-  final String dropdownValue = list.first;
+  @override
+  State<SettingsSensorEditScreen> createState() =>
+      _SettingsSensorEditScreenState();
+}
+
+class _SettingsSensorEditScreenState extends State<SettingsSensorEditScreen> {
+  final DataController dataController = Get.find();
+
+  late TextEditingController nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
+      title: "Edit Sensor",
       body: Column(
         mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const BreadcrumbWidget(
-            title: 'Settings / Sensor Settings/ Edit Sensor',
-          ),
+          const SizedBox(height: 12),
           Expanded(
             child: PiScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextInputWidget(
-                    labelText: "Name",
-                    keyboardType: TextInputType.name,
-                  ),
-                  const TextInputWidget(
-                    labelText: "MinValue",
-                    keyboardType: TextInputType.number,
-                  ),
-                  const TextInputWidget(
-                    labelText: "MaxValue",
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(16),
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      border: UiDimens.formBorder,
+                      labelText: 'Sensor Name',
                     ),
-                    child: DropdownButton(
-                      underline: Container(
-                        color: Colors.transparent,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      isExpanded: true,
-                      value: null,
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (_) {},
-                    ),
+                    onTap: () async {
+                      final result = await OnScreenKeyboard.show(
+                        context: context,
+                        initialValue: nameController.text,
+                        label: 'Sensor Name',
+                        hintText: 'Type a sensor name here',
+                        maxLength: 16,
+                        minLength: 1,
+                        type: OSKInputType.name,
+                      );
+                      if (result != null) {
+                        nameController.text = result;
+                      }
+                    },
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: DropdownButton(
-                      underline: Container(
-                        color: Colors.transparent,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      isExpanded: true,
-                      value: null,
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (_) {},
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 200,
-                  )
                 ],
               ),
             ),
@@ -110,6 +87,7 @@ class SettingsSensorEditScreen extends StatelessWidget {
         },
         child: const Text("Save"),
       );
+
   Widget get cancelButton => ElevatedButton(
         onPressed: () => Get.back(),
         child: const Text("Cancel"),
