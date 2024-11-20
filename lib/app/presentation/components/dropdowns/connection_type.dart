@@ -11,9 +11,11 @@ class ConnectionTypeDropdownWidget extends StatelessWidget {
     super.key,
     this.onChanged,
     this.value,
+    this.showNoneOption = true,
   });
   final Function(HeaterDeviceConnectionType?)? onChanged;
   final HeaterDeviceConnectionType? value;
+  final bool showNoneOption;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,9 @@ class ConnectionTypeDropdownWidget extends StatelessWidget {
             isExpanded: true,
             underline: Container(),
             items: HeaterDeviceConnectionType.values
+                .where((e) => !showNoneOption
+                    ? e != HeaterDeviceConnectionType.none
+                    : true)
                 .map((e) => DropdownMenuItem<HeaterDeviceConnectionType>(
                       value: e,
                       child: Text(e.name.camelCaseToHumanReadable()),

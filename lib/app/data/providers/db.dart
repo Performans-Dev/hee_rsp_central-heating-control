@@ -98,7 +98,9 @@ class DbProvider {
 
     await db.execute(Keys.dbDropSensors);
     await db.execute(Keys.dbCreateSensors);
-
+    for (int i = 1; i <= 4; i++) {
+      await db.execute(Keys.dbInsertSensor.replaceAll('{INDEX}', i.toString()));
+    }
     await db.execute(Keys.dbDropHeaters);
     await db.execute(Keys.dbCreateHeaters);
 

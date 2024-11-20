@@ -25,8 +25,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/logs.d
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_list_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/management/sensor/edit_settings_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/management/sensor/settings_sensor_add_screen.dart';
+
 import 'package:central_heating_control/app/presentation/screens/settings/management/sensor/settings_sensor_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/settings_management_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_add_screen.dart';
@@ -230,20 +229,7 @@ final List<GetPage> getPages = [
       AdminLoggedInMiddleware(),
     ],
   ),
-  GetPage(
-    name: Routes.settingsSensorAdd,
-    page: () => const SettingsSensorAddScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
-  ),
-  GetPage(
-    name: Routes.settingsSensorEdit,
-    page: () => SettingsSensorEditScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
-  ),
+
   GetPage(
     name: Routes.settingsUserList,
     page: () => const SettingsUserListScreen(),

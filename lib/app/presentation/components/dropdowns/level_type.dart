@@ -10,9 +10,11 @@ class LevelTypeDropdownWidget extends StatelessWidget {
     super.key,
     this.onChanged,
     this.value,
+    this.showNoneOption = true,
   });
   final Function(HeaterDeviceLevel?)? onChanged;
   final HeaterDeviceLevel? value;
+  final bool showNoneOption;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,8 @@ class LevelTypeDropdownWidget extends StatelessWidget {
           child: DropdownButton<HeaterDeviceLevel>(
             underline: Container(), isExpanded: true,
             items: HeaterDeviceLevel.values
+                .where(
+                    (e) => !showNoneOption ? e != HeaterDeviceLevel.none : true)
                 .map((e) => DropdownMenuItem<HeaterDeviceLevel>(
                       value: e,
                       child: Text(e.name.camelCaseToHumanReadable()),

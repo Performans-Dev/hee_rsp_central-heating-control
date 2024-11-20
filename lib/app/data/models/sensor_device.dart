@@ -1,52 +1,54 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:central_heating_control/app/core/constants/data.dart';
 
 class SensorDevice {
   int id;
-  String name;
-  double minValue;
-  double maxValue;
-  int? comportId;
-  int? zoneId;
+  int device;
+  int index;
+  int? zone;
+  String? color;
+  String? name;
   SensorDevice({
     required this.id,
-    required this.name,
-    required this.minValue,
-    required this.maxValue,
-    this.comportId,
-    this.zoneId,
+    required this.device,
+    required this.index,
+    this.zone,
+    this.color,
+    this.name,
   });
 
   Map<String, dynamic> toMap() => id > 0
       ? {
           'id': id,
+          'device': device,
+          'sensorIndex': index,
+          'zoneId': zone,
+          'color': color,
           'name': name,
-          'minValue': minValue,
-          'maxValue': maxValue,
-          'comportId': comportId,
-          'zoneId': zoneId,
         }
       : {
+          'device': device,
+          'sensorIndex': index,
+          'zoneId': zone,
+          'color': color,
           'name': name,
-          'minValue': minValue,
-          'maxValue': maxValue,
-          'comportId': comportId,
-          'zoneId': zoneId,
         };
 
   factory SensorDevice.fromMap(Map<String, dynamic> map) {
     return SensorDevice(
-      id: map['id']?.toInt() ?? 0,
-      name: map['name'] ?? '',
-      minValue: map['minValue']?.toDouble() ?? 0.0,
-      maxValue: map['maxValue']?.toDouble() ?? 0.0,
-      comportId: map['comportId']?.toInt(),
-      zoneId: map['zoneId']?.toInt(),
+      id: map['id']?.toInt(),
+      device: map['device']?.toInt(),
+      index: map['sensorIndex']?.toInt(),
+      zone: map['zoneId']?.toInt(),
+      color: map['color'],
+      name: map['name'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory SensorDevice.fromJson(String source) =>
-      SensorDevice.fromMap(json.decode(source));
+      SensorDevice.fromMap(json.decode(source) as Map<String, dynamic>);
 }

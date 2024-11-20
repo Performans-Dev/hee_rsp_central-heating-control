@@ -1,10 +1,9 @@
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
-import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/widgets/label.dart';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart'; // Bu import yolu kendi projenize göre güncellenmelidir.
+import 'package:get/get.dart';
 
 class SettingsSensorListScreen extends StatefulWidget {
   const SettingsSensorListScreen({super.key});
@@ -15,80 +14,76 @@ class SettingsSensorListScreen extends StatefulWidget {
 }
 
 class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
+  final DataController dc = Get.find();
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataController>(builder: (dc) {
-      return AppScaffold(
-        title: "Sensors",
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              width: double.infinity,
-              // color: Theme.of(context).focusColor,
-              alignment: Alignment.centerLeft,
-
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const LabelWidget(
-                    text: 'Settings / Sensors',
-                  ),
-                  addSensorButon,
-                ],
-              ),
-            ),
-            Expanded(
-              child: dc.sensorList.isEmpty
-                  ? const Center(
-                      child: Text('No sensor found'),
-                    )
-                  : ListView.builder(
-                      itemCount: dc.sensorList.length,
-                      itemBuilder: (_, index) {
-                        final SensorDevice sensorDevice = dc.sensorList[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ListTile(
-                            dense: true,
-                            trailing: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Get.toNamed(Routes.settingsSensorEdit);
-                                    },
-                                    icon: const Icon(Icons.edit)),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.delete)),
-                              ],
-                            ),
-                            title: Text(sensorDevice.name),
-                            subtitle: Text(
-                              'Min Value: ${sensorDevice.minValue}, Max Value: ${sensorDevice.maxValue}',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
-      );
-    });
+    return AppScaffold(
+      selectedIndex: 3,
+      title: "Sensors",
+      body: GetBuilder<DataController>(builder: (dc) {
+        return dc.sensorList.isEmpty
+            ? const Center(child: Text("No sensors found"))
+            : Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Wrap(
+                  spacing: 20.0,
+                  runSpacing: 12.0,
+                  children: dc.sensorList
+                      .map((sensor) => sensorCard(
+                            sensor,
+                            (value) {
+                              if (value != null) {
+                                sensor.zone = int.parse(value);
+                                dc.updateSensor(sensor);
+                              }
+                            },
+                          ))
+                      .toList(),
+                ),
+              );
+      }),
+    );
   }
 
-  Widget get addSensorButon => Container(
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.bottomRight,
-        child: ElevatedButton.icon(
-          onPressed: () => Get.toNamed(Routes.settingsSensorAdd),
-          label: const Text("Add New Sensor"),
-          icon: const Icon(Icons.add),
+  Widget sensorCard(
+      SensorDevice sensorDevice, ValueChanged<String?> onZoneSelected) {
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      child: Container(
+        width: 150,
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              sensorDevice.name ?? "Unknown Sensor",
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              value: dc.getZoneListForDropdown().any((zone) =>
+                      zone.id.toString() == sensorDevice.zone?.toString())
+                  ? sensorDevice.zone?.toString()
+                  : null,
+              decoration: const InputDecoration(
+                labelText: "Zone",
+                border: OutlineInputBorder(),
+              ),
+              items: dc
+                  .getZoneListForDropdown()
+                  .map((zone) => DropdownMenuItem<String>(
+                        value: zone.id.toString(),
+                        child: Text(zone.name),
+                      ))
+                  .toList(),
+              onChanged: onZoneSelected,
+            ),
+            const SizedBox(height: 8),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
