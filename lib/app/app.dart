@@ -11,7 +11,6 @@ import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
-import 'package:central_heating_control/app/presentation/components/idle_detector.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';

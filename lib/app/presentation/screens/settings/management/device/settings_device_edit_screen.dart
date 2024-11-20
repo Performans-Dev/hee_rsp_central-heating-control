@@ -70,7 +70,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
     l3CarbonController =
         TextEditingController(text: (heater.level3Carbon ?? 0).toString());
     ipAddressController =
-        TextEditingController(text: '${heater.ipAddress ?? '0.0.0.0'}');
+        TextEditingController(text: heater.ipAddress ?? '0.0.0.0');
   }
 
   @override

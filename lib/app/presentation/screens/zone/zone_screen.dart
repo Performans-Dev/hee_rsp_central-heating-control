@@ -152,7 +152,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                   leading: CircleAvatar(
                     child: Text(
                       sensors[index].id.toString(),
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),

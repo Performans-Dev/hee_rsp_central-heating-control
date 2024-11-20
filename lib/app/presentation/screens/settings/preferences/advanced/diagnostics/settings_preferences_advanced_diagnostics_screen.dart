@@ -22,7 +22,7 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ...sc.outputChannels.map((e) => Text(e.toString())),
-                    Divider(),
+                    const Divider(),
                     ...sc.inputChannels.map((e) => Text(e.toString())),
                   ],
                 ),
