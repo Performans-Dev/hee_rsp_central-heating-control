@@ -19,7 +19,8 @@ class DeveloperScreen extends StatefulWidget {
 class _DeveloperScreenState extends State<DeveloperScreen> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<GpioController>(builder: (gc) {
+    return Placeholder();
+    /* return GetBuilder<GpioController>(builder: (gc) {
       return AppScaffold(
         title: 'Diagnostics',
         selectedIndex: 3,
@@ -221,6 +222,6 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
           ),
         ),
       );
-    });
+    }); */
   }
 }

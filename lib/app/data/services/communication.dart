@@ -32,11 +32,11 @@ class CommController extends GetxController {
   final Rxn<SerialPort> _serialPort = Rxn();
   SerialPort? get serialPort => _serialPort.value;
   void setSerialPort() {
-    final GpioController gpio = Get.find();
+   /*  final GpioController gpio = Get.find();
     _serialPort.value = gpio.serialPort;
     update();
     //
-    registerStreamListener();
+    registerStreamListener(); */
   }
 
   // get gpio pin that is responsible for sending / receiving messages
@@ -45,11 +45,11 @@ class CommController extends GetxController {
   GPIO? get txPin => _txPin.value;
 
   void setTxPin() {
-    final GpioController gpio = Get.find();
+  /*   final GpioController gpio = Get.find();
     _txPin.value = gpio.outGpios.firstWhere((e) => e.line == 4);
     update();
     //
-    txClose();
+    txClose(); */
   }
 
   Future<void> txOpen() async {

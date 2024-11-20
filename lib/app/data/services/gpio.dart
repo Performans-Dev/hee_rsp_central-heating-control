@@ -1,4 +1,4 @@
-import 'dart:async';
+/* import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
@@ -463,3 +463,4 @@ class GpioController extends GetxController {
   //#region MARK: HARDWARE
   //#endregion
 }
+ */
