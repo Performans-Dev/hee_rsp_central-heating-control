@@ -5,7 +5,6 @@ import 'package:central_heating_control/app/data/services/pin.dart';
 import 'package:central_heating_control/app/presentation/widgets/keypad.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class PinScreen extends StatefulWidget {

@@ -7,7 +7,6 @@ import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';

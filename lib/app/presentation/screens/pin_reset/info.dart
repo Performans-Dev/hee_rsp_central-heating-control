@@ -2,7 +2,6 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/body.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/footer_widget.dart';
-import 'package:central_heating_control/app/presentation/widgets/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

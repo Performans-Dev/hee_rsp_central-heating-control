@@ -164,23 +164,24 @@ class _SettingsPreferencesAdvancedScreenState
                 Expanded(
                   child: ListTile(
                     leading: const Icon(Icons.bug_report),
-                    title: const Text('Diagnostics'),
+                    title: const Text('Diagnostics Page'),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () async {
-                      //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
+                      Get.toNamed(
+                          Routes.settingsPreferencesAdvancedDiagnostics);
                       //TODO: write hardware to json file in disk
-                      Future.delayed(const Duration(seconds: 1), () {
-                        Process.killPid(pid);
-                      });
-                      await Process.run(
-                        'sudo',
-                        // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
-                        ['/home/pi/Heethings/ccdownload.sh'],
-                      );
+                      // Future.delayed(const Duration(seconds: 1), () {
+                      //   Process.killPid(pid);
+                      // });
+                      // await Process.run(
+                      //   'sudo',
+                      //   // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
+                      //   ['/home/pi/Heethings/ccdownload.sh'],
+                      // );
                     },
                   ),
                 ),
@@ -188,7 +189,7 @@ class _SettingsPreferencesAdvancedScreenState
                 Expanded(
                   child: ListTile(
                     leading: const Icon(Icons.bug_report),
-                    title: const Text('Diagnostics'),
+                    title: const Text('Diagnostics App'),
                     trailing: const Icon(Icons.chevron_right),
                     tileColor: Theme.of(context).highlightColor,
                     shape: RoundedRectangleBorder(
