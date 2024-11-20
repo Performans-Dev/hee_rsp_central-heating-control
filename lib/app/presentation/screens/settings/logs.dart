@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/day.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/month.dart';
@@ -24,12 +25,14 @@ class _LogViewScreenState extends State<LogViewScreen> {
   List<int> availableMonths = List.generate(12, (index) => index + 1);
   List<int> availableDays = [];
   List<LogDefinition> logs = [];
+  final AppController appController = Get.find();
   // String path = '';
 
   @override
   void initState() {
     super.initState();
     _initializeDateDropdowns();
+    appController.setHasError(false);
   }
 
   void _initializeDateDropdowns() {

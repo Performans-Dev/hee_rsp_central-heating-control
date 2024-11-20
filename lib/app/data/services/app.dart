@@ -111,6 +111,12 @@ class AppController extends GetxController {
   bool get hasAdminUser =>
       appUserList.where((e) => e.level == AppUserLevel.admin).isNotEmpty;
 
+  final RxBool _hasError = false.obs;
+  bool get hasError => _hasError.value;
+  void setHasError(bool value) {
+    _hasError.value = value;
+  }
+
   bool setupCompleted() {
     final SetupController setupController = Get.find();
     final list = setupController.setupSequenceList;
