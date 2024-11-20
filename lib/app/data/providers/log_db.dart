@@ -1,6 +1,8 @@
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
 
@@ -74,6 +76,10 @@ class LogDbProvider {
         data.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      if (data.level == LogLevel.error) {
+        AppController appController = Get.find();
+        appController.setHasError(true);
+      }
       return id;
     } on Exception catch (_) {
       return -1;
@@ -110,9 +116,7 @@ class LogDbProvider {
           logs.add(LogDefinition.fromMap(map));
         }
       }
-
     } catch (_) {
-
       return logs;
     }
     return logs;
