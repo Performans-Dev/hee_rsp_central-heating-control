@@ -36,6 +36,11 @@ class HomeScreen extends StatelessWidget {
                   itemCount: length,
                   shrinkWrap: true,
                 ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text('Serial Number: ${app.deviceInfo?.serialNumber}\n'
+                      'installationId: ${app.deviceInfo?.installationId}'),
+                )
                 // PiScrollView(
                 //   child: Center(
                 //     child: Padding(

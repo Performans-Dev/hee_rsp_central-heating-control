@@ -1,5 +1,7 @@
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SetupHeaderWidget extends StatelessWidget {
   const SetupHeaderWidget({super.key, required this.title});
@@ -23,12 +25,20 @@ class SetupHeaderWidget extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                IconButton(
+                    onPressed: () => Get.toNamed(Routes.piInfo),
+                    icon: const Icon(Icons.info_outline))
+              ],
             ),
           ),
         ],

@@ -77,6 +77,8 @@ class Routes {
   static const String splashAppUserList = '/checking-app-user-list';
   static const String splashAppSettings = '/loading-app-settings';
 
+  static const String piInfo = '/pi-info';
+
   // static const String splash = '/initializing';
   // static const String splashFetchSettings = '/fetch-settings';
   // static const String splashConnection = '/checking-connection';

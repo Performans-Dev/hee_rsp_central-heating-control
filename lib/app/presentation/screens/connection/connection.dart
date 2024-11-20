@@ -8,7 +8,6 @@ import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/string.dart';
-import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

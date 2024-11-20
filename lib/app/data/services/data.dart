@@ -9,7 +9,6 @@ import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {

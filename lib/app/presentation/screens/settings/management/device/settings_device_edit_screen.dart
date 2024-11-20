@@ -11,7 +11,6 @@ import 'package:central_heating_control/app/presentation/components/dropdowns/le
 import 'package:central_heating_control/app/presentation/components/dropdowns/type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/zone.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
-import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';

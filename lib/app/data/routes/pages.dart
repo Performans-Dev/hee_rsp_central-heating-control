@@ -2,7 +2,6 @@ import 'package:central_heating_control/app/data/middlewares/admin_logged_in_mid
 import 'package:central_heating_control/app/data/middlewares/app_settings_middleware.dart';
 
 import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
-import 'package:central_heating_control/app/data/middlewares/pin_reset_account_signed_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/setup_completed_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
@@ -11,6 +10,7 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
+import 'package:central_heating_control/app/presentation/screens/misc/pi_info/pi_info_screen.dart';
 
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/entry.dart';
@@ -406,6 +406,9 @@ final List<GetPage> getPages = [
     name: Routes.splashAppSettings,
     page: () => const SplashAppSettingsScreen(),
   ),
+  ///
+  ///
+  GetPage(name: Routes.piInfo, page: () => const PiInfoScreen()),
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // GetPage(
@@ -538,4 +541,5 @@ const List<String> autoLockExcludedRoutes = [
   Routes.setupTerms,
   Routes.setupTheme,
   Routes.setupTimezone,
+  Routes.piInfo
 ];

@@ -5,7 +5,8 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/network.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
-import 'package:central_heating_control/main.dart';
+import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -39,16 +40,19 @@ class BaseNetworkProvider {
     try {
       Dio dio = _getDio();
       String url = NetworkUtils.buildUrl(partUrl);
-      logger.d('GET: $url');
+
+      LogService.addLog(LogDefinition(message: 'GET: $url'));
       final Response response = await dio.get(url);
-      logger.d('Success: $url ${response.statusCode}');
+      LogService.addLog(
+          LogDefinition(message: 'Success: $url ${response.statusCode}'));
       return NetworkUtils.processDioResponse(response);
     } on DioException catch (error) {
-      logger.e('Error:', error: error);
+      LogService.addLog(LogDefinition(message: 'Error: ${error.toString()}'));
       Buzz.error();
       return NetworkUtils.processDioError(error);
     } catch (exception) {
-      logger.e('Error:', error: exception);
+      LogService.addLog(
+          LogDefinition(message: 'Error: ${exception.toString()}'));
       Buzz.error();
       return NetworkUtils.processError({'error': exception.toString()});
     }
@@ -61,16 +65,20 @@ class BaseNetworkProvider {
     try {
       Dio dio = _getDio();
       String url = NetworkUtils.buildUrl(partUrl);
-      logger.d('GET: $url');
+
+      LogService.addLog(LogDefinition(message: 'GET: $url'));
       final Response response = await dio.post(url, data: data);
-      logger.d('Success: $url ${response.statusCode}');
+
+      LogService.addLog(
+          LogDefinition(message: 'Success: $url ${response.statusCode}'));
       return NetworkUtils.processDioResponse(response);
     } on DioException catch (error) {
-      logger.e('Error:', error: error);
+      LogService.addLog(LogDefinition(message: 'Error: ${error.toString()}'));
       Buzz.error();
       return NetworkUtils.processDioError(error);
     } catch (exception) {
-      logger.e('Error:', error: exception);
+      LogService.addLog(
+          LogDefinition(message: 'Error: ${exception.toString()}'));
       Buzz.error();
       return NetworkUtils.processError({'error': exception.toString()});
     }

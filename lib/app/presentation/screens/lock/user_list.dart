@@ -2,8 +2,6 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 
-import 'package:central_heating_control/app/data/models/log.dart';
-import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:flutter/material.dart';
