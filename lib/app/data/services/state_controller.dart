@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
-import 'package:central_heating_control/app/data/services/state.dart';
+
 import 'package:central_heating_control/main.dart';
 
 int kMainBoardDigitalPinCount = 8;
