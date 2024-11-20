@@ -1,7 +1,7 @@
 name: central_heating_control
 description: "Central Heating Control by Heethings"
 publish_to: 'none'
-version: 1.0.41+1041
+version: 1.0.42+1042
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
@@ -21,7 +21,7 @@ dependencies:
   get: ^4.6.6
   get_storage: ^2.1.1
   intl: ^0.19.0
-  logger: ^2.2.0
+  # logger: ^2.2.0
   package_info_plus: ^8.0.0
   path: ^1.9.0
   path_provider: ^2.1.4

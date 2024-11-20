@@ -1,13 +1,10 @@
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
-
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/pin.dart';
-import 'package:central_heating_control/app/presentation/screens/misc/pi_info/pi_info_screen.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:screen_saver/screen_saver_screen.dart';
@@ -16,12 +13,10 @@ class NavController {
   //
   static void onTermsOfUseTapped() async {
     Buzz.feedback();
-    logger.d('terms of use');
   }
 
   static void onPrivacyPolicyTapped() async {
     Buzz.feedback();
-    logger.d('privacy policy');
   }
 
   static void toHome() async {

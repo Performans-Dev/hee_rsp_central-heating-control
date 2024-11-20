@@ -1,10 +1,9 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
-import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/data/services/screen_saver.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/app/data/services/state.dart';
+import 'package:central_heating_control/app/data/services/state_controller.dart';
 import 'package:get/get.dart';
 
 class AppBindings extends Bindings {
@@ -26,21 +25,17 @@ class AppBindings extends Bindings {
       () async => DataController(),
       permanent: true,
     );
+    // await Get.putAsync(
+    //   () async => GpioController(),
+    //   permanent: true,
+    // );
     await Get.putAsync(
-      () async => GpioController(),
+      () async => StateController(),
       permanent: true,
     );
 
     await Get.putAsync(
       () async => ProcessController(),
-      permanent: true,
-    );
-    await Get.putAsync(
-      () async => StateController(),
-      permanent: true,
-    );
-    await Get.putAsync(
-      () async => StateController(),
       permanent: true,
     );
   }
