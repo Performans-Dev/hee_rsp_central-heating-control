@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
+import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -25,6 +26,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
   final DataController dataController = Get.find();
   late ZoneProcess zone;
   List<HeaterProcess> heaters = <HeaterProcess>[];
+  late List<SensorDevice> sensors;
 
   @override
   void initState() {
@@ -39,6 +41,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
       heaters = pc.heaterProcessList
           .where((e) => e.heater.zoneId == Get.arguments[0])
           .toList();
+
+      sensors = dataController.sensorList
+          .where((e) => e.zone == Get.arguments[0])
+          .toList();
+
       return AppScaffold(
         selectedIndex: 0,
         title: 'Zone View "${zone.zone.name}"',
@@ -140,16 +147,16 @@ class _ZoneScreenState extends State<ZoneScreen> {
               const Divider(),
               const LabelWidget(text: 'Sensors'),
               ListView.builder(
-                itemBuilder: (context, index) => const ListTile(
-                  title: Text('Sample Sensor'),
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(sensors[index].name ?? ""),
                   leading: CircleAvatar(
                     child: Text(
-                      '22.3°',
+                      sensors[index].id.toString(),
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
-                itemCount: 1,
+                itemCount: sensors.length,
                 shrinkWrap: true,
               ),
             ],

@@ -56,6 +56,8 @@ class DataController extends GetxController {
   //#region ZONE LIST
   final List<ZoneDefinition> _zoneList = <ZoneDefinition>[].obs;
   List<ZoneDefinition> get zoneList => _zoneList;
+
+  
   List<ZoneDefinition> getZoneListForDropdown() =>
       [ZoneDefinition.initial(), ...zoneList];
 
