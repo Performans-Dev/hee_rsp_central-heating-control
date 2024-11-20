@@ -1,9 +1,12 @@
+import 'dart:convert';
+
+import 'package:dart_periphery/dart_periphery.dart';
+import 'package:get/get.dart';
+
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/state.dart';
 import 'package:central_heating_control/main.dart';
-import 'package:dart_periphery/dart_periphery.dart';
-import 'package:get/get.dart';
 
 int kMainBoardDigitalPinCount = 8;
 int kExtBoardDigitalPinCount = 6;
@@ -141,7 +144,9 @@ class StateController extends GetxController {
   final RxList<ChannelDefinition> _outputChannels = <ChannelDefinition>[].obs;
   List<ChannelDefinition> get outputChannels => _outputChannels;
   void populateChannels() {
-    List<ChannelDefinition> temp = [];
+    _inputChannels.clear();
+    _outputChannels.clear();
+
     int indexCount = 0;
     for (final d in deviceIds) {
       int digitalCount = d == kMainBoardId
@@ -157,6 +162,7 @@ class StateController extends GetxController {
           pinIndex: i,
           type: PinType.digitalOutput,
         );
+        _outputChannels.add(cdo);
         final cdi = ChannelDefinition(
           index: indexCount,
           name: outputChannelName.replaceAll(
@@ -165,10 +171,10 @@ class StateController extends GetxController {
           pinIndex: i,
           type: PinType.digitalInput,
         );
-        temp.add(cdo);
-        temp.add(cdi);
+        _inputChannels.add(cdi);
       }
     }
+    update();
   }
   //#endregion
 
@@ -178,13 +184,6 @@ class StateController extends GetxController {
   }
   //#endregion
 }
-
-
-
-
-
-
-
 
 class StateDefinition {
   int deviceId; // 0x00 mainboard, 0x01 serial 1, 0x02 serial 2 ... (max 30)
@@ -214,6 +213,27 @@ class ChannelDefinition {
     required this.pinIndex,
     required this.type,
   });
+
+  ChannelDefinition copyWith({
+    int? index,
+    String? name,
+    int? deviceId,
+    int? pinIndex,
+    PinType? type,
+  }) {
+    return ChannelDefinition(
+      index: index ?? this.index,
+      name: name ?? this.name,
+      deviceId: deviceId ?? this.deviceId,
+      pinIndex: pinIndex ?? this.pinIndex,
+      type: type ?? this.type,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ChannelDefinition(index: $index, name: $name, deviceId: $deviceId, pinIndex: $pinIndex, type: $type)';
+  }
 }
 
 class StateModel {

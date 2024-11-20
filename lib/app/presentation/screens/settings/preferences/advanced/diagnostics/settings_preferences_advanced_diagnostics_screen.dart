@@ -21,9 +21,9 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ...sc.outputChannels.map((e) => Text(e.name)),
+                    ...sc.outputChannels.map((e) => Text(e.toString())),
                     Divider(),
-                    ...sc.inputChannels.map((e) => Text(e.name)),
+                    ...sc.inputChannels.map((e) => Text(e.toString())),
                   ],
                 ),
               ),
