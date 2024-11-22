@@ -2,8 +2,6 @@ import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/services/communication.dart';
-import 'package:central_heating_control/app/data/services/data.dart';
-import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:get/get.dart';
 
 class StateController extends GetxController {

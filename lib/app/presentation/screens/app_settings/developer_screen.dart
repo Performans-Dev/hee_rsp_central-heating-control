@@ -1,13 +1,4 @@
-import 'package:central_heating_control/app/core/constants/data.dart';
-import 'package:central_heating_control/app/core/constants/dimens.dart';
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/data/services/gpio.dart';
-import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/form_item.dart';
-import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DeveloperScreen extends StatefulWidget {
   const DeveloperScreen({super.key});
@@ -19,7 +10,7 @@ class DeveloperScreen extends StatefulWidget {
 class _DeveloperScreenState extends State<DeveloperScreen> {
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return const Placeholder();
     /* return GetBuilder<GpioController>(builder: (gc) {
       return AppScaffold(
         title: 'Diagnostics',

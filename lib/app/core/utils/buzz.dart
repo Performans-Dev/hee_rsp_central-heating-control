@@ -1,6 +1,3 @@
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/data/services/gpio.dart';
-import 'package:get/get.dart';
 
 class Buzz {
   static void mini() {

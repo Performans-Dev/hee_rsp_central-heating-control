@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {
@@ -208,9 +209,13 @@ class DataController extends GetxController {
   Future<int?> copyPlan({required int sourcePlanId, String? name}) async {
     final data = await DbProvider.db.getPlanDetails(planId: sourcePlanId);
     if (data.isEmpty) {
-      print('Plan ID: $sourcePlanId ile herhangi bir veri bulunamadı.');
+      if (kDebugMode) {
+        print('Plan ID: $sourcePlanId ile herhangi bir veri bulunamadı.');
+      }
     } else {
-      print('Plan ID: $sourcePlanId için ${data.length} adet detay bulundu.');
+      if (kDebugMode) {
+        print('Plan ID: $sourcePlanId için ${data.length} adet detay bulundu.');
+      }
     }
 
     final target = await DbProvider.db.addPlanDefinition(
@@ -297,7 +302,9 @@ class DataController extends GetxController {
       if (downloadResult.success) {
         loadTemperatureValues();
       } else {
-        print("Failed to download temperature values");
+        if (kDebugMode) {
+          print("Failed to download temperature values");
+        }
       }
     } else {
       result.insert(
