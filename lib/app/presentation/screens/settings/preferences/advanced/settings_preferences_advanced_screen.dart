@@ -191,16 +191,11 @@ class _SettingsPreferencesAdvancedScreenState
                     onTap: () async {
                       final extList =
                           await DbProvider.db.getHardwareExtensions();
-                      String extIds = '';
-                      for (final ext in extList) {
-                        extIds += '${ext.id},';
-                      }
-
                       try {
                         final file = File(
                             '/home/pi/Heethings/CC/databases/external-devices.txt');
-                        await file.writeAsString(
-                            extIds.substring(0, extIds.length - 1));
+                        await file
+                            .writeAsString(extList.map((e) => e.id).join(','));
                       } catch (e) {
                         debugPrint('Error writing external devices file: $e');
                       }
