@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/shell_command.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -172,16 +173,8 @@ class _SettingsPreferencesAdvancedScreenState
                     ),
                     onTap: () async {
                       Get.toNamed(
-                          Routes.settingsPreferencesAdvancedDiagnostics);
-                      //TODO: write hardware to json file in disk
-                      // Future.delayed(const Duration(seconds: 1), () {
-                      //   Process.killPid(pid);
-                      // });
-                      // await Process.run(
-                      //   'sudo',
-                      //   // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
-                      //   ['/home/pi/Heethings/ccdownload.sh'],
-                      // );
+                        Routes.settingsPreferencesAdvancedDiagnostics,
+                      );
                     },
                   ),
                 ),
@@ -196,15 +189,28 @@ class _SettingsPreferencesAdvancedScreenState
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () async {
-                      //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
-                      //TODO: write hardware to json file in disk
+                      final extList =
+                          await DbProvider.db.getHardwareExtensions();
+                      String extIds = '';
+                      for (final ext in extList) {
+                        extIds += '${ext.id},';
+                      }
+
+                      try {
+                        final file = File(
+                            '/home/pi/Heethings/CC/databases/external-devices.txt');
+                        await file.writeAsString(
+                            extIds.substring(0, extIds.length - 1));
+                      } catch (e) {
+                        debugPrint('Error writing external devices file: $e');
+                      }
+
                       Future.delayed(const Duration(seconds: 1), () {
                         Process.killPid(pid);
                       });
                       await Process.run(
                         'sudo',
-                        // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
-                        ['/home/pi/Heethings/ccdiagnose.sh'],
+                        ['/home/pi/Heethings/run-cc-diagnose.sh'],
                       );
                     },
                   ),

@@ -1,4 +1,4 @@
-
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:get/get.dart';
 
@@ -62,13 +62,11 @@ class StateController extends GetxController {
   List<int> get deviceIds => _deviceIds;
 
   Future<void> activateHardwares() async {
-    // TODO:
-    // add 0x00
-    // look up database
-    // for each extension in db, add device id
-    // will implement it later
-    // for testing purposes just adding to 0x02
-    _deviceIds.assignAll([0x00, 0x01, 0x02]);
+    final extList = await DbProvider.db.getHardwareExtensions();
+    _deviceIds.add(0x00);
+    for (final ext in extList) {
+      _deviceIds.add(0x00 + ext.id);
+    }
     update();
   }
 
@@ -186,17 +184,33 @@ class StateController extends GetxController {
 
 class StateDefinition {
   int deviceId; // 0x00 mainboard, 0x01 serial 1, 0x02 serial 2 ... (max 30)
+  int pinIndex; // (starts with 1)
   bool isDefined; // true if defined, false if not, ignore when false.
   StateValue value; // required for digital input
   double? analogValue; // required for analog input
-  int pinIndex; // (starts with 1)
+  PinType pinType;
   StateDefinition({
     required this.deviceId,
+    required this.pinIndex,
+    required this.pinType,
     required this.isDefined,
     required this.value,
     this.analogValue,
-    required this.pinIndex,
   });
+
+  factory StateDefinition.create({
+    required int deviceId,
+    required int pinIndex,
+  }) {
+    return StateDefinition(
+      deviceId: deviceId,
+      pinIndex: pinIndex,
+      pinType: PinType.digitalInput,
+      isDefined: true,
+      value: StateValue.loading,
+      analogValue: null,
+    );
+  }
 }
 
 class ChannelDefinition {
@@ -233,25 +247,6 @@ class ChannelDefinition {
   String toString() {
     return 'ChannelDefinition(index: $index, name: $name, deviceId: $deviceId, pinIndex: $pinIndex, type: $type)';
   }
-}
-
-class StateModel {
-  int hwId;
-  int pinIndex;
-  PinType pinType;
-  HardwareType hardwareType;
-  bool pinValue;
-  double? analogValue;
-  String? title;
-  StateModel({
-    this.hwId = 0,
-    this.pinIndex = 0,
-    this.pinType = PinType.none,
-    this.hardwareType = HardwareType.none,
-    this.pinValue = false,
-    this.analogValue = 0.0,
-    this.title,
-  });
 }
 
 /// MARK: PIN TYPE
