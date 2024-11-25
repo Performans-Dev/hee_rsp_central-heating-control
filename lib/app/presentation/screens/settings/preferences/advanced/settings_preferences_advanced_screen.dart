@@ -191,22 +191,32 @@ class _SettingsPreferencesAdvancedScreenState
                     onTap: () async {
                       final extList =
                           await DbProvider.db.getHardwareExtensions();
+                      
                       try {
-                        final file = File(
-                            '/home/pi/Heethings/CC/databases/external-devices.txt');
-                        await file
-                            .writeAsString(extList.map((e) => e.id).join(','));
+                        final directory = Directory('/home/pi/Heethings/CC/databases');
+                        if (!await directory.exists()) {
+                          await directory.create(recursive: true);
+                        }
+                        
+                        final file = File('${directory.path}/external-devices.txt');
+                        final content = extList.map((e) => e.id).join(',');
+                        await file.writeAsString(content);
                       } catch (e) {
-                        debugPrint('Error writing external devices file: $e');
+                        // Handle error silently
                       }
 
                       Future.delayed(const Duration(seconds: 1), () {
                         Process.killPid(pid);
                       });
-                      await Process.run(
-                        'sudo',
-                        ['/home/pi/Heethings/run-cc-diagnose.sh'],
-                      );
+                      
+                      try {
+                        await Process.run(
+                          'sudo',
+                          ['/home/pi/Heethings/run-cc-diagnose.sh'],
+                        );
+                      } catch (e) {
+                        // Handle error silently
+                      }
                     },
                   ),
                 ),
