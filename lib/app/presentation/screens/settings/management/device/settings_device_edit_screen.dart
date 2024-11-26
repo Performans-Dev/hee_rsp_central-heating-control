@@ -57,12 +57,12 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
         text: (heater.level2ConsumptionAmount ?? 0).toString());
     l3ConsumptionController = TextEditingController(
         text: (heater.level3ConsumptionAmount ?? 0).toString());
-    l1UnitController =
-        TextEditingController(text: heater.level1ConsumptionUnit ?? '');
-    l2UnitController =
-        TextEditingController(text: heater.level2ConsumptionUnit ?? '');
-    l3UnitController =
-        TextEditingController(text: heater.level3ConsumptionUnit ?? '');
+    // l1UnitController =
+    //     TextEditingController(text: heater.level1ConsumptionUnit ?? '');
+    // l2UnitController =
+    //     TextEditingController(text: heater.level2ConsumptionUnit ?? '');
+    // l3UnitController =
+    //     TextEditingController(text: heater.level3ConsumptionUnit ?? '');
     l1CarbonController =
         TextEditingController(text: (heater.level1Carbon ?? 0).toString());
     l2CarbonController =
@@ -288,19 +288,20 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
         children: [
           Expanded(
             flex: 5,
-            child: FormItemComponent(
+            child: Container(color: Colors.orange),
+            /* FormItemComponent(
               label: 'Level 1 Relay',
               child: ChannelDropdownWidget(
                 onChanged: (value) {
                   setState(() {
-                    heater.level1Relay =
+                    heater.outputChannel1 =
                         (value?.id ?? '').isEmpty ? null : value;
                   });
                 },
-                value: heater.level1Relay,
+                value: heater.outputChannel1,
                 group: GpioGroup.outPin,
               ),
-            ),
+            ), */
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -349,7 +350,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   if (result != null) {
                     l1UnitController.text = result;
                     setState(() {
-                      heater.level1ConsumptionUnit = result;
+                      // heater.level1ConsumptionUnit = result;
                     });
                   }
                 },
@@ -363,7 +364,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
         children: [
           Expanded(
             flex: 5,
-            child: FormItemComponent(
+            child: Container(color: Colors.orange),
+            /* FormItemComponent(
               label: 'Level 2 Relay',
               child: ChannelDropdownWidget(
                 onChanged: (value) {
@@ -375,7 +377,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 value: heater.level2Relay,
                 group: GpioGroup.outPin,
               ),
-            ),
+            ), */
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -420,7 +422,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   if (result != null) {
                     l2UnitController.text = result;
                     setState(() {
-                      heater.level2ConsumptionUnit = result;
+                      // heater.level2ConsumptionUnit = result;
                     });
                   }
                 },
@@ -433,7 +435,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
         children: [
           Expanded(
             flex: 5,
-            child: FormItemComponent(
+            child: Container(color: Colors.orange),
+            /*  FormItemComponent(
               label: 'Level 3 Relay',
               child: ChannelDropdownWidget(
                 onChanged: (value) {
@@ -445,7 +448,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 value: heater.level3Relay,
                 group: GpioGroup.outPin,
               ),
-            ),
+            ), */
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -490,7 +493,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   if (result != null) {
                     l3UnitController.text = result;
                     setState(() {
-                      heater.level3ConsumptionUnit = result;
+                      // heater.level3ConsumptionUnit = result;
                     });
                   }
                 },
@@ -503,7 +506,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
         children: [
           Expanded(
             flex: 5,
-            child: FormItemComponent(
+            child: Container(color: Colors.orange),
+            /* FormItemComponent(
                 label: 'Error Channel',
                 child: ChannelDropdownWidget(
                   onChanged: (value) {
@@ -514,7 +518,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   },
                   value: heater.errorChannel,
                   group: GpioGroup.inPin,
-                )),
+                )), */
           ),
           Expanded(
             flex: 3,

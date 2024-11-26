@@ -21,19 +21,17 @@ class AppBindings extends Bindings {
       () async => AppController(),
       permanent: true,
     );
-    await Get.putAsync(
-      () async => DataController(),
-      permanent: true,
-    );
-    // await Get.putAsync(
-    //   () async => GpioController(),
-    //   permanent: true,
-    // );
+    /// GPIO and Serial Pins and its states
     await Get.putAsync(
       () async => StateController(),
       permanent: true,
     );
-
+    /// Handles DB related data
+    await Get.putAsync(
+      () async => DataController(),
+      permanent: true,
+    );
+    ///
     await Get.putAsync(
       () async => ProcessController(),
       permanent: true,

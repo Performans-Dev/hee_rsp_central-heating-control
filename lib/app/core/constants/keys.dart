@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 21;
+  static const int databaseVersion = 22;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -124,20 +124,18 @@ class Keys {
       connectionType INTEGER NOT NULL DEFAULT 0,
       ipAddress TEXT,
       levelType INTEGER NOT NULL DEFAULT 1,
-      level1Relay TEXT,
-      level1ConsumptionAmount DOUBLE,
-      level1ConsumptionUnit TEXT,
-      level1Carbon DOUBLE,
-      level2Relay TEXT,
-      level2ConsumptionAmount DOUBLE,
-      level2ConsumptionUnit TEXT,
-      level2Carbon DOUBLE,
-      level3Relay TEXT,
-      level3ConsumptionAmount DOUBLE,
-      level3ConsumptionUnit TEXT,
-      level3Carbon DOUBLE,
-      errorChannel INTEGER,
+      outputChannel1  INTEGER NOT NULL DEFAULT 0,
+      outputChannel2  INTEGER NOT NULL DEFAULT 0,
+      outputChannel3  INTEGER NOT NULL DEFAULT 0,
+      errorChannel INTEGER NOT NULL DEFAULT 0,
       errorChannelType INTEGER,
+      level1ConsumptionAmount DOUBLE,
+      level1Carbon DOUBLE,
+      level2ConsumptionAmount DOUBLE,
+      level2Carbon DOUBLE,
+      level3ConsumptionAmount DOUBLE,
+      level3Carbon DOUBLE,
+      consumptionUnit TEXT,
       state INTEGER NOT NULL DEFAULT 0,
       zoneId INTEGER NOT NULL DEFAULT 0
     )

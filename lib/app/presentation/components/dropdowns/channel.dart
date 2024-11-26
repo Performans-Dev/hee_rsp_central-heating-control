@@ -21,8 +21,9 @@ class ChannelDropdownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(builder: (dc) {
-      final l1List = dc.heaterList
-          .map((e) => e.level1Relay)
+      return Container();
+      /*  final l1List = dc.heaterList
+          .map((e) => e.outputChannel1)
           .where((e) => e != null)
           .toList();
       final l2List = dc.heaterList
@@ -76,7 +77,7 @@ class ChannelDropdownWidget extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           // decoration: InputDecoration(border: UiDimens.formBorder),
         ),
-      );
+      ); */
     });
   }
 }

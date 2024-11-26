@@ -28,7 +28,7 @@ class DataController extends GetxController {
   }
 
   Future<void> _onReady() async {
-    _comportList.assignAll(UiData.ports);
+    // _comportList.assignAll(UiData.ports);
     update();
     await getZoneListFromDb();
     await getHeaterListFromDb();
@@ -42,12 +42,12 @@ class DataController extends GetxController {
   //MARK: PORTS
 
   //#region COMMUNICATION PORTS
-  final List<ComPort> _comportList = <ComPort>[].obs;
-  List<ComPort> get comportList => _comportList;
-  List<ComPort> get availableComportList {
-    var list = comportList;
-    return list;
-  }
+  // final List<ComPort> _comportList = <ComPort>[].obs;
+  // List<ComPort> get comportList => _comportList;
+  // List<ComPort> get availableComportList {
+  //   var list = comportList;
+  //   return list;
+  // }
 
   //#endregion
 
@@ -57,7 +57,6 @@ class DataController extends GetxController {
   final List<ZoneDefinition> _zoneList = <ZoneDefinition>[].obs;
   List<ZoneDefinition> get zoneList => _zoneList;
 
-  
   List<ZoneDefinition> getZoneListForDropdown() =>
       [ZoneDefinition.initial(), ...zoneList];
 
@@ -153,14 +152,17 @@ class DataController extends GetxController {
     _sensorList.assignAll(data);
     update();
   }
+
   void updateSensor(SensorDevice updatedSensor) {
-  final index = sensorList.indexWhere((sensor) => sensor.id == updatedSensor.id);
-  if (index != -1) {
-    sensorList[index] = updatedSensor;
-    DbProvider.db.updateSensor(updatedSensor); // Veritabanına güncelleme işlemi
-    update();
+    final index =
+        sensorList.indexWhere((sensor) => sensor.id == updatedSensor.id);
+    if (index != -1) {
+      sensorList[index] = updatedSensor;
+      DbProvider.db
+          .updateSensor(updatedSensor); // Veritabanına güncelleme işlemi
+      update();
+    }
   }
-}
 
   //#endregion
 
