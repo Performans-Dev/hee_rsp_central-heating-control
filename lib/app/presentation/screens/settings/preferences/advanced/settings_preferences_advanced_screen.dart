@@ -139,11 +139,18 @@ class _SettingsPreferencesAdvancedScreenState
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () async {
+                final app = Get.find<AppController>();
+                if (app.deviceInfo == null) return;
+                
                 Future.delayed(const Duration(seconds: 1), () {
                   Process.killPid(pid);
                 });
                 await Process.run(
-                    'sudo', ['/home/pi/Heethings/CC/elevator/app/chc_updater']);
+                    'sudo', [
+                      '/home/pi/Heethings/CC/elevator/app/chc_updater',
+                      '--version-code="${app.deviceInfo!.appBuild}"',
+                      '--version-number="${app.deviceInfo!.appVersion}"'
+                    ]);
               },
             ),
             const SizedBox(height: 8),
