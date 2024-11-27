@@ -21,9 +21,9 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ...sc.outputChannels.map((e) => Text(e.toString())),
+                    ...sc.outputChannels.map((e) => DevTile(channel: e)),
                     const Divider(),
-                    ...sc.inputChannels.map((e) => Text(e.toString())),
+                    ...sc.inputChannels.map((e) => DevTile(channel: e)),
                   ],
                 ),
               ),
@@ -31,6 +31,22 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class DevTile extends StatelessWidget {
+  const DevTile({super.key, required this.channel});
+  final ChannelDefinition channel;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(channel.name),
+      subtitle: Text(
+          'Device: ${channel.deviceId} Index: ${channel.pinIndex} Type: ${channel.type.name}'),
+      // leading: Text(''),
+      // trailing: Text(''),
     );
   }
 }
