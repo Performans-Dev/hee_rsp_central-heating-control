@@ -15,17 +15,24 @@ import 'package:central_heating_control/app/data/providers/log.dart';
 
 import 'package:central_heating_control/main.dart';
 
-int kMainBoardDigitalPinCount = 8;
-int kExtBoardDigitalPinCount = 6;
+int kMainBoardDigitalOutputPinCount = 8;
+int kExtBoardDigitalOutputPinCount = 6;
+int kMainBoardDigitalInputPinCount = 8;
+int kExtBoardDigitalInputPinCount = 6;
+int kMainBoardAnalogInputPinCount = 4;
+int kExtBoardAnalogInputPinCount = 1;
+int kMainBoardButtonPinCount = 4;
+String inputChannelName = 'CHI {n}';
+String outputChannelName = 'CHO {n}';
+String inputAnalogChannelName = 'NTC {n}';
+String buttonChannelName = 'BTN {n}';
+
 int kMainBoardId = 0x00;
 int startByte = 0x3A;
 List<int> stopBytes = [0x0D, 0x0A];
 String serialKey = '/dev/ttyS0';
 int kSerialAcknowledgementDelay = 700;
 int kSerialLoopDelay = 100;
-String inputChannelName = 'CHI {n}';
-String outputChannelName = 'CHO {n}';
-String inputAnalogChannelName = 'ADC {n}';
 
 class StateController extends GetxController {
   final SerialMessageHandler handler = SerialMessageHandler();
@@ -248,80 +255,91 @@ class StateController extends GetxController {
     _inputChannels.clear();
     _outputChannels.clear();
 
-    int indexCount = 0;
+    int id = 1000;
+
+    // OUTPUTS
+
+    _outputChannels.add(ChannelDefinition(
+      id: 1000,
+      name: 'BUZZER',
+      deviceId: 0x00,
+      pinIndex: 1,
+      type: PinType.buzzerOut,
+      userSelectable: false,
+    ));
+
     for (final d in deviceIds) {
       int digitalCount = d == kMainBoardId
-          ? kMainBoardDigitalPinCount
-          : kExtBoardDigitalPinCount;
+          ? kMainBoardDigitalOutputPinCount
+          : kExtBoardDigitalOutputPinCount;
+
       for (int i = 1; i <= digitalCount; i++) {
-        indexCount++;
-        final cdo = ChannelDefinition(
-          id: indexCount,
-          name: inputChannelName.replaceAll(
-              '{n}', indexCount.toString().padLeft(2, '0')),
+        id++;
+
+        _outputChannels.add(ChannelDefinition(
+          id: id,
+          name: inputChannelName.replaceAll('{n}', id.toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
               ? PinType.onboardPinOutput
               : PinType.uartPinOutput,
           userSelectable: true,
-        );
-        _outputChannels.add(cdo);
-        final cdi = ChannelDefinition(
-          id: indexCount,
-          name: outputChannelName.replaceAll(
-              '{n}', indexCount.toString().padLeft(2, '0')),
+        ));
+      }
+    }
+    // INPUTS
+
+    id = 2000;
+
+    for (final d in deviceIds) {
+      int digitalCount = d == kMainBoardId
+          ? kMainBoardDigitalInputPinCount
+          : kExtBoardDigitalInputPinCount;
+      int analogCount = d == kMainBoardId
+          ? kMainBoardAnalogInputPinCount
+          : kExtBoardAnalogInputPinCount;
+      int btnCount = d == kMainBoardId ? kMainBoardButtonPinCount : 0;
+
+      for (int i = 1; i <= digitalCount; i++) {
+        id++;
+        _inputChannels.add(ChannelDefinition(
+          id: id,
+          name: outputChannelName.replaceAll('{n}', id.toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
               ? PinType.onboardPinInput
               : PinType.uartPinInput,
           userSelectable: true,
-        );
-        _inputChannels.add(cdi);
+        ));
       }
-    }
-
-    for (final d in deviceIds) {
-      int analogCount = d == kMainBoardId ? 4 : 1;
+      for (int i = 1; i <= btnCount; i++) {
+        id++;
+        _inputChannels.add(ChannelDefinition(
+          id: id,
+          name: buttonChannelName.replaceAll('{n}', id.toString()),
+          deviceId: d,
+          pinIndex: i,
+          type: PinType.buttonPinInput,
+          userSelectable: false,
+        ));
+      }
       for (int i = 1; i <= analogCount; i++) {
-        indexCount++;
-        final cdi = ChannelDefinition(
-          id: indexCount,
-          name: inputAnalogChannelName.replaceAll(
-              '{n}', indexCount.toString().padLeft(2, '0')),
+        id++;
+        _inputChannels.add(ChannelDefinition(
+          id: id,
+          name: inputAnalogChannelName.replaceAll('{n}', id.toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
               ? PinType.onboardAnalogInput
               : PinType.uartAnalogInput,
           userSelectable: true,
-        );
-        _inputChannels.add(cdi);
-      }
-      if (d == kMainBoardId) {
-        for (int i = 1; i <= 4; i++) {
-          final cdi = ChannelDefinition(
-            id: i + 1000,
-            name: 'BTN $i',
-            deviceId: d,
-            pinIndex: i,
-            type: PinType.buttonPinInput,
-            userSelectable: false,
-          );
-          _inputChannels.add(cdi);
-        }
-        final cdo = ChannelDefinition(
-          id: 1000,
-          name: 'BUZZER',
-          deviceId: d,
-          pinIndex: 1,
-          type: PinType.buzzerOut,
-          userSelectable: false,
-        );
-        _outputChannels.add(cdo);
+        ));
       }
     }
+
     update();
   }
 
