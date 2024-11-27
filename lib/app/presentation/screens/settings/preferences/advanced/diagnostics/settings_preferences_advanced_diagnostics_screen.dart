@@ -16,16 +16,32 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
               appBar: AppBar(
                 title: const Text('Diagnostics'),
               ),
-              body: PiScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...sc.outputChannels.map((e) => DevTile(channel: e)),
-                    const Divider(),
-                    ...sc.inputChannels.map((e) => DevTile(channel: e)),
-                  ],
-                ),
+              body: Row(
+                children: [
+                  Expanded(
+                    child: PiScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...sc.outputChannels.map((e) => DevTile(channel: e)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const VerticalDivider(),
+                  Expanded(
+                    child: PiScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...sc.inputChannels.map((e) => DevTile(channel: e)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           },
