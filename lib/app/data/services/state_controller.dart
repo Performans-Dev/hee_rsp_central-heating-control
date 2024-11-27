@@ -284,7 +284,8 @@ class StateController extends GetxController {
 
         _outputChannels.add(ChannelDefinition(
           id: id,
-          name: outputChannelName.replaceAll('{n}', outputIndex.toString()),
+          name: outputChannelName.replaceAll(
+              '{n}', outputIndex.toString().padLeft(2, '0')),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -312,7 +313,8 @@ class StateController extends GetxController {
         inputIndex++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: inputChannelName.replaceAll('{n}', inputIndex.toString()),
+          name: inputChannelName.replaceAll(
+              '{n}', inputIndex.toString().padLeft(2, '0')),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -326,7 +328,8 @@ class StateController extends GetxController {
         btnIndex++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: buttonChannelName.replaceAll('{n}', btnIndex.toString()),
+          name: buttonChannelName.replaceAll(
+              '{n}', btnIndex.toString().padLeft(2, '0')),
           deviceId: d,
           pinIndex: i,
           type: PinType.buttonPinInput,
@@ -338,7 +341,8 @@ class StateController extends GetxController {
         ntcIndex++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: inputAnalogChannelName.replaceAll('{n}', ntcIndex.toString()),
+          name: inputAnalogChannelName.replaceAll(
+              '{n}', ntcIndex.toString().padLeft(2, '0')),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -348,7 +352,7 @@ class StateController extends GetxController {
         ));
       }
     }
-
+    _inputChannels.sort((a, b) => a.name.compareTo(b.name));
     update();
   }
 
