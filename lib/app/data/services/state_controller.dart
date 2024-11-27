@@ -257,10 +257,15 @@ class StateController extends GetxController {
 
     int id = 1000;
 
+    int inputIndex = 0;
+    int outputIndex = 0;
+    int ntcIndex = 0;
+    int btnIndex = 0;
+
     // OUTPUTS
 
     _outputChannels.add(ChannelDefinition(
-      id: 1000,
+      id: id,
       name: 'BUZZER',
       deviceId: 0x00,
       pinIndex: 1,
@@ -275,10 +280,11 @@ class StateController extends GetxController {
 
       for (int i = 1; i <= digitalCount; i++) {
         id++;
+        outputIndex++;
 
         _outputChannels.add(ChannelDefinition(
           id: id,
-          name: inputChannelName.replaceAll('{n}', (id - 1000).toString()),
+          name: outputChannelName.replaceAll('{n}', outputIndex.toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -303,9 +309,10 @@ class StateController extends GetxController {
 
       for (int i = 1; i <= digitalCount; i++) {
         id++;
+        inputIndex++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: outputChannelName.replaceAll('{n}', (id - 2000).toString()),
+          name: inputChannelName.replaceAll('{n}', inputIndex.toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -316,9 +323,10 @@ class StateController extends GetxController {
       }
       for (int i = 1; i <= btnCount; i++) {
         id++;
+        btnIndex++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: buttonChannelName.replaceAll('{n}', i.toString()),
+          name: buttonChannelName.replaceAll('{n}', btnIndex.toString()),
           deviceId: d,
           pinIndex: i,
           type: PinType.buttonPinInput,
@@ -327,15 +335,10 @@ class StateController extends GetxController {
       }
       for (int i = 1; i <= analogCount; i++) {
         id++;
+        ntcIndex++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: inputAnalogChannelName.replaceAll(
-              '{n}',
-              (((d * analogCount) + i) +
-                      (analogCount == kMainBoardAnalogInputPinCount
-                          ? 0
-                          : kMainBoardAnalogInputPinCount))
-                  .toString()),
+          name: inputAnalogChannelName.replaceAll('{n}', ntcIndex.toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
