@@ -43,10 +43,9 @@ class DevTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(channel.name),
-      subtitle: Text(
-          'Device: ${channel.deviceId} Index: ${channel.pinIndex} Type: ${channel.type.name}'),
-      // leading: Text(''),
-      // trailing: Text(''),
+      subtitle: Text('Device: ${channel.deviceId} Index: ${channel.pinIndex}'),
+      leading: Text('${channel.id}'),
+      trailing: Text(channel.type.name),
     );
   }
 }
