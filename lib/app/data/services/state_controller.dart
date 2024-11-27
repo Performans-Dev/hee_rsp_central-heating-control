@@ -278,7 +278,7 @@ class StateController extends GetxController {
 
         _outputChannels.add(ChannelDefinition(
           id: id,
-          name: inputChannelName.replaceAll('{n}', id.toString()),
+          name: inputChannelName.replaceAll('{n}', (id - 1000).toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -305,7 +305,7 @@ class StateController extends GetxController {
         id++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: outputChannelName.replaceAll('{n}', id.toString()),
+          name: outputChannelName.replaceAll('{n}', (id - 2000).toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
@@ -318,7 +318,7 @@ class StateController extends GetxController {
         id++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: buttonChannelName.replaceAll('{n}', id.toString()),
+          name: buttonChannelName.replaceAll('{n}', i.toString()),
           deviceId: d,
           pinIndex: i,
           type: PinType.buttonPinInput,
@@ -329,7 +329,8 @@ class StateController extends GetxController {
         id++;
         _inputChannels.add(ChannelDefinition(
           id: id,
-          name: inputAnalogChannelName.replaceAll('{n}', id.toString()),
+          name: inputAnalogChannelName.replaceAll(
+              '{n}', ((d * analogCount) + i).toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
