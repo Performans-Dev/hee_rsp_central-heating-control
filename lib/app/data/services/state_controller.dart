@@ -330,7 +330,12 @@ class StateController extends GetxController {
         _inputChannels.add(ChannelDefinition(
           id: id,
           name: inputAnalogChannelName.replaceAll(
-              '{n}', ((d * analogCount) + i).toString()),
+              '{n}',
+              (((d * analogCount) + i) +
+                      (analogCount == kMainBoardAnalogInputPinCount
+                          ? 0
+                          : kMainBoardAnalogInputPinCount))
+                  .toString()),
           deviceId: d,
           pinIndex: i,
           type: d == kMainBoardId
