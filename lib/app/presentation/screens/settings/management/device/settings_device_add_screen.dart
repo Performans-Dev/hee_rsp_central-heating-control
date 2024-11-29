@@ -615,7 +615,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                             ],
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,

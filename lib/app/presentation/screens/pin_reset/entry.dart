@@ -95,7 +95,6 @@ class _PinResetEntryScreenState extends State<PinResetEntryScreen> {
                     digits.assignAll(newPin.split(""));
                   });
                 }
-                print(result);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
