@@ -4,11 +4,9 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/connection_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/error_channel_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/level_type.dart';

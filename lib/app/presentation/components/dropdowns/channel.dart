@@ -1,7 +1,4 @@
-import 'package:central_heating_control/app/core/constants/data.dart';
-import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
