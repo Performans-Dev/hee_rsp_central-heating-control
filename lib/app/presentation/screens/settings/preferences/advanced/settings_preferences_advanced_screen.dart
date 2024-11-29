@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/shell_command.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -138,11 +139,18 @@ class _SettingsPreferencesAdvancedScreenState
                 borderRadius: BorderRadius.circular(16),
               ),
               onTap: () async {
+                final app = Get.find<AppController>();
+                if (app.deviceInfo == null) return;
+                
                 Future.delayed(const Duration(seconds: 1), () {
                   Process.killPid(pid);
                 });
                 await Process.run(
-                    'sudo', ['/home/pi/Heethings/CC/elevator/app/chc_updater']);
+                    'sudo', [
+                      '/home/pi/Heethings/CC/elevator/app/chc_updater',
+                      '--version-code="${app.deviceInfo!.appBuild}"',
+                      '--version-number="${app.deviceInfo!.appVersion}"'
+                    ]);
               },
             ),
             const SizedBox(height: 8),
@@ -172,16 +180,8 @@ class _SettingsPreferencesAdvancedScreenState
                     ),
                     onTap: () async {
                       Get.toNamed(
-                          Routes.settingsPreferencesAdvancedDiagnostics);
-                      //TODO: write hardware to json file in disk
-                      // Future.delayed(const Duration(seconds: 1), () {
-                      //   Process.killPid(pid);
-                      // });
-                      // await Process.run(
-                      //   'sudo',
-                      //   // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
-                      //   ['/home/pi/Heethings/ccdownload.sh'],
-                      // );
+                        Routes.settingsPreferencesAdvancedDiagnostics,
+                      );
                     },
                   ),
                 ),
@@ -196,16 +196,34 @@ class _SettingsPreferencesAdvancedScreenState
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () async {
-                      //Get.toNamed(Routes.settingsPreferencesAdvancedDiagnostics);
-                      //TODO: write hardware to json file in disk
+                      final extList =
+                          await DbProvider.db.getHardwareExtensions();
+                      
+                      try {
+                        final directory = Directory('/home/pi/Heethings/CC/databases');
+                        if (!await directory.exists()) {
+                          await directory.create(recursive: true);
+                        }
+                        
+                        final file = File('${directory.path}/external-devices.txt');
+                        final content = extList.map((e) => e.id).join(',');
+                        await file.writeAsString(content);
+                      } catch (e) {
+                        // Handle error silently
+                      }
+
                       Future.delayed(const Duration(seconds: 1), () {
                         Process.killPid(pid);
                       });
-                      await Process.run(
-                        'sudo',
-                        // ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
-                        ['/home/pi/Heethings/ccdiagnose.sh'],
-                      );
+                      
+                      try {
+                        await Process.run(
+                          'sudo',
+                          ['/home/pi/Heethings/run-cc-diagnose.sh'],
+                        );
+                      } catch (e) {
+                        // Handle error silently
+                      }
                     },
                   ),
                 ),

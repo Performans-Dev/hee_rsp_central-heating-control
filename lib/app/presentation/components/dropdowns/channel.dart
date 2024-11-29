@@ -1,7 +1,4 @@
-import 'package:central_heating_control/app/core/constants/data.dart';
-import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/models/channel.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +18,9 @@ class ChannelDropdownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(builder: (dc) {
-      final l1List = dc.heaterList
-          .map((e) => e.level1Relay)
+      return Container();
+      /*  final l1List = dc.heaterList
+          .map((e) => e.outputChannel1)
           .where((e) => e != null)
           .toList();
       final l2List = dc.heaterList
@@ -76,7 +74,7 @@ class ChannelDropdownWidget extends StatelessWidget {
           borderRadius: UiDimens.formRadius,
           // decoration: InputDecoration(border: UiDimens.formBorder),
         ),
-      );
+      ); */
     });
   }
 }

@@ -4,11 +4,9 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/connection_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/error_channel_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/level_type.dart';
@@ -64,27 +62,27 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
     level1ConsumptionController = TextEditingController()
       ..addListener(() => setState(() => heater.level1ConsumptionAmount =
           double.tryParse(level1ConsumptionController.text)));
-    level1UnitController = TextEditingController()
-      ..addListener(() => setState(
-          () => heater.level1ConsumptionUnit = level1UnitController.text));
+    // level1UnitController = TextEditingController()
+    //   ..addListener(() => setState(
+    //       () => heater.level1ConsumptionUnit = level1UnitController.text));
     level1CarbonController = TextEditingController()
       ..addListener(() => setState(() =>
           heater.level1Carbon = double.tryParse(level1CarbonController.text)));
     level2ConsumptionController = TextEditingController()
       ..addListener(() => setState(() => heater.level2ConsumptionAmount =
           double.tryParse(level2ConsumptionController.text)));
-    level2UnitController = TextEditingController()
-      ..addListener(() => setState(
-          () => heater.level2ConsumptionUnit = level2UnitController.text));
+    // level2UnitController = TextEditingController()
+    //   ..addListener(() => setState(
+    //       () => heater.level2ConsumptionUnit = level2UnitController.text));
     level2CarbonController = TextEditingController()
       ..addListener(() => setState(() =>
           heater.level2Carbon = double.tryParse(level2CarbonController.text)));
     level3ConsumptionController = TextEditingController()
       ..addListener(() => setState(() => heater.level3ConsumptionAmount =
           double.tryParse(level3ConsumptionController.text)));
-    level3UnitController = TextEditingController()
-      ..addListener(() => setState(
-          () => heater.level3ConsumptionUnit = level3UnitController.text));
+    // level3UnitController = TextEditingController()
+    //   ..addListener(() => setState(
+    //       () => heater.level3ConsumptionUnit = level3UnitController.text));
     level3CarbonController = TextEditingController()
       ..addListener(() => setState(() =>
           heater.level3Carbon = double.tryParse(level3CarbonController.text)));
@@ -182,21 +180,22 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                     children: [
                                       //MARK: LEVEL 1 OUTPUT
                                       Expanded(
-                                        child: FormItemComponent(
+                                        child: Container(color: Colors.orange),
+                                        /* FormItemComponent(
                                           label: 'On/Level1 Output Channel',
                                           child: ChannelDropdownWidget(
                                             group: GpioGroup.outPin,
-                                            value: heater.level1Relay,
+                                            value: heater.outputChannel1,
                                             onChanged: (value) {
                                               setState(() {
-                                                heater.level1Relay =
+                                                heater.outputChannel1 =
                                                     (value?.id ?? '').isEmpty
                                                         ? null
                                                         : value;
                                               });
                                             },
                                           ),
-                                        ),
+                                        ), */
                                       ),
 
                                       //MARK: LEVEL 2 OUTPUT
@@ -210,7 +209,9 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                           heater.levelType ==
                                               HeaterDeviceLevel.twoLevels)
                                         Expanded(
-                                          child: FormItemComponent(
+                                          child:
+                                              Container(color: Colors.orange),
+                                          /* FormItemComponent(
                                             label: 'Level2 Output Channel',
                                             child: ChannelDropdownWidget(
                                               group: GpioGroup.outPin,
@@ -224,7 +225,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                                 });
                                               },
                                             ),
-                                          ),
+                                          ), */
                                         ),
 
                                       //MARK: LEVEL 3 OUTPUT
@@ -234,7 +235,9 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       if (heater.levelType ==
                                           HeaterDeviceLevel.threeLevels)
                                         Expanded(
-                                          child: FormItemComponent(
+                                          child:
+                                              Container(color: Colors.orange),
+                                          /*  FormItemComponent(
                                             label: 'Level3 Output Channel',
                                             child: ChannelDropdownWidget(
                                               group: GpioGroup.outPin,
@@ -248,7 +251,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                                 });
                                               },
                                             ),
-                                          ),
+                                          ), */
                                         ),
                                     ],
                                   ),
@@ -259,7 +262,8 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       //MARK: INPUT
                                       Expanded(
                                         flex: 3,
-                                        child: FormItemComponent(
+                                        child: Container(color: Colors.orange),
+                                        /*  FormItemComponent(
                                           label: 'Please Select Input Channel',
                                           child: ChannelDropdownWidget(
                                             group: GpioGroup.inPin,
@@ -273,7 +277,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                               });
                                             },
                                           ),
-                                        ),
+                                        ), */
                                       ),
                                       const SizedBox(width: 8),
 
@@ -616,9 +620,10 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              FormItemComponent(
+                              /* FormItemComponent(
                                 label: 'Channels',
-                                child: Text('out: ${heater.level1Relay?.name}'
+                                child: Text(
+                                    'out: ${heater.outputChannel1?.name}'
                                     '${heater.levelType == HeaterDeviceLevel.threeLevels || heater.levelType == HeaterDeviceLevel.twoLevels ? ', ${heater.level2Relay?.name}' : ''}'
                                     '${heater.levelType == HeaterDeviceLevel.threeLevels ? ', ${heater.level3Relay?.name}' : ''}'
                                     '\nin: ${heater.errorChannel?.name} (${heater.errorChannelType?.name})'),
@@ -646,7 +651,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       heater.level3ConsumptionAmount,
                                   consumptionUnit: heater.level3ConsumptionUnit,
                                 )}  (${CCUtils.displayCarbon(heater.level3Carbon)})'),
-                              ),
+                              ), */
                             ],
                           ),
                         ),

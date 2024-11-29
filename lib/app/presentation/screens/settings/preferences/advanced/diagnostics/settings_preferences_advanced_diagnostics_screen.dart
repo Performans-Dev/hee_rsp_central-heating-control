@@ -16,21 +16,52 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
               appBar: AppBar(
                 title: const Text('Diagnostics'),
               ),
-              body: PiScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...sc.outputChannels.map((e) => Text(e.toString())),
-                    const Divider(),
-                    ...sc.inputChannels.map((e) => Text(e.toString())),
-                  ],
-                ),
+              body: Row(
+                children: [
+                  Expanded(
+                    child: PiScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...sc.outputChannels.map((e) => DevTile(channel: e)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const VerticalDivider(),
+                  Expanded(
+                    child: PiScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...sc.inputChannels.map((e) => DevTile(channel: e)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           },
         );
       },
+    );
+  }
+}
+
+class DevTile extends StatelessWidget {
+  const DevTile({super.key, required this.channel});
+  final ChannelDefinition channel;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(channel.name),
+      subtitle: Text('Device: ${channel.deviceId} Index: ${channel.pinIndex}'),
+      leading: Text('${channel.id}'),
+      trailing: Text(channel.type.name),
     );
   }
 }
