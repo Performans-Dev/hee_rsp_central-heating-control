@@ -4,7 +4,6 @@ import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/connection_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/error_channel_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/level_type.dart';

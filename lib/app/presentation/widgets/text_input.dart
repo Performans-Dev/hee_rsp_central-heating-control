@@ -61,22 +61,25 @@ class TextInputWidget extends StatelessWidget {
         obscuringCharacter: obscuringCharacter ?? " ",
         onTap: () async {
           if (context.mounted) {
-            final result = isPin
-                ? await NavController.toPin(
-                    context: context, username: "", isNewUser: isNewUser)
-                : await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: controller?.text,
-                    label: labelText,
-                    minLength: minLength,
-                    maxLength: maxLenght,
-                    hintText: hintText,
-                    type: type ?? OSKInputType.text,
-                    feedbackFunction: () {
-                      Buzz.feedback();
-                    },
-                  );
-            controller?.text = result;
+            late String? result;
+            if (isPin) {
+              result = await NavController.toPin(
+                  context: context, username: "", isNewUser: isNewUser);
+            } else {
+              result = await OnScreenKeyboard.show(
+                context: context,
+                initialValue: controller?.text,
+                label: labelText,
+                minLength: minLength,
+                maxLength: maxLenght,
+                hintText: hintText,
+                type: type ?? OSKInputType.text,
+                feedbackFunction: () {
+                  Buzz.feedback();
+                },
+              );
+            }
+            controller?.text = result ?? '';
           }
         },
       ),
