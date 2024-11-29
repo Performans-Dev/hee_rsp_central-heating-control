@@ -173,7 +173,8 @@ class Box {
   }
 
   static AccountSubscription? get accountSubscription {
-    final String data = getString(key: Keys.subscriptionResult);
+    final String data = '{"id": "123", "status": "active"}';
+    // final String data = getString(key: Keys.subscriptionResult);
     if (data.isNotEmpty) {
       try {
         return AccountSubscription.fromJson(data);

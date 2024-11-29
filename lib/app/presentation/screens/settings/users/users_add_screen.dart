@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
@@ -8,6 +9,20 @@ import 'package:central_heating_control/app/presentation/widgets/text_input.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
+
+final accessControl = {
+  AppUserLevel.developer: AppUserLevel.values,
+  AppUserLevel.techSupport: [
+    AppUserLevel.admin,
+    AppUserLevel.techSupport,
+    AppUserLevel.user,
+  ],
+  AppUserLevel.admin: [
+    AppUserLevel.admin,
+    AppUserLevel.user,
+  ],
+  AppUserLevel.user: [],
+};
 
 class SettingsUserAddScreen extends StatefulWidget {
   const SettingsUserAddScreen({super.key});
@@ -20,7 +35,7 @@ class _SettingsUserAddScreenState extends State<SettingsUserAddScreen> {
   late final TextEditingController nameController;
   late final TextEditingController pinController;
   bool isAdminChecked = false;
-
+  AppUserLevel selectedUserLevel = AppUserLevel.user;
   @override
   void initState() {
     super.initState();
@@ -38,66 +53,96 @@ class _SettingsUserAddScreenState extends State<SettingsUserAddScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
-      builder: (app) => AppScaffold(
-        title: 'Settings - Add New User',
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: PiScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    TextInputWidget(
-                      labelText: 'Name, Surname',
-                      controller: nameController,
-                      type: OSKInputType.name,
-                      minLength: 3,
-                      maxLenght: 28,
-                    ),
-                    const SizedBox(height: 12),
-                    TextInputWidget(
-                      isNewUser: true,
-                      isPin: true,
-                      labelText: 'PIN Code'.tr,
-                      controller: pinController,
-                      type: OSKInputType.number,
-                      obscureText: true,
-                      obscuringCharacter: '*',
-                      minLength: 6,
-                      maxLenght: 6,
-                    ),
-                    const SizedBox(height: 12),
-                    SwitchListTile(
-                      value: isAdminChecked,
-                      onChanged: (v) {
-                        setState(() {
-                          isAdminChecked = v;
-                        });
-                      },
-                      title: const Text('Admin'),
-                      subtitle: const Text(
-                          'Switch on if you want to access this user to settings screen'),
-                      isThreeLine: true,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                    ),
-                  ],
+      builder: (app) {
+        AppUserLevel? currentUserLevel =
+            app.loggedInAppUser?.level ?? AppUserLevel.developer;
+
+        List<dynamic> allowedLevels = accessControl[currentUserLevel] ?? [];
+        return AppScaffold(
+          title: 'Settings - Add New User',
+          body: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: PiScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 12),
+                      TextInputWidget(
+                        labelText: 'Name, Surname',
+                        controller: nameController,
+                        type: OSKInputType.name,
+                        minLength: 3,
+                        maxLenght: 28,
+                      ),
+                      const SizedBox(height: 12),
+                      TextInputWidget(
+                        isNewUser: true,
+                        isPin: true,
+                        labelText: 'PIN Code'.tr,
+                        controller: pinController,
+                        type: OSKInputType.number,
+                        obscureText: true,
+                        obscuringCharacter: '*',
+                        minLength: 6,
+                        maxLenght: 6,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Select User Level',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Column(
+                        children: allowedLevels.isNotEmpty
+                            ? allowedLevels.map((level) {
+                                return RadioListTile<AppUserLevel>(
+                                  value: level,
+                                  groupValue: selectedUserLevel,
+                                  onChanged: (AppUserLevel? value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        selectedUserLevel = value;
+                                      });
+                                    }
+                                  },
+                                  title: Text(
+                                      AppUserLevelExtension(level).displayName),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                );
+                              }).toList()
+                            : [
+                                const Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: Text(
+                                    'No user levels available for selection.',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [cancelButton, const SizedBox(width: 12), saveButton],
-              ),
-            )
-          ],
-        ),
-      ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    cancelButton,
+                    const SizedBox(width: 12),
+                    saveButton
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -115,7 +160,7 @@ class _SettingsUserAddScreenState extends State<SettingsUserAddScreen> {
       id: -1,
       username: nameController.text,
       pin: pinController.text,
-      level: isAdminChecked ? AppUserLevel.admin : AppUserLevel.user,
+      level: selectedUserLevel,
     );
     if (appUser.username.isEmpty) {
       DialogUtils.snackbar(

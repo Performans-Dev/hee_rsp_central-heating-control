@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
@@ -158,6 +159,17 @@ class DbProvider {
 
     final existingUser = await getUserByName(username: user.username);
     if (existingUser != null) return -3;
+    if (user.level == AppUserLevel.developer) {
+      final developerUser = await db.query(
+        Keys.tableUsers,
+        where: 'level=?',
+        whereArgs: [AppUserLevel.developer.index],
+      );
+
+      if (developerUser.isNotEmpty) {
+        return -4;
+      }
+    }
     try {
       return await db.insert(
         Keys.tableUsers,

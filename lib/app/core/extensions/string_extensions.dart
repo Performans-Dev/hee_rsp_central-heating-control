@@ -1,3 +1,5 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
+
 extension InitialsExtension on String {
 /*   String getInitials() {
     List<String> nameParts = split(" ");
@@ -82,4 +84,21 @@ extension DiacriticsAwareString on String {
       onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
           ? nonDiacritics[diacritics.indexOf(char)]
           : char);
+}
+
+extension AppUserLevelExtension on AppUserLevel {
+  String get displayName {
+    switch (this) {
+      case AppUserLevel.developer:
+        return 'Developer';
+      case AppUserLevel.techSupport:
+        return 'Tech Support';
+      case AppUserLevel.admin:
+        return 'Admin';
+      case AppUserLevel.user:
+        return 'User';
+      default:
+        return 'Unknown';
+    }
+  }
 }
