@@ -411,9 +411,6 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.splashAppSettings,
     page: () => const SplashAppSettingsScreen(),
-    middlewares: [
-      InternetConnectionCheckerMiddleware(),
-    ],
   ),
 
   ///

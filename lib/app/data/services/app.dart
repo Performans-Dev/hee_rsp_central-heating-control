@@ -39,7 +39,7 @@ class AppController extends GetxController {
     super.onInit();
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
-   // checkInternetConnection();
+    // checkInternetConnection();
     fetchLanguages();
     fetchTimezones();
     fetchDateTimeFormats();
