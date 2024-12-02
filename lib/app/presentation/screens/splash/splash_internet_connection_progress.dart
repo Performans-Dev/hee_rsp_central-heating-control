@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/routes/routes.dart';
+/* import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -40,3 +40,4 @@ class _MyWidgetState extends State<SplashInternetConnectionProgressScreen> {
     }
   }
 }
+ */

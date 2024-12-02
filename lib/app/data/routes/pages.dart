@@ -66,7 +66,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/setup_scr
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_user_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_device_info_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/splash/splash_internet_connection_progress.dart';
+
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
@@ -404,10 +404,10 @@ final List<GetPage> getPages = [
     name: Routes.splashAppUserList,
     page: () => const SplashAppUserListScreen(),
   ),
-  GetPage(
+/*   GetPage(
     name: Routes.splashInternetConnectionProgress,
     page: () => const SplashInternetConnectionProgressScreen(),
-  ),
+  ), */
   GetPage(
     name: Routes.splashAppSettings,
     page: () => const SplashAppSettingsScreen(),
