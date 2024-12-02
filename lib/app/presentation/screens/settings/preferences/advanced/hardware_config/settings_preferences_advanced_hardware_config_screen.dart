@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
-  //TODO: controllerda kontrol et db de temperaturevalues boş ise içerik gösterme download butonunu göster.
   const SettingsPreferencesAdvancedHardwareConfigScreen({super.key});
 
   @override
@@ -49,10 +48,24 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                               dc.hardwareExtensionList[index];
                           return ListTile(
                             title: Text(hw.modelName),
-                            leading: CircleAvatar(
-                              child: Text('${hw.deviceId}'),
-                            ),
-                            /* trailing: PopupMenuButton(
+                            subtitle: Text(
+                                '${hw.manufacturer} - ${hw.description}\nS/N: ${hw.serialNumber}'),
+                            leading: Icon(
+                                hw.deviceId == 0x00 ? Icons.memory : Icons.developer_board),
+                            trailing: hw.deviceId != 0x00
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('ID: ${hw.deviceId}'),
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: null,
+                                      ),
+                                    ],
+                                  )
+                                : null,
+                          );
+                          /* trailing: PopupMenuButton(
                               child: const Icon(Icons.more_vert),
                               itemBuilder: (context) => [
                                 //TODO: TEMPERATUREVALUENAME DEĞİŞTİRECEK DİALOG
@@ -297,7 +310,7 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                               ],
                               onSelected: (value) {},
                             ), */
-                            /* Row(
+                          /* Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 TextButton.icon(
@@ -343,7 +356,6 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                                 ),
                               ],
                             ), */
-                          );
                         },
                         itemCount: dc.hardwareExtensionList.length,
                       ),
