@@ -21,7 +21,6 @@ dependencies:
   get: ^4.6.6
   get_storage: ^2.1.1
   intl: ^0.19.0
-  # logger: ^2.2.0
   package_info_plus: ^8.0.0
   path: ^1.9.0
   path_provider: ^2.1.4
@@ -33,8 +32,6 @@ dependencies:
   screen_saver:
     path: modules/screen_saver/
   network_info_plus: ^5.0.3
-  # rpi_spi: 
-  #   path: modules/rpi_spi/
   flutter_libserialport: ^0.4.0
   google_fonts: ^6.2.1
   process_run: ^1.0.0+1
