@@ -12,18 +12,18 @@ import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 final accessControl = {
   AppUserLevel.developer: [
+    AppUserLevel.user,
     AppUserLevel.admin,
     AppUserLevel.techSupport,
-    AppUserLevel.user,
   ],
   AppUserLevel.techSupport: [
+    AppUserLevel.user,
     AppUserLevel.admin,
     AppUserLevel.techSupport,
-    AppUserLevel.user,
   ],
   AppUserLevel.admin: [
-    AppUserLevel.admin,
     AppUserLevel.user,
+    AppUserLevel.admin,
   ],
   AppUserLevel.user: [],
 };
