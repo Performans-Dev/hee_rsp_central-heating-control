@@ -114,21 +114,9 @@ class HardwareExtension {
   }
 
   factory HardwareExtension.fromDb(Map<String, dynamic> map) {
-    var conTypeStr = map['connectionType'];
-    late List<dynamic> conTypeList;
-    if (conTypeStr != null) {
-      conTypeList = json.decode(conTypeStr) as List;
-    }
-    List<HwConnectionType> conTypes = [];
-    for (final item in conTypeList) {
-      final conType = HwConnectionType
-          .values[HwConnectionType.values.indexWhere((e) => e.name == item)];
-
-      conTypes.add(conType);
-    }
     return HardwareExtension(
       id: map['id']?.toInt() ?? 0,
-      deviceId: map['deviceId']?.toInt() ?? 0,
+      deviceId: map['deviceId']?.toInt() ?? 0x00,
       modelName: map['modelName'] ?? '',
       diCount: map['diCount']?.toInt() ?? 0,
       doCount: map['doCount']?.toInt() ?? 0,
