@@ -50,14 +50,15 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                             title: Text(hw.modelName),
                             subtitle: Text(
                                 '${hw.manufacturer} - ${hw.description}\nS/N: ${hw.serialNumber}'),
-                            leading: Icon(
-                                hw.deviceId == 0x00 ? Icons.memory : Icons.developer_board),
+                            leading: Icon(hw.deviceId == 0x00
+                                ? Icons.memory
+                                : Icons.developer_board),
                             trailing: hw.deviceId != 0x00
                                 ? Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text('ID: ${hw.deviceId}'),
-                                      IconButton(
+                                      const IconButton(
                                         icon: Icon(Icons.edit),
                                         onPressed: null,
                                       ),
