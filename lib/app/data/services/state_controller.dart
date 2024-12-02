@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/byte.dart';
+import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:dart_periphery/dart_periphery.dart';
@@ -80,15 +81,20 @@ class StateController extends GetxController {
   //#endregion
 
   //#region MARK: Device List
-  final RxList<int> _deviceIds = <int>[].obs;
-  List<int> get deviceIds => _deviceIds;
+
+  final RxList<HardwareExtension> _hardwareList = <HardwareExtension>[].obs;
+  List<HardwareExtension> get hardwareList => _hardwareList;
+
+  // final RxList<int> _deviceIds = <int>[].obs;
+  // List<int> get deviceIds => _deviceIds;
 
   Future<void> activateHardwares() async {
     final extList = await DbProvider.db.getHardwareExtensions();
-    _deviceIds.add(0x00);
-    for (final ext in extList) {
-      _deviceIds.add(0x00 + ext.id);
-    }
+    _hardwareList.assignAll(extList);
+
+    // for (final ext in extList) {
+    //   _deviceIds.add(0x00 + ext.id);
+    // }
     update();
   }
 
@@ -188,7 +194,7 @@ class StateController extends GetxController {
 
     await wait(100);
 
-    if (deviceIds.length > 1) {
+    if (hardwareList.length > 1) {
       runSerialLoop();
     }
   }
@@ -273,10 +279,8 @@ class StateController extends GetxController {
       userSelectable: false,
     ));
 
-    for (final d in deviceIds) {
-      int digitalCount = d == kMainBoardId
-          ? kMainBoardDigitalOutputPinCount
-          : kExtBoardDigitalOutputPinCount;
+    for (final d in hardwareList) {
+      int digitalCount = d.doCount;
 
       for (int i = 1; i <= digitalCount; i++) {
         id++;
@@ -286,9 +290,9 @@ class StateController extends GetxController {
           id: id,
           name: outputChannelName.replaceAll(
               '{n}', outputIndex.toString().padLeft(2, '0')),
-          deviceId: d,
+          deviceId: d.deviceId,
           pinIndex: i,
-          type: d == kMainBoardId
+          type: d.deviceId == kMainBoardId
               ? PinType.onboardPinOutput
               : PinType.uartPinOutput,
           userSelectable: true,
@@ -299,14 +303,10 @@ class StateController extends GetxController {
 
     id = 2000;
 
-    for (final d in deviceIds) {
-      int digitalCount = d == kMainBoardId
-          ? kMainBoardDigitalInputPinCount
-          : kExtBoardDigitalInputPinCount;
-      int analogCount = d == kMainBoardId
-          ? kMainBoardAnalogInputPinCount
-          : kExtBoardAnalogInputPinCount;
-      int btnCount = d == kMainBoardId ? kMainBoardButtonPinCount : 0;
+    for (final d in hardwareList) {
+      int digitalCount = d.diCount;
+      int analogCount = d.adcCount;
+      int btnCount = d.deviceId == kMainBoardId ? kMainBoardButtonPinCount : 0;
 
       for (int i = 1; i <= digitalCount; i++) {
         id++;
@@ -315,9 +315,9 @@ class StateController extends GetxController {
           id: id,
           name: inputChannelName.replaceAll(
               '{n}', inputIndex.toString().padLeft(2, '0')),
-          deviceId: d,
+          deviceId: d.deviceId,
           pinIndex: i,
-          type: d == kMainBoardId
+          type: d.deviceId == kMainBoardId
               ? PinType.onboardPinInput
               : PinType.uartPinInput,
           userSelectable: true,
@@ -330,7 +330,7 @@ class StateController extends GetxController {
           id: id,
           name: buttonChannelName.replaceAll(
               '{n}', btnIndex.toString().padLeft(2, '0')),
-          deviceId: d,
+          deviceId: d.deviceId,
           pinIndex: i,
           type: PinType.buttonPinInput,
           userSelectable: false,
@@ -343,9 +343,9 @@ class StateController extends GetxController {
           id: id,
           name: inputAnalogChannelName.replaceAll(
               '{n}', ntcIndex.toString().padLeft(2, '0')),
-          deviceId: d,
+          deviceId: d.deviceId,
           pinIndex: i,
-          type: d == kMainBoardId
+          type: d.deviceId == kMainBoardId
               ? PinType.onboardAnalogInput
               : PinType.uartAnalogInput,
           userSelectable: true,

@@ -200,7 +200,7 @@ class StaticProvider {
   static final List<HardwareExtension> availableHardwareExtensions = [
     HardwareExtension(
       id: 0,
-      deviceId: 0,
+      deviceId: 0x00,
       modelName: '2041.01-V1.00',
       diCount: 6,
       doCount: 6,
@@ -211,7 +211,6 @@ class StaticProvider {
       serialNumber: 'N/A',
       manufacturer: 'MYSIA',
       description: 'Serial Extension Board',
-     
     ),
   ];
 }
