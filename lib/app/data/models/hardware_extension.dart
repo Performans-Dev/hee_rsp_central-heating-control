@@ -20,14 +20,7 @@ class HardwareExtension {
   String serialNumber;
   String manufacturer;
   String description;
-  List<HwConnectionType> connectionType;
-  HwProfileUart? uartProfile;
-  HwProfileWifi? wifiProfile;
-  HwProfileEthernet? ethernetProfile;
-  HwProfileBle? bleProfile;
-  String tempValueName;
-  double coefficient;
-  double gap;
+  
   HardwareExtension({
     required this.id,
     required this.deviceId,
@@ -41,14 +34,6 @@ class HardwareExtension {
     required this.serialNumber,
     required this.manufacturer,
     required this.description,
-    required this.connectionType,
-    required this.tempValueName,
-    this.coefficient = 1.0,
-    this.gap = 0.0,
-    this.uartProfile,
-    this.wifiProfile,
-    this.ethernetProfile,
-    this.bleProfile,
   });
 
   Map<String, dynamic> toMap() {
@@ -65,22 +50,10 @@ class HardwareExtension {
       'serialNumber': serialNumber,
       'manufacturer': manufacturer,
       'description': description,
-      'connectionType': connectionType.map((x) => x.name).toList(),
-      'hwProfileUart': uartProfile?.toMap(),
-      'hwProfileWifi': wifiProfile?.toMap(),
-      'hwProfileEthernet': ethernetProfile?.toMap(),
-      'hwProfileBle': bleProfile?.toMap(),
-      'tempValueName': tempValueName,
-      'coefficient': coefficient,
-      'gap': gap,
     };
   }
 
   Map<String, dynamic> toDb() {
-    List<String> conType = [];
-    for (final item in connectionType) {
-      conType.add(item.name);
-    }
     return id > 0
         ? {
             'id': id,
@@ -95,14 +68,6 @@ class HardwareExtension {
             'serialNumber': serialNumber,
             'manufacturer': manufacturer,
             'description': description,
-            'connectionType': json.encode(conType),
-            'hwProfileUart': uartProfile?.toJson(),
-            'hwProfileWifi': wifiProfile?.toJson(),
-            'hwProfileEthernet': ethernetProfile?.toJson(),
-            'hwProfileBle': bleProfile?.toJson(),
-            'tempValueName': tempValueName,
-            'coefficient': coefficient,
-            'gap': gap,
           }
         : {
             'deviceId': deviceId,
@@ -116,14 +81,6 @@ class HardwareExtension {
             'serialNumber': serialNumber,
             'manufacturer': manufacturer,
             'description': description,
-            'connectionType': json.encode(conType),
-            'hwProfileUart': uartProfile?.toJson(),
-            'hwProfileWifi': wifiProfile?.toJson(),
-            'hwProfileEthernet': ethernetProfile?.toJson(),
-            'hwProfileBle': bleProfile?.toJson(),
-            'tempValueName': tempValueName,
-            'coefficient': coefficient,
-            'gap': gap,
           };
   }
 
@@ -153,22 +110,6 @@ class HardwareExtension {
       serialNumber: map['serialNumber'] ?? '',
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
-      connectionType: conTypes,
-      tempValueName: map['tempValueName'] ?? '',
-      coefficient: map['coefficient']?.toDouble() ?? 0.0,
-      gap: map['gap']?.toDouble() ?? 0.0,
-      uartProfile: map['hwProfileUart'] != null
-          ? HwProfileUart.fromMap(map['hwProfileUart'])
-          : null,
-      wifiProfile: map['hwProfileWifi'] != null
-          ? HwProfileWifi.fromMap(map['hwProfileWifi'])
-          : null,
-      ethernetProfile: map['hwProfileEthernet'] != null
-          ? HwProfileEthernet.fromMap(map['hwProfileEthernet'])
-          : null,
-      bleProfile: map['hwProfileBle'] != null
-          ? HwProfileBle.fromMap(map['hwProfileBle'])
-          : null,
     );
   }
 
@@ -198,22 +139,6 @@ class HardwareExtension {
       serialNumber: map['serialNumber'] ?? '',
       manufacturer: map['manufacturer'] ?? '',
       description: map['description'] ?? '',
-      connectionType: conTypes,
-      tempValueName: map['tempValueName'] ?? '',
-      coefficient: map['coefficient']?.toDouble() ?? 0.0,
-      gap: map['gap']?.toDouble() ?? 0.0,
-      uartProfile: map['hwProfileUart'] != null
-          ? HwProfileUart.fromJson(map['hwProfileUart'])
-          : null,
-      wifiProfile: map['hwProfileWifi'] != null
-          ? HwProfileWifi.fromJson(map['hwProfileWifi'])
-          : null,
-      ethernetProfile: map['hwProfileEthernet'] != null
-          ? HwProfileEthernet.fromJson(map['hwProfileEthernet'])
-          : null,
-      bleProfile: map['hwProfileBle'] != null
-          ? HwProfileBle.fromJson(map['hwProfileBle'])
-          : null,
     );
   }
 

@@ -31,7 +31,7 @@ class CommController extends GetxController {
   final Rxn<SerialPort> _serialPort = Rxn();
   SerialPort? get serialPort => _serialPort.value;
   void setSerialPort() {
-   /*  final GpioController gpio = Get.find();
+    /*  final GpioController gpio = Get.find();
     _serialPort.value = gpio.serialPort;
     update();
     //
@@ -44,7 +44,7 @@ class CommController extends GetxController {
   GPIO? get txPin => _txPin.value;
 
   void setTxPin() {
-  /*   final GpioController gpio = Get.find();
+    /*   final GpioController gpio = Get.find();
     _txPin.value = gpio.outGpios.firstWhere((e) => e.line == 4);
     update();
     //
@@ -67,24 +67,28 @@ class CommController extends GetxController {
   // get serial port settings from database
   // apply port settings.
   Future<void> getPortSettings() async {
+    ///    baudrate: 9600,
+    ///    bits: 8,
+    ///    stopBits: 1,
+    ///    parity: 0,
+    ///    xonXoff: 0,
+    ///    rts: 1,
+    ///    cts: 0,
+    ///    dsr: 0,
+    ///    dtr: 1,
+
     if (serialPort == null) return;
-    final hardwareExtensions = await DbProvider.db.getHardwareExtensions();
-    final uartProfile = hardwareExtensions
-        .firstWhereOrNull((e) =>
-            e.connectionType.contains(HwConnectionType.uartSerial) &&
-            e.uartProfile != null)
-        ?.uartProfile;
-    if (uartProfile == null) return;
+
     final SerialPortConfig config = SerialPortConfig();
-    config.baudRate = uartProfile.baudrate;
-    config.bits = uartProfile.bits;
-    config.parity = uartProfile.parity;
-    config.stopBits = uartProfile.stopBits;
-    config.xonXoff = uartProfile.xonXoff;
-    config.rts = uartProfile.rts;
-    config.cts = uartProfile.cts;
-    config.dsr = uartProfile.dsr;
-    config.dtr = uartProfile.dtr;
+    config.baudRate = 9600;
+    config.bits = 8;
+    config.parity = 0;
+    config.stopBits = 1;
+    config.xonXoff = 0;
+    config.rts = 1;
+    config.cts = 0;
+    config.dsr = 0;
+    config.dtr = 1;
     serialPort!.config = config;
   }
 

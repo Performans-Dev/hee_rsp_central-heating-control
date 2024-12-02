@@ -314,26 +314,4 @@ class DataController extends GetxController {
     }
   }
 
-  Future<int> changeTemperatureValueName(
-      HardwareExtension data, String temperature) async {
-    data.tempValueName = temperature;
-    final result = await DbProvider.db.updateHardwareExtension(data);
-    await loadHardwareExtensions();
-    return result;
-  }
-
-  Future<int> changeCoefficientValue(
-      HardwareExtension data, double coefficient) async {
-    data.coefficient = coefficient;
-    final result = await DbProvider.db.updateHardwareExtension(data);
-    await loadHardwareExtensions();
-    return result;
-  }
-
-  Future<int> changeGapValue(HardwareExtension data, double gap) async {
-    data.gap = gap;
-    final result = await DbProvider.db.updateHardwareExtension(data);
-    await loadHardwareExtensions();
-    return result;
-  }
 }

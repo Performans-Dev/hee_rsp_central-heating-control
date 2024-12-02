@@ -211,24 +211,7 @@ class StaticProvider {
       serialNumber: 'N/A',
       manufacturer: 'MYSIA',
       description: 'Serial Extension Board',
-      connectionType: [HwConnectionType.uartSerial],
-      uartProfile: HwProfileUart(
-        baudrate: 9600,
-        bits: 8,
-        stopBits: 1,
-        parity: 0,
-        xonXoff: 0,
-        rts: 1,
-        cts: 0,
-        dsr: 0,
-        dtr: 1,
-      ),
-      bleProfile: null,
-      wifiProfile: null,
-      ethernetProfile: null,
-      tempValueName: '',
-      coefficient: 1,
-      gap: 0,
+     
     ),
   ];
 }

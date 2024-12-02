@@ -51,19 +51,12 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final HardwareExtension hw =
                               dc.hardwareExtensionList[index];
-                          List<String> connectionNames = [];
-                          for (final item in hw.connectionType) {
-                            connectionNames
-                                .add(item.name.camelCaseToHumanReadable());
-                          }
                           return ListTile(
                             title: Text(hw.modelName),
                             leading: CircleAvatar(
                               child: Text('${hw.deviceId}'),
                             ),
-                            subtitle: Text('${connectionNames.join(',')} '
-                                '[ sn:${hw.serialNumber}, g:${hw.gap}, c:${hw.coefficient}, n:${hw.tempValueName}]'),
-                            trailing: PopupMenuButton(
+                            /* trailing: PopupMenuButton(
                               child: const Icon(Icons.more_vert),
                               itemBuilder: (context) => [
                                 //TODO: TEMPERATUREVALUENAME DEĞİŞTİRECEK DİALOG
@@ -307,7 +300,7 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                                 ),
                               ],
                               onSelected: (value) {},
-                            ),
+                            ), */
                             /* Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [

@@ -1,5 +1,3 @@
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -90,11 +88,11 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                 '${selectedHardwareExtension?.manufacturer}'),
                             title:
                                 Text('${selectedHardwareExtension?.modelName}'),
-                            trailing: Text(selectedHardwareExtension!
-                                .connectionType
-                                .map((e) => e.name)
-                                .toList()
-                                .join(', ')),
+                            // trailing: Text(selectedHardwareExtension!
+                            //     .connectionType
+                            //     .map((e) => e.name)
+                            //     .toList()
+                            //     .join(', ')),
                           ),
                           ListTile(
                             title: const Text('Input/Output Count'),
@@ -190,7 +188,9 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                             width: double.infinity,
                             alignment: Alignment.centerRight,
                             child: ElevatedButton.icon(
-                              onPressed: busy
+                              onPressed: null,
+
+                              /* busy
                                   ? null
                                   : () async {
                                       final DataController dataController =
@@ -232,7 +232,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                                               type: SnackbarType.error);
                                         }
                                       }
-                                    },
+                                    },*/
                               label: Text(busy ? 'Saving...' : 'Save'),
                               icon: busy
                                   ? const SizedBox(
