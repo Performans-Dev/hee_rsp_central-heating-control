@@ -195,7 +195,7 @@ class AppProvider {
         return true;
       }
       return false;
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return false;
     }
   }
