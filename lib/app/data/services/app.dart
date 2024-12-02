@@ -39,6 +39,7 @@ class AppController extends GetxController {
     super.onInit();
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+    checkInternetConnection();
     fetchLanguages();
     fetchTimezones();
     fetchDateTimeFormats();
@@ -73,6 +74,9 @@ class AppController extends GetxController {
 
   final RxBool _didConnected = false.obs;
   bool get didConnected => _didConnected.value;
+
+  final RxBool _didConnectionChecked = false.obs;
+  bool get didConnectionChecked => _didConnectionChecked.value;
 
   final RxBool _didSettingsFetched = false.obs;
   bool get didSettingsFetched => _didSettingsFetched.value;
@@ -299,6 +303,7 @@ class AppController extends GetxController {
     _didConnected.value = connected;
     _didConnectivityResultReceived.value = true;
     update();
+    checkInternetConnection();
     getNetworkInfo();
   }
 
@@ -328,6 +333,13 @@ class AppController extends GetxController {
     }
     _eth0Mac.value = ethMac;
     _wlan0Mac.value = wifiMac;
+    update();
+  }
+
+  Future<void> checkInternetConnection() async {
+    final result = await AppProvider.testInternetConnection();
+    _didConnected.value = result;
+    _didConnectionChecked.value = true;
     update();
   }
 
@@ -369,7 +381,10 @@ class AppController extends GetxController {
   AppSettings? get appSettings => _appSettings.value;
 
   Future<bool> fetchAppSettings() async {
+    if (!didConnected) return false;
+
     final data = Box.getString(key: Keys.appSettings);
+
     if (didConnected && data.isEmpty) {
       final result = await AppProvider.fetchAppSettings();
       if (result.success && result.data != null) {
@@ -393,6 +408,7 @@ class AppController extends GetxController {
   List<LanguageDefinition> get languages => _languages;
 
   void fetchLanguages() {
+    if (!didConnected) return;
     final list = <LanguageDefinition>[];
     const data = StaticProvider.getLanguageList;
     for (final map in data) {
@@ -416,6 +432,8 @@ class AppController extends GetxController {
   List<TimezoneDefinition> get timezones => _timezones;
 
   void fetchTimezones() {
+    if (!didConnected) return;
+
     final list = <TimezoneDefinition>[];
     const data = StaticProvider.getTimezoneList;
     for (final map in data) {
@@ -447,6 +465,8 @@ class AppController extends GetxController {
   List<String> get timeFormats => _timeFormats;
 
   void fetchDateTimeFormats() {
+    if (!didConnected) return;
+
     _dateFormats.assignAll(StaticProvider.getDateFormatList);
     _timeFormats.assignAll(StaticProvider.getTimeFormatList);
     update();
@@ -483,6 +503,8 @@ class AppController extends GetxController {
   String get selectedTheme => _selectedTheme.value;
 
   void fetchThemes() {
+    if (!didConnected) return;
+
     _themes.assignAll(StaticProvider.getThemeList);
     update();
   }

@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/middlewares/admin_logged_in_mid
 import 'package:central_heating_control/app/data/middlewares/app_settings_middleware.dart';
 
 import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
+import 'package:central_heating_control/app/data/middlewares/internet_connection_checker.dart';
 import 'package:central_heating_control/app/data/middlewares/setup_completed_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
@@ -65,6 +66,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/setup_scr
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_user_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_device_info_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/splash/splash_internet_connection_progress.dart';
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
@@ -403,9 +405,17 @@ final List<GetPage> getPages = [
     page: () => const SplashAppUserListScreen(),
   ),
   GetPage(
+    name: Routes.splashInternetConnectionProgress,
+    page: () => const SplashInternetConnectionProgressScreen(),
+  ),
+  GetPage(
     name: Routes.splashAppSettings,
     page: () => const SplashAppSettingsScreen(),
+    middlewares: [
+      InternetConnectionCheckerMiddleware(),
+    ],
   ),
+
   ///
   ///
   GetPage(name: Routes.piInfo, page: () => const PiInfoScreen()),

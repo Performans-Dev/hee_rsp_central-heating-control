@@ -185,4 +185,18 @@ class AppProvider {
     }
     return GenericResponse.error();
   }
+
+  static Future<bool> testInternetConnection() async {
+    Dio dio = Dio();
+    dio.options.connectTimeout = const Duration(seconds: 2);
+    try {
+      final response = await dio.get('https://heethings.io');
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on Exception catch (e) {
+      return false;
+    }
+  }
 }
