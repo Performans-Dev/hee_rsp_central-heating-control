@@ -131,6 +131,7 @@ class DbProvider {
 
     await db.execute(Keys.dbDropHardwareExtensionsDropTable);
     await db.execute(Keys.dbCreateHardwareExtensionsCreateTable);
+    await db.execute(Keys.dbInsertMainBoardHardwareExtension);
 
     await db.execute(Keys.dbDropTemperatureValues);
     await db.execute(Keys.dbCreateTemperatureValues);

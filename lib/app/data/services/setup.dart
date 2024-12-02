@@ -19,7 +19,7 @@ class SetupController extends GetxController {
       SetupSequence.dateFormat(),
       SetupSequence.terms(),
       SetupSequence.privacy(),
-      SetupSequence.registerDevice(),
+      // SetupSequence.registerDevice(),
       SetupSequence.signIn(),
       SetupSequence.activation(),
       SetupSequence.subscriptionResult(),

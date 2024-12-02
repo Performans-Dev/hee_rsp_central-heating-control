@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 22;
+  static const int databaseVersion = 23;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -285,6 +285,13 @@ class Keys {
       gap REAL NOT NULL DEFAULT 0,
       isExtension INTEGER NOT NULL DEFAULT 1
     )
+  ''';
+
+  static const String dbInsertMainBoardHardwareExtension = '''
+    INSERT INTO hardwareExtensions 
+    (deviceId, modelName, diCount, doCount, adcCount, dacCount, hardwareVersion, 
+    firmwareVersion, serialNumber, manufacturer, description, connectionType, isExtension) VALUES 
+    (0, 'Mainboard', 8, 8, 4, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '', '', 0)
   ''';
 
   //#endregion
