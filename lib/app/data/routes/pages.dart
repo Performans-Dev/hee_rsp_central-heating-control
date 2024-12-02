@@ -2,7 +2,6 @@ import 'package:central_heating_control/app/data/middlewares/admin_logged_in_mid
 import 'package:central_heating_control/app/data/middlewares/app_settings_middleware.dart';
 
 import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
-import 'package:central_heating_control/app/data/middlewares/internet_connection_checker.dart';
 import 'package:central_heating_control/app/data/middlewares/setup_completed_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
