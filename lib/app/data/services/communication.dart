@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/serial.dart';
-import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:dart_periphery/dart_periphery.dart';

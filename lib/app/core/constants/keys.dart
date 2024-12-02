@@ -60,7 +60,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 24;
+  static const int databaseVersion = 25;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -275,14 +275,6 @@ class Keys {
       serialNumber TEXT,
       manufacturer TEXT,
       description TEXT,
-      connectionType TEXT,
-      hwProfileUart TEXT,
-      hwProfileWifi TEXT,
-      hwProfileEthernet TEXT,
-      hwProfileBle TEXT,
-      tempValueName TEXT,
-      coefficient REAL NOT NULL DEFAULT 0,
-      gap REAL NOT NULL DEFAULT 0,
       isExtension INTEGER NOT NULL DEFAULT 1
     )
   ''';
@@ -290,8 +282,8 @@ class Keys {
   static const String dbInsertMainBoardHardwareExtension = '''
     INSERT INTO hardwareExtensions 
     (deviceId, modelName, diCount, doCount, adcCount, dacCount, hardwareVersion, 
-    firmwareVersion, serialNumber, manufacturer, description, connectionType, isExtension) VALUES 
-    (0, 'Mainboard', 8, 8, 4, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '', '', 0)
+    firmwareVersion, serialNumber, manufacturer, description,  isExtension) VALUES 
+    (0, 'Mainboard', 8, 8, 4, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '', 0)
   ''';
 
   //#endregion

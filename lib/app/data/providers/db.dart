@@ -135,6 +135,9 @@ class DbProvider {
 
     await db.execute(Keys.dbDropTemperatureValues);
     await db.execute(Keys.dbCreateTemperatureValues);
+
+    await db.execute(Keys.dbDropUsers);
+    await db.execute(Keys.dbCreateUsers);
   }
 
   Future<void> resetDb() async {

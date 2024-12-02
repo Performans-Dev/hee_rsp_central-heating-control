@@ -1,6 +1,3 @@
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/hardware_extension.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -8,7 +5,6 @@ import 'package:central_heating_control/app/presentation/components/app_scaffold
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
   //TODO: controllerda kontrol et db de temperaturevalues boş ise içerik gösterme download butonunu göster.
