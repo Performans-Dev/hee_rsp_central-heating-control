@@ -197,6 +197,9 @@ class StaticProvider {
     'crimson',
   ];
 
+  //static String termsContent = '';
+  //static String privacyContent = '';
+
   static final List<HardwareExtension> availableHardwareExtensions = [
     HardwareExtension(
       id: 0,
