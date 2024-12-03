@@ -42,29 +42,36 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                     ? const Center(
                         child: Text('no hardware installed'),
                       )
-                    : ListView.builder(
+                    : GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3),
                         itemBuilder: (context, index) {
                           final HardwareExtension hw =
                               dc.hardwareExtensionList[index];
-                          return ListTile(
-                            title: Text(hw.modelName),
-                            subtitle: Text(
-                                '${hw.manufacturer} - ${hw.description}\nS/N: ${hw.serialNumber}'),
-                            leading: Icon(hw.deviceId == 0x00
-                                ? Icons.memory
-                                : Icons.developer_board),
-                            trailing: hw.deviceId != 0x00
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text('ID: ${hw.deviceId}'),
-                                      const IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: null,
-                                      ),
-                                    ],
-                                  )
-                                : null,
+                          return Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Icon(hw.deviceId == 0x00
+                                      ? Icons.memory
+                                      : Icons.developer_board),
+                                  Text(
+                                    hw.modelName,
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                  Text(hw.manufacturer,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall
+                                          ?.copyWith(color: Colors.grey)),
+                                  Text(hw.description),
+                                  Text(hw.serialNumber),
+                                ],
+                              ),
+                            ),
                           );
                           /* trailing: PopupMenuButton(
                               child: const Icon(Icons.more_vert),
