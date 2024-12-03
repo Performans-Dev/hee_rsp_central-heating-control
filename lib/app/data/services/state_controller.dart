@@ -41,6 +41,7 @@ class StateController extends GetxController {
   SerialPortConfig config = SerialPortConfig();
   late SerialPortReader serialPortReader;
   StreamSubscription<Uint8List>? messageSubscription;
+  late StreamController<SerialQuery> serialQueryStreamController;
   int _lastSensorDataFetch = 0;
 
   //#region MARK: Super
@@ -77,6 +78,7 @@ class StateController extends GetxController {
     populateChannels();
 
     await wait(100);
+    serialQueryStreamController = StreamController<SerialQuery>.broadcast();
   }
   //#endregion
 
@@ -369,6 +371,18 @@ class StateController extends GetxController {
     //TODO: parse serial message
   }
 
+  Future<void> queryTest(int id) async {
+    //
+  }
+
+  Future<void> querySerialNumber(int id) async {
+    //
+  }
+
+  Future<void> queryModel(int id) async {
+    //
+  }
+
   void runSerialLoop() async {
     //
     _processingSerialLoop.value = true;
@@ -594,4 +608,17 @@ class Sensor {
 
   @override
   int get hashCode => sensor.hashCode ^ rawValue.hashCode;
+}
+
+class SerialQuery {
+  int deviceId;
+  int command; // limited to TestSignal, GetSerialNumber, GetModelNumber,
+  bool? success;
+  String? response;
+  SerialQuery({
+    required this.deviceId,
+    required this.command,
+    this.success,
+    this.response,
+  });
 }
