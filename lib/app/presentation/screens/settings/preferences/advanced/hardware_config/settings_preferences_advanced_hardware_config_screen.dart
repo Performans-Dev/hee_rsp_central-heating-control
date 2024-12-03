@@ -54,9 +54,12 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(20),
                               child: Column(
                                 children: [
-                                  Icon(hw.deviceId == 0x00
-                                      ? Icons.memory
-                                      : Icons.developer_board),
+                                  Icon(
+                                    hw.deviceId == 0x00
+                                        ? Icons.memory
+                                        : Icons.developer_board,
+                                    size: 56,
+                                  ),
                                   Text(
                                     hw.modelName,
                                     style:
@@ -69,6 +72,12 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                                           ?.copyWith(color: Colors.grey)),
                                   Text(hw.description),
                                   Text(hw.serialNumber),
+                                  if (hw.deviceId != 0x00)
+                                    CircleAvatar(
+                                      child: Text(
+                                        hw.deviceId.toString(),
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),
