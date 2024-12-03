@@ -381,7 +381,7 @@ class AppController extends GetxController {
   AppSettings? get appSettings => _appSettings.value;
 
   Future<bool> fetchAppSettings() async {
-    if (!didConnected) return false;
+    // if (!didConnected) return false;
 
     final data = Box.getString(key: Keys.appSettings);
 
@@ -408,7 +408,7 @@ class AppController extends GetxController {
   List<LanguageDefinition> get languages => _languages;
 
   void fetchLanguages() {
-    if (!didConnected) return;
+    // if (!didConnected) return;
     final list = <LanguageDefinition>[];
     const data = StaticProvider.getLanguageList;
     for (final map in data) {
@@ -432,7 +432,7 @@ class AppController extends GetxController {
   List<TimezoneDefinition> get timezones => _timezones;
 
   void fetchTimezones() {
-    if (!didConnected) return;
+    //  if (!didConnected) return;
 
     final list = <TimezoneDefinition>[];
     const data = StaticProvider.getTimezoneList;
@@ -465,7 +465,7 @@ class AppController extends GetxController {
   List<String> get timeFormats => _timeFormats;
 
   void fetchDateTimeFormats() {
-    if (!didConnected) return;
+    // if (!didConnected) return;
 
     _dateFormats.assignAll(StaticProvider.getDateFormatList);
     _timeFormats.assignAll(StaticProvider.getTimeFormatList);
@@ -503,7 +503,7 @@ class AppController extends GetxController {
   String get selectedTheme => _selectedTheme.value;
 
   void fetchThemes() {
-    if (!didConnected) return;
+    // if (!didConnected) return;
 
     _themes.assignAll(StaticProvider.getThemeList);
     update();
