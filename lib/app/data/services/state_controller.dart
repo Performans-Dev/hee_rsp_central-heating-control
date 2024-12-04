@@ -54,6 +54,7 @@ class StateController extends GetxController {
 
   @override
   void onReady() {
+    //
     super.onReady();
   }
 
