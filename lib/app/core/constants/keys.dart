@@ -285,6 +285,13 @@ class Keys {
     (0x00, 'Mainboard', 8, 8, 4, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '')
   ''';
 
+  static const String dbInsertSampleHardwareExtension = '''
+    INSERT INTO hardwareExtensions 
+    (deviceId, modelName, diCount, doCount, adcCount, dacCount, hardwareVersion, 
+    firmwareVersion, serialNumber, manufacturer, description) VALUES 
+    (0x01, '2041.01', 6, 6, 1, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '')
+  ''';
+
   //#endregion
 
   //#region Temperature Value
