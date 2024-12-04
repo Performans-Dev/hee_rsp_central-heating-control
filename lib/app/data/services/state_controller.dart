@@ -4,18 +4,16 @@ import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/byte.dart';
 import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
-
-import 'package:central_heating_control/app/data/models/log.dart';
-import 'package:central_heating_control/app/data/providers/log.dart';
-
-import 'package:central_heating_control/main.dart';
 
 int kMainBoardDigitalOutputPinCount = 8;
 int kExtBoardDigitalOutputPinCount = 6;
@@ -217,9 +215,10 @@ class StateController extends GetxController {
 
     await wait(100);
 
-    if (hardwareList.length > 1) {
-      runSerialLoop();
-    }
+    _allowSerialLoop.value = hardwareList.length > 1;
+    update();
+
+    runSerialLoop();
   }
   //#endregion
 
@@ -385,11 +384,62 @@ class StateController extends GetxController {
   //#endregion
 
   //#region MARK: SERIAL MESSAGES
+
+  final RxBool _allowSerialLoop = true.obs;
+  bool get allowSerialLoop => _allowSerialLoop.value;
+
   final RxBool _processingSerialLoop = false.obs;
   bool get processingSerialLoop => _processingSerialLoop.value;
 
   final Rxn<SerialMessage> _currentSerialMessage = Rxn<SerialMessage>();
   SerialMessage? get currentSerialMessage => _currentSerialMessage.value;
+
+  final RxList<SerialMessage> _messageStack = <SerialMessage>[].obs;
+  List<SerialMessage> get messageStack => _messageStack;
+
+  void enableSerialTransmit() {
+    txEnablePin.write(true);
+  }
+
+  void disableSerialTransmit() {
+    txEnablePin.write(false);
+  }
+
+  Future<void> sendSerialMessage(SerialMessage m) async {
+    List<int> message = m.toBytesWithCrc();
+    Uint8List bytes = Uint8List.fromList(message);
+    _currentSerialMessage.value = m;
+    update();
+    enableSerialTransmit();
+    await wait(1);
+    try {
+      serialPort.write(bytes);
+    } on Exception catch (e) {
+      LogService.addLog(
+          LogDefinition(message: e.toString(), type: LogType.error));
+    }
+    await wait(1);
+    disableSerialTransmit();
+  }
+
+  Future<void> sendSerialMessageFromStack() async {
+    if (messageStack.isNotEmpty) {
+      SerialMessage m = messageStack.removeAt(0);
+      await sendSerialMessage(m);
+    }
+  }
+
+  void turnOnSerialLoop() {
+    _allowSerialLoop.value = true;
+    update();
+    runSerialLoop();
+  }
+
+  void turnOffSerialLoop() {
+    _allowSerialLoop.value = false;
+    _processingSerialLoop.value = false;
+    update();
+  }
 
   void parseSerialMessage(List<int> data) {
     final deviceId = data[1];
@@ -468,11 +518,17 @@ class StateController extends GetxController {
   }
 
   Future<void> queryTest(int id) async {
-    //
+    turnOnSerialLoop();
+    await sendSerialMessage(
+        SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
+    await waitForSerialResponse();
   }
 
   Future<void> querySerialNumber(int id) async {
-    //
+     turnOnSerialLoop();
+    await sendSerialMessage(
+        SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
+    await waitForSerialResponse();
   }
 
   Future<void> queryModel(int id) async {
@@ -480,6 +536,10 @@ class StateController extends GetxController {
   }
 
   void runSerialLoop() async {
+    if (processingSerialLoop) {
+      // exit if already processing
+      return;
+    }
     //
     _processingSerialLoop.value = true;
     update();
@@ -522,6 +582,58 @@ class StateController extends GetxController {
               LogDefinition(message: e.toString(), type: LogType.error));
         }
       }
+    }
+
+    for (final d in hardwareList) {
+      if (d.deviceId != 0x00) {
+        await sendSerialMessage(
+            SerialMessage(device: d.deviceId, command: 0x69));
+        await waitForSerialResponse();
+        await sendSerialMessage(
+            SerialMessage(device: d.deviceId, command: 0x67));
+        await waitForSerialResponse();
+        await sendSerialMessage(
+            SerialMessage(device: d.deviceId, command: 0x70));
+        await waitForSerialResponse();
+      }
+    }
+
+    do {
+      await sendSerialMessageFromStack();
+      await waitForSerialResponse();
+    } while (messageStack.isNotEmpty);
+
+    _processingSerialLoop.value = false;
+    update();
+
+    await wait(kSerialLoopDelay);
+    if (allowSerialLoop) {
+      runSerialLoop();
+    }
+  }
+
+  Future<void> waitForSerialResponse() async {
+    if (currentSerialMessage == null) {
+      // no message expected, no need to wait
+      return;
+    } else if (currentSerialMessage != null &&
+        currentSerialMessage!.command == 0x65) {
+      // restart device command cant send response
+      await wait(kSerialAcknowledgementDelay);
+      return;
+    } else {
+      int timeoutMillis = 0;
+      const maxTimeout = 1000;
+      do {
+        timeoutMillis++;
+        await wait(1);
+        if (timeoutMillis >= maxTimeout) {
+          _currentSerialMessage.value = null;
+          update();
+          return;
+        }
+      } while (currentSerialMessage != null &&
+          timeoutMillis < kSerialAcknowledgementDelay);
     }
   }
   //#endregion
