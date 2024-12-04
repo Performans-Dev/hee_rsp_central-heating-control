@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
 import 'package:central_heating_control/app/data/routes/pages.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
@@ -119,6 +120,7 @@ class AppScaffold extends StatelessWidget {
                       break;
                     case 1:
                       // Get.toNamed(Routes.daySummaryScreen);
+                      Get.toNamed(Routes.settingsPreferencesAdvanced);
                       break;
                     case 2:
                       app.nextThemeMode();
