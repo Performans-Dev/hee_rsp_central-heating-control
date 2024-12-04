@@ -42,7 +42,7 @@ class StateController extends GetxController {
   StreamSubscription<Uint8List>? messageSubscription;
   late StreamController<SerialQuery> serialQueryStreamController;
   late StreamController<String> logMessageController;
-  int _lastSensorDataFetch = 0;
+  // int _lastSensorDataFetch = 0;
 
   //#region MARK: Super
   @override
@@ -408,10 +408,12 @@ class StateController extends GetxController {
 
   void enableSerialTransmit() {
     txEnablePin.write(true);
+    logMessageController.add('enabling serial transmit');
   }
 
   void disableSerialTransmit() {
     txEnablePin.write(false);
+    logMessageController.add('disabling serial transmit');
   }
 
   Future<void> sendSerialMessage(SerialMessage m) async {
@@ -450,12 +452,14 @@ class StateController extends GetxController {
   }
 
   void turnOnSerialLoop() {
+    logMessageController.add('turning on serial loop');
     _allowSerialLoop.value = true;
     update();
     runSerialLoop();
   }
 
   void turnOffSerialLoop() {
+    logMessageController.add('turning off serial loop');
     _allowSerialLoop.value = false;
     _processingSerialLoop.value = false;
     update();
@@ -565,11 +569,10 @@ class StateController extends GetxController {
       // exit if already processing
       return;
     }
-    //
     _processingSerialLoop.value = true;
     update();
 
-    final now = DateTime.now().millisecondsSinceEpoch;
+    /* final now = DateTime.now().millisecondsSinceEpoch;
     if (now - _lastSensorDataFetch >= 30000) {
       _lastSensorDataFetch = now;
       final data = await getSensorData();
@@ -607,7 +610,7 @@ class StateController extends GetxController {
               LogDefinition(message: e.toString(), type: LogType.error));
         }
       }
-    }
+    } */
 
     for (final d in hardwareList) {
       if (d.deviceId != 0x00) {
@@ -638,8 +641,10 @@ class StateController extends GetxController {
   }
 
   Future<void> waitForSerialResponse() async {
-    logMessageController.add(
-        'Stack: ${messageStack.length}, Current: ${currentSerialMessage != null}');
+    if (messageStack.isNotEmpty && currentSerialMessage != null) {
+      logMessageController.add(
+          'Stack: ${messageStack.length}, Current: ${currentSerialMessage != null}');
+    }
     if (currentSerialMessage == null) {
       // no message expected, no need to wait
       return;
