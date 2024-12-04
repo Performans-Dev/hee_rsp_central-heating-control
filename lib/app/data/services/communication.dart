@@ -111,13 +111,13 @@ class CommController extends GetxController {
   }
 
   void onSerialMessageReceived(List<int> message) {
-    SerialMessage m = SerialMessage(
-      deviceId: message[1],
-      command: message[2],
-      data1: message[3],
-      data2: message[4],
-    );
-    serialMessageStreamController.add(m);
+    // SerialMessage m = SerialMessage(
+    //   deviceId: message[1],
+    //   command: message[2],
+    //   data1: message[3],
+    //   data2: message[4],
+    // );
+    // serialMessageStreamController.add(m);
   }
 
   // create sendMessage method

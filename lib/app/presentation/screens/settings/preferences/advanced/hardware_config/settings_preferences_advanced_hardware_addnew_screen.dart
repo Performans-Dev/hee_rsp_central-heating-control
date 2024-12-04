@@ -207,12 +207,14 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   Future<void> loadExistingHardwareExtensions() async {
     setState(() => screenState = HardwareInstallScreenState.acquiringNextId);
     await dataController.loadHardwareExtensions();
-    nextHardwareId = 0;
+    setState(() => nextHardwareId = 0);
+
     List<HardwareExtension> tmpList = dataController.hardwareExtensionList;
-    tmpList.sort((a, b) => a.id.compareTo(b.id));
+    tmpList.sort((a, b) => a.deviceId.compareTo(b.deviceId));
     if (tmpList.isNotEmpty) {
-      nextHardwareId = tmpList.last.id + 1;
+      setState(() => nextHardwareId = tmpList.last.deviceId + 1);
     }
+    
     setState(
         () => screenState = HardwareInstallScreenState.awaitingForCheckTrigger);
   }

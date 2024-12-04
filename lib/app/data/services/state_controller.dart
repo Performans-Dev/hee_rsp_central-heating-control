@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/byte.dart';
 import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:dart_periphery/dart_periphery.dart';
@@ -182,13 +183,33 @@ class StateController extends GetxController {
     handler.onMessage.listen(
       (Uint8List data) {
         List<int> rawData = ByteUtils.intListToUint8List(data);
-        List<int> dataForCrc = rawData.sublist(1, 5);
+        // Get the command byte
+        int command = rawData[2];
+
+        // Determine CRC data length based on command
+        int crcDataLength;
+        switch (command) {
+          case 0xCA: // Serial number
+            crcDataLength = 17; // deviceId + command + 14 bytes serial
+            break;
+          case 0xCB: // Hardware version
+          case 0xCC: // Firmware version
+            crcDataLength = 24; // deviceId + command + 21 bytes version
+            break;
+          default:
+            crcDataLength = 5; // Normal command (deviceId + command + 2 args)
+        }
+
+        List<int> dataForCrc = rawData.sublist(1, crcDataLength);
         List<int> expectedCrcBytes =
             ByteUtils.getCrcBytes(ByteUtils.intListToUint8List(dataForCrc));
-        List<int> receivedCrcBytes = rawData.sublist(5, 7).toList();
+        List<int> receivedCrcBytes =
+            rawData.sublist(crcDataLength, crcDataLength + 2).toList();
         if (receivedCrcBytes.toString() == expectedCrcBytes.toString()) {
           // CRC match
           parseSerialMessage(rawData);
+        } else {
+          // ignore invalid CRC
         }
       },
       cancelOnError: false,
@@ -367,8 +388,83 @@ class StateController extends GetxController {
   final RxBool _processingSerialLoop = false.obs;
   bool get processingSerialLoop => _processingSerialLoop.value;
 
+  final Rxn<SerialMessage> _currentSerialMessage = Rxn<SerialMessage>();
+  SerialMessage? get currentSerialMessage => _currentSerialMessage.value;
+
   void parseSerialMessage(List<int> data) {
-    //TODO: parse serial message
+    final deviceId = data[1];
+    final command = data[2];
+    final number = data[3];
+    final args = data[4];
+
+    final m = SerialMessage(
+      command: command,
+      device: deviceId,
+      index: number,
+      arg: args,
+    );
+
+    if (currentSerialMessage != null &&
+        currentSerialMessage!.command == m.command &&
+        currentSerialMessage!.device == m.device &&
+        currentSerialMessage!.index == m.index) {
+      _currentSerialMessage.value = null;
+      update();
+    }
+
+    switch (command) {
+      // update pin states
+
+      case 0xCA: // Serial number query response
+        serialNumberResponseReceived(Uint8List.fromList(data));
+        break;
+
+      case 0xCB: // Hardware version query response
+        hardwareVersionResponseReceived(Uint8List.fromList(data));
+        break;
+
+      case 0xCC: // Firmware version query response
+        firmwareVersionResponseReceived(Uint8List.fromList(data));
+        break;
+      default:
+        break;
+    }
+  }
+
+  void serialNumberResponseReceived(Uint8List message) {
+    final int deviceId = message[1];
+    // Extract serial number bytes (14 bytes after command byte)
+    final List<int> serialNumberBytes = message.sublist(3, 17);
+    final String asciiValue = _bytesToAscii(serialNumberBytes);
+    serialQueryStreamController.add(SerialQuery(
+        deviceId: deviceId,
+        command: 0xCA,
+        success: true,
+        response: asciiValue));
+  }
+
+  void hardwareVersionResponseReceived(Uint8List message) {
+    final int deviceId = message[1];
+    // Extract hardware version bytes (21 bytes after command byte)
+    final List<int> versionBytes = message.sublist(3, 24);
+    final String asciiValue = _bytesToAscii(versionBytes);
+    serialQueryStreamController.add(SerialQuery(
+        deviceId: deviceId,
+        command: 0xCB,
+        success: true,
+        response: asciiValue));
+  }
+
+  void firmwareVersionResponseReceived(Uint8List message) {
+    final int deviceId = message[1];
+    // Extract firmware version bytes (21 bytes after command byte)
+    final List<int> versionBytes = message.sublist(3, 24);
+    final String asciiValue = _bytesToAscii(versionBytes);
+    serialQueryStreamController.add(SerialQuery(
+        deviceId: deviceId,
+        command: 0xCC,
+        success: true,
+        response: asciiValue));
   }
 
   Future<void> queryTest(int id) async {
@@ -446,6 +542,10 @@ class StateController extends GetxController {
       return null;
     }
     return null;
+  }
+
+  String _bytesToAscii(List<int> bytes) {
+    return String.fromCharCodes(bytes).replaceAll(RegExp(r'[^\x20-\x7E]'), '?');
   }
   //#endregion
 }
