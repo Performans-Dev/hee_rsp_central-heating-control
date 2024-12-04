@@ -37,6 +37,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   late int nextHardwareId;
   late StreamSubscription<SerialQuery> subscription;
   late Timer timer;
+  List<String> messages = [];
 
   @override
   void initState() {
@@ -56,152 +57,164 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataController>(builder: (dc) {
-      const acquiringNextIdWidget = Center(
-        child: CircularProgressIndicator(),
-      );
+    return GetBuilder<DataController>(
+      builder: (dc) {
+        const acquiringNextIdWidget = Center(
+          child: CircularProgressIndicator(),
+        );
 
-      final awaitingForCheckTriggerWidget = Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-              'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
-          ElevatedButton(
-            onPressed: triggerHardwareCheck,
-            child: const Text('Continue'),
-          ),
-        ],
-      );
-
-      const checkingWidget = Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        final awaitingForCheckTriggerWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 20),
-            Text('Querying hardware...'),
+            Text(
+                'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
+            ElevatedButton(
+              onPressed: triggerHardwareCheck,
+              child: const Text('Continue'),
+            ),
           ],
-        ),
-      );
+        );
 
-      final receivedSuccessResponseWidget = Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-              'Communication successfull with $nextHardwareId. Hit Install Device button to use it.'),
-          ElevatedButton(
-            onPressed: onInstallDeviceClicked,
-            child: const Text('Install Device'),
+        const checkingWidget = Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text('Querying hardware...'),
+            ],
           ),
-        ],
-      );
+        );
 
-      final receivedFailureResponseWidget = Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Cannot communicate with $nextHardwareId. Try again.'),
-          Text(
-              'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
-          ElevatedButton(
-            onPressed: triggerHardwareCheck,
-            child: const Text('Continue'),
-          ),
-        ],
-      );
-
-      final timedOutWidget = Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-              'Cannot communicate with $nextHardwareId within the specific time. Operation timed out.'),
-          Text(
-              'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
-          ElevatedButton(
-            onPressed: triggerHardwareCheck,
-            child: const Text('Continue'),
-          ),
-        ],
-      );
-
-      const awaitingDbOperationWidget = Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        final receivedSuccessResponseWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 20),
-            Text('Installing hardware...'),
+            Text(
+                'Communication successfull with $nextHardwareId. Hit Install Device button to use it.'),
+            ElevatedButton(
+              onPressed: onInstallDeviceClicked,
+              child: const Text('Install Device'),
+            ),
           ],
-        ),
-      );
+        );
 
-      final completedWidget = Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-              'Hardware [$nextHardwareId] install is successful. Reboot System to start using it.'),
-          ElevatedButton(
-            onPressed: onRebootClicked,
-            child: const Text('Reboot Now'),
+        final receivedFailureResponseWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('Cannot communicate with $nextHardwareId. Try again.'),
+            Text(
+                'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
+            ElevatedButton(
+              onPressed: triggerHardwareCheck,
+              child: const Text('Continue'),
+            ),
+          ],
+        );
+
+        final timedOutWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+                'Cannot communicate with $nextHardwareId within the specific time. Operation timed out.'),
+            Text(
+                'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
+            ElevatedButton(
+              onPressed: triggerHardwareCheck,
+              child: const Text('Continue'),
+            ),
+          ],
+        );
+
+        const awaitingDbOperationWidget = Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text('Installing hardware...'),
+            ],
           ),
-        ],
-      );
+        );
 
-      final failedWidget = Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Cannot install $nextHardwareId'),
-          ElevatedButton(
-            onPressed: tryAgainClicked,
-            child: const Text('Try Again'),
+        final completedWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+                'Hardware [$nextHardwareId] install is successful. Reboot System to start using it.'),
+            ElevatedButton(
+              onPressed: onRebootClicked,
+              child: const Text('Reboot Now'),
+            ),
+          ],
+        );
+
+        final failedWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('Cannot install $nextHardwareId'),
+            ElevatedButton(
+              onPressed: tryAgainClicked,
+              child: const Text('Try Again'),
+            ),
+          ],
+        );
+
+        Widget pageBody = Container();
+        switch (screenState) {
+          case HardwareInstallScreenState.acquiringNextId:
+            pageBody = acquiringNextIdWidget;
+            break;
+          case HardwareInstallScreenState.awaitingForCheckTrigger:
+            pageBody = awaitingForCheckTriggerWidget;
+            break;
+          case HardwareInstallScreenState.checking:
+            pageBody = checkingWidget;
+            break;
+          case HardwareInstallScreenState.receivedSuccessResponse:
+            pageBody = receivedSuccessResponseWidget;
+            break;
+          case HardwareInstallScreenState.receivedFailureResponse:
+            pageBody = receivedFailureResponseWidget;
+            break;
+          case HardwareInstallScreenState.timedout:
+            pageBody = timedOutWidget;
+            break;
+          case HardwareInstallScreenState.awaitingDbOperation:
+            pageBody = awaitingDbOperationWidget;
+            break;
+          case HardwareInstallScreenState.completed:
+            pageBody = completedWidget;
+            break;
+          case HardwareInstallScreenState.failed:
+            pageBody = failedWidget;
+            break;
+          default:
+            break;
+        }
+
+        return AppScaffold(
+          selectedIndex: 3,
+          title: 'Add New Hardware',
+          body: Row(
+            children: [
+              Expanded(child: pageBody),
+              SizedBox(
+                width: 200,
+                child: ListView.builder(
+                    itemBuilder: (context, index) => Text(messages[index]),
+                    itemCount: messages.length),
+              ),
+            ],
           ),
-        ],
-      );
-
-      Widget pageBody = Container();
-      switch (screenState) {
-        case HardwareInstallScreenState.acquiringNextId:
-          pageBody = acquiringNextIdWidget;
-          break;
-        case HardwareInstallScreenState.awaitingForCheckTrigger:
-          pageBody = awaitingForCheckTriggerWidget;
-          break;
-        case HardwareInstallScreenState.checking:
-          pageBody = checkingWidget;
-          break;
-        case HardwareInstallScreenState.receivedSuccessResponse:
-          pageBody = receivedSuccessResponseWidget;
-          break;
-        case HardwareInstallScreenState.receivedFailureResponse:
-          pageBody = receivedFailureResponseWidget;
-          break;
-        case HardwareInstallScreenState.timedout:
-          pageBody = timedOutWidget;
-          break;
-        case HardwareInstallScreenState.awaitingDbOperation:
-          pageBody = awaitingDbOperationWidget;
-          break;
-        case HardwareInstallScreenState.completed:
-          pageBody = completedWidget;
-          break;
-        case HardwareInstallScreenState.failed:
-          pageBody = failedWidget;
-          break;
-        default:
-          break;
-      }
-
-      return AppScaffold(
-        selectedIndex: 3,
-        title: 'Add New Hardware',
-        body: pageBody,
-      );
-    });
+        );
+      },
+    );
   }
 
   Future<void> loadExistingHardwareExtensions() async {
@@ -214,7 +227,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     if (tmpList.isNotEmpty) {
       setState(() => nextHardwareId = tmpList.last.deviceId + 1);
     }
-    
+
     setState(
         () => screenState = HardwareInstallScreenState.awaitingForCheckTrigger);
   }
@@ -229,10 +242,14 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   }
 
   void onSerialQueryDataReceived(SerialQuery serialQuery) async {
+    setState(() => messages.insert(0, serialQuery.response ?? ''));
+
     if (serialQuery.deviceId == nextHardwareId) {
       timer.cancel();
       setState(() =>
           screenState = HardwareInstallScreenState.receivedSuccessResponse);
+    } else {
+      messages.insert(0, 'invalid serial query response received');
     }
   }
 

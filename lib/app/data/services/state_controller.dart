@@ -41,18 +41,19 @@ class StateController extends GetxController {
   late SerialPortReader serialPortReader;
   StreamSubscription<Uint8List>? messageSubscription;
   late StreamController<SerialQuery> serialQueryStreamController;
+  late StreamController<String> logMessageController;
   int _lastSensorDataFetch = 0;
 
   //#region MARK: Super
   @override
   void onInit() {
     super.onInit();
+    logMessageController = StreamController<String>.broadcast();
     runInitTasks();
   }
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
   }
 
@@ -60,6 +61,9 @@ class StateController extends GetxController {
   void onClose() {
     disposeSerialPins();
     disposeGpioPins();
+    serialQueryStreamController.close();
+    logMessageController.close();
+    messageSubscription?.cancel();
     super.onClose();
   }
 
@@ -167,9 +171,11 @@ class StateController extends GetxController {
     messageSubscription?.cancel();
     messageSubscription = serialPortReader.stream.listen(
       (Uint8List data) {
+        logMessageController.add('<-- Serial: $data');
         handler.onDataReceived(data);
       },
       onError: (error) {
+        logMessageController.add('<-- Serial error: $error');
         LogService.addLog(LogDefinition(
           message: 'Serial stream error: $error',
           type: LogType.error,
@@ -208,6 +214,8 @@ class StateController extends GetxController {
           parseSerialMessage(rawData);
         } else {
           // ignore invalid CRC
+          logMessageController.add(
+              '<-- Serial: CRC mismatch, expected: $expectedCrcBytes, received: $receivedCrcBytes');
         }
       },
       cancelOnError: false,
@@ -410,11 +418,14 @@ class StateController extends GetxController {
     Uint8List bytes = Uint8List.fromList(message);
     _currentSerialMessage.value = m;
     update();
+
     enableSerialTransmit();
     await wait(1);
     try {
       serialPort.write(bytes);
+      logMessageController.add('--> Serial: $bytes');
     } on Exception catch (e) {
+      logMessageController.add('--> Serial: $e');
       LogService.addLog(
           LogDefinition(message: e.toString(), type: LogType.error));
     }
@@ -461,7 +472,7 @@ class StateController extends GetxController {
       _currentSerialMessage.value = null;
       update();
     }
-
+    logMessageController.add('<-- Serial: ${m.toLog()}');
     switch (command) {
       // update pin states
 
@@ -518,6 +529,7 @@ class StateController extends GetxController {
   }
 
   Future<void> queryTest(int id) async {
+    logMessageController.add('Querying test');
     turnOnSerialLoop();
     await sendSerialMessage(
         SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
@@ -525,13 +537,15 @@ class StateController extends GetxController {
   }
 
   Future<void> querySerialNumber(int id) async {
-     turnOnSerialLoop();
+    logMessageController.add('Querying serial number');
+    turnOnSerialLoop();
     await sendSerialMessage(
         SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
     await waitForSerialResponse();
   }
 
   Future<void> queryModel(int id) async {
+    logMessageController.add('Querying model');
     //
   }
 
