@@ -657,15 +657,14 @@ class StateController extends GetxController {
       do {
         timeoutMillis++;
         await wait(1);
-        if (timeoutMillis >= maxTimeout) {
+        if (timeoutMillis >= kSerialAcknowledgementDelay) {
           _currentSerialMessage.value = null;
           update();
           logMessageController.add(
               'Timeout waiting for serial response, clear current serial message');
           return;
         }
-      } while (currentSerialMessage != null &&
-          timeoutMillis < kSerialAcknowledgementDelay);
+      } while (currentSerialMessage != null && timeoutMillis < maxTimeout);
     }
   }
   //#endregion
