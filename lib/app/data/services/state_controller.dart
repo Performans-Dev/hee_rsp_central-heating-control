@@ -419,6 +419,7 @@ class StateController extends GetxController {
     Uint8List bytes = Uint8List.fromList(message);
     _currentSerialMessage.value = m;
     update();
+    logMessageController.add('--> Current Serial: \n${m.toLog()}');
 
     enableSerialTransmit();
     await wait(1);
@@ -479,8 +480,9 @@ class StateController extends GetxController {
         currentSerialMessage!.index == m.index) {
       _currentSerialMessage.value = null;
       update();
+      logMessageController.add('<-- Current Serial: clear }');
     }
-    logMessageController.add('<-- Serial: ${m.toLog()}');
+    logMessageController.add('<-- Serial: \n${m.toLog()}');
     switch (command) {
       // update pin states
 
@@ -645,7 +647,9 @@ class StateController extends GetxController {
       await wait(kSerialAcknowledgementDelay);
       return;
     } else {
-      logMessageController.add('Waiting for serial response');
+      if (currentSerialMessage != null) {
+        logMessageController.add('Waiting for serial response');
+      }
       int timeoutMillis = 0;
       const maxTimeout = 1000;
       do {
@@ -654,7 +658,8 @@ class StateController extends GetxController {
         if (timeoutMillis >= maxTimeout) {
           _currentSerialMessage.value = null;
           update();
-          logMessageController.add('Timeout waiting for serial response');
+          logMessageController.add(
+              'Timeout waiting for serial response, clear current serial message');
           return;
         }
       } while (currentSerialMessage != null &&
