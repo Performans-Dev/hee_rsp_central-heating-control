@@ -1,9 +1,5 @@
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/data/models/account.dart';
-import 'package:central_heating_control/app/data/models/activation_result.dart';
-import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +69,7 @@ Future<void> main() async {
 
   /// OVERRIDE SETTINGS TO SKIP SETUP SEQUENCE
   //#region SkipSetup
-  Box.setBool(key: Keys.didLanguageSelected, value: true);
+  /* Box.setBool(key: Keys.didLanguageSelected, value: true);
   Box.setBool(key: Keys.didTimezoneSelected, value: true);
   Box.setBool(key: Keys.didDateFormatSelected, value: true);
   Box.setBool(key: Keys.didThemeSelected, value: true);
@@ -103,7 +99,7 @@ Future<void> main() async {
     activationTime: 'test',
   );
   Box.setString(key: Keys.account, value: account.toJson());
-  Box.setString(key: Keys.activationResult, value: activationResult.toJson());
+  Box.setString(key: Keys.activationResult, value: activationResult.toJson()); */
   //#endregion
   /// OVERRIDE SETTINGS TO SKIP SETUP SEQUENCE
 

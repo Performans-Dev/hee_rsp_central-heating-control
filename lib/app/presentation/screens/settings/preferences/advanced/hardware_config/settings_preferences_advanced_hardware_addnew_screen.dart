@@ -36,6 +36,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   final StateController stateController = Get.find();
   late int nextHardwareId;
   late StreamSubscription<SerialQuery> subscription;
+  late StreamSubscription<String> logSubscription;
   late Timer timer;
   List<String> messages = [];
 
@@ -45,6 +46,12 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     timer = Timer(Duration.zero, () {});
     subscription = stateController.serialQueryStreamController.stream
         .listen(onSerialQueryDataReceived);
+    logSubscription =
+        stateController.logMessageController.stream.listen((data) {
+      setState(() {
+        messages.insert(0, data);
+      });
+    });
     loadExistingHardwareExtensions();
   }
 
