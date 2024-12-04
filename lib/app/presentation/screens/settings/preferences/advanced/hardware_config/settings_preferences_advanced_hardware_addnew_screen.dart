@@ -248,6 +248,9 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     timer.cancel();
     timer = Timer(const Duration(seconds: 15), () {
       setState(() => screenState = HardwareInstallScreenState.timedout);
+      if (nextHardwareId == 0x01) {
+        stateController.turnOffSerialLoop();
+      }
     });
   }
 
