@@ -648,7 +648,8 @@ class StateController extends GetxController {
       return;
     } else {
       if (currentSerialMessage != null) {
-        logMessageController.add('Waiting for serial response');
+        logMessageController
+            .add('Waiting for serial response ${currentSerialMessage != null}');
       }
       int timeoutMillis = 0;
       const maxTimeout = 1000;

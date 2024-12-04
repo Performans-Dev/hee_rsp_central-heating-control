@@ -50,6 +50,9 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
         stateController.logMessageController.stream.listen((data) {
       setState(() {
         messages.insert(0, data);
+        if (messages.length > 100) {
+          messages.removeRange(99, messages.length);
+        }
       });
     });
     loadExistingHardwareExtensions();
@@ -243,7 +246,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     setState(() => screenState = HardwareInstallScreenState.checking);
     stateController.queryTest(nextHardwareId);
     timer.cancel();
-    timer = Timer(const Duration(seconds: 5), () {
+    timer = Timer(const Duration(seconds: 15), () {
       setState(() => screenState = HardwareInstallScreenState.timedout);
     });
   }
