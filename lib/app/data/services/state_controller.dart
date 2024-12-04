@@ -638,6 +638,8 @@ class StateController extends GetxController {
   }
 
   Future<void> waitForSerialResponse() async {
+    logMessageController.add(
+        'Stack: ${messageStack.length}, Current: ${currentSerialMessage != null}');
     if (currentSerialMessage == null) {
       // no message expected, no need to wait
       return;
@@ -648,8 +650,7 @@ class StateController extends GetxController {
       return;
     } else {
       if (currentSerialMessage != null) {
-        logMessageController
-            .add('Waiting for serial response ${currentSerialMessage != null}');
+        logMessageController.add('Waiting for serial response');
       }
       int timeoutMillis = 0;
       const maxTimeout = 1000;
