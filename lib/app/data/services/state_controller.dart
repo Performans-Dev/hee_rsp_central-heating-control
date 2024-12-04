@@ -437,8 +437,15 @@ class StateController extends GetxController {
   Future<void> sendSerialMessageFromStack() async {
     if (messageStack.isNotEmpty) {
       SerialMessage m = messageStack.removeAt(0);
+      logMessageController
+          .add('processing stack to Send Serial: \n${m.toLog()}');
       await sendSerialMessage(m);
     }
+  }
+
+  void addToSerialMessageStack(SerialMessage m) {
+    _messageStack.add(m);
+    update();
   }
 
   void turnOnSerialLoop() {
@@ -532,7 +539,8 @@ class StateController extends GetxController {
   Future<void> queryTest(int id) async {
     logMessageController.add('Querying test');
     turnOnSerialLoop();
-    await sendSerialMessage(
+
+    addToSerialMessageStack(
         SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
     await waitForSerialResponse();
   }
@@ -540,7 +548,7 @@ class StateController extends GetxController {
   Future<void> querySerialNumber(int id) async {
     logMessageController.add('Querying serial number');
     turnOnSerialLoop();
-    await sendSerialMessage(
+    addToSerialMessageStack(
         SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
     await waitForSerialResponse();
   }
@@ -637,6 +645,7 @@ class StateController extends GetxController {
       await wait(kSerialAcknowledgementDelay);
       return;
     } else {
+      logMessageController.add('Waiting for serial response');
       int timeoutMillis = 0;
       const maxTimeout = 1000;
       do {
@@ -645,6 +654,7 @@ class StateController extends GetxController {
         if (timeoutMillis >= maxTimeout) {
           _currentSerialMessage.value = null;
           update();
+          logMessageController.add('Timeout waiting for serial response');
           return;
         }
       } while (currentSerialMessage != null &&
