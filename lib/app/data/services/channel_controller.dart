@@ -385,12 +385,12 @@ class ChannelController extends GetxController {
 
   void enableSerialTransmit() {
     txEnablePin.write(true);
-    logMessageController.add('enabling serial transmit');
+    // logMessageController.add('enabling serial transmit');
   }
 
   void disableSerialTransmit() {
     txEnablePin.write(false);
-    logMessageController.add('disabling serial transmit');
+    // logMessageController.add('disabling serial transmit');
   }
 
   Future<void> sendSerialMessage(SerialMessage m) async {

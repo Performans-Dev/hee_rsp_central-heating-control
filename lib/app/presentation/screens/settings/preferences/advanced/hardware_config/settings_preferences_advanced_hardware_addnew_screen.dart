@@ -33,7 +33,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     extends State<SettingsPreferencesAdvancedHardwareConfigAddNewScreen> {
   HardwareInstallScreenState screenState = HardwareInstallScreenState.idle;
   final DataController dataController = Get.find();
-  final ChannelController stateController = Get.find();
+  final ChannelController channelController = Get.find();
   late int nextHardwareId;
   late StreamSubscription<SerialQuery> subscription;
   late StreamSubscription<String> logSubscription;
@@ -44,14 +44,14 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   void initState() {
     super.initState();
     timer = Timer(Duration.zero, () {});
-    subscription = stateController.serialQueryStreamController.stream
+    subscription = channelController.serialQueryStreamController.stream
         .listen(onSerialQueryDataReceived);
     logSubscription =
-        stateController.logMessageController.stream.listen((data) {
+        channelController.logMessageController.stream.listen((data) {
       setState(() {
         messages.insert(0, data);
-        if (messages.length > 100) {
-          messages.removeRange(99, messages.length);
+        if (messages.length > 1000) {
+          messages.removeRange(999, messages.length);
         }
       });
     });
@@ -215,10 +215,27 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
             children: [
               Expanded(child: pageBody),
               SizedBox(
-                width: 200,
-                child: ListView.builder(
-                    itemBuilder: (context, index) => Text(messages[index]),
-                    itemCount: messages.length),
+                width: 280,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      color: Colors.green.withOpacity(0.2),
+                      child: Obx(() => Text(
+                          channelController.currentSerialMessage == null
+                              ? '---'
+                              : channelController.currentSerialMessage!
+                                  .toLog())),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                          itemBuilder: (context, index) =>
+                              Text(messages[index]),
+                          itemCount: messages.length),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -244,12 +261,12 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
 
   Future<void> triggerHardwareCheck() async {
     setState(() => screenState = HardwareInstallScreenState.checking);
-    stateController.queryTest(nextHardwareId);
+    channelController.queryTest(nextHardwareId);
     timer.cancel();
     timer = Timer(const Duration(seconds: 15), () {
       setState(() => screenState = HardwareInstallScreenState.timedout);
       if (nextHardwareId == 0x01) {
-        stateController.turnOffSerialLoop();
+        channelController.turnOffSerialLoop();
       }
     });
   }
