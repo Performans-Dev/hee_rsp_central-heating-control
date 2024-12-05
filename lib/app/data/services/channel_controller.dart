@@ -398,7 +398,7 @@ class ChannelController extends GetxController {
     Uint8List bytes = Uint8List.fromList(message);
     _currentSerialMessage.value = m;
     update();
-    logMessageController.add('--> Current Serial: \n${m.toLog()}');
+    // logMessageController.add('--> Current Serial: \n${m.toLog()}');
 
     enableSerialTransmit();
     await wait(1);
