@@ -635,7 +635,7 @@ class ChannelController extends GetxController {
         logMessageController.add('Waiting for serial response');
       }
       int timeoutMillis = 0;
-      const maxTimeout = 1000;
+      final maxTimeout = currentSerialMessage!.command == 0x64 ? 10000 : 1000;
       do {
         timeoutMillis++;
         await wait(1);
