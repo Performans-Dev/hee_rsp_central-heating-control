@@ -7,7 +7,7 @@ enum HwConnectionType {
   ble,
 }
 
-class HardwareExtension {
+class Hardware {
   int id;
   int deviceId;
   String modelName;
@@ -21,7 +21,7 @@ class HardwareExtension {
   String manufacturer;
   String description;
 
-  HardwareExtension({
+  Hardware({
     required this.id,
     required this.deviceId,
     required this.modelName,
@@ -84,7 +84,7 @@ class HardwareExtension {
           };
   }
 
-  factory HardwareExtension.fromMap(Map<String, dynamic> map) {
+  factory Hardware.fromMap(Map<String, dynamic> map) {
     var conTypeStr = map['connectionType'];
     late List<dynamic> conTypeList;
     if (conTypeStr != null) {
@@ -97,7 +97,7 @@ class HardwareExtension {
 
       conTypes.add(conType);
     }
-    return HardwareExtension(
+    return Hardware(
       id: map['id']?.toInt() ?? 0,
       deviceId: map['deviceId']?.toInt() ?? 0,
       modelName: map['modelName'] ?? '',
@@ -113,8 +113,8 @@ class HardwareExtension {
     );
   }
 
-  factory HardwareExtension.fromDb(Map<String, dynamic> map) {
-    return HardwareExtension(
+  factory Hardware.fromDb(Map<String, dynamic> map) {
+    return Hardware(
       id: map['id']?.toInt() ?? 0,
       deviceId: map['deviceId']?.toInt() ?? 0x00,
       modelName: map['modelName'] ?? '',
@@ -132,6 +132,6 @@ class HardwareExtension {
 
   String toJson() => json.encode(toMap());
 
-  factory HardwareExtension.fromJson(String source) =>
-      HardwareExtension.fromMap(json.decode(source));
+  factory Hardware.fromJson(String source) =>
+      Hardware.fromMap(json.decode(source));
 }

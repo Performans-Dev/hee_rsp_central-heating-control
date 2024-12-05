@@ -81,7 +81,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
 
                               if (result != null && result.isNotEmpty) {
                                 plan.name = result;
-                                dc.updatePlanDefinition(plan: plan);
+                                dc.updatePlanDetail(plan: plan);
                               }
                             },
                       icon: const Icon(Icons.edit),
@@ -425,7 +425,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
               hasThermostat: selectedHasThermostat ? 1 : 0,
             ))
         .toList();
-    await dataController.addPlanDetailsToDb(dataToSave);
+    await dataController.addPlanDetails(dataToSave);
     selectedBoxes.clear();
     editedOnTheFly = false;
     setState(() {});

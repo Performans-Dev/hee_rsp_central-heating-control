@@ -1,41 +1,45 @@
-import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:central_heating_control/app/core/utils/byte.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 
 class SerialMessage {
-  int deviceId;
+  int device;
   int command;
-  int data1;
-  int data2;
+  int index;
+  int arg;
   SerialMessage({
-    required this.deviceId,
+    required this.device,
     required this.command,
-    this.data1 = 0x00,
-    this.data2 = 0x00,
+    this.index = 0x00,
+    this.arg = 0x00,
   });
 
-  List<int> toBytes() {
-    return [deviceId, command, data1, data2];
+  List<int> toBytesWithCrc() {
+    // Create data array for CRC calculation (without placeholders)
+    List<int> dataForCrc = [
+      device,
+      command,
+      index,
+      arg,
+    ];
+
+    // Calculate CRC only once using the actual data
+    List<int> crcBytes = ByteUtils.getCrcBytes(Uint8List.fromList(dataForCrc));
+
+    // Return complete message with start byte, data, CRC, and stop bytes
+    return [
+      startByte,
+      device,
+      command,
+      index,
+      arg,
+      ...crcBytes,
+      ...stopBytes,
+    ];
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'deviceId': deviceId,
-      'command': command,
-      'data1': data1,
-      'data2': data2,
-    };
-  }
+  Uint8List toBytes() => Uint8List.fromList(toBytesWithCrc());
 
-  factory SerialMessage.fromMap(Map<String, dynamic> map) {
-    return SerialMessage(
-      deviceId: map['deviceId']?.toInt() ?? 0,
-      command: map['command']?.toInt() ?? 0,
-      data1: map['data1']?.toInt() ?? 0,
-      data2: map['data2']?.toInt() ?? 0,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory SerialMessage.fromJson(String source) =>
-      SerialMessage.fromMap(json.decode(source));
+  String toLog() => ByteUtils.bytesToHex(Uint8List.fromList(toBytesWithCrc()));
 }

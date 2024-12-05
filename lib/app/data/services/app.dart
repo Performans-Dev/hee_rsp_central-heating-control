@@ -33,6 +33,280 @@ import 'package:get_storage/get_storage.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
+  //#region MARK: Session
+  final RxString _sessionKey = ''.obs;
+  String get sessionKey => _sessionKey.value;
+
+  void startSession() {
+    _sessionKey.value = Guid.newGuid.toString();
+    update();
+  }
+  //#endregion
+
+  //#region MARK: Device Info
+
+  final Rxn<ChcDevice> _deviceInfo = Rxn();
+  ChcDevice? get deviceInfo => _deviceInfo.value;
+
+  Future<void> readDevice() async {
+    ChcDevice device = await DeviceUtils.createDeviceInfo();
+    _deviceInfo.value = device;
+    _didDeviceInfoCreated.value = true;
+    update();
+  }
+  //#endregion
+
+  //#region MARK: Connectivity
+  late final StreamSubscription<List<ConnectivityResult>>
+      _connectivitySubscription;
+
+  final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
+  NetworkIndicator get networkIndicator => _networkIndicator.value;
+
+  final Rxn<String> _networkName = Rxn();
+  String? get networkName => _networkName.value;
+
+  final Rxn<String> _networkIP = Rxn();
+  String? get networkIp => _networkIP.value;
+
+  final Rxn<String> _networkGateway = Rxn();
+  String? get networkGateway => _networkGateway.value;
+
+  final Rxn<String> _eth0Mac = Rxn();
+  String? get eth0Mac => _eth0Mac.value;
+
+  final Rxn<String> _wlan0Mac = Rxn();
+  String? get wlan0Mac => _wlan0Mac.value;
+
+  _onConnectivityChanged(List<ConnectivityResult> results) {
+    bool connected = false;
+    for (final result in results) {
+      if (!connected) {
+        switch (result) {
+          case ConnectivityResult.wifi:
+            connected = true;
+            _networkIndicator.value = NetworkIndicator.wifi;
+            break;
+          case ConnectivityResult.ethernet:
+            connected = true;
+            _networkIndicator.value = NetworkIndicator.ethernet;
+            break;
+          case ConnectivityResult.vpn:
+          case ConnectivityResult.mobile:
+          case ConnectivityResult.bluetooth:
+            connected = true;
+            _networkIndicator.value = NetworkIndicator.none;
+            break;
+          default:
+            connected = false;
+            _networkIndicator.value = NetworkIndicator.none;
+            break;
+        }
+      }
+    }
+    _didConnected.value = connected;
+    _didConnectivityResultReceived.value = true;
+    update();
+    //checkInternetConnection();
+    getNetworkInfo();
+  }
+
+  Future<void> getMacAddresses() async {
+    // Run the 'ip link' command and get the output
+    final processResult = await Process.run('ip', ['link']);
+    final ipLinkOutput = processResult.stdout as String;
+
+    // Define regular expression pattern to match interface name and MAC address
+    final macPattern =
+        RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
+
+    String? ethMac;
+    String? wifiMac;
+
+    // Iterate through all matches
+    for (final match in macPattern.allMatches(ipLinkOutput)) {
+      final interface = match.group(1);
+      final macAddress = match.group(2);
+
+      // Identify Ethernet and Wi-Fi interfaces by their names
+      if (interface != null && interface.contains(RegExp(r'enp|eth'))) {
+        ethMac = macAddress;
+      } else if (interface != null && interface.contains(RegExp(r'wl|wlan'))) {
+        wifiMac = macAddress;
+      }
+    }
+    _eth0Mac.value = ethMac;
+    _wlan0Mac.value = wifiMac;
+    update();
+  }
+
+  Future<void> checkInternetConnection() async {
+    final result = await AppProvider.testInternetConnection();
+    _didConnected.value = result;
+    _didConnectionChecked.value = true;
+    update();
+  }
+
+  Future<void> getNetworkInfo() async {
+    _networkName.value = '';
+    _networkIP.value = '';
+    _networkGateway.value = '';
+    _eth0Mac.value = '';
+    _wlan0Mac.value = '';
+    update();
+    await getMacAddresses();
+    final info = NetworkInfo();
+    final wifiName = await info.getWifiName();
+    final wifiIp = await info.getWifiIP();
+    final wifiGateway = await info.getWifiGatewayIP();
+    _networkName.value = wifiName;
+    _networkIP.value = wifiIp ?? "-";
+    _networkGateway.value = wifiGateway ?? "-";
+
+    update();
+  }
+  //#endregion
+
+  //////////////////// remove below
+  ///
+  /// PreferencesDefiniton
+  /// language, timezone, dateformat, theme,
+  /// screensaverType (blank, static, slideshow), LockDurationIdleTimeout, slideShowTimer etc
+  ///
+  /// bool get allSelected => didSelectedLanguage && didSelectedTimezone  && didSelectedDateFormat && didSelectedTheme
+  ///
+  /// HeethingsAccount
+  /// heethings user id, token, (email/phone), subscriptionResult (int, date),
+  /// terms consent status, privacy consent status
+  /// bool get created => user.isnotempty && token.isnotempty && subscriptionResult.isnotempty && termsStatus && privacyStatus
+  ///
+  ///
+  /// List<AppUser> db deki liste.
+  /// bool get hasRequiredAppUserRoles => en az 1 admin ve 1 tech support var.
+  ///
+  /// AppUser? loggedInAppUser.
+  /// bool get hasLoggedInUser => loggedInAppUser != null
+  ///
+  /// RxBool shouldUpdateApp
+  ///
+  /// bool get isSerialNumberValid => deviceInfo!=null && deviceInfo.serialNumber == Box.serialNumber
+  ///
+  /// RxBool didConnected
+  ///
+  /// onInit
+  /// register connectivity listener
+  /// checkFoldersExists()
+  /// checkProvisionCompleted()
+  /// readDeviceInfo()
+  /// startSession()
+  /// applyPrefencesFromBox()
+  ///
+  /// onReady
+  /// loadAppUserList() ** try first onInit. if it fails, try onReady
+  ///
+
+/////////////////////////////////////////////////////////////////////
+  /// ProductionTestScreen
+  /// deviceInfo.serialNumber goster + qr butonu
+  /// connection status true/false + connect-disconnect button (otomatik Wifi HeethingsTech:12345678)
+  /// trigger Provision Button -> API ->serino
+  /// response gelince diske dosya yaz
+  /// {
+  /// "provisionId": "abc",
+  /// "secretKey": "def",
+  /// "serialNumber": "ghi",
+  /// "username": "jkl",
+  /// "success":true,
+  /// "createdAt": "datetime",
+  /// }
+  ///
+  ///
+  ///
+  ///
+/////////////////////////////////////////////////////////////////////
+  /// SetupScreen
+  /// setupcontroller neyin eksin oldugunu karar verir
+  /// data olarak appController dan-> prefence + heethings accont + db user alir
+  /// uygun screen listesini olusturur
+  /// screen gosterir
+  /// kullanici birseyi kaydettiginde box gunceller, appController daki degiskenleri update eder
+  /// bitince tesekkur ve box update
+  ///
+  /// DiskErrorScreen, ForceUpdateScreen ve InvalidUsageScreen
+  /// bos placeholder ekran. bu ekranlar gelirse baska hic bir ekrana gidemez.
+  ///
+  ///
+  ///
+  ///
+  /// IVIR ZIVIR SEYLER
+  ///
+  ///
+  /// Future<void> checkFoldersExists() async {
+  /// //[ -d folder_path ] && echo "Folder exists" || echo "Folder does not exist"
+
+  ///     final List<bool> results = [];
+  ///     final List<String> paths = [
+  ///         '/home/pi/Heethings/CC/application',
+  ///         '/home/pi/Heethings/CC/diagnose/app',
+  ///         '/home/pi/Heethings/CC/databases',
+  ///         '/home/pi/Heethings/CC/logs',
+  ///         '/home/pi/Heethings/CC/elevator/app',
+  ///     ];
+  ///
+  ///     for (final path in paths) {
+  ///         final result = await Process.run('test', ['-d', path]);
+  ///         results.add(result.exitCode == 0);
+  ///     }
+  ///
+  ///     setDoesFoldersExists( results.every((r) => r) );
+  ///     setDidCheckFoldersExists(true);
+  /// }
+  ///
+  /// future void checkProductionTestsCompleted() {
+  ///     File f = File (/db path/production.json)
+  ///     final content = await f.readAsString();
+  ///     final map = jsonDecode(content);
+  ///     setProductionTestsCompleted ( map['success'])
+  ///     setDidCheckProductionTestResults(true);
+  /// }
+  ///
+  /// AppController
+  /// bool get doesFoldersExists
+  /// bool get doesProvisionExists
+  ///
+  /// bool didCheckedFoldersExists
+  /// bool didCheckedProvisionResults
+  ///
+  ///
+  /// bool get didPreferencesSelected {
+  ///     // Box.preferences
+  ///     // AppController.preferences
+  ///     // return pref.language.selected && pref.timezone.selected && pref.dateformat.selected && pref.theme.selected
+  /// }
+  ///
+  ///
+  /// bool get didAccountCreated {
+  ///     // Box.account
+  ///     // AppController.account
+  ///     // return account.user.token.isNotEmpty && account.subscription.isNotEmpty && account.consentsStatus.allApproved
+  /// }
+  ///
+  /// bool get hasRequiredAppUserRoles {
+  ///     return hasAdminUser && hasTechSupportUser
+  /// }
+  ///
+  /// bool get shouldUpdateApp {
+  ///     return hasConnection && hasNewVersion
+  /// }
+  ///
+  /// bool get isSerialNumberValid {
+  ///     return cpuSerial == serialOnDisk
+  /// }
+  ///
+  ///
+  ///
+  ///
+
   //#region MARK: Super
   @override
   void onInit() {
@@ -154,16 +428,6 @@ class AppController extends GetxController {
   }
   //#endregion
 
-  //#region MARK: Session
-  final RxString _sessionKey = ''.obs;
-  String get sessionKey => _sessionKey.value;
-
-  void startSession() {
-    _sessionKey.value = Guid.newGuid.toString();
-    update();
-  }
-  //#endregion
-
   //#region MARK: Users
   final RxList<AppUser> _appUserList = <AppUser>[].obs;
   List<AppUser> get appUserList => _appUserList;
@@ -251,6 +515,7 @@ class AppController extends GetxController {
     }
   }
   //#endregion
+
 
   //#region MARK: Connectivity
   late final StreamSubscription<List<ConnectivityResult>>
@@ -648,11 +913,6 @@ class AppController extends GetxController {
 
   //#endregion
 
-  //#region MARK: Pin Reset
-  final Rxn<Account> _pinResetAccount = Rxn();
-  Account? get pinResetAccount => _pinResetAccount.value;
-  //#endregion
-
   //#region MARK: Terms-Privacy
 
   //#endregion
@@ -672,6 +932,33 @@ class AppController extends GetxController {
   void setSlideTime(value) {
     _slideShowTime.value = value;
     update();
+  }
+  //#endregion
+
+  //#region MARK: AppSettings
+  final Rxn<AppSettings> _appSettings = Rxn();
+  AppSettings? get appSettings => _appSettings.value;
+
+  Future<bool> fetchAppSettings() async {
+    if (!didConnected) return false;
+
+    final data = Box.getString(key: Keys.appSettings);
+
+    if (didConnected && data.isEmpty) {
+      final result = await AppProvider.fetchAppSettings();
+      if (result.success && result.data != null) {
+        await Box.setString(
+            key: Keys.appSettings, value: result.data!.toJson());
+        _appSettings.value = result.data;
+      }
+      _didSettingsFetched.value = true;
+      update();
+    } else {
+      if (data.isEmpty) return false;
+      _appSettings.value = AppSettings.fromJson(data);
+      update();
+    }
+    return true;
   }
   //#endregion
 }

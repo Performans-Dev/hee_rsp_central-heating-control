@@ -67,6 +67,42 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
+  /// OVERRIDE SETTINGS TO SKIP SETUP SEQUENCE
+  //#region SkipSetup
+  /* Box.setBool(key: Keys.didLanguageSelected, value: true);
+  Box.setBool(key: Keys.didTimezoneSelected, value: true);
+  Box.setBool(key: Keys.didDateFormatSelected, value: true);
+  Box.setBool(key: Keys.didThemeSelected, value: true);
+  Box.setString(key: Keys.localeLang, value: 'tr');
+  Box.setString(
+      key: Keys.selectedTimezone,
+      value: StaticProvider.getTimezoneList.first['name']);
+  Box.setString(
+      key: Keys.selectedDateFormat,
+      value: StaticProvider.getDateFormatList.first);
+  Box.setSelectedTheme(StaticProvider.getThemeList.first);
+
+  Account account = Account(
+    id: 'test',
+    displayName: 'test',
+    email: 'test',
+    status: 1,
+    token: 'test',
+    createdAt: 'test',
+  );
+  ActivationResult activationResult = ActivationResult(
+    id: 'test',
+    createdAt: 'test',
+    chcDeviceId: 'test',
+    userId: 'test',
+    status: 1,
+    activationTime: 'test',
+  );
+  Box.setString(key: Keys.account, value: account.toJson());
+  Box.setString(key: Keys.activationResult, value: activationResult.toJson()); */
+  //#endregion
+  /// OVERRIDE SETTINGS TO SKIP SETUP SEQUENCE
+
   // bind services
   await AppBindings().dependencies();
 

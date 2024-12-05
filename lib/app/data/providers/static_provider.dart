@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/hardware.dart';
 
 class StaticProvider {
   static const List<Map<String, dynamic>> getLanguageList = [
@@ -197,8 +197,11 @@ class StaticProvider {
     'crimson',
   ];
 
-  static final List<HardwareExtension> availableHardwareExtensions = [
-    HardwareExtension(
+  //static String termsContent = '';
+  //static String privacyContent = '';
+
+  static final List<Hardware> availableHardwareExtensions = [
+    Hardware(
       id: 0,
       deviceId: 0x00,
       modelName: '2041.01-V1.00',

@@ -4,7 +4,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
@@ -111,8 +111,8 @@ class DbProvider {
     await db.execute(Keys.dbDropZoneUsers);
     await db.execute(Keys.dbCreateZoneUsers);
 
-    await db.execute(Keys.dbDropHardwareParameters);
-    await db.execute(Keys.dbCreateHardwareParameters);
+    // await db.execute(Keys.dbDropHardwareParameters);
+    // await db.execute(Keys.dbCreateHardwareParameters);
 
     await db.execute(Keys.dbDropPlans);
     await db.execute(Keys.dbCreatePlans);
@@ -129,9 +129,10 @@ class DbProvider {
       }
     }
 
-    await db.execute(Keys.dbDropHardwareExtensionsDropTable);
-    await db.execute(Keys.dbCreateHardwareExtensionsCreateTable);
+    await db.execute(Keys.dbDropHardwareTable);
+    await db.execute(Keys.dbCreateHardwareTable);
     await db.execute(Keys.dbInsertMainBoardHardwareExtension);
+    await db.execute(Keys.dbInsertSampleHardwareExtension);
 
     await db.execute(Keys.dbDropTemperatureValues);
     await db.execute(Keys.dbCreateTemperatureValues);
@@ -1122,36 +1123,36 @@ class DbProvider {
   //MARK: HARDWARE CONFIG
 
   //#region HARDWARE LIST
-  Future<List<HardwareExtension>> getHardwareExtensions() async {
-    final hwExtList = <HardwareExtension>[];
+  Future<List<Hardware>> getHardwareDevices() async {
+    final hwList = <Hardware>[];
     final db = await database;
-    if (db == null) return hwExtList;
+    if (db == null) return hwList;
     try {
-      final data = await db.query(Keys.tableHardwareExtensions);
+      final data = await db.query(Keys.tableHardwares);
       for (final map in data) {
-        final ext = HardwareExtension.fromDb(map);
-        hwExtList.add(ext);
+        final ext = Hardware.fromDb(map);
+        hwList.add(ext);
       }
-      return hwExtList;
+      return hwList;
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(
         message: err.toString(),
         level: LogLevel.error,
         type: LogType.database,
       ));
-      return hwExtList;
+      return hwList;
     }
   }
   //#endregion
 
   //#region HARDWARE ADD
-  Future<int> addHardwareExtension(HardwareExtension hwExt) async {
+  Future<int> addHardwareDevice(Hardware hw) async {
     final db = await database;
     if (db == null) return -1;
     try {
       final int id = await db.insert(
-        Keys.tableHardwareExtensions,
-        hwExt.toDb(),
+        Keys.tableHardwares,
+        hw.toDb(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       return id;
@@ -1167,14 +1168,14 @@ class DbProvider {
   //#endregion
 
   //#region HARDWARE DELETE
-  Future<int> deleteHardwareExtension(HardwareExtension hwExt) async {
+  Future<int> deleteHardwareDevice(Hardware hw) async {
     final db = await database;
     if (db == null) return -1;
     try {
       return await db.delete(
-        Keys.tableHardwareExtensions,
+        Keys.tableHardwares,
         where: Keys.queryId,
-        whereArgs: [hwExt.id],
+        whereArgs: [hw.id],
       );
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(
@@ -1188,15 +1189,15 @@ class DbProvider {
   //#endregion
 
   //#region HARDWARE UPDATE
-  Future<int> updateHardwareExtension(HardwareExtension hwExt) async {
+  Future<int> updateHardwareDevice(Hardware hw) async {
     final db = await database;
     if (db == null) return -1;
     try {
       return await db.update(
-        Keys.tableHardwareExtensions,
-        hwExt.toDb(),
+        Keys.tableHardwares,
+        hw.toDb(),
         where: Keys.queryId,
-        whereArgs: [hwExt.id],
+        whereArgs: [hw.id],
       );
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(
