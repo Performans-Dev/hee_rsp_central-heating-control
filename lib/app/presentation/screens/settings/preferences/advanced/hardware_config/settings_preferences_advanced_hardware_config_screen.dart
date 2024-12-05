@@ -72,10 +72,20 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                                   Text(hw.description),
                                   Text(hw.serialNumber),
                                   if (hw.deviceId != 0x00)
-                                    CircleAvatar(
-                                      child: Text(
-                                        hw.deviceId.toString(),
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Chip(
+                                          label: Text(
+                                            hw.deviceId.toString(),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.more_vert),
+                                          onPressed: () {},
+                                        ),
+                                      ],
                                     ),
                                 ],
                               ),

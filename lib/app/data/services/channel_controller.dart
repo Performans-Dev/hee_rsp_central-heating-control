@@ -642,8 +642,7 @@ class ChannelController extends GetxController {
         if (timeoutMillis >= kSerialAcknowledgementDelay) {
           _currentSerialMessage.value = null;
           update();
-          logMessageController.add(
-              'Timeout waiting for serial response, clear current serial message');
+          logMessageController.add('Serial response timeout, clearing current');
           return;
         }
       } while (currentSerialMessage != null && timeoutMillis < maxTimeout);

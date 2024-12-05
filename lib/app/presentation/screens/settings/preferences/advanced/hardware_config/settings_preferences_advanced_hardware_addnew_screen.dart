@@ -230,9 +230,9 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                     ),
                     Expanded(
                       child: ListView.builder(
-                          itemBuilder: (context, index) =>
-                              Text(messages[index]),
-                          itemCount: messages.length),
+                        itemBuilder: (context, index) => Text(messages[index]),
+                        itemCount: messages.length,
+                      ),
                     ),
                   ],
                 ),
