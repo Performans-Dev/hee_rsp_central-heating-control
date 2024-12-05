@@ -398,13 +398,12 @@ class ChannelController extends GetxController {
     Uint8List bytes = Uint8List.fromList(message);
     _currentSerialMessage.value = m;
     update();
-    // logMessageController.add('--> Current Serial: \n${m.toLog()}');
 
     enableSerialTransmit();
     await wait(1);
     try {
       serialPort.write(bytes);
-      logMessageController.add('--> Serial: $bytes');
+      logMessageController.add('--> ${ByteUtils.bytesToHex(bytes)}');
     } on Exception catch (e) {
       logMessageController.add('--> Serial: $e');
       LogService.addLog(
