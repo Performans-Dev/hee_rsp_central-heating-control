@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/byte.dart';
-import 'package:central_heating_control/app/data/services/state_controller.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 
 class SerialMessage {
   int device;

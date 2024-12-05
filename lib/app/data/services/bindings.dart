@@ -3,7 +3,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/data/services/screen_saver.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/app/data/services/state_controller.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:get/get.dart';
 
 class AppBindings extends Bindings {
@@ -21,16 +21,19 @@ class AppBindings extends Bindings {
       () async => AppController(),
       permanent: true,
     );
+
     /// GPIO and Serial Pins and its states
     await Get.putAsync(
-      () async => StateController(),
+      () async => ChannelController(),
       permanent: true,
     );
+
     /// Handles DB related data
     await Get.putAsync(
       () async => DataController(),
       permanent: true,
     );
+
     ///
     await Get.putAsync(
       () async => ProcessController(),

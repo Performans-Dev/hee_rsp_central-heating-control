@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
-import 'package:central_heating_control/app/data/services/state_controller.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,7 +33,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     extends State<SettingsPreferencesAdvancedHardwareConfigAddNewScreen> {
   HardwareInstallScreenState screenState = HardwareInstallScreenState.idle;
   final DataController dataController = Get.find();
-  final StateController stateController = Get.find();
+  final ChannelController stateController = Get.find();
   late int nextHardwareId;
   late StreamSubscription<SerialQuery> subscription;
   late StreamSubscription<String> logSubscription;
@@ -229,10 +229,10 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
 
   Future<void> loadExistingHardwareExtensions() async {
     setState(() => screenState = HardwareInstallScreenState.acquiringNextId);
-    await dataController.loadHardwareExtensions();
+    await dataController.loadHardwareDevices();
     setState(() => nextHardwareId = 0);
 
-    List<HardwareExtension> tmpList = dataController.hardwareExtensionList;
+    List<Hardware> tmpList = dataController.hardwareDeviceList;
     tmpList.sort((a, b) => a.deviceId.compareTo(b.deviceId));
     if (tmpList.isNotEmpty) {
       setState(() => nextHardwareId = tmpList.last.deviceId + 1);

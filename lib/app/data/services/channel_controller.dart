@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/byte.dart';
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
@@ -15,12 +15,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
 
-int kMainBoardDigitalOutputPinCount = 8;
-int kExtBoardDigitalOutputPinCount = 6;
-int kMainBoardDigitalInputPinCount = 8;
-int kExtBoardDigitalInputPinCount = 6;
-int kMainBoardAnalogInputPinCount = 4;
-int kExtBoardAnalogInputPinCount = 1;
+//#region MARK: Constants
 int kMainBoardButtonPinCount = 4;
 String inputChannelName = 'CHI {n}';
 String outputChannelName = 'CHO {n}';
@@ -33,8 +28,10 @@ List<int> stopBytes = [0x0D, 0x0A];
 String serialKey = '/dev/ttyS0';
 int kSerialAcknowledgementDelay = 700;
 int kSerialLoopDelay = 100;
+//#endregion
 
-class StateController extends GetxController {
+class ChannelController extends GetxController {
+  //#region MARK: Variables
   final SerialMessageHandler handler = SerialMessageHandler();
   late SerialPort serialPort;
   SerialPortConfig config = SerialPortConfig();
@@ -43,6 +40,7 @@ class StateController extends GetxController {
   late StreamController<SerialQuery> serialQueryStreamController;
   late StreamController<String> logMessageController;
   // int _lastSensorDataFetch = 0;
+  //#endregion
 
   //#region MARK: Super
   @override
@@ -88,19 +86,12 @@ class StateController extends GetxController {
 
   //#region MARK: Device List
 
-  final RxList<HardwareExtension> _hardwareList = <HardwareExtension>[].obs;
-  List<HardwareExtension> get hardwareList => _hardwareList;
-
-  // final RxList<int> _deviceIds = <int>[].obs;
-  // List<int> get deviceIds => _deviceIds;
+  final RxList<Hardware> _hardwareList = <Hardware>[].obs;
+  List<Hardware> get hardwareList => _hardwareList;
 
   Future<void> activateHardwares() async {
-    final extList = await DbProvider.db.getHardwareExtensions();
+    final extList = await DbProvider.db.getHardwareDevices();
     _hardwareList.assignAll(extList);
-
-    // for (final ext in extList) {
-    //   _deviceIds.add(0x00 + ext.id);
-    // }
     update();
   }
 
@@ -265,20 +256,6 @@ class StateController extends GetxController {
     in8.dispose();
     txEnablePin.dispose();
   }
-  //#endregion
-
-  //#region MARK: Global States
-  /// Onboard
-  /// 8 digital input
-  /// 8 digital output
-  /// 4 analog input
-  /// 4 button
-  /// 1 buzzer
-  ///
-  /// serial extension (0-30)
-  /// 6 digital input
-  /// 6 digital output
-  /// 1 analog ntc input
   //#endregion
 
   //#region MARK: Channels

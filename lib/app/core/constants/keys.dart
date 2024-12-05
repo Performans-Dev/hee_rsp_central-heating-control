@@ -71,10 +71,9 @@ class Keys {
   static const String tableZoneUsers = 'zoneUsers';
   static const String tableZoneHeaters = 'zoneHeaters';
   static const String tableZoneSensors = 'zoneSensors';
-  static const String tableHardwareParameters = 'hardwareParameters';
   static const String tablePlans = 'plans';
   static const String tablePlanDetails = 'planDetails';
-  static const String tableHardwareExtensions = 'hardwareExtensions';
+  static const String tableHardwares = 'hardwares';
   static const String tableTemperatureValues = 'temperatureValues';
 
   static const String queryId = 'id=?';
@@ -184,22 +183,22 @@ class Keys {
     )
   ''';
 
-  static const String dbDropHardwareParameters = '''
-    DROP TABLE IF EXISTS hardwareParameters
-  ''';
+  // static const String dbDropHardwareParameters = '''
+  //   DROP TABLE IF EXISTS hardwareParameters
+  // ''';
 
-  static const String dbCreateHardwareParameters = '''
-    CREATE TABLE IF NOT EXISTS hardwareParameters (
-      id INTEGER NOT NULL DEFAULT 0,
-      name TEXT,
-      inputCount INTEGER NOT NULL DEFAULT 0,
-      outputCount INTEGER NOT NULL DEFAULT 0,
-      analogCount INTEGER NOT NULL DEFAULT 0,
-      version TEXT,
-      type TEXT,
-      isExtension INTEGER NOT NULL DEFAULT 1
-    )
-  ''';
+  // static const String dbCreateHardwareParameters = '''
+  //   CREATE TABLE IF NOT EXISTS hardwareParameters (
+  //     id INTEGER NOT NULL DEFAULT 0,
+  //     name TEXT,
+  //     inputCount INTEGER NOT NULL DEFAULT 0,
+  //     outputCount INTEGER NOT NULL DEFAULT 0,
+  //     analogCount INTEGER NOT NULL DEFAULT 0,
+  //     version TEXT,
+  //     type TEXT,
+  //     isExtension INTEGER NOT NULL DEFAULT 1
+  //   )
+  // ''';
 
   static const String dbDropPlans = '''
     DROP TABLE IF EXISTS plans
@@ -256,13 +255,13 @@ class Keys {
   ''';
   //#endregion
 
-  //#region Hardware Extensions
-  static const String dbDropHardwareExtensionsDropTable = '''
-    DROP TABLE IF EXISTS hardwareExtensions
+  //#region Hardware
+  static const String dbDropHardwareTable = '''
+    DROP TABLE IF EXISTS hardwares
   ''';
 
-  static const String dbCreateHardwareExtensionsCreateTable = '''
-    CREATE TABLE IF NOT EXISTS hardwareExtensions (
+  static const String dbCreateHardwareTable = '''
+    CREATE TABLE IF NOT EXISTS hardwares (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       deviceId INTEGER NOT NULL DEFAULT 0,
       modelName TEXT,
@@ -279,14 +278,14 @@ class Keys {
   ''';
 
   static const String dbInsertMainBoardHardwareExtension = '''
-    INSERT INTO hardwareExtensions 
+    INSERT INTO hardwares
     (deviceId, modelName, diCount, doCount, adcCount, dacCount, hardwareVersion, 
     firmwareVersion, serialNumber, manufacturer, description) VALUES 
     (0x00, 'Mainboard', 8, 8, 4, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '')
   ''';
 
   static const String dbInsertSampleHardwareExtension = '''
-    INSERT INTO hardwareExtensions 
+    INSERT INTO hardwares
     (deviceId, modelName, diCount, doCount, adcCount, dacCount, hardwareVersion, 
     firmwareVersion, serialNumber, manufacturer, description) VALUES 
     (0x01, '2041.01', 6, 6, 1, 0, '1.0.0', '1.0.0', 'N/A', 'Heethings', '')

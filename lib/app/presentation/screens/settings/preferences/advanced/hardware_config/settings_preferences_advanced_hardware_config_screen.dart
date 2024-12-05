@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -38,7 +38,7 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                 ],
               ),
               Expanded(
-                child: dc.hardwareExtensionList.isEmpty
+                child: dc.hardwareDeviceList.isEmpty
                     ? const Center(
                         child: Text('no hardware installed'),
                       )
@@ -47,8 +47,7 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3),
                         itemBuilder: (context, index) {
-                          final HardwareExtension hw =
-                              dc.hardwareExtensionList[index];
+                          final Hardware hw = dc.hardwareDeviceList[index];
                           return Card(
                             child: Container(
                               padding: const EdgeInsets.all(20),
@@ -374,7 +373,7 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                               ],
                             ), */
                         },
-                        itemCount: dc.hardwareExtensionList.length,
+                        itemCount: dc.hardwareDeviceList.length,
                       ),
               ),
             ],
