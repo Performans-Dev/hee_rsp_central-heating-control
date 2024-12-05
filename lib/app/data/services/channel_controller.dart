@@ -630,18 +630,18 @@ class ChannelController extends GetxController {
       await wait(kSerialAcknowledgementDelay);
       return;
     } else {
-      if (currentSerialMessage != null) {
-        logMessageController.add('Waiting for serial response');
-      }
+      // if (currentSerialMessage != null) {
+      //   logMessageController.add('Waiting for serial response');
+      // }
       int timeoutMillis = 0;
       final maxTimeout = currentSerialMessage!.command == 0x64 ? 10000 : 1000;
       do {
         timeoutMillis++;
         await wait(1);
-        if (timeoutMillis >= kSerialAcknowledgementDelay) {
+        if (timeoutMillis >= maxTimeout) {
           _currentSerialMessage.value = null;
           update();
-          logMessageController.add('Serial response timeout, clearing current');
+          logMessageController.add('... timeout');
           return;
         }
       } while (currentSerialMessage != null && timeoutMillis < maxTimeout);
