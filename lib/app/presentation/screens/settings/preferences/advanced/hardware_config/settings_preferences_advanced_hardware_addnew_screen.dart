@@ -83,6 +83,18 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
               onPressed: triggerHardwareCheck,
               child: const Text('Continue'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                channelController.queryReboot(nextHardwareId);
+              },
+              child: const Text('Reboot'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                channelController.queryTest(nextHardwareId);
+              },
+              child: const Text('Test'),
+            ),
           ],
         );
 

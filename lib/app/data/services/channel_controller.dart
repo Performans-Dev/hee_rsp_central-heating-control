@@ -518,6 +518,13 @@ class ChannelController extends GetxController {
         response: asciiValue));
   }
 
+  Future<void> queryReboot(int id) async {
+    logMessageController.add('Querying reboot');
+    turnOnSerialLoop();
+
+    addToSerialMessageStack(SerialMessage(device: id, command: 0x65));
+  }
+
   Future<void> queryTest(int id) async {
     logMessageController.add('Querying test');
     turnOnSerialLoop();
