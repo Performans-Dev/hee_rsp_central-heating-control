@@ -355,7 +355,6 @@ class _SettingsPreferencesAdvancedScreenState
       positiveCallback: () async {
         SmartDialog.show(
           tag: 'update_indicator',
-          backDismiss: false,
           clickMaskDismiss: false,
           builder: (context) => Center(
             child: Container(
