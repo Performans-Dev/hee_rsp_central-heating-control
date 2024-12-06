@@ -42,11 +42,12 @@ class ChannelController extends GetxController {
   // int _lastSensorDataFetch = 0;
   //#endregion
 
-  //#region MARK: Super
+  //#region MARK: Lifecycle
   @override
   void onInit() {
     super.onInit();
     logMessageController = StreamController<String>.broadcast();
+    registerSerialListener();
     runInitTasks();
   }
 
@@ -67,13 +68,17 @@ class ChannelController extends GetxController {
   }
 
   Future<void> runInitTasks() async {
+    // Load hardware devices from DB
     await activateHardwares();
     await wait(100);
+
+    // Initialize GPIO pins
     if (isPi) {
       initGpioPins();
     }
     await wait(100);
 
+    // Initialize Serial pins
     await initSerialPins();
 
     await wait(100);
@@ -81,6 +86,8 @@ class ChannelController extends GetxController {
 
     await wait(100);
     serialQueryStreamController = StreamController<SerialQuery>.broadcast();
+
+    runSerialLoop();
   }
   //#endregion
 
@@ -176,6 +183,13 @@ class ChannelController extends GetxController {
       cancelOnError: false,
     );
 
+    await wait(100);
+
+    _allowSerialLoop.value = hardwareList.length > 1;
+    update();
+  }
+
+  void registerSerialListener() {
     handler.onMessage.listen(
       (Uint8List data) {
         List<int> rawData = ByteUtils.intListToUint8List(data);
@@ -212,13 +226,6 @@ class ChannelController extends GetxController {
       },
       cancelOnError: false,
     );
-
-    await wait(100);
-
-    _allowSerialLoop.value = hardwareList.length > 1;
-    update();
-
-    runSerialLoop();
   }
   //#endregion
 
@@ -364,9 +371,13 @@ class ChannelController extends GetxController {
     update();
   }
 
-  updateChannelValue(int id, double value) {}
+  updateChannelValue(int id, double value) {
+    //TODO:
+  }
 
-  updateChannelState(int id, bool value) {}
+  updateChannelState(int id, bool value) {
+    //TODO:
+  }
   //#endregion
 
   //#region MARK: SERIAL MESSAGES
