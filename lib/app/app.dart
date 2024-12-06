@@ -77,8 +77,7 @@ class MainApp extends StatelessWidget {
                   : ThemeMode.light,
               defaultTransition: Transition.circularReveal,
               getPages: getPages,
-              initialRoute: Routes
-                  .settingsPreferencesAdvancedHardwareConfigAddNew, //Routes.home,
+              initialRoute: Routes.home,
               initialBinding: AppBindings(),
               locale: LocalizationService.locale,
               fallbackLocale: LocalizationService.fallbackLocale,
