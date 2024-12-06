@@ -55,12 +55,39 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
                                   children: [
-                                    Icon(
-                                      hw.deviceId == 0x00
-                                          ? Icons.memory
-                                          : Icons.developer_board,
-                                      size: 56,
-                                    ),
+                                    hw.deviceId == 0x00
+                                        ? const Icon(
+                                            Icons.memory,
+                                            size: 56,
+                                          )
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Chip(
+                                                label: Text(
+                                                  hw.deviceId.toString(),
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.developer_board,
+                                                size: 56,
+                                              ),
+                                              PopupMenuButton(
+                                                child:
+                                                    const Icon(Icons.more_vert),
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    child: const Text(
+                                                        'Test Signal'),
+                                                    onTap: () {
+                                                      cc.queryTest(hw.deviceId);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                     Text(
                                       hw.modelName,
                                       style: Theme.of(context)
@@ -74,45 +101,50 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
                                             ?.copyWith(color: Colors.grey)),
                                     Text(hw.description),
                                     Text(hw.serialNumber),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Text('DI'),
-                                        ...cc.inputChannels
-                                            .where((e) => e.deviceId == hw.id)
-                                            .map((e) => CircleAvatar(
-                                                  radius: 8,
-                                                  backgroundColor: e.status
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                                )),
-                                      ],
-                                    ),
-                                    if (hw.deviceId != 0x00)
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Chip(
-                                            label: Text(
-                                              hw.deviceId.toString(),
-                                            ),
-                                          ),
-                                          PopupMenuButton(
-                                            child: const Icon(Icons.more_vert),
-                                            itemBuilder: (context) => [
-                                              PopupMenuItem(
-                                                child:
-                                                    const Text('Test Signal'),
-                                                onTap: () {
-                                                  cc.queryTest(hw.deviceId);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                    // Row(
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.spaceEvenly,
+                                    //   children: [
+                                    //     const Text('DI'),
+                                    //     ...cc.inputChannels
+                                    //         .where((e) => e.deviceId == hw.id)
+                                    //         .map((e) => CircleAvatar(
+                                    //               radius: 8,
+                                    //               backgroundColor: e.status
+                                    //                   ? Colors.green
+                                    //                   : Colors.red,
+                                    //             )),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: [
+                                    //     const Text('DO'),
+                                    //     ToggleButtons(
+                                    //       isSelected: [
+                                    //         ...cc.outputChannels
+                                    //             .where(
+                                    //                 (e) => e.deviceId == hw.id)
+                                    //             .map((e) => e.status)
+                                    //       ],
+                                    //       onPressed: (index) {
+                                    //         // cc.toggleOutputChannel(
+                                    //         //   device: hw.deviceId,
+                                    //         //   index: cc.outputChannels
+                                    //         //       .where((e) =>
+                                    //         //           e.deviceId == hw.id)
+                                    //         //       .toList()[index]
+                                    //         //       .pinIndex,
+                                    //         // );
+                                    //       },
+                                    //       children: [
+                                    //         ...cc.outputChannels
+                                    //             .where(
+                                    //                 (e) => e.deviceId == hw.id)
+                                    //             .map((e) => Container()),
+                                    //       ],
+                                    //     )
+                                    //   ],
+                                    // )
                                   ],
                                 ),
                               ),

@@ -656,6 +656,18 @@ class ChannelController extends GetxController {
   }
   //#endregion
 
+  //#region MARK: TOGGLE OUTPUT
+  void toggleOutput(int device, int index) {
+    if (device == 0x00) {
+      toggleRelay(index);
+    } else {}
+  }
+
+  void toggleRelay(int index) {
+    // updateChannelValue(index, !getPinValue(hwId: 0x00, pinIndex: index));
+  }
+  //#endregion
+
   //#region MARK: Helper Functions
   Future<void> wait(int ms) async {
     await Future.delayed(Duration(milliseconds: ms));
