@@ -15,7 +15,7 @@ class InitializeAppMiddleware extends GetMiddleware {
       return const RouteSettings(name: Routes.splashDeviceInfo);
     }
 
-    if (appController.userList.isEmpty) {
+    if (appController.appUserList.isEmpty) {
       return const RouteSettings(name: Routes.splashAppUserList);
     }
 

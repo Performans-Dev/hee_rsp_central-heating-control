@@ -93,7 +93,7 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
                         });
                       },
                       selectedUsers: zone.users,
-                      users: app.userList
+                      users: app.appUserList
                           .where((e) => e.level == AppUserLevel.user)
                           .toList(),
                     ),

@@ -5,15 +5,20 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
+import 'package:central_heating_control/app/data/models/account.dart';
+import 'package:central_heating_control/app/data/models/activation_request.dart';
+import 'package:central_heating_control/app/data/models/activation_result.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/chc_device.dart';
+import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/heethings_account.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/preferences.dart';
+import 'package:central_heating_control/app/data/models/register_request.dart';
+import 'package:central_heating_control/app/data/models/subscription_result.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
@@ -66,7 +71,8 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Connectivity
-  late final StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  late final StreamSubscription<List<ConnectivityResult>>
+      _connectivitySubscription;
 
   final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
   NetworkIndicator get networkIndicator => _networkIndicator.value;
@@ -122,7 +128,8 @@ class AppController extends GetxController {
     final processResult = await Process.run('ip', ['link']);
     final ipLinkOutput = processResult.stdout as String;
 
-    final macPattern = RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
+    final macPattern =
+        RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
 
     String? ethMac;
     String? wifiMac;
@@ -184,7 +191,8 @@ class AppController extends GetxController {
   }
 
   final _preferencesDefinition = PreferencesDefinition.empty().obs;
-  PreferencesDefinition get preferencesDefinition => _preferencesDefinition.value;
+  PreferencesDefinition get preferencesDefinition =>
+      _preferencesDefinition.value;
 
   void setPreferencesDefinition(PreferencesDefinition value) {
     _preferencesDefinition.value = value;
@@ -201,8 +209,9 @@ class AppController extends GetxController {
     // TODO: bu value box a yazıcak
   }
 
-  bool get hasAdmin => _userList.any((user) => user.level.name == 'admin');
-  bool get hasTechSupport => _userList.any((user) => user.level.name == 'techSupport');
+  bool get hasAdmin => _appUserList.any((user) => user.level.name == 'admin');
+  bool get hasTechSupport =>
+      _appUserList.any((user) => user.level.name == 'techSupport');
 
   bool get hasRequiredAppUserRoles => hasAdmin && hasTechSupport;
 
@@ -284,10 +293,10 @@ class AppController extends GetxController {
     await box.erase();
     await DbProvider.db.resetDb();
     logoutUser();
-    if (isPi) {
+    if (Platform.isLinux) {
       Process.run('sudo', ['reboot', 'now']);
     } else {
-      Process.killPid(pid);
+      exit(0);
     }
   }
 
@@ -398,13 +407,24 @@ class AppController extends GetxController {
   //#region MARK: Flags
 
   final RxBool _didConnectivityResultReceived = false.obs;
-  bool get didConnectivityResultReceived => _didConnectivityResultReceived.value;
+  bool get didConnectivityResultReceived =>
+      _didConnectivityResultReceived.value;
 
   final RxBool _didConnected = false.obs;
   bool get didConnected => _didConnected.value;
 
   final RxBool _didConnectionChecked = false.obs;
   bool get didConnectionChecked => _didConnectionChecked.value;
+
+  final RxBool _didActivated = false.obs;
+  bool get didActivated => _didActivated.value;
+
+  final RxBool _didSignedIn = false.obs;
+  bool get didSignedIn => _didSignedIn.value;
+
+  final RxBool _didSubscriptionResultReceived = false.obs;
+  bool get didSubscriptionResultReceived =>
+      _didSubscriptionResultReceived.value;
 
   final RxBool _displayErrorNotification = false.obs;
   bool get displayErrorNotification => _displayErrorNotification.value;

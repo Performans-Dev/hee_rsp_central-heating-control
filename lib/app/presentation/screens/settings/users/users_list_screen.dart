@@ -43,7 +43,7 @@ class SettingsUserListScreen extends StatelessWidget {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  if (app.userList[index].level == AppUserLevel.developer &&
+                  if (app.appUserList[index].level == AppUserLevel.developer &&
                       app.loggedInAppUser?.level != AppUserLevel.developer) {
                     return const SizedBox.shrink();
                   }
@@ -51,14 +51,15 @@ class SettingsUserListScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListTile(
                       leading: CircleAvatar(
-                        child: Text(app.userList[index].username.getInitials()),
+                        child:
+                            Text(app.appUserList[index].username.getInitials()),
                       ),
-                      title: Text(app.userList[index].username),
-                      subtitle: Text(app.userList[index].level.name
+                      title: Text(app.appUserList[index].username),
+                      subtitle: Text(app.appUserList[index].level.name
                           .camelCaseToHumanReadable()),
                       trailing: !canAccess(
                               app.loggedInAppUser?.level ?? AppUserLevel.user,
-                              app.userList[index].level)
+                              app.appUserList[index].level)
                           ? null
                           : PopupMenuButton(
                               itemBuilder: (context) {
@@ -78,11 +79,11 @@ class SettingsUserListScreen extends StatelessWidget {
                                         context: context,
                                         label: 'Name, Surname',
                                         initialValue:
-                                            app.userList[index].username,
+                                            app.appUserList[index].username,
                                         type: OSKInputType.name,
                                       );
                                       if (result != null) {
-                                        var u = app.userList[index];
+                                        var u = app.appUserList[index];
                                         u.username = result;
                                         await db.updateUser(u);
                                         if (context.mounted) {
@@ -108,7 +109,7 @@ class SettingsUserListScreen extends StatelessWidget {
                                       /*   final result = await OnScreenKeyboard.show(
                                 context: context,
                                 label: 'Password',
-                                initialValue: app.userList[index].pin,
+                                initialValue: app.appUserList[index].pin,
                                 type: OSKInputType.number,
                                 maxLength: 6,
                                 minLength: 6,
@@ -116,9 +117,9 @@ class SettingsUserListScreen extends StatelessWidget {
                                       final result = await NavController.toPin(
                                           context: context,
                                           username:
-                                              app.userList[index].username);
+                                              app.appUserList[index].username);
                                       if (result != null) {
-                                        var u = app.userList[index];
+                                        var u = app.appUserList[index];
                                         u.pin = result;
                                         await db.updateUser(u);
                                         if (context.mounted) {
@@ -152,7 +153,7 @@ class SettingsUserListScreen extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: app.userList.length,
+                itemCount: app.appUserList.length,
               ),
             ),
             addNewUserButon,
@@ -198,7 +199,7 @@ class SettingsUserListScreen extends StatelessWidget {
     required int index,
   }) async {
     final AppController app = Get.find();
-    final result = await db.deleteUser(app.userList[index]);
+    final result = await db.deleteUser(app.appUserList[index]);
 
     if (context.mounted) {
       if (result > 0) {
@@ -212,7 +213,7 @@ class SettingsUserListScreen extends StatelessWidget {
           action: SnackBarAction(
             label: "Retry",
             onPressed: () async {
-              await db.deleteUser(app.userList[index]);
+              await db.deleteUser(app.appUserList[index]);
             },
           ),
           context: context,
