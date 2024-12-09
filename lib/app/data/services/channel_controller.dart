@@ -3,25 +3,19 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/utils/byte.dart';
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
+import 'package:central_heating_control/app/data/models/hardware.dart';
+import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
 
-import 'package:central_heating_control/app/data/models/log.dart';
-import 'package:central_heating_control/app/data/providers/log.dart';
-
-import 'package:central_heating_control/main.dart';
-
-int kMainBoardDigitalOutputPinCount = 8;
-int kExtBoardDigitalOutputPinCount = 6;
-int kMainBoardDigitalInputPinCount = 8;
-int kExtBoardDigitalInputPinCount = 6;
-int kMainBoardAnalogInputPinCount = 4;
-int kExtBoardAnalogInputPinCount = 1;
+//#region MARK: Constants
 int kMainBoardButtonPinCount = 4;
 String inputChannelName = 'CHI {n}';
 String outputChannelName = 'CHO {n}';
@@ -34,25 +28,32 @@ List<int> stopBytes = [0x0D, 0x0A];
 String serialKey = '/dev/ttyS0';
 int kSerialAcknowledgementDelay = 700;
 int kSerialLoopDelay = 100;
+//#endregion
 
-class StateController extends GetxController {
+class ChannelController extends GetxController {
+  //#region MARK: Variables
   final SerialMessageHandler handler = SerialMessageHandler();
   late SerialPort serialPort;
   SerialPortConfig config = SerialPortConfig();
   late SerialPortReader serialPortReader;
   StreamSubscription<Uint8List>? messageSubscription;
-  int _lastSensorDataFetch = 0;
+  late StreamController<SerialQuery> serialQueryStreamController;
+  late StreamController<String> logMessageController;
+  // int _lastSensorDataFetch = 0;
+  //#endregion
 
-  //#region MARK: Super
+  //#region MARK: Lifecycle
   @override
   void onInit() {
     super.onInit();
+    logMessageController = StreamController<String>.broadcast();
+    registerSerialListener();
     runInitTasks();
   }
 
   @override
   void onReady() {
-    // TODO: implement onReady
+    //
     super.onReady();
   }
 
@@ -60,41 +61,44 @@ class StateController extends GetxController {
   void onClose() {
     disposeSerialPins();
     disposeGpioPins();
+    serialQueryStreamController.close();
+    logMessageController.close();
+    messageSubscription?.cancel();
     super.onClose();
   }
 
   Future<void> runInitTasks() async {
+    // Load hardware devices from DB
     await activateHardwares();
     await wait(100);
+
+    // Initialize GPIO pins
     if (isPi) {
       initGpioPins();
     }
     await wait(100);
 
+    // Initialize Serial pins
     await initSerialPins();
 
     await wait(100);
     populateChannels();
 
     await wait(100);
+    serialQueryStreamController = StreamController<SerialQuery>.broadcast();
+
+    runSerialLoop();
   }
   //#endregion
 
   //#region MARK: Device List
 
-  final RxList<HardwareExtension> _hardwareList = <HardwareExtension>[].obs;
-  List<HardwareExtension> get hardwareList => _hardwareList;
-
-  // final RxList<int> _deviceIds = <int>[].obs;
-  // List<int> get deviceIds => _deviceIds;
+  final RxList<Hardware> _hardwareList = <Hardware>[].obs;
+  List<Hardware> get hardwareList => _hardwareList;
 
   Future<void> activateHardwares() async {
-    final extList = await DbProvider.db.getHardwareExtensions();
+    final extList = await DbProvider.db.getHardwareDevices();
     _hardwareList.assignAll(extList);
-
-    // for (final ext in extList) {
-    //   _deviceIds.add(0x00 + ext.id);
-    // }
     update();
   }
 
@@ -166,9 +170,11 @@ class StateController extends GetxController {
     messageSubscription?.cancel();
     messageSubscription = serialPortReader.stream.listen(
       (Uint8List data) {
+        logMessageController.add('<-- Serial: $data');
         handler.onDataReceived(data);
       },
       onError: (error) {
+        logMessageController.add('<-- Serial error: $error');
         LogService.addLog(LogDefinition(
           message: 'Serial stream error: $error',
           type: LogType.error,
@@ -177,26 +183,49 @@ class StateController extends GetxController {
       cancelOnError: false,
     );
 
+    await wait(100);
+
+    _allowSerialLoop.value = hardwareList.length > 1;
+    update();
+  }
+
+  void registerSerialListener() {
     handler.onMessage.listen(
       (Uint8List data) {
         List<int> rawData = ByteUtils.intListToUint8List(data);
-        List<int> dataForCrc = rawData.sublist(1, 5);
+        // Get the command byte
+        int command = rawData[2];
+
+        // Determine CRC data length based on command
+        int crcDataLength;
+        switch (command) {
+          case 0xCA: // Serial number
+            crcDataLength = 17; // deviceId + command + 14 bytes serial
+            break;
+          case 0xCB: // Hardware version
+          case 0xCC: // Firmware version
+            crcDataLength = 24; // deviceId + command + 21 bytes version
+            break;
+          default:
+            crcDataLength = 5; // Normal command (deviceId + command + 2 args)
+        }
+
+        List<int> dataForCrc = rawData.sublist(1, crcDataLength);
         List<int> expectedCrcBytes =
             ByteUtils.getCrcBytes(ByteUtils.intListToUint8List(dataForCrc));
-        List<int> receivedCrcBytes = rawData.sublist(5, 7).toList();
+        List<int> receivedCrcBytes =
+            rawData.sublist(crcDataLength, crcDataLength + 2).toList();
         if (receivedCrcBytes.toString() == expectedCrcBytes.toString()) {
           // CRC match
           parseSerialMessage(rawData);
+        } else {
+          // ignore invalid CRC
+          logMessageController.add(
+              '<-- Serial: CRC mismatch, expected: $expectedCrcBytes, received: $receivedCrcBytes');
         }
       },
       cancelOnError: false,
     );
-
-    await wait(100);
-
-    if (hardwareList.length > 1) {
-      runSerialLoop();
-    }
   }
   //#endregion
 
@@ -234,20 +263,6 @@ class StateController extends GetxController {
     in8.dispose();
     txEnablePin.dispose();
   }
-  //#endregion
-
-  //#region MARK: Global States
-  /// Onboard
-  /// 8 digital input
-  /// 8 digital output
-  /// 4 analog input
-  /// 4 button
-  /// 1 buzzer
-  ///
-  /// serial extension (0-30)
-  /// 6 digital input
-  /// 6 digital output
-  /// 1 analog ntc input
   //#endregion
 
   //#region MARK: Channels
@@ -356,25 +371,202 @@ class StateController extends GetxController {
     update();
   }
 
-  updateChannelValue(int id, double value) {}
+  updateChannelValue(int id, double value) {
+    //TODO:
+  }
 
-  updateChannelState(int id, bool value) {}
+  updateChannelState(int id, bool value) {
+    //TODO:
+  }
   //#endregion
 
   //#region MARK: SERIAL MESSAGES
+
+  final RxBool _allowSerialLoop = true.obs;
+  bool get allowSerialLoop => _allowSerialLoop.value;
+
   final RxBool _processingSerialLoop = false.obs;
   bool get processingSerialLoop => _processingSerialLoop.value;
 
+  final Rxn<SerialMessage> _currentSerialMessage = Rxn<SerialMessage>();
+  SerialMessage? get currentSerialMessage => _currentSerialMessage.value;
+
+  final RxList<SerialMessage> _messageStack = <SerialMessage>[].obs;
+  List<SerialMessage> get messageStack => _messageStack;
+
+  void enableSerialTransmit() {
+    txEnablePin.write(true);
+    // logMessageController.add('enabling serial transmit');
+  }
+
+  void disableSerialTransmit() {
+    txEnablePin.write(false);
+    // logMessageController.add('disabling serial transmit');
+  }
+
+  Future<void> sendSerialMessage(SerialMessage m) async {
+    List<int> message = m.toBytesWithCrc();
+    Uint8List bytes = Uint8List.fromList(message);
+    _currentSerialMessage.value = m;
+    update();
+
+    enableSerialTransmit();
+    await wait(1);
+    try {
+      serialPort.write(bytes);
+      logMessageController.add('--> ${ByteUtils.bytesToHex(bytes)}');
+    } on Exception catch (e) {
+      logMessageController.add('--> Serial: $e');
+      LogService.addLog(
+          LogDefinition(message: e.toString(), type: LogType.error));
+    }
+    await wait(1);
+    disableSerialTransmit();
+  }
+
+  Future<void> sendSerialMessageFromStack() async {
+    if (messageStack.isNotEmpty) {
+      SerialMessage m = messageStack.removeAt(0);
+      logMessageController
+          .add('processing stack to Send Serial: \n${m.toLog()}');
+      await sendSerialMessage(m);
+    }
+  }
+
+  void addToSerialMessageStack(SerialMessage m) {
+    _messageStack.add(m);
+    update();
+  }
+
+  void turnOnSerialLoop() {
+    logMessageController.add('turning on serial loop');
+    _allowSerialLoop.value = true;
+    update();
+    runSerialLoop();
+  }
+
+  void turnOffSerialLoop() {
+    logMessageController.add('turning off serial loop');
+    _allowSerialLoop.value = false;
+    _processingSerialLoop.value = false;
+    update();
+  }
+
   void parseSerialMessage(List<int> data) {
-    //TODO: parse serial message
+    final deviceId = data[1];
+    final command = data[2];
+    final number = data[3];
+    final args = data[4];
+
+    final m = SerialMessage(
+      command: command,
+      device: deviceId,
+      index: number,
+      arg: args,
+    );
+
+    if (currentSerialMessage != null &&
+        currentSerialMessage!.command == m.command &&
+        currentSerialMessage!.device == m.device &&
+        currentSerialMessage!.index == m.index) {
+      _currentSerialMessage.value = null;
+      update();
+      logMessageController.add('<-- Current Serial: clear }');
+    }
+    logMessageController.add('<-- Serial: \n${m.toLog()}');
+    switch (command) {
+      // update pin states
+
+      case 0xCA: // Serial number query response
+        serialNumberResponseReceived(Uint8List.fromList(data));
+        break;
+
+      case 0xCB: // Hardware version query response
+        hardwareVersionResponseReceived(Uint8List.fromList(data));
+        break;
+
+      case 0xCC: // Firmware version query response
+        firmwareVersionResponseReceived(Uint8List.fromList(data));
+        break;
+      default:
+        break;
+    }
+  }
+
+  void serialNumberResponseReceived(Uint8List message) {
+    final int deviceId = message[1];
+    // Extract serial number bytes (14 bytes after command byte)
+    final List<int> serialNumberBytes = message.sublist(3, 17);
+    final String asciiValue = _bytesToAscii(serialNumberBytes);
+    serialQueryStreamController.add(SerialQuery(
+        deviceId: deviceId,
+        command: 0xCA,
+        success: true,
+        response: asciiValue));
+  }
+
+  void hardwareVersionResponseReceived(Uint8List message) {
+    final int deviceId = message[1];
+    // Extract hardware version bytes (21 bytes after command byte)
+    final List<int> versionBytes = message.sublist(3, 24);
+    final String asciiValue = _bytesToAscii(versionBytes);
+    serialQueryStreamController.add(SerialQuery(
+        deviceId: deviceId,
+        command: 0xCB,
+        success: true,
+        response: asciiValue));
+  }
+
+  void firmwareVersionResponseReceived(Uint8List message) {
+    final int deviceId = message[1];
+    // Extract firmware version bytes (21 bytes after command byte)
+    final List<int> versionBytes = message.sublist(3, 24);
+    final String asciiValue = _bytesToAscii(versionBytes);
+    serialQueryStreamController.add(SerialQuery(
+        deviceId: deviceId,
+        command: 0xCC,
+        success: true,
+        response: asciiValue));
+  }
+
+  Future<void> queryReboot(int id) async {
+    logMessageController.add('Querying reboot');
+    turnOnSerialLoop();
+
+    addToSerialMessageStack(SerialMessage(device: id, command: 0x65));
+  }
+
+  Future<void> queryTest(int id) async {
+    logMessageController.add('Querying test');
+    turnOnSerialLoop();
+
+    addToSerialMessageStack(
+        SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
+    await waitForSerialResponse();
+  }
+
+  Future<void> querySerialNumber(int id) async {
+    logMessageController.add('Querying serial number');
+    turnOnSerialLoop();
+    addToSerialMessageStack(
+        SerialMessage(device: id, command: 0x64, index: 0xCC, arg: 0xBB));
+    await waitForSerialResponse();
+  }
+
+  Future<void> queryModel(int id) async {
+    logMessageController.add('Querying model');
+    //
   }
 
   void runSerialLoop() async {
-    //
+    if (processingSerialLoop) {
+      // exit if already processing
+      return;
+    }
     _processingSerialLoop.value = true;
     update();
 
-    final now = DateTime.now().millisecondsSinceEpoch;
+    /* final now = DateTime.now().millisecondsSinceEpoch;
     if (now - _lastSensorDataFetch >= 30000) {
       _lastSensorDataFetch = now;
       final data = await getSensorData();
@@ -412,7 +604,78 @@ class StateController extends GetxController {
               LogDefinition(message: e.toString(), type: LogType.error));
         }
       }
+    } */
+
+    for (final d in hardwareList) {
+      if (d.deviceId != 0x00) {
+        await sendSerialMessage(
+            SerialMessage(device: d.deviceId, command: 0x69));
+        await waitForSerialResponse();
+        await sendSerialMessage(
+            SerialMessage(device: d.deviceId, command: 0x67));
+        await waitForSerialResponse();
+        await sendSerialMessage(
+            SerialMessage(device: d.deviceId, command: 0x70));
+        await waitForSerialResponse();
+      }
     }
+
+    do {
+      await sendSerialMessageFromStack();
+      await waitForSerialResponse();
+    } while (messageStack.isNotEmpty);
+
+    _processingSerialLoop.value = false;
+    update();
+
+    await wait(kSerialLoopDelay);
+    if (allowSerialLoop) {
+      runSerialLoop();
+    }
+  }
+
+  Future<void> waitForSerialResponse() async {
+    if (messageStack.isNotEmpty && currentSerialMessage != null) {
+      logMessageController.add(
+          'Stack: ${messageStack.length}, Current: ${currentSerialMessage != null}');
+    }
+    if (currentSerialMessage == null) {
+      // no message expected, no need to wait
+      return;
+    } else if (currentSerialMessage != null &&
+        currentSerialMessage!.command == 0x65) {
+      // restart device command cant send response
+      await wait(kSerialAcknowledgementDelay);
+      return;
+    } else {
+      // if (currentSerialMessage != null) {
+      //   logMessageController.add('Waiting for serial response');
+      // }
+      int timeoutMillis = 0;
+      final maxTimeout = currentSerialMessage!.command == 0x64 ? 10000 : 1000;
+      do {
+        timeoutMillis++;
+        await wait(1);
+        if (timeoutMillis >= maxTimeout) {
+          _currentSerialMessage.value = null;
+          update();
+          logMessageController.add('... timeout');
+          return;
+        }
+      } while (currentSerialMessage != null && timeoutMillis < maxTimeout);
+    }
+  }
+  //#endregion
+
+  //#region MARK: TOGGLE OUTPUT
+  void toggleOutput(int device, int index) {
+    if (device == 0x00) {
+      toggleRelay(index);
+    } else {}
+  }
+
+  void toggleRelay(int index) {
+    // updateChannelValue(index, !getPinValue(hwId: 0x00, pinIndex: index));
   }
   //#endregion
 
@@ -432,6 +695,10 @@ class StateController extends GetxController {
       return null;
     }
     return null;
+  }
+
+  String _bytesToAscii(List<int> bytes) {
+    return String.fromCharCodes(bytes).replaceAll(RegExp(r'[^\x20-\x7E]'), '?');
   }
   //#endregion
 }
@@ -594,4 +861,17 @@ class Sensor {
 
   @override
   int get hashCode => sensor.hashCode ^ rawValue.hashCode;
+}
+
+class SerialQuery {
+  int deviceId;
+  int command; // limited to TestSignal, GetSerialNumber, GetModelNumber,
+  bool? success;
+  String? response;
+  SerialQuery({
+    required this.deviceId,
+    required this.command,
+    this.success,
+    this.response,
+  });
 }

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -38,8 +39,14 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Text('Serial Number: ${app.deviceInfo?.serialNumber}\n'
-                      'installationId: ${app.deviceInfo?.installationId}'),
+                  child: TextButton(
+                    onPressed: () {
+                      Get.toNamed(Routes.settingsPreferencesAdvanced);
+                    },
+                    child: Text(
+                        'Serial Number: ${app.deviceInfo?.serialNumber}\n'
+                        'installationId: ${app.deviceInfo?.installationId}'),
+                  ),
                 )
                 // PiScrollView(
                 //   child: Center(

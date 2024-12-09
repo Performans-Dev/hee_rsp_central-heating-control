@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -127,42 +128,37 @@ class _PiInfoScreenState extends State<PiInfoScreen> {
                               titleLevel: 2,
                             ),
                             Expanded(
-                              child: ListView.builder(
-                                itemBuilder: (context, index) =>
-                                    // ListTile(
-                                    //   // leading: CircleAvatar(
-                                    //   //   child: Text('${index + 1}'),
-                                    //   // ),
-                                    //   title: const Text(
-                                    //     'HT2041.01',
-                                    //     style: style,
-                                    //   ),
-                                    //   subtitle: Text(
-                                    //     '2041.01.100.25$index',
-                                    //     style: style,
-                                    //   ),
-                                    //   trailing: IconButton(
-                                    //     onPressed: () => setState(() =>
-                                    //         qrCodeData = '2041.01.100.25$index'),
-                                    //     icon: const Icon(Icons.qr_code),
-                                    //   ),
-                                    // ),
-                                    Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    infoLabelValueWidget(
-                                      label: 'Model',
-                                      value: 'HT2041.01',
-                                    ),
-                                    infoLabelValueWidget(
-                                      label: 'S/N',
-                                      qr: '2041.01.100.25$index',
-                                    ),
-                                    const Divider(),
-                                  ],
-                                ),
-                                itemCount: 8,
-                              ),
+                              child:
+                                  GetBuilder<ChannelController>(builder: (cc) {
+                                final data = cc.hardwareList
+                                    .where((e) => e.id != 0x00)
+                                    .toList();
+                                return ListView.builder(
+                                  itemBuilder: (context, index) => Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      infoLabelValueWidget(
+                                        label: 'Model',
+                                        value: data[index].modelName,
+                                      ),
+                                      infoLabelValueWidget(
+                                        label: 'S/N',
+                                        qr: data[index].serialNumber,
+                                      ),
+                                      infoLabelValueWidget(
+                                        label: 'Firmware',
+                                        value: data[index].firmwareVersion,
+                                      ),
+                                      infoLabelValueWidget(
+                                        label: 'Hardware',
+                                        value: data[index].hardwareVersion,
+                                      ),
+                                      const Divider(),
+                                    ],
+                                  ),
+                                  itemCount: data.length,
+                                );
+                              }),
                             )
                           ],
                         ),

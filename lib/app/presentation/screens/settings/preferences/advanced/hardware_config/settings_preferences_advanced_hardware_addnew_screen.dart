@@ -1,12 +1,24 @@
-import 'package:central_heating_control/app/data/models/hardware_extension.dart';
-import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'dart:async';
+
+import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
+
+enum HardwareInstallScreenState {
+  idle,
+  acquiringNextId,
+  awaitingForCheckTrigger,
+  checking,
+  receivedSuccessResponse,
+  receivedFailureResponse,
+  timedout,
+  awaitingDbOperation,
+  completed,
+  failed,
+}
 
 class SettingsPreferencesAdvancedHardwareConfigAddNewScreen
     extends StatefulWidget {
@@ -19,240 +31,286 @@ class SettingsPreferencesAdvancedHardwareConfigAddNewScreen
 
 class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     extends State<SettingsPreferencesAdvancedHardwareConfigAddNewScreen> {
-  HardwareExtension? selectedHardwareExtension;
-  String selectedTemperatureValueName = "";
-
-  late TextEditingController serialNumberController;
-  late TextEditingController deviceIdController;
-  late TextEditingController gapController;
-  late TextEditingController cofficientController;
-  bool busy = false;
+  HardwareInstallScreenState screenState = HardwareInstallScreenState.idle;
+  final DataController dataController = Get.find();
+  final ChannelController channelController = Get.find();
+  late int nextHardwareId;
+  late StreamSubscription<SerialQuery> subscription;
+  late StreamSubscription<String> logSubscription;
+  late Timer timer;
+  List<String> messages = [];
 
   @override
   void initState() {
     super.initState();
-    serialNumberController = TextEditingController();
-    deviceIdController = TextEditingController();
-    gapController = TextEditingController();
-    cofficientController = TextEditingController();
-
-    gapController.text = "0.0";
-    cofficientController.text = "1.0";
+    timer = Timer(Duration.zero, () {});
+    subscription = channelController.serialQueryStreamController.stream
+        .listen(onSerialQueryDataReceived);
+    logSubscription =
+        channelController.logMessageController.stream.listen((data) {
+      setState(() {
+        messages.insert(0, data);
+        if (messages.length > 1000) {
+          messages.removeRange(999, messages.length);
+        }
+      });
+    });
+    loadExistingHardwareExtensions();
   }
 
   @override
   void dispose() {
-    serialNumberController.dispose();
-    deviceIdController.dispose();
+    timer.cancel();
+    subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataController>(builder: (dc) {
-      return AppScaffold(
-        selectedIndex: 3,
-        title: 'Add New Hardware',
-        body: Column(
+    return GetBuilder<DataController>(
+      builder: (dc) {
+        const acquiringNextIdWidget = Center(
+          child: CircularProgressIndicator(),
+        );
+
+        final awaitingForCheckTriggerWidget = Column(
           mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(height: 8),
-            DropdownMenu<HardwareExtension>(
-              enableFilter: false,
-              enableSearch: false,
-              expandedInsets: const EdgeInsets.all(8),
-              leadingIcon: const Icon(Icons.hardware),
-              dropdownMenuEntries: StaticProvider.availableHardwareExtensions
-                  .map((e) => DropdownMenuEntry<HardwareExtension>(
-                      label: e.modelName, value: e))
-                  .toList(),
-              label: const Text('Available Hardware Profiles'),
-              onSelected: (value) {
-                setState(() {
-                  selectedHardwareExtension = value;
-                });
-              },
+            Text(
+                'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
+            ElevatedButton(
+              onPressed: triggerHardwareCheck,
+              child: const Text('Continue'),
             ),
-            const Divider(),
-            Expanded(
-              child: selectedHardwareExtension == null
-                  ? const Center(
-                      child: Text('Select a hardware profile from list'),
-                    )
-                  : PiScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            subtitle: Text(
-                                '${selectedHardwareExtension?.manufacturer}'),
-                            title:
-                                Text('${selectedHardwareExtension?.modelName}'),
-                            // trailing: Text(selectedHardwareExtension!
-                            //     .connectionType
-                            //     .map((e) => e.name)
-                            //     .toList()
-                            //     .join(', ')),
-                          ),
-                          ListTile(
-                            title: const Text('Input/Output Count'),
-                            subtitle: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                    'DI: ${selectedHardwareExtension?.diCount}'),
-                                const VerticalDivider(),
-                                Text(
-                                    'DO: ${selectedHardwareExtension?.doCount}'),
-                                const VerticalDivider(),
-                                Text(
-                                    'ADC: ${selectedHardwareExtension?.adcCount}'),
-                                const VerticalDivider(),
-                                Text(
-                                    'DAC: ${selectedHardwareExtension?.dacCount}'),
-                              ],
-                            ),
-                          ),
-                          const Divider(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextInputWidget(
-                                  controller: serialNumberController,
-                                  labelText: 'Serial number',
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: TextInputWidget(
-                                  controller: deviceIdController,
-                                  labelText: 'ID',
-                                  type: OSKInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              if (dc.temperatureValues.isNotEmpty)
-                                Expanded(
-                                  child: DropdownMenu<String>(
-                                    enableFilter: false,
-                                    enableSearch: false,
-                                    expandedInsets: const EdgeInsets.all(8),
-                                    dropdownMenuEntries: dc.temperatureValues
-                                        .map((e) => e.name)
-                                        .toSet()
-                                        .toList()
-                                        .map((e) => DropdownMenuEntry<String>(
-                                            label: e, value: e))
-                                        .toSet()
-                                        .toList(),
-                                    label: const Text(
-                                      'Temperature Value',
-                                    ),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedTemperatureValueName = value!;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              const SizedBox(width: 6),
-
-                              Expanded(
-                                child: TextInputWidget(
-                                  controller: gapController,
-                                  labelText: 'Gap',
-                                  type: OSKInputType.number,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-
-                              Expanded(
-                                flex: 1,
-                                child: TextInputWidget(
-                                  controller: cofficientController,
-                                  labelText: 'Coefficient',
-                                  type: OSKInputType.number,
-                                ),
-                              ),
-
-                              //TODO: temperature value name dropdown
-                              //TODO: gap
-                              //TODO: coefficient
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 16),
-                            width: double.infinity,
-                            alignment: Alignment.centerRight,
-                            child: ElevatedButton.icon(
-                              onPressed: null,
-
-                              /* busy
-                                  ? null
-                                  : () async {
-                                      final DataController dataController =
-                                          Get.find();
-                                      setState(() {
-                                        selectedHardwareExtension!
-                                                .serialNumber =
-                                            serialNumberController.text;
-                                        selectedHardwareExtension!.deviceId =
-                                            int.parse(deviceIdController.text);
-                                        selectedHardwareExtension!
-                                                .tempValueName =
-                                            selectedTemperatureValueName;
-
-                                        selectedHardwareExtension!.gap =
-                                            double.parse(gapController.text);
-                                        selectedHardwareExtension!.coefficient =
-                                            double.parse(
-                                                cofficientController.text);
-                                        //TODO: add temperatureVALUENAME+ COEFFİCİENT+GAP
-                                        busy = true;
-                                      });
-                                      final result =
-                                          await dataController.addNewHardware(
-                                              selectedHardwareExtension!);
-                                      setState(() => busy = false);
-                                      if (context.mounted) {
-                                        if (result > 0) {
-                                          DialogUtils.snackbar(
-                                              context: context,
-                                              message:
-                                                  'Hardware Extension Profile saved',
-                                              type: SnackbarType.success);
-                                          Get.back();
-                                        } else {
-                                          DialogUtils.snackbar(
-                                              context: context,
-                                              message: 'An error occured',
-                                              type: SnackbarType.error);
-                                        }
-                                      }
-                                    },*/
-                              label: Text(busy ? 'Saving...' : 'Save'),
-                              icon: busy
-                                  ? const SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : const Icon(
-                                      Icons.save_alt,
-                                      size: 24,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+            ElevatedButton(
+              onPressed: () {
+                channelController.queryReboot(nextHardwareId);
+              },
+              child: const Text('Reboot'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                channelController.queryTest(nextHardwareId);
+              },
+              child: const Text('Test'),
             ),
           ],
-        ),
-      );
+        );
+
+        const checkingWidget = Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text('Querying hardware...'),
+            ],
+          ),
+        );
+
+        final receivedSuccessResponseWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+                'Communication successfull with $nextHardwareId. Hit Install Device button to use it.'),
+            ElevatedButton(
+              onPressed: onInstallDeviceClicked,
+              child: const Text('Install Device'),
+            ),
+          ],
+        );
+
+        final receivedFailureResponseWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('Cannot communicate with $nextHardwareId. Try again.'),
+            Text(
+                'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
+            ElevatedButton(
+              onPressed: triggerHardwareCheck,
+              child: const Text('Continue'),
+            ),
+          ],
+        );
+
+        final timedOutWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+                'Cannot communicate with $nextHardwareId within the specific time. Operation timed out.'),
+            Text(
+                'Connect your hardware and set its ID to $nextHardwareId. Hit continue when done.'),
+            ElevatedButton(
+              onPressed: triggerHardwareCheck,
+              child: const Text('Continue'),
+            ),
+          ],
+        );
+
+        const awaitingDbOperationWidget = Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text('Installing hardware...'),
+            ],
+          ),
+        );
+
+        final completedWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+                'Hardware [$nextHardwareId] install is successful. Reboot System to start using it.'),
+            ElevatedButton(
+              onPressed: onRebootClicked,
+              child: const Text('Reboot Now'),
+            ),
+          ],
+        );
+
+        final failedWidget = Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('Cannot install $nextHardwareId'),
+            ElevatedButton(
+              onPressed: tryAgainClicked,
+              child: const Text('Try Again'),
+            ),
+          ],
+        );
+
+        Widget pageBody = Container();
+        switch (screenState) {
+          case HardwareInstallScreenState.acquiringNextId:
+            pageBody = acquiringNextIdWidget;
+            break;
+          case HardwareInstallScreenState.awaitingForCheckTrigger:
+            pageBody = awaitingForCheckTriggerWidget;
+            break;
+          case HardwareInstallScreenState.checking:
+            pageBody = checkingWidget;
+            break;
+          case HardwareInstallScreenState.receivedSuccessResponse:
+            pageBody = receivedSuccessResponseWidget;
+            break;
+          case HardwareInstallScreenState.receivedFailureResponse:
+            pageBody = receivedFailureResponseWidget;
+            break;
+          case HardwareInstallScreenState.timedout:
+            pageBody = timedOutWidget;
+            break;
+          case HardwareInstallScreenState.awaitingDbOperation:
+            pageBody = awaitingDbOperationWidget;
+            break;
+          case HardwareInstallScreenState.completed:
+            pageBody = completedWidget;
+            break;
+          case HardwareInstallScreenState.failed:
+            pageBody = failedWidget;
+            break;
+          default:
+            break;
+        }
+
+        return AppScaffold(
+          selectedIndex: 3,
+          title: 'Add New Hardware',
+          body: Row(
+            children: [
+              Expanded(child: pageBody),
+              SizedBox(
+                width: 280,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      color: Colors.green.withOpacity(0.2),
+                      child: Obx(() => Text(
+                          channelController.currentSerialMessage == null
+                              ? '---'
+                              : channelController.currentSerialMessage!
+                                  .toLog())),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => Text(messages[index]),
+                        itemCount: messages.length,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> loadExistingHardwareExtensions() async {
+    setState(() => screenState = HardwareInstallScreenState.acquiringNextId);
+    await dataController.loadHardwareDevices();
+    setState(() => nextHardwareId = 0);
+
+    List<Hardware> tmpList = dataController.hardwareDeviceList;
+    tmpList.sort((a, b) => a.deviceId.compareTo(b.deviceId));
+    if (tmpList.isNotEmpty) {
+      setState(() => nextHardwareId = tmpList.last.deviceId + 1);
+    }
+
+    setState(
+        () => screenState = HardwareInstallScreenState.awaitingForCheckTrigger);
+  }
+
+  Future<void> triggerHardwareCheck() async {
+    setState(() => screenState = HardwareInstallScreenState.checking);
+    channelController.queryTest(nextHardwareId);
+    timer.cancel();
+    timer = Timer(const Duration(seconds: 15), () {
+      setState(() => screenState = HardwareInstallScreenState.timedout);
+      if (nextHardwareId == 0x01) {
+        channelController.turnOffSerialLoop();
+      }
     });
+  }
+
+  void onSerialQueryDataReceived(SerialQuery serialQuery) async {
+    setState(() => messages.insert(0, serialQuery.response ?? ''));
+
+    if (serialQuery.deviceId == nextHardwareId) {
+      timer.cancel();
+      setState(() =>
+          screenState = HardwareInstallScreenState.receivedSuccessResponse);
+    } else {
+      messages.insert(0, 'invalid serial query response received');
+    }
+  }
+
+  Future<void> onInstallDeviceClicked() async {
+    setState(
+        () => screenState = HardwareInstallScreenState.awaitingDbOperation);
+    // add to db
+    // if success
+    setState(() => screenState = HardwareInstallScreenState.completed);
+    // if fail
+    // setState(() => screenState = HardwareInstallScreenState.failed);
+  }
+
+  Future<void> onRebootClicked() async {
+    //show confirm dialog
+  }
+
+  Future<void> tryAgainClicked() async {
+    //close 'add' screen, user should try again
+    Get.back();
   }
 }

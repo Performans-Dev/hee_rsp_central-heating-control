@@ -60,7 +60,6 @@ class ProcessController extends GetxController {
   }
 
   void onZoneStateCalled({required int zoneId, required HeaterState state}) {
-    
     var z = zoneProcessList.firstWhere((e) => e.zone.id == zoneId);
     z.selectedState = state;
     _zoneProcessList.removeWhere((e) => e.zone.id == zoneId);

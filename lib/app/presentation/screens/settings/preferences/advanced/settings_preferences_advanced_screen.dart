@@ -141,16 +141,15 @@ class _SettingsPreferencesAdvancedScreenState
               onTap: () async {
                 final app = Get.find<AppController>();
                 if (app.deviceInfo == null) return;
-                
+
                 Future.delayed(const Duration(seconds: 1), () {
                   Process.killPid(pid);
                 });
-                await Process.run(
-                    'sudo', [
-                      '/home/pi/Heethings/CC/elevator/app/chc_updater',
-                      '--version-code="${app.deviceInfo!.appBuild}"',
-                      '--version-number="${app.deviceInfo!.appVersion}"'
-                    ]);
+                await Process.run('sudo', [
+                  '/home/pi/Heethings/CC/elevator/app/chc_updater',
+                  '--version-code="${app.deviceInfo!.appBuild}"',
+                  '--version-number="${app.deviceInfo!.appVersion}"'
+                ]);
               },
             ),
             const SizedBox(height: 8),
@@ -196,16 +195,17 @@ class _SettingsPreferencesAdvancedScreenState
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onTap: () async {
-                      final extList =
-                          await DbProvider.db.getHardwareExtensions();
-                      
+                      final extList = await DbProvider.db.getHardwareDevices();
+
                       try {
-                        final directory = Directory('/home/pi/Heethings/CC/databases');
+                        final directory =
+                            Directory('/home/pi/Heethings/CC/databases');
                         if (!await directory.exists()) {
                           await directory.create(recursive: true);
                         }
-                        
-                        final file = File('${directory.path}/external-devices.txt');
+
+                        final file =
+                            File('${directory.path}/external-devices.txt');
                         final content = extList.map((e) => e.id).join(',');
                         await file.writeAsString(content);
                       } catch (e) {
@@ -215,7 +215,7 @@ class _SettingsPreferencesAdvancedScreenState
                       Future.delayed(const Duration(seconds: 1), () {
                         Process.killPid(pid);
                       });
-                      
+
                       try {
                         await Process.run(
                           'sudo',
@@ -355,7 +355,6 @@ class _SettingsPreferencesAdvancedScreenState
       positiveCallback: () async {
         SmartDialog.show(
           tag: 'update_indicator',
-          backDismiss: false,
           clickMaskDismiss: false,
           builder: (context) => Center(
             child: Container(

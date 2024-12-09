@@ -32,71 +32,15 @@ class AppController extends GetxController {
 
   void setDidCheckFoldersExists(bool value) {
     _didCheckFoldersExists.value = value;
-    update();
   }
 
   void setDidCheckProvisionTestResults(bool value) {
     _didCheckedProvisionResults.value = value;
-    update();
   }
 
   void setReadDeviceInfoCompleted(bool value) {
     _didReadDeviceInfoCompleted.value = value;
-    update();
   }
-  //#endregion
-
-  //#region Setup Flags
-  final RxBool _doesFoldersExists = false.obs;
-  bool get doesFoldersExists => _doesFoldersExists.value;
-  void setDoesFoldersExists(bool value) {
-    _doesFoldersExists.value = value;
-    update();
-  }
-
-  final RxBool _doesProvisionExists = false.obs;
-  bool get doesProvisionExists => _doesProvisionExists.value;
-  void setDoesProvisionExists(bool value) {
-    _doesProvisionExists.value = value;
-    update();
-  }
-
-  final _preferencesDefinition = PreferencesDefinition.empty().obs;
-  PreferencesDefinition get preferencesDefinition =>
-      _preferencesDefinition.value;
-
-  void setPreferencesDefinition(PreferencesDefinition value) {
-    _preferencesDefinition.value = value;
-    update();
-    // TODO: bu value box a yazıcak
-  }
-
-  final Rxn<HeethingsAccount> _heethingsAccount = Rxn();
-  HeethingsAccount? get heethingsAccount => _heethingsAccount.value;
-
-  void setHeethingsAccount(HeethingsAccount? value) {
-    _heethingsAccount.value = value;
-    update();
-    // TODO: bu value box a yazıcak
-  }
-
-  bool get hasAdmin => _userList.any((user) => user.level.name == 'admin');
-  bool get hasTechSupport =>
-      _userList.any((user) => user.level.name == 'techSupport');
-
-  bool get hasRequiredAppUserRoles => hasAdmin && hasTechSupport;
-
-  final RxBool _shouldUpdateApp = false.obs;
-  bool get shouldUpdateApp => _shouldUpdateApp.value;
-
-  bool get isSerialNumberValid {
-    final cpuSerial = deviceInfo?.serialNumber;
-    final serialOnDisk = Box.getString(key: Keys.serialNumber);
-
-    return cpuSerial != null && cpuSerial == serialOnDisk;
-  }
-
-  bool get hasLoggedInUser => loggedInAppUser != null;
   //#endregion
 
   //#region MARK: Session
@@ -110,22 +54,19 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Device Info
-
   final Rxn<ChcDevice> _deviceInfo = Rxn();
   ChcDevice? get deviceInfo => _deviceInfo.value;
 
   Future<void> readDevice() async {
     ChcDevice device = await DeviceUtils.createDeviceInfo();
     _deviceInfo.value = device;
-
+    _didReadDeviceInfoCompleted.value = true;
     update();
   }
-
   //#endregion
 
   //#region MARK: Connectivity
-  late final StreamSubscription<List<ConnectivityResult>>
-      _connectivitySubscription;
+  late final StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
   NetworkIndicator get networkIndicator => _networkIndicator.value;
@@ -174,28 +115,22 @@ class AppController extends GetxController {
     _didConnected.value = connected;
     _didConnectivityResultReceived.value = true;
     update();
-    //checkInternetConnection();
     getNetworkInfo();
   }
 
   Future<void> getMacAddresses() async {
-    // Run the 'ip link' command and get the output
     final processResult = await Process.run('ip', ['link']);
     final ipLinkOutput = processResult.stdout as String;
 
-    // Define regular expression pattern to match interface name and MAC address
-    final macPattern =
-        RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
+    final macPattern = RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
 
     String? ethMac;
     String? wifiMac;
 
-    // Iterate through all matches
     for (final match in macPattern.allMatches(ipLinkOutput)) {
       final interface = match.group(1);
       final macAddress = match.group(2);
 
-      // Identify Ethernet and Wi-Fi interfaces by their names
       if (interface != null && interface.contains(RegExp(r'enp|eth'))) {
         ethMac = macAddress;
       } else if (interface != null && interface.contains(RegExp(r'wl|wlan'))) {
@@ -229,8 +164,205 @@ class AppController extends GetxController {
     _networkName.value = wifiName;
     _networkIP.value = wifiIp ?? "-";
     _networkGateway.value = wifiGateway ?? "-";
+    update();
+  }
+  //#endregion
+
+  //#region Setup Flags
+  final RxBool _doesFoldersExists = false.obs;
+  bool get doesFoldersExists => _doesFoldersExists.value;
+  void setDoesFoldersExists(bool value) {
+    _doesFoldersExists.value = value;
+    update();
+  }
+
+  final RxBool _doesProvisionExists = false.obs;
+  bool get doesProvisionExists => _doesProvisionExists.value;
+  void setDoesProvisionExists(bool value) {
+    _doesProvisionExists.value = value;
+    update();
+  }
+
+  final _preferencesDefinition = PreferencesDefinition.empty().obs;
+  PreferencesDefinition get preferencesDefinition => _preferencesDefinition.value;
+
+  void setPreferencesDefinition(PreferencesDefinition value) {
+    _preferencesDefinition.value = value;
+    update();
+    // TODO: bu value box a yazıcak
+  }
+
+  final Rxn<HeethingsAccount> _heethingsAccount = Rxn();
+  HeethingsAccount? get heethingsAccount => _heethingsAccount.value;
+
+  void setHeethingsAccount(HeethingsAccount? value) {
+    _heethingsAccount.value = value;
+    update();
+    // TODO: bu value box a yazıcak
+  }
+
+  bool get hasAdmin => _userList.any((user) => user.level.name == 'admin');
+  bool get hasTechSupport => _userList.any((user) => user.level.name == 'techSupport');
+
+  bool get hasRequiredAppUserRoles => hasAdmin && hasTechSupport;
+
+  final RxBool _shouldUpdateApp = false.obs;
+  bool get shouldUpdateApp => _shouldUpdateApp.value;
+
+  bool get isSerialNumberValid {
+    final cpuSerial = deviceInfo?.serialNumber;
+    final serialOnDisk = Box.getString(key: Keys.serialNumber);
+
+    return cpuSerial != null && cpuSerial == serialOnDisk;
+  }
+
+  bool get hasLoggedInUser => loggedInAppUser != null;
+  //#endregion
+
+  //#region MARK: Users
+  final RxList<AppUser> _appUserList = <AppUser>[].obs;
+  List<AppUser> get appUserList => _appUserList;
+
+  final Rxn<AppUser> _loggedInAppUser = Rxn();
+  AppUser? get loggedInAppUser => _loggedInAppUser.value;
+
+  void setLoggedInAppUser(AppUser? user) {
+    _loggedInAppUser.value = user;
+    update();
+  }
+
+  Future<void> loadAppUserList() async {
+    final users = await DbProvider.db.getUsers();
+    _appUserList.assignAll(users);
+    update();
+
+    final isDeveloperUserExists = _appUserList.any((user) =>
+        user.username.toLowerCase() == 'developer' &&
+        user.level == AppUserLevel.developer);
+    if (_appUserList.isEmpty || !isDeveloperUserExists) {
+      await DbProvider.db.addUser(AppUser(
+        id: -1,
+        username: 'Developer',
+        pin: '111111',
+        level: AppUserLevel.developer,
+      ));
+      final updatedUsers = await DbProvider.db.getUsers();
+      _appUserList.assignAll(updatedUsers);
+    }
 
     update();
+  }
+
+  void logoutUser() {
+    _loggedInAppUser.value = null;
+    update();
+  }
+
+  Future<bool> loginUser({
+    required String username,
+    required String pin,
+  }) async {
+    final user = appUserList
+        .firstWhereOrNull((e) => e.username == username && e.pin == pin);
+    _loggedInAppUser.value = user;
+    update();
+    final result = loggedInAppUser != null;
+    if (result) {
+      setLoggedInAppUser(user);
+      LogService.addLog(LogDefinition(
+        message:
+            'Unlock Screen ${user != null ? '${user.username}(${user.level.name})' : ''}',
+        type: LogType.unlockScreenEvent,
+      ));
+    }
+    return result;
+  }
+  //#endregion
+
+  Future<void> performFactoryReset() async {
+    final box = GetStorage();
+    await box.erase();
+    await DbProvider.db.resetDb();
+    logoutUser();
+    if (isPi) {
+      Process.run('sudo', ['reboot', 'now']);
+    } else {
+      Process.killPid(pid);
+    }
+  }
+
+  Future<GenericResponse> accountRegister({
+    required String email,
+    required String fullName,
+    required String password,
+  }) async {
+    final response = await AppProvider.accountRegister(
+      request: RegisterRequest(
+        email: email,
+        fullName: fullName,
+        password: password,
+      ),
+    );
+    if (response.success && response.data != null) {
+      Account account = response.data!;
+      await Box.setString(key: Keys.account, value: account.toJson());
+      _didSignedIn.value = true;
+    } else {
+      _didSignedIn.value = false;
+    }
+    update();
+    return response;
+  }
+
+  Future<GenericResponse<ActivationResult?>> performActivation({
+    required String deviceId,
+    required String accountId,
+  }) async {
+    final response = await AppProvider.activateDevice(
+      request: ActivationRequest(
+        userId: accountId,
+        chcDeviceId: deviceId,
+      ),
+    );
+    if (response.success && response.data != null) {
+      ActivationResult activationResult = response.data!;
+      await Box.setString(
+          key: Keys.activationResult, value: activationResult.toJson());
+      await Box.setBool(key: Keys.didActivated, value: true);
+      _didActivated.value = true;
+    } else {
+      await Box.setBool(key: Keys.didActivated, value: false);
+      _didActivated.value = false;
+    }
+    update();
+    return response;
+  }
+
+  Future<GenericResponse<SubscriptionResult?>> requestSubscription({
+    required String activationId,
+  }) async {
+    final response =
+        await AppProvider.requestSubscription(activationId: activationId);
+    if (response.success && response.data != null) {
+      SubscriptionResult subscriptionResult = response.data!;
+      await Box.setString(
+          key: Keys.subscriptionResult, value: subscriptionResult.toJson());
+      _didSubscriptionResultReceived.value = true;
+    } else {
+      _didSubscriptionResultReceived.value = false;
+    }
+    update();
+    return response;
+  }
+
+  //#region MARK: Preferences
+
+  loadPreferencesFromBox() {
+    final prefs = Box.getString(key: Keys.preferences);
+    if (prefs.isNotEmpty) {
+      _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
+      update();
+    }
   }
 
   //#endregion
@@ -266,8 +398,7 @@ class AppController extends GetxController {
   //#region MARK: Flags
 
   final RxBool _didConnectivityResultReceived = false.obs;
-  bool get didConnectivityResultReceived =>
-      _didConnectivityResultReceived.value;
+  bool get didConnectivityResultReceived => _didConnectivityResultReceived.value;
 
   final RxBool _didConnected = false.obs;
   bool get didConnected => _didConnected.value;
@@ -283,90 +414,4 @@ class AppController extends GetxController {
     update();
   }
   //#endregion
-
-  //#region MARK: Preferences
-
-  loadPreferencesFromBox() {
-    final prefs = Box.getString(key: Keys.preferences);
-    if (prefs.isNotEmpty) {
-      _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
-      update();
-    }
-  }
-
-//#endregion
-
-  //#region MARK: AppUser
-  final Rxn<AppUser> _loggedInAppUser = Rxn();
-  AppUser? get loggedInAppUser => _loggedInAppUser.value;
-
-  final List<AppUser> _userList = <AppUser>[].obs;
-  List<AppUser> get userList => _userList;
-
-  void setLoggedInAppUser(AppUser? user) {
-    _loggedInAppUser.value = user;
-    update();
-  }
-
-  Future<void> loadAppUserList() async {
-    final users = await DbProvider.db.getUsers();
-    _userList.assignAll(users);
-    update();
-
-    final isDeveloperUserExists = _userList.any((user) =>
-        user.username.toLowerCase() == 'developer' &&
-        user.level == AppUserLevel.developer);
-    if (_userList.isEmpty || !isDeveloperUserExists) {
-      await DbProvider.db.addUser(AppUser(
-        id: -1,
-        username: 'Developer',
-        pin: '111111',
-        level: AppUserLevel.developer,
-      ));
-      final updatedUsers = await DbProvider.db.getUsers();
-      _userList.assignAll(updatedUsers);
-    }
-
-    update();
-  }
-
-  void logoutUser() {
-    _loggedInAppUser.value = null;
-    update();
-  }
-
-  Future<bool> loginUser({
-    required String username,
-    required String pin,
-  }) async {
-    final user = userList
-        .firstWhereOrNull((e) => e.username == username && e.pin == pin);
-    _loggedInAppUser.value = user;
-    update();
-    final result = loggedInAppUser != null;
-    if (result) {
-      setLoggedInAppUser(user);
-      LogService.addLog(LogDefinition(
-        message:
-            'Unlock Screen ${user != null ? '${user.username}(${user.level.name})' : ''}',
-        type: LogType.unlockScreenEvent,
-      ));
-    }
-    return result;
-  }
-//#endregion
-
-  Future<void> performFactoryReset() async {
-    final box = GetStorage();
-    await box.erase();
-    await DbProvider.db.resetDb();
-    logoutUser();
-    if (isPi) {
-      Process.run('sudo', ['reboot', 'now']);
-    } else {
-      Process.killPid(pid);
-    }
-  }
-
-
 }
