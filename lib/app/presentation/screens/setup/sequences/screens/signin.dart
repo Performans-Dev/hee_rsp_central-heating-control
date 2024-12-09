@@ -1,5 +1,7 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/data/models/signin_request.dart';
+import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -48,9 +50,11 @@ class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
                     ? null
                     : () async {
                         setState(() => busy = true);
-                        final response = await app.accountSignin(
-                          email: usernameController.text,
-                          password: passwordController.text,
+                        final response = await AppProvider.accountSignin(
+                          request: SigninRequest(
+                            email: usernameController.text,
+                            password: passwordController.text,
+                          ),
                         );
                         setState(() => busy = false);
                         if (!response.success || response.data == null) {

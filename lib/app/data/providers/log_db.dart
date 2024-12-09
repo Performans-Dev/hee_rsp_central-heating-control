@@ -78,7 +78,7 @@ class LogDbProvider {
       );
       if (data.level == LogLevel.error) {
         AppController appController = Get.find();
-        appController.setHasError(true);
+        appController.setDisplayErrorNotification(true);
       }
       return id;
     } on Exception catch (_) {

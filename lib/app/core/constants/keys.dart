@@ -4,6 +4,7 @@ class Keys {
   static const String logPath = 'logs';
 
   ///
+  static const String preferences = 'preferences';
   static const String appSettings = 'appSettings';
   static const String idleTimerInSeconds = 'idleTimerInSeconds';
   static const String slideShowTimer = 'slideShowTimer';
@@ -40,6 +41,7 @@ class Keys {
   static const String account = 'account';
   static const String activationId = 'activationId';
   static const String activationResult = 'activationResult';
+  static const String serialNumber = 'activationResult';
 
   static const String wifiCredentials = 'wifiCredentials';
   static const String wifiSsid = 'wifiSsid';

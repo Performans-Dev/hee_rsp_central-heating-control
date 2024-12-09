@@ -23,7 +23,7 @@ class LogoWidget extends StatelessWidget {
         width: size,
         child: SvgPicture.asset(
           themeMode == ThemeMode.system
-              ? app.isDarkMode
+              ? app.preferencesDefinition.isDark
                   ? UiAssets.heethingsLogodark
                   : UiAssets.heethingsLogoLight
               : themeMode == ThemeMode.light

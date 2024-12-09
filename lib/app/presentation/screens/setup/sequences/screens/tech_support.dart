@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -24,7 +25,7 @@ class _SetupSequenceTechSupportScreenState
     extends State<SetupSequenceTechSupportScreen> {
   late TextEditingController usernameController;
   late TextEditingController pinController;
-
+DbProvider db=DbProvider.db;
   @override
   void initState() {
     super.initState();
@@ -64,8 +65,8 @@ class _SetupSequenceTechSupportScreenState
                     pin: pinController.text,
                     level: AppUserLevel.techSupport,
                   );
-                  final result = await app.addUser(user: user);
-                  if (result.success) {
+                  final result = await db.addUser( user);
+                  if (result>0) {
                     await app.loadAppUserList();
                     await Box.setBool(
                       key: Keys.didTechSupportUserCreated,
@@ -77,7 +78,7 @@ class _SetupSequenceTechSupportScreenState
                     if (context.mounted) {
                       DialogUtils.snackbar(
                         context: context,
-                        message: result.message ?? 'User creation failed'.tr,
+                        message: result.toString(),
                         type: SnackbarType.error,
                       );
                     }

@@ -22,7 +22,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         const SizedBox(width: 8),
         Icon(
           Icons.warning,
-          color: app.hasError ? Colors.red : null,
+          color: app.displayErrorNotification ? Colors.red : null,
         ),
         const SizedBox(width: 4),
         const AppBarNetworkIndicator(),

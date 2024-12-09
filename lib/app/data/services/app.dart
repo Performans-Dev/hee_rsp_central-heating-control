@@ -3,36 +3,51 @@ import 'dart:io';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
-import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
+import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/activation_result.dart';
-import 'package:central_heating_control/app/data/models/app_settings.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/chc_device.dart';
-import 'package:central_heating_control/app/data/models/forgot_password_request.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
-import 'package:central_heating_control/app/data/models/language_definition.dart';
+import 'package:central_heating_control/app/data/models/heethings_account.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/models/preferences.dart';
 import 'package:central_heating_control/app/data/models/register_request.dart';
-import 'package:central_heating_control/app/data/models/signin_request.dart';
 import 'package:central_heating_control/app/data/models/subscription_result.dart';
-import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
-import 'package:central_heating_control/app/data/providers/static_provider.dart';
-import 'package:central_heating_control/app/data/services/setup.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
+  //#region Structure Flags
+  final RxBool _didCheckFoldersExists = false.obs;
+  final RxBool _didCheckedProvisionResults = false.obs;
+  final RxBool _didReadDeviceInfoCompleted = false.obs;
+
+  bool get didCheckFoldersExists => _didCheckFoldersExists.value;
+  bool get didCheckedProvisionResults => _didCheckedProvisionResults.value;
+  bool get didReadDeviceInfoCompleted => _didReadDeviceInfoCompleted.value;
+
+  void setDidCheckFoldersExists(bool value) {
+    _didCheckFoldersExists.value = value;
+  }
+
+  void setDidCheckProvisionTestResults(bool value) {
+    _didCheckedProvisionResults.value = value;
+  }
+
+  void setReadDeviceInfoCompleted(bool value) {
+    _didReadDeviceInfoCompleted.value = value;
+  }
+  //#endregion
+
   //#region MARK: Session
   final RxString _sessionKey = ''.obs;
   String get sessionKey => _sessionKey.value;
@@ -44,14 +59,13 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Device Info
-
   final Rxn<ChcDevice> _deviceInfo = Rxn();
   ChcDevice? get deviceInfo => _deviceInfo.value;
 
   Future<void> readDevice() async {
     ChcDevice device = await DeviceUtils.createDeviceInfo();
     _deviceInfo.value = device;
-    _didDeviceInfoCreated.value = true;
+    _didReadDeviceInfoCompleted.value = true;
     update();
   }
   //#endregion
@@ -107,28 +121,23 @@ class AppController extends GetxController {
     _didConnected.value = connected;
     _didConnectivityResultReceived.value = true;
     update();
-    //checkInternetConnection();
     getNetworkInfo();
   }
 
   Future<void> getMacAddresses() async {
-    // Run the 'ip link' command and get the output
     final processResult = await Process.run('ip', ['link']);
     final ipLinkOutput = processResult.stdout as String;
 
-    // Define regular expression pattern to match interface name and MAC address
     final macPattern =
         RegExp(r'^\d+: (\S+): .*\n\s+link/ether ([\da-f:]+)', multiLine: true);
 
     String? ethMac;
     String? wifiMac;
 
-    // Iterate through all matches
     for (final match in macPattern.allMatches(ipLinkOutput)) {
       final interface = match.group(1);
       final macAddress = match.group(2);
 
-      // Identify Ethernet and Wi-Fi interfaces by their names
       if (interface != null && interface.contains(RegExp(r'enp|eth'))) {
         ethMac = macAddress;
       } else if (interface != null && interface.contains(RegExp(r'wl|wlan'))) {
@@ -162,280 +171,80 @@ class AppController extends GetxController {
     _networkName.value = wifiName;
     _networkIP.value = wifiIp ?? "-";
     _networkGateway.value = wifiGateway ?? "-";
-
     update();
   }
   //#endregion
 
-  //////////////////// remove below
-  ///
-  /// PreferencesDefiniton
-  /// language, timezone, dateformat, theme,
-  /// screensaverType (blank, static, slideshow), LockDurationIdleTimeout, slideShowTimer etc
-  ///
-  /// bool get allSelected => didSelectedLanguage && didSelectedTimezone  && didSelectedDateFormat && didSelectedTheme
-  ///
-  /// HeethingsAccount
-  /// heethings user id, token, (email/phone), subscriptionResult (int, date),
-  /// terms consent status, privacy consent status
-  /// bool get created => user.isnotempty && token.isnotempty && subscriptionResult.isnotempty && termsStatus && privacyStatus
-  ///
-  ///
-  /// List<AppUser> db deki liste.
-  /// bool get hasRequiredAppUserRoles => en az 1 admin ve 1 tech support var.
-  ///
-  /// AppUser? loggedInAppUser.
-  /// bool get hasLoggedInUser => loggedInAppUser != null
-  ///
-  /// RxBool shouldUpdateApp
-  ///
-  /// bool get isSerialNumberValid => deviceInfo!=null && deviceInfo.serialNumber == Box.serialNumber
-  ///
-  /// RxBool didConnected
-  ///
-  /// onInit
-  /// register connectivity listener
-  /// checkFoldersExists()
-  /// checkProvisionCompleted()
-  /// readDeviceInfo()
-  /// startSession()
-  /// applyPrefencesFromBox()
-  ///
-  /// onReady
-  /// loadAppUserList() ** try first onInit. if it fails, try onReady
-  ///
-
-/////////////////////////////////////////////////////////////////////
-  /// ProductionTestScreen
-  /// deviceInfo.serialNumber goster + qr butonu
-  /// connection status true/false + connect-disconnect button (otomatik Wifi HeethingsTech:12345678)
-  /// trigger Provision Button -> API ->serino
-  /// response gelince diske dosya yaz
-  /// {
-  /// "provisionId": "abc",
-  /// "secretKey": "def",
-  /// "serialNumber": "ghi",
-  /// "username": "jkl",
-  /// "success":true,
-  /// "createdAt": "datetime",
-  /// }
-  ///
-  ///
-  ///
-  ///
-/////////////////////////////////////////////////////////////////////
-  /// SetupScreen
-  /// setupcontroller neyin eksin oldugunu karar verir
-  /// data olarak appController dan-> prefence + heethings accont + db user alir
-  /// uygun screen listesini olusturur
-  /// screen gosterir
-  /// kullanici birseyi kaydettiginde box gunceller, appController daki degiskenleri update eder
-  /// bitince tesekkur ve box update
-  ///
-  /// DiskErrorScreen, ForceUpdateScreen ve InvalidUsageScreen
-  /// bos placeholder ekran. bu ekranlar gelirse baska hic bir ekrana gidemez.
-  ///
-  ///
-  ///
-  ///
-  /// IVIR ZIVIR SEYLER
-  ///
-  ///
-  /// Future<void> checkFoldersExists() async {
-  /// //[ -d folder_path ] && echo "Folder exists" || echo "Folder does not exist"
-
-  ///     final List<bool> results = [];
-  ///     final List<String> paths = [
-  ///         '/home/pi/Heethings/CC/application',
-  ///         '/home/pi/Heethings/CC/diagnose/app',
-  ///         '/home/pi/Heethings/CC/databases',
-  ///         '/home/pi/Heethings/CC/logs',
-  ///         '/home/pi/Heethings/CC/elevator/app',
-  ///     ];
-  ///
-  ///     for (final path in paths) {
-  ///         final result = await Process.run('test', ['-d', path]);
-  ///         results.add(result.exitCode == 0);
-  ///     }
-  ///
-  ///     setDoesFoldersExists( results.every((r) => r) );
-  ///     setDidCheckFoldersExists(true);
-  /// }
-  ///
-  /// future void checkProductionTestsCompleted() {
-  ///     File f = File (/db path/production.json)
-  ///     final content = await f.readAsString();
-  ///     final map = jsonDecode(content);
-  ///     setProductionTestsCompleted ( map['success'])
-  ///     setDidCheckProductionTestResults(true);
-  /// }
-  ///
-  /// AppController
-  /// bool get doesFoldersExists
-  /// bool get doesProvisionExists
-  ///
-  /// bool didCheckedFoldersExists
-  /// bool didCheckedProvisionResults
-  ///
-  ///
-  /// bool get didPreferencesSelected {
-  ///     // Box.preferences
-  ///     // AppController.preferences
-  ///     // return pref.language.selected && pref.timezone.selected && pref.dateformat.selected && pref.theme.selected
-  /// }
-  ///
-  ///
-  /// bool get didAccountCreated {
-  ///     // Box.account
-  ///     // AppController.account
-  ///     // return account.user.token.isNotEmpty && account.subscription.isNotEmpty && account.consentsStatus.allApproved
-  /// }
-  ///
-  /// bool get hasRequiredAppUserRoles {
-  ///     return hasAdminUser && hasTechSupportUser
-  /// }
-  ///
-  /// bool get shouldUpdateApp {
-  ///     return hasConnection && hasNewVersion
-  /// }
-  ///
-  /// bool get isSerialNumberValid {
-  ///     return cpuSerial == serialOnDisk
-  /// }
-  ///
-  ///
-  ///
-  ///
-
-  //#region MARK: Super
-  @override
-  void onInit() {
-    super.onInit();
-    _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
-    // checkInternetConnection();
-    fetchLanguages();
-    fetchTimezones();
-    fetchDateTimeFormats();
-    fetchThemes();
-    checkFlags();
-    final t = Box.getString(key: Keys.selectedTheme);
-    _selectedTheme.value = t.isEmpty ? StaticProvider.getThemeList.first : t;
-    _idleTimeout.value =
-        Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 60);
-    _slideShowTime.value = Box.getInt(key: Keys.slideShowTimer, defaultVal: 10);
+  //#region Setup Flags
+  final RxBool _doesFoldersExists = false.obs;
+  bool get doesFoldersExists => _doesFoldersExists.value;
+  void setDoesFoldersExists(bool value) {
+    _doesFoldersExists.value = value;
     update();
   }
 
-  @override
-  void onReady() {
-    loadAppUserList();
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    _connectivitySubscription.cancel();
-    super.onClose();
-  }
-  //#endregion
-
-  //#region MARK: Flags
-
-  final RxBool _didConnectivityResultReceived = false.obs;
-  bool get didConnectivityResultReceived =>
-      _didConnectivityResultReceived.value;
-
-  final RxBool _didConnected = false.obs;
-  bool get didConnected => _didConnected.value;
-
-  final RxBool _didConnectionChecked = false.obs;
-  bool get didConnectionChecked => _didConnectionChecked.value;
-
-  final RxBool _didSettingsFetched = false.obs;
-  bool get didSettingsFetched => _didSettingsFetched.value;
-
-  final RxBool _didLanguageSelected = false.obs;
-  bool get didLanguageSelected => _didLanguageSelected.value;
-
-  final RxBool _didTimezoneSelected = false.obs;
-  bool get didTimezoneSelected => _didTimezoneSelected.value;
-
-  final RxBool _didDateFormatSelected = false.obs;
-  bool get didDateFormatSelected => _didDateFormatSelected.value;
-
-  final RxBool _didThemeSelected = false.obs;
-  bool get didThemeSelected => _didThemeSelected.value;
-
-  final RxBool _didDeviceInfoCreated = false.obs;
-  bool get didDeviceInfoCreated => _didDeviceInfoCreated.value;
-
-  final RxBool _didDeviceRegistered = false.obs;
-  bool get didDeviceRegistered => _didDeviceRegistered.value;
-
-  final RxBool _didSignedIn = false.obs;
-  bool get didSignedIn => _didSignedIn.value;
-
-  final RxBool _didActivated = false.obs;
-  bool get didActivated => _didActivated.value;
-
-  final RxBool _didSubscriptionResultReceived = false.obs;
-  bool get didSubscriptionResultReceived =>
-      _didSubscriptionResultReceived.value;
-
-  final RxBool _didAppUsersLoaded = false.obs;
-  bool get didAppUsersLoaded => _didAppUsersLoaded.value;
-
-  bool get hasAdminUser =>
-      appUserList.where((e) => e.level == AppUserLevel.admin).isNotEmpty;
-
-  final RxBool _hasError = false.obs;
-  bool get hasError => _hasError.value;
-  void setHasError(bool value) {
-    _hasError.value = value;
-  }
-
-  bool setupCompleted() {
-    final SetupController setupController = Get.find();
-    final list = setupController.setupSequenceList;
-    return list.where((e) => !e.isCompleted).isEmpty;
-  }
-
-  void checkFlags() {
-    _didLanguageSelected.value = Box.getBool(key: Keys.didLanguageSelected);
-    _didTimezoneSelected.value = Box.getBool(key: Keys.didTimezoneSelected);
-    _didDateFormatSelected.value = Box.getBool(key: Keys.didDateFormatSelected);
-    _didThemeSelected.value = Box.getBool(key: Keys.didThemeSelected);
-    _didDeviceInfoCreated.value = deviceInfo != null;
-    _didDeviceRegistered.value = Box.getString(key: Keys.deviceId).isNotEmpty;
-    _didSignedIn.value = Box.account != null && Box.account!.id.isNotEmpty;
-    _didActivated.value = Box.getString(key: Keys.activationId).isNotEmpty;
-    _didSubscriptionResultReceived.value = Box.accountSubscription != null &&
-        Box.accountSubscription!.id.isNotEmpty;
+  final RxBool _doesProvisionExists = false.obs;
+  bool get doesProvisionExists => _doesProvisionExists.value;
+  void setDoesProvisionExists(bool value) {
+    _doesProvisionExists.value = value;
     update();
   }
 
-  Future<void> performFactoryReset() async {
-    final box = GetStorage();
-    await box.erase();
-    await DbProvider.db.resetDb();
-    logoutUser();
-    if (isPi) {
-      Process.run('sudo', ['reboot', 'now']);
-    } else {
-      Process.killPid(pid);
-    }
+  final _preferencesDefinition = PreferencesDefinition.empty().obs;
+  PreferencesDefinition get preferencesDefinition =>
+      _preferencesDefinition.value;
+
+  void setPreferencesDefinition(PreferencesDefinition value) {
+    _preferencesDefinition.value = value;
+    update();
+    // TODO: bu value box a yazıcak
   }
+
+  final Rxn<HeethingsAccount> _heethingsAccount = Rxn();
+  HeethingsAccount? get heethingsAccount => _heethingsAccount.value;
+
+  void setHeethingsAccount(HeethingsAccount? value) {
+    _heethingsAccount.value = value;
+    update();
+    // TODO: bu value box a yazıcak
+  }
+
+  bool get hasAdmin => _appUserList.any((user) => user.level.name == 'admin');
+  bool get hasTechSupport =>
+      _appUserList.any((user) => user.level.name == 'techSupport');
+
+  bool get hasRequiredAppUserRoles => hasAdmin && hasTechSupport;
+
+  final RxBool _shouldUpdateApp = false.obs;
+  bool get shouldUpdateApp => _shouldUpdateApp.value;
+
+  bool get isSerialNumberValid {
+    final cpuSerial = deviceInfo?.serialNumber;
+    final serialOnDisk = Box.getString(key: Keys.serialNumber);
+
+    return cpuSerial != null && cpuSerial == serialOnDisk;
+  }
+
+  bool get hasLoggedInUser => loggedInAppUser != null;
   //#endregion
 
   //#region MARK: Users
   final RxList<AppUser> _appUserList = <AppUser>[].obs;
   List<AppUser> get appUserList => _appUserList;
 
+  final Rxn<AppUser> _loggedInAppUser = Rxn();
+  AppUser? get loggedInAppUser => _loggedInAppUser.value;
+
+  void setLoggedInAppUser(AppUser? user) {
+    _loggedInAppUser.value = user;
+    update();
+  }
+
   Future<void> loadAppUserList() async {
     final users = await DbProvider.db.getUsers();
     _appUserList.assignAll(users);
-    _didAppUsersLoaded.value = true;
+    update();
+
     final isDeveloperUserExists = _appUserList.any((user) =>
         user.username.toLowerCase() == 'developer' &&
         user.level == AppUserLevel.developer);
@@ -453,11 +262,8 @@ class AppController extends GetxController {
     update();
   }
 
-  final Rxn<AppUser> _loggedInAppUser = Rxn();
-  AppUser? get loggedInAppUser => _loggedInAppUser.value;
-
-  void setLoggedInAppUser(AppUser? user) {
-    _loggedInAppUser.value = user;
+  void logoutUser() {
+    _loggedInAppUser.value = null;
     update();
   }
 
@@ -480,238 +286,18 @@ class AppController extends GetxController {
     }
     return result;
   }
-
-  void logoutUser() {
-    _loggedInAppUser.value = null;
-    update();
-  }
-
-  Future<bool> updateUser({required AppUser user}) async {
-    final result = await DbProvider.db.updateUser(user);
-    await loadAppUserList();
-    return result > 0;
-  }
-
-  Future<bool> deleteUser({required AppUser user}) async {
-    final result = await DbProvider.db.deleteUser(user);
-    await loadAppUserList();
-    return result > 0;
-  }
-
-  Future<GenericResponse> addUser({required AppUser user}) async {
-    final result = await DbProvider.db.addUser(user);
-    await loadAppUserList();
-    switch (result) {
-      case -3:
-        return GenericResponse.error(message: 'Username already exists'.tr);
-      case -2:
-        return GenericResponse.error(message: 'Couldnot read database'.tr);
-      case -1:
-        return GenericResponse.error(message: 'Database exception'.tr);
-      case 0:
-        return GenericResponse.error(message: 'Unknown error'.tr);
-      default:
-        return GenericResponse.success(user);
-    }
-  }
   //#endregion
 
-
-
-  //#region MARK: AppSettings
-  final Rxn<AppSettings> _appSettings = Rxn();
-  AppSettings? get appSettings => _appSettings.value;
-
-  Future<bool> fetchAppSettings() async {
-    // if (!didConnected) return false;
-
-    final data = Box.getString(key: Keys.appSettings);
-
-    if (didConnected && data.isEmpty) {
-      final result = await AppProvider.fetchAppSettings();
-      if (result.success && result.data != null) {
-        await Box.setString(
-            key: Keys.appSettings, value: result.data!.toJson());
-        _appSettings.value = result.data;
-      }
-      _didSettingsFetched.value = true;
-      update();
+  Future<void> performFactoryReset() async {
+    final box = GetStorage();
+    await box.erase();
+    await DbProvider.db.resetDb();
+    logoutUser();
+    if (Platform.isLinux) {
+      Process.run('sudo', ['reboot', 'now']);
     } else {
-      if (data.isEmpty) return false;
-      _appSettings.value = AppSettings.fromJson(data);
-      update();
+      exit(0);
     }
-    return true;
-  }
-  //#endregion
-
-  //#region MARK: Languages
-  final RxList<LanguageDefinition> _languages = <LanguageDefinition>[].obs;
-  List<LanguageDefinition> get languages => _languages;
-
-  void fetchLanguages() {
-    // if (!didConnected) return;
-    final list = <LanguageDefinition>[];
-    const data = StaticProvider.getLanguageList;
-    for (final map in data) {
-      list.add(LanguageDefinition.fromMap(map));
-    }
-    _languages.assignAll(list);
-    update();
-  }
-
-  Future<void> onLanguageSelected(int index) async {
-    final selectedLang = languages[index];
-    await Box.setBool(key: Keys.didLanguageSelected, value: true);
-    await LocalizationService().changeLocale(selectedLang.languageCode);
-    _didLanguageSelected.value = true;
-    update();
-  }
-  //#endregion
-
-  //#region MARK: Timezones
-  final RxList<TimezoneDefinition> _timezones = <TimezoneDefinition>[].obs;
-  List<TimezoneDefinition> get timezones => _timezones;
-
-  void fetchTimezones() {
-    //  if (!didConnected) return;
-
-    final list = <TimezoneDefinition>[];
-    const data = StaticProvider.getTimezoneList;
-    for (final map in data) {
-      list.add(TimezoneDefinition.fromMap(map));
-    }
-    _timezones.assignAll(list);
-    update();
-  }
-
-  Future<void> onTimezoneSelected(int index) async {
-    final selectedTimezone = timezones[index];
-    await Box.setString(
-      key: Keys.selectedTimezone,
-      value: selectedTimezone.toJson(),
-    );
-    await Box.setBool(key: Keys.didTimezoneSelected, value: true);
-    _didTimezoneSelected.value = true;
-    update();
-
-    //TODO: inform OS to selected timezone
-  }
-  //#endregion
-
-  //#region MARK: DateTime Formats
-  final RxList<String> _dateFormats = <String>[].obs;
-  List<String> get dateFormats => _dateFormats;
-
-  final RxList<String> _timeFormats = <String>[].obs;
-  List<String> get timeFormats => _timeFormats;
-
-  void fetchDateTimeFormats() {
-    // if (!didConnected) return;
-
-    _dateFormats.assignAll(StaticProvider.getDateFormatList);
-    _timeFormats.assignAll(StaticProvider.getTimeFormatList);
-    update();
-  }
-  //#endregion
-
-  //#region MARK: Themes
-  final Rx<ThemeMode> _themeMode = ThemeMode.light.obs;
-  ThemeMode get themeMode => _themeMode.value;
-
-  final RxBool _isDarkMode = false.obs;
-  bool get isDarkMode => _isDarkMode.value;
-
-  Future<void> nextThemeMode() async {
-    int index = ThemeMode.values.indexOf(themeMode);
-    final nextTheme = ThemeMode.values[(index + 1) % ThemeMode.values.length];
-    await setThemeMode(nextTheme);
-  }
-
-  Future<void> setThemeMode(ThemeMode mode) async {
-    await Box.setInt(key: Keys.themeMode, value: mode.index);
-    Get.changeThemeMode(mode);
-    _themeMode.value = mode;
-    _isDarkMode.value = Get.isDarkMode;
-    update();
-    _isDarkMode.value = Get.isDarkMode;
-    update();
-  }
-
-  final RxList<String> _themes = <String>[].obs;
-  List<String> get themes => _themes;
-
-  final Rx<String> _selectedTheme = ''.obs;
-  String get selectedTheme => _selectedTheme.value;
-
-  void fetchThemes() {
-    // if (!didConnected) return;
-
-    _themes.assignAll(StaticProvider.getThemeList);
-    update();
-  }
-
-  Future<void> setSelectedTheme(String value) async {
-    _selectedTheme.value = value;
-    _didThemeSelected.value = true;
-    update();
-    await Box.setString(key: Keys.selectedTheme, value: value);
-  }
-
-  //#endregion
-
-  //#region MARK: Account
-  final Rxn<String> _token = Rxn();
-  String? get token => _token.value;
-  void deleteToken() {
-    _token.value = null;
-    update();
-  }
-
-  Future<GenericResponse<String?>> registerDevice(ChcDevice device) async {
-    final response = await AppProvider.registerChcDevice(request: device);
-    String deviceId = response.data?.id ?? '';
-    await Box.setString(key: Keys.deviceId, value: deviceId);
-    _deviceInfo.value?.id = deviceId;
-    _didDeviceRegistered.value = true;
-    update();
-    await Box.setBool(key: Keys.didRegisteredDevice, value: true);
-    return GenericResponse(
-      success: response.success,
-      statusCode: response.statusCode,
-      message: response.message,
-      data: response.data?.id,
-    );
-  }
-
-  Future<GenericResponse<Account?>> accountSignin({
-    required String email,
-    required String password,
-  }) async {
-    final response = await AppProvider.accountSignin(
-      request: SigninRequest(
-        email: email,
-        password: password,
-      ),
-    );
-    if (response.success && response.data != null) {
-      Account account = response.data!;
-      await Box.setString(key: Keys.account, value: account.toJson());
-      _didSignedIn.value = true;
-    } else {
-      _didSignedIn.value = false;
-    }
-    update();
-    return response;
-  }
-
-  Future<GenericResponse> accountForgotPassword({required String email}) async {
-    final response = await AppProvider.accountForgotPassword(
-      request: ForgotPasswordRequest(
-        email: email,
-      ),
-    );
-    return response;
   }
 
   Future<GenericResponse> accountRegister({
@@ -741,34 +327,24 @@ class AppController extends GetxController {
     required String deviceId,
     required String accountId,
   }) async {
-    // final response = await AppProvider.activateDevice(
-    //   request: ActivationRequest(
-    //     userId: accountId,
-    //     chcDeviceId: deviceId,
-    //   ),
-    // );
-    await Future.delayed(const Duration(seconds: 3));
-
-    // if (response.success && response.data != null) {
-    // ActivationResult activationResult = response.data!;
-    ActivationResult activationResult = ActivationResult(
-      id: Guid.newGuid.toString(),
-      createdAt: DateTime.now().toIso8601String(),
-      chcDeviceId: deviceId,
-      userId: accountId,
-      status: 1,
-      activationTime: DateTime.now().toIso8601String(),
+    final response = await AppProvider.activateDevice(
+      request: ActivationRequest(
+        userId: accountId,
+        chcDeviceId: deviceId,
+      ),
     );
-    await Box.setString(
-        key: Keys.activationResult, value: activationResult.toJson());
-    await Box.setBool(key: Keys.didActivated, value: true);
-    _didActivated.value = true;
-    // } else {
-    //   await Box.setBool(key: Keys.didActivated, value: false);
-    //   _didActivated.value = false;
-    // }
+    if (response.success && response.data != null) {
+      ActivationResult activationResult = response.data!;
+      await Box.setString(
+          key: Keys.activationResult, value: activationResult.toJson());
+      await Box.setBool(key: Keys.didActivated, value: true);
+      _didActivated.value = true;
+    } else {
+      await Box.setBool(key: Keys.didActivated, value: false);
+      _didActivated.value = false;
+    }
     update();
-    return GenericResponse.success(activationResult);
+    return response;
   }
 
   Future<GenericResponse<SubscriptionResult?>> requestSubscription({
@@ -788,29 +364,74 @@ class AppController extends GetxController {
     return response;
   }
 
-  //#endregion
+  //#region MARK: Preferences
 
-  //#region MARK: Terms-Privacy
-
-  //#endregion
-
-  //#region MARK: Idle Timeout / Screen Saver
-  final Rx<int> _idleTimeout = 500.obs;
-  int get idleTimeout => _idleTimeout.value;
-
-  final Rx<int> _slideShowTime = 10.obs;
-  int get slideShowTime => _slideShowTime.value;
-
-  void setIdleTime(value) {
-    _idleTimeout.value = value;
-    update();
+  loadPreferencesFromBox() {
+    final prefs = Box.getString(key: Keys.preferences);
+    if (prefs.isNotEmpty) {
+      _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
+      update();
+    }
   }
 
-  void setSlideTime(value) {
-    _slideShowTime.value = value;
+  //#endregion
+
+  //#region MARK: Super
+  @override
+  void onInit() {
+    super.onInit();
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+
+    readDevice();
+    startSession();
+    loadPreferencesFromBox();
+    //TODO:loadaccountfrombox
+    //boxdaki account boş ise null olarak güncelle.
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    loadAppUserList();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription.cancel();
+    super.onClose();
+  }
+
+  //#endregion
+
+  //#region MARK: Flags
+
+  final RxBool _didConnectivityResultReceived = false.obs;
+  bool get didConnectivityResultReceived =>
+      _didConnectivityResultReceived.value;
+
+  final RxBool _didConnected = false.obs;
+  bool get didConnected => _didConnected.value;
+
+  final RxBool _didConnectionChecked = false.obs;
+  bool get didConnectionChecked => _didConnectionChecked.value;
+
+  final RxBool _didActivated = false.obs;
+  bool get didActivated => _didActivated.value;
+
+  final RxBool _didSignedIn = false.obs;
+  bool get didSignedIn => _didSignedIn.value;
+
+  final RxBool _didSubscriptionResultReceived = false.obs;
+  bool get didSubscriptionResultReceived =>
+      _didSubscriptionResultReceived.value;
+
+  final RxBool _displayErrorNotification = false.obs;
+  bool get displayErrorNotification => _displayErrorNotification.value;
+
+  void setDisplayErrorNotification(bool value) {
+    _displayErrorNotification.value = value;
     update();
   }
   //#endregion
-
-  
 }

@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/timezone_definition.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/day.dart';
@@ -48,21 +49,23 @@ class _SettingsPreferencesTimezoneScreenState
   @override
   void initState() {
     super.initState();
-    _selectedTimezone = app.timezones.firstWhereOrNull((e) =>
-            e.zone ==
+    _selectedTimezone = (StaticProvider.getTimezoneList.firstWhereOrNull((e) =>
+            e["zone"] ==
             (TimezoneDefinition.fromJson(
                     Box.getString(key: Keys.selectedTimezone)))
                 .zone) ??
-        app.timezones.first;
+        StaticProvider.getTimezoneList.first) as TimezoneDefinition;
     _selectedYear = DateTime.now().year;
     _selectedMonth = DateTime.now().month;
     _selectedDay = DateTime.now().day;
     _selectedHour = DateTime.now().hour;
     _selectedMinute = DateTime.now().minute;
     _selectedDateFormat = Box.getString(
-        key: Keys.selectedDateFormat, defaultVal: app.dateFormats.first);
+        key: Keys.selectedDateFormat,
+        defaultVal: StaticProvider.getDateFormatList.first);
     _selectedTimeFormat = Box.getString(
-        key: Keys.selectedTimeFormat, defaultVal: app.timeFormats.first);
+        key: Keys.selectedTimeFormat,
+        defaultVal: StaticProvider.getTimeFormatList.first);
   }
 
   @override
@@ -182,7 +185,7 @@ class _SettingsPreferencesTimezoneScreenState
                                     child: FormItemComponent(
                                       label: 'Date Format',
                                       child: StringDropdownWidget(
-                                        data: app.dateFormats,
+                                        data: StaticProvider.getDateFormatList,
                                         value: _selectedDateFormat,
                                         onChanged: (v) {
                                           if (v == null) return;
@@ -197,7 +200,7 @@ class _SettingsPreferencesTimezoneScreenState
                                     child: FormItemComponent(
                                       label: 'Time Format',
                                       child: StringDropdownWidget(
-                                        data: app.timeFormats,
+                                        data: StaticProvider.getTimeFormatList,
                                         value: _selectedTimeFormat,
                                         onChanged: (v) {
                                           if (v == null) return;
@@ -231,10 +234,13 @@ class _SettingsPreferencesTimezoneScreenState
                             const SizedBox(height: 12),
                             FormItemComponent(
                               label: 'Timezone',
-                              child: ac.timezones.isEmpty
+                              child: StaticProvider.getTimezoneList.isEmpty
                                   ? const CircularProgressIndicator()
                                   : TimezoneDropdownWidget(
-                                      data: app.timezones,
+                                      data: StaticProvider.getTimezoneList
+                                          .map((e) =>
+                                              TimezoneDefinition.fromMap(e))
+                                          .toList(),
                                       value: _selectedTimezone,
                                       onChanged: (v) {
                                         if (v == null) return;
@@ -273,6 +279,7 @@ class _SettingsPreferencesTimezoneScreenState
             const SizedBox(width: 10),
             ElevatedButton(
               onPressed: () async {
+                //TODO: burdaki herley yerine appcontroller.pref.copywith
                 //save selected timezone
                 await Box.setString(
                   key: Keys.selectedTimezone,

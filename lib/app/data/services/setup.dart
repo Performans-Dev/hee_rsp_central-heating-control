@@ -14,18 +14,18 @@ class SetupController extends GetxController {
   void refreshSetupSequenceList() {
     _setupSequenceList.clear();
     _setupSequenceList.addAll([
-      SetupSequence.language(),
-      SetupSequence.timezone(),
-      SetupSequence.dateFormat(),
-      SetupSequence.terms(),
-      SetupSequence.privacy(),
-      // SetupSequence.registerDevice(),
-      SetupSequence.signIn(),
-      SetupSequence.activation(),
-      SetupSequence.subscriptionResult(),
-      SetupSequence.techSupport(),
-      SetupSequence.adminUser(),
-      SetupSequence.theme(),
+      SetupSequence.language(), //pref
+      SetupSequence.timezone(),//pref
+      SetupSequence.dateFormat(),//pref
+      SetupSequence.terms(), //account
+      SetupSequence.privacy(), //account
+
+      SetupSequence.signIn(), //account
+      SetupSequence.activation(),//account
+      SetupSequence.subscriptionResult(), //account
+      SetupSequence.techSupport(), //flag
+      SetupSequence.adminUser(), //flag
+      SetupSequence.theme(), //pref
     ]);
     update();
   }

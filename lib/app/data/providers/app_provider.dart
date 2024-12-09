@@ -1,5 +1,4 @@
 import 'package:central_heating_control/app/core/constants/api.dart';
-import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/activation_request.dart';
 import 'package:central_heating_control/app/data/models/activation_result.dart';
@@ -18,7 +17,6 @@ import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_guid/flutter_guid.dart';
 
 class AppProvider {
   static Future<GenericResponse<AppSettings?>> fetchAppSettings() async {
@@ -49,7 +47,7 @@ class AppProvider {
   static Future<GenericResponse<SubscriptionResult>> requestSubscription({
     required String activationId,
   }) async {
-    final response = await BaseNetworkProvider.post(
+    /*  final response = await BaseNetworkProvider.post(
       Api.requestSubscription,
       data: {
         'activationId': activationId,
@@ -71,8 +69,8 @@ class AppProvider {
           type: SubscriptionType.pro,
         ),
       );
-    }
-    return GenericResponse.error();
+    } */
+    return GenericResponse.success(null);
   }
 
   static Future<GenericResponse<ActivationResult?>> checkActivation(

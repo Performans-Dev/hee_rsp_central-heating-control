@@ -136,7 +136,8 @@ class MainApp extends StatelessWidget {
     final AppController appController = Get.find();
     ThemeMode themeModeOnDisk =
         ThemeMode.values[Box.getInt(key: Keys.themeMode)];
-    await appController.setThemeMode(themeModeOnDisk);
+    appController.setPreferencesDefinition(appController.preferencesDefinition
+        .copyWith(themeMode: ThemeMode.values.indexOf(themeModeOnDisk)));
 
     // localization
 

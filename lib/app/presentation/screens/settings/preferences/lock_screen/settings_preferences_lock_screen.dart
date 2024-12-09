@@ -6,7 +6,6 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
@@ -169,9 +168,10 @@ class _SettingsPreferencesLockScreenState
               onPressed: () async {
                 await Box.setInt(
                     key: Keys.idleTimerInSeconds, value: selectedIdleTimeout);
-                final AppController app = Get.find();
-                app.setIdleTime(selectedIdleTimeout);
-                app.setSlideTime(selectedSlideTime);
+                // final AppController app = Get.find();
+                /* TODO:
+                 app.setIdleTime(selectedIdleTimeout);
+                app.setSlideTime(selectedSlideTime); */
                 Get.back();
               },
               child: const Text("Confirm"),

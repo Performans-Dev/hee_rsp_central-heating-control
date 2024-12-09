@@ -43,3 +43,4 @@ app.*.map.json
 /android/app/release
 lib/secrets.dart
 docs/builder.md
+github_token.txt

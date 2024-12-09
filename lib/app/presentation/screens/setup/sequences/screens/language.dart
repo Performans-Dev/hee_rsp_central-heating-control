@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -27,14 +28,20 @@ class _SetupSequenceLanguageScreenState
           subtitle: 'Choose your language'.tr,
           nextCallback: () async {
             Buzz.feedback();
-            await app.onLanguageSelected(selectedIndex);
+
+            app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
+              language: StaticProvider.getLanguageList[selectedIndex]
+                  ['languageCode'],
+              didSelectLanguage: true,
+            ));
+
             sc.refreshSetupSequenceList();
             NavController.toHome();
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (int i = 0; i < app.languages.length; i++)
+              for (int i = 0; i < StaticProvider.getLanguageList.length; i++)
                 ListTile(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -44,9 +51,9 @@ class _SetupSequenceLanguageScreenState
                         ? Icons.radio_button_checked
                         : Icons.radio_button_off,
                   ),
-                  title: Text(app.languages[i].name),
+                  title: Text(StaticProvider.getLanguageList[i]['name']),
                   trailing: Text(
-                      '${app.languages[i].languageCode}-${app.languages[i].countryCode}'),
+                      '${StaticProvider.getLanguageList[i]['languageCode']}-${StaticProvider.getLanguageList[i]['countryCode']}'),
                   selected: selectedIndex == i,
                   selectedTileColor: Theme.of(context).highlightColor,
                   onTap: () {
@@ -54,8 +61,8 @@ class _SetupSequenceLanguageScreenState
                     setState(() {
                       selectedIndex = i;
                     });
-                    LocalizationService()
-                        .changeLocale(app.languages[i].languageCode);
+                    LocalizationService().changeLocale(
+                        StaticProvider.getLanguageList[i]['languageCode']);
                     final SetupController sc = Get.find();
                     sc.refreshSetupSequenceList();
                   },

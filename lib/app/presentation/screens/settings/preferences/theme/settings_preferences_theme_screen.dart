@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
@@ -37,16 +38,20 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                     child: ListView.builder(
                       itemBuilder: (context, index) => RadioListTile(
                         value: index,
-                        groupValue: app.themes.indexOf(app.selectedTheme),
+                        groupValue: app.preferencesDefinition.theme,
                         onChanged: (value) {
-                          app.setSelectedTheme(app.themes[index]);
+                          app.setPreferencesDefinition(
+                              app.preferencesDefinition.copyWith(theme: index));
+
                           RestartWidget.restartApp(context);
                         },
                         title: Text(
-                          app.themes[index].camelCaseToHumanReadable(),
+                          StaticProvider.getThemeList[index]
+                              .camelCaseToHumanReadable()
+                              .tr,
                         ),
                       ),
-                      itemCount: app.themes.length,
+                      itemCount: StaticProvider.getThemeList.length,
                     ),
                   ),
                   const Divider(),
@@ -60,10 +65,16 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                         constraints:
                             const BoxConstraints(minWidth: 80, minHeight: 48),
                         isSelected: ThemeMode.values
-                            .map((e) => e == app.themeMode)
+                            .map(
+                              (e) =>
+                                  e ==
+                                  ThemeMode.values[
+                                      app.preferencesDefinition.themeMode],
+                            )
                             .toList(),
                         onPressed: (index) async {
-                          await app.setThemeMode(ThemeMode.values[index]);
+                          app.setPreferencesDefinition(app.preferencesDefinition
+                              .copyWith(themeMode: index));
                         },
                         borderRadius: UiDimens.formRadius,
                         children: ThemeMode.values
@@ -97,7 +108,7 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                             angle: -math.pi / 8.0,
                             child: Icon(
                               Icons.sensors,
-                              color: app.isDarkMode
+                              color: app.preferencesDefinition.isDark
                                   ? Theme.of(context).highlightColor
                                   : Theme.of(context)
                                       .primaryColor

@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -23,8 +24,10 @@ class _SetupSequenceTimezoneScreenState
   void initState() {
     super.initState();
     scrollController = ScrollController();
-    selectedIndex =
-        appController.timezones.map((e) => e.name).toList().indexOf('Istanbul');
+    selectedIndex = StaticProvider.getTimezoneList
+        .map((e) => e["name"])
+        .toList()
+        .indexOf('Istanbul');
 
     Future.delayed(const Duration(milliseconds: 200), () {
       scrollController.animateTo(
@@ -49,7 +52,10 @@ class _SetupSequenceTimezoneScreenState
           title: 'Timezone'.tr,
           nextCallback: () async {
             Buzz.feedback();
-            await app.onTimezoneSelected(selectedIndex);
+            app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
+              timezone: StaticProvider.getTimezoneList[selectedIndex]['name'],
+            ));
+
             sc.refreshSetupSequenceList();
             NavController.toHome();
           },
@@ -85,9 +91,9 @@ class _SetupSequenceTimezoneScreenState
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      title: Text(app.timezones[i].name),
-                      subtitle: Text(app.timezones[i].zone),
-                      trailing: Text(app.timezones[i].gmt
+                      title: Text(StaticProvider.getTimezoneList[i]['name']),
+                      subtitle: Text(StaticProvider.getTimezoneList[i]['zone']),
+                      trailing: Text(StaticProvider.getTimezoneList[i]['gmt']
                           .replaceAll('(', '')
                           .replaceAll(')', '')),
                       leading: Icon(selectedIndex == i
@@ -103,7 +109,7 @@ class _SetupSequenceTimezoneScreenState
                       },
                     ),
                   ),
-                  itemCount: app.timezones.length,
+                  itemCount: StaticProvider.getTimezoneList.length,
                 ),
               ),
             ],

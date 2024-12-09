@@ -99,6 +99,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                   context: context, username: user.username);
                               await Future.delayed(
                                   const Duration(milliseconds: 200));
+                              
                               final loginResult = await app.loginUser(
                                   username: user.username, pin: result ?? "");
 
@@ -127,39 +128,5 @@ class _UserListScreenState extends State<UserListScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*            */

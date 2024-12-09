@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
@@ -36,17 +35,19 @@ class _SettingsPreferencesLanguageScreenState
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: RadioListTile(
                       dense: true,
-                      value: app.languages[index].name,
+                      value: app.preferencesDefinition.language[index],
                       groupValue: _selectedLanguage,
                       onChanged: (value) {
                         setState(() {
                           _selectedLanguage = value;
                         });
                       },
-                      title: Text(app.languages[index].name),
-                      subtitle: Text(app.languages[index].countryCode),
+                      title: Text(
+                        app.preferencesDefinition.language[index],
+                      ),
+                      subtitle: Text(app.preferencesDefinition.language[index]),
                     )),
-                itemCount: app.languages.length,
+                itemCount: app.preferencesDefinition.language.length,
               ),
             ),
             actionButton,
@@ -72,11 +73,11 @@ class _SettingsPreferencesLanguageScreenState
             ElevatedButton(
                 onPressed: _selectedLanguage != null
                     ? () async {
-                        await app.onLanguageSelected(app.languages.indexWhere(
+                       /*  await app.onLanguageSelected(app.languages.indexWhere(
                             (element) => element.name == _selectedLanguage));
                         Get.back();
 
-                        log("TODO: $_selectedLanguage seçildi. Kaydediliyor...");
+                        log("TODO: $_selectedLanguage seçildi. Kaydediliyor..."); */
                       }
                     : null,
                 child: const Text("Confirm")),
