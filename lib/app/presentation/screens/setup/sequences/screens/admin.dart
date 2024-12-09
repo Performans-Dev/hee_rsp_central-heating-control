@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -45,6 +46,7 @@ class _SetupSequenceAdminUserScreenState
     super.dispose();
   }
 
+  DbProvider db = DbProvider.db;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SetupController>(builder: (sc) {
@@ -53,35 +55,35 @@ class _SetupSequenceAdminUserScreenState
           title: 'Admin User'.tr,
           subtitle: 'Please create an admin user'.tr,
           nextLabel: 'Save'.tr,
-          nextCallback: usernameController.text.isEmpty ||
-                  pinController.text.isEmpty
-              ? null
-              : () async {
-                  AppUser user = AppUser(
-                    id: -1,
-                    username: usernameController.text,
-                    pin: pinController.text,
-                    level: AppUserLevel.admin,
-                  );
-                  final result = await app.addUser(user: user);
-                  if (result.success) {
-                    await app.loadAppUserList();
-                    await Box.setBool(
-                      key: Keys.didAdminUserCreated,
-                      value: true,
-                    );
-                    sc.refreshSetupSequenceList();
-                    NavController.toHome();
-                  } else {
-                    if (context.mounted) {
-                      DialogUtils.snackbar(
-                        context: context,
-                        message: result.message ?? 'User creation failed'.tr,
-                        type: SnackbarType.error,
+          nextCallback:
+              usernameController.text.isEmpty || pinController.text.isEmpty
+                  ? null
+                  : () async {
+                      AppUser user = AppUser(
+                        id: -1,
+                        username: usernameController.text,
+                        pin: pinController.text,
+                        level: AppUserLevel.admin,
                       );
-                    }
-                  }
-                },
+                      final result = await db.addUser(user);
+                      if (result > 0) {
+                        await app.loadAppUserList();
+                        await Box.setBool(
+                          key: Keys.didAdminUserCreated,
+                          value: true,
+                        );
+                        sc.refreshSetupSequenceList();
+                        NavController.toHome();
+                      } else {
+                        if (context.mounted) {
+                          DialogUtils.snackbar(
+                            context: context,
+                            message: result.toString(),
+                            type: SnackbarType.error,
+                          );
+                        }
+                      }
+                    },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

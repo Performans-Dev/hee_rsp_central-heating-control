@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -23,6 +24,7 @@ class SetupSequenceThemeScreen extends StatefulWidget {
 
 class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
   int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SetupController>(
@@ -53,7 +55,7 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                         child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: app.themes.length,
+                          itemCount: StaticProvider.getThemeList.length,
                           itemBuilder: (context, index) => RadioListTile(
                             value: index,
                             groupValue: selectedIndex,
@@ -62,11 +64,17 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                               setState(() {
                                 selectedIndex = index;
                               });
-                              app.setSelectedTheme(app.themes[index]);
+                              app.setPreferencesDefinition(
+                                  app.preferencesDefinition.copyWith(
+                                theme: index,
+                              ));
+
                               RestartWidget.restartApp(context);
                             },
                             title: Text(
-                              app.themes[index].camelCaseToHumanReadable().tr,
+                              StaticProvider.getThemeList[index]
+                                  .camelCaseToHumanReadable()
+                                  .tr,
                             ),
                           ),
                         ),
@@ -92,7 +100,7 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                                       angle: -math.pi / 8.0,
                                       child: Icon(
                                         Icons.sensors,
-                                        color: app.isDarkMode
+                                        color: app.preferencesDefinition.isDark
                                             ? Theme.of(context).highlightColor
                                             : Theme.of(context)
                                                 .primaryColor
@@ -122,10 +130,20 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                   const Divider(),
                   ToggleButtons(
                     isSelected: ThemeMode.values
-                        .map((e) => e == app.themeMode)
+                        .map(
+                          (e) =>
+                              e ==
+                              ThemeMode
+                                  .values[app.preferencesDefinition.themeMode],
+                        )
                         .toList(),
                     onPressed: (index) async {
-                      await app.setThemeMode(ThemeMode.values[index]);
+                      app.setPreferencesDefinition(
+                          app.preferencesDefinition.copyWith(
+                        themeMode: index,
+                        didSelectThemeMode: true,
+                      ));
+
                       if (context.mounted) {
                         RestartWidget.restartApp(context);
                       }

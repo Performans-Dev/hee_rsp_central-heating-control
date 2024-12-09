@@ -15,6 +15,11 @@ class Routes {
   static const String setupTechSupport = '/setup-tech-support';
   static const String setupAdminUser = '/setup-admin-user';
   static const String connection = '/setup-connection';
+  static const String setupSuccess = '/setup-success';
+  static const String initialTest = '/initial-test';
+  static const String forceUpdate = '/force-update';
+  static const String invalidSerial = '/invalid-serial';
+  static const String createFolders = '/create-folders';
 
   static const String settingsConnection = '/connection';
 
@@ -76,6 +81,7 @@ class Routes {
   static const String splashDeviceInfo = '/reading-device-info';
   static const String splashAppUserList = '/checking-app-user-list';
   static const String splashAppSettings = '/loading-app-settings';
+  static const String splashStructureProgress = '/loading-structure-progress';
   static const String splashInternetConnectionProgress =
       '/loading-internet-connection';
 

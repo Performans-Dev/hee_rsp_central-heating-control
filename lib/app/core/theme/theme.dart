@@ -9,12 +9,12 @@ class MaterialTheme {
   const MaterialTheme(this.textTheme);
   ThemeData light() {
     final AppController app = Get.find();
-    switch (app.selectedTheme) {
-      case 'warmy':
+    switch (app.preferencesDefinition.theme) {
+      case 2:
         return theme(ColorSchemes.warmyLightScheme());
-      case 'nature':
+      case 1:
         return theme(ColorSchemes.natureLightScheme());
-      case 'crimson':
+      case 3:
         return theme(ColorSchemes.crimsonLightScheme());
       default:
         return theme(ColorSchemes.defaultLightScheme());
@@ -23,12 +23,12 @@ class MaterialTheme {
 
   ThemeData lightMediumContrast() {
     final AppController app = Get.find();
-    switch (app.selectedTheme) {
-      case 'warmy':
+    switch (app.preferencesDefinition.theme) {
+      case 2:
         return theme(ColorSchemes.warmyLightMediumContrastScheme());
-      case 'nature':
+      case 1:
         return theme(ColorSchemes.natureLightMediumContrastScheme());
-      case 'crimson':
+      case 3:
         return theme(ColorSchemes.crimsonLightMediumContrastScheme());
       default:
         return theme(ColorSchemes.defaultLightMediumContrastScheme());
@@ -37,12 +37,12 @@ class MaterialTheme {
 
   ThemeData lightHighContrast() {
     final AppController app = Get.find();
-    switch (app.selectedTheme) {
-      case 'warmy':
+    switch (app.preferencesDefinition.theme) {
+      case 2:
         return theme(ColorSchemes.warmyLightHighContrastScheme());
-      case 'nature':
+      case 1:
         return theme(ColorSchemes.natureLightHighContrastScheme());
-      case 'crimson':
+      case 3:
         return theme(ColorSchemes.crimsonLightHighContrastScheme());
       default:
         return theme(ColorSchemes.defaultLightHighContrastScheme());
@@ -51,12 +51,12 @@ class MaterialTheme {
 
   ThemeData dark() {
     final AppController app = Get.find();
-    switch (app.selectedTheme) {
-      case 'warmy':
+    switch (app.preferencesDefinition.theme) {
+      case 2:
         return theme(ColorSchemes.warmyDarkScheme());
-      case 'nature':
+      case 1:
         return theme(ColorSchemes.natureDarkScheme());
-      case 'crimson':
+      case 3:
         return theme(ColorSchemes.crimsonDarkScheme());
       default:
         return theme(ColorSchemes.defaultDarkScheme());
@@ -65,12 +65,12 @@ class MaterialTheme {
 
   ThemeData darkMediumContrast() {
     final AppController app = Get.find();
-    switch (app.selectedTheme) {
-      case 'warmy':
+    switch (app.preferencesDefinition.theme) {
+      case 2:
         return theme(ColorSchemes.warmyDarkMediumContrastScheme());
-      case 'nature':
+      case 1:
         return theme(ColorSchemes.natureDarkMediumContrastScheme());
-      case 'crimson':
+      case 3:
         return theme(ColorSchemes.crimsonDarkMediumContrastScheme());
       default:
         return theme(ColorSchemes.defaultDarkMediumContrastScheme());
@@ -79,12 +79,12 @@ class MaterialTheme {
 
   ThemeData darkHighContrast() {
     final AppController app = Get.find();
-    switch (app.selectedTheme) {
-      case 'warmy':
+    switch (app.preferencesDefinition.theme) {
+      case 2:
         return theme(ColorSchemes.warmyDarkHighContrastScheme());
-      case 'nature':
+      case 1:
         return theme(ColorSchemes.natureDarkHighContrastScheme());
-      case 'crimson':
+      case 3:
         return theme(ColorSchemes.crimsonDarkHighContrastScheme());
       default:
         return theme(ColorSchemes.defaultDarkHighContrastScheme());

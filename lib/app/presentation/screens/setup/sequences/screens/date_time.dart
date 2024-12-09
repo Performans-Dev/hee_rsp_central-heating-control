@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -31,11 +32,11 @@ class _SetupSequenceDateTimeScreenState
     super.initState();
     _selectedDateFormat = Box.getString(
       key: Keys.selectedDateFormat,
-      defaultVal: appController.dateFormats.first,
+      defaultVal: StaticProvider.getDateFormatList.first,
     );
     _selectedTimeFormat = Box.getString(
       key: Keys.selectedTimeFormat,
-      defaultVal: appController.timeFormats.first,
+      defaultVal: StaticProvider.getTimeFormatList.first,
     );
   }
 
@@ -77,7 +78,7 @@ class _SetupSequenceDateTimeScreenState
                         child: FormItemComponent(
                           label: 'Date Format'.tr,
                           child: StringDropdownWidget(
-                            data: app.dateFormats,
+                            data: StaticProvider.getDateFormatList,
                             value: _selectedDateFormat,
                             onChanged: (v) {
                               Buzz.feedback();
@@ -93,7 +94,7 @@ class _SetupSequenceDateTimeScreenState
                         child: FormItemComponent(
                           label: 'Time Format'.tr,
                           child: StringDropdownWidget(
-                            data: app.timeFormats,
+                            data: StaticProvider.getTimeFormatList,
                             value: _selectedTimeFormat,
                             onChanged: (v) {
                               Buzz.feedback();

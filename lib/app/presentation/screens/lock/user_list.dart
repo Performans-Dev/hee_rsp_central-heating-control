@@ -82,7 +82,7 @@ class _UserListScreenState extends State<UserListScreen> {
                       child: ListView.builder(
                         shrinkWrap: false,
                         itemBuilder: (context, index) {
-                          final user = app.appUserList[index];
+                          final user = app.userList[index];
                           if (user.username.toLowerCase() == 'developer' &&
                               !showDeveloper) {
                             return const SizedBox();
@@ -116,7 +116,7 @@ class _UserListScreenState extends State<UserListScreen> {
                             },
                           );
                         },
-                        itemCount: app.appUserList.length,
+                        itemCount: app.userList.length,
                       ),
                     ),
                   ],

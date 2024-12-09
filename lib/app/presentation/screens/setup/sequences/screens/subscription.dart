@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
@@ -60,7 +61,7 @@ class _SetupSequenceSubscriptionResultScreenState
       initTaskIsRunning = true;
     });
 
-    final response = await appController.requestSubscription(
+    final response = await AppProvider.requestSubscription(
       activationId: Guid.newGuid.toString(),
     );
 

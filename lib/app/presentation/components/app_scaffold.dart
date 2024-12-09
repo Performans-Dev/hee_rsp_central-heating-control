@@ -63,7 +63,8 @@ class AppScaffold extends StatelessWidget {
                   height: 40,
                   child: Center(
                     child: SvgPicture.asset(
-                      app.themeMode == ThemeMode.dark
+                      app.preferencesDefinition.themeMode ==
+                              ThemeMode.values.indexOf(ThemeMode.dark)
                           ? UiAssets.appIconDark
                           : UiAssets.appIconLight,
                     ),
@@ -121,7 +122,8 @@ class AppScaffold extends StatelessWidget {
                       // Get.toNamed(Routes.daySummaryScreen);
                       break;
                     case 2:
-                      app.nextThemeMode();
+                      //TODO:
+                      // app.nextThemeMode();
                       break;
                     case 3:
                       NavController.toSettings();

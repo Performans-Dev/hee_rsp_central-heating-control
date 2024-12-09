@@ -10,11 +10,31 @@ class SetupCompletedMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
-
-    if (!appController.setupCompleted()) {
-      return const RouteSettings(name: Routes.setup);
+    if (!appController.doesFoldersExists) {
+      return const RouteSettings(name: Routes.createFolders);
+    }
+    if (!appController.doesProvisionExists) {
+      return const RouteSettings(name: Routes.initialTest);
     }
 
+    if (!appController.preferencesDefinition.allSelected) {
+      return const RouteSettings(name: Routes.setup);
+    }
+    if (appController.heethingsAccount?.isOkey != true) {
+      return const RouteSettings(name: Routes.setup);
+    }
+    if (!appController.hasRequiredAppUserRoles) {
+      return const RouteSettings(name: Routes.setup);
+    }
+    if (!appController.shouldUpdateApp) {
+      return const RouteSettings(name: Routes.forceUpdate);
+    }
+    if (!appController.isSerialNumberValid) {
+      return const RouteSettings(name: Routes.invalidSerial);
+    }
+    if (!appController.hasLoggedInUser) {
+      return const RouteSettings(name: Routes.lockScreen);
+    }
     return null;
   }
 }

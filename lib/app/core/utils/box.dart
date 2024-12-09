@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/models/account.dart';
 import 'package:central_heating_control/app/data/models/account_subscription_type.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
+import 'package:central_heating_control/app/data/models/preferences.dart';
 import 'package:central_heating_control/app/data/models/wifi.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:flutter_guid/flutter_guid.dart';
@@ -185,4 +186,16 @@ class Box {
     return null;
   }
   //#endregion
+
+  static PreferencesDefinition? get preferences {
+    final String data = getString(key: Keys.preferences);
+    if (data.isNotEmpty) {
+      try {
+        return PreferencesDefinition.fromJson(data);
+      } on Exception catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
 }

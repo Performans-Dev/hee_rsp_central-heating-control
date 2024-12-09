@@ -11,15 +11,11 @@ class InitializeAppMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
 
-    if (appController.appSettings == null) {
-      return const RouteSettings(name: Routes.splashAppSettings);
-    }
-
     if (appController.deviceInfo == null) {
       return const RouteSettings(name: Routes.splashDeviceInfo);
     }
 
-    if (appController.appUserList.isEmpty) {
+    if (appController.userList.isEmpty) {
       return const RouteSettings(name: Routes.splashAppUserList);
     }
 

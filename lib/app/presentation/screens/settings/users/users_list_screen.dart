@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
 class SettingsUserListScreen extends StatelessWidget {
-  const SettingsUserListScreen({super.key});
+  SettingsUserListScreen({super.key});
   bool canAccess(AppUserLevel loggedInUserLevel, AppUserLevel targetUserLevel) {
     final accessControl = {
       AppUserLevel.techSupport: [AppUserLevel.developer],
@@ -27,6 +28,7 @@ class SettingsUserListScreen extends StatelessWidget {
     return !restrictedLevels.contains(targetUserLevel);
   }
 
+  final DbProvider db = DbProvider.db;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -41,7 +43,7 @@ class SettingsUserListScreen extends StatelessWidget {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  if (app.appUserList[index].level == AppUserLevel.developer &&
+                  if (app.userList[index].level == AppUserLevel.developer &&
                       app.loggedInAppUser?.level != AppUserLevel.developer) {
                     return const SizedBox.shrink();
                   }
@@ -49,15 +51,14 @@ class SettingsUserListScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListTile(
                       leading: CircleAvatar(
-                        child:
-                            Text(app.appUserList[index].username.getInitials()),
+                        child: Text(app.userList[index].username.getInitials()),
                       ),
-                      title: Text(app.appUserList[index].username),
-                      subtitle: Text(app.appUserList[index].level.name
+                      title: Text(app.userList[index].username),
+                      subtitle: Text(app.userList[index].level.name
                           .camelCaseToHumanReadable()),
                       trailing: !canAccess(
                               app.loggedInAppUser?.level ?? AppUserLevel.user,
-                              app.appUserList[index].level)
+                              app.userList[index].level)
                           ? null
                           : PopupMenuButton(
                               itemBuilder: (context) {
@@ -77,13 +78,13 @@ class SettingsUserListScreen extends StatelessWidget {
                                         context: context,
                                         label: 'Name, Surname',
                                         initialValue:
-                                            app.appUserList[index].username,
+                                            app.userList[index].username,
                                         type: OSKInputType.name,
                                       );
                                       if (result != null) {
-                                        var u = app.appUserList[index];
+                                        var u = app.userList[index];
                                         u.username = result;
-                                        await app.updateUser(user: u);
+                                        await db.updateUser(u);
                                         if (context.mounted) {
                                           DialogUtils.snackbar(
                                             type: SnackbarType.success,
@@ -107,7 +108,7 @@ class SettingsUserListScreen extends StatelessWidget {
                                       /*   final result = await OnScreenKeyboard.show(
                                 context: context,
                                 label: 'Password',
-                                initialValue: app.appUserList[index].pin,
+                                initialValue: app.userList[index].pin,
                                 type: OSKInputType.number,
                                 maxLength: 6,
                                 minLength: 6,
@@ -115,11 +116,11 @@ class SettingsUserListScreen extends StatelessWidget {
                                       final result = await NavController.toPin(
                                           context: context,
                                           username:
-                                              app.appUserList[index].username);
+                                              app.userList[index].username);
                                       if (result != null) {
-                                        var u = app.appUserList[index];
+                                        var u = app.userList[index];
                                         u.pin = result;
-                                        await app.updateUser(user: u);
+                                        await db.updateUser(u);
                                         if (context.mounted) {
                                           DialogUtils.snackbar(
                                             type: SnackbarType.success,
@@ -151,7 +152,7 @@ class SettingsUserListScreen extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: app.appUserList.length,
+                itemCount: app.userList.length,
               ),
             ),
             addNewUserButon,
@@ -197,10 +198,10 @@ class SettingsUserListScreen extends StatelessWidget {
     required int index,
   }) async {
     final AppController app = Get.find();
-    final result = await app.deleteUser(user: app.appUserList[index]);
+    final result = await db.deleteUser(app.userList[index]);
 
     if (context.mounted) {
-      if (result) {
+      if (result > 0) {
         DialogUtils.snackbar(
           context: context,
           message: "The record has been deleted successfully",
@@ -211,7 +212,7 @@ class SettingsUserListScreen extends StatelessWidget {
           action: SnackBarAction(
             label: "Retry",
             onPressed: () async {
-              await app.deleteUser(user: app.appUserList[index]);
+              await db.deleteUser(app.userList[index]);
             },
           ),
           context: context,

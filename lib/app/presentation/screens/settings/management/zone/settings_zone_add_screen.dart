@@ -84,21 +84,21 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
                   const Text("Select/Deselect All"),
                   const SizedBox(width: 6),
                   Checkbox(
-                    value: app.appUserList
+                    value: app.userList
                             .where((e) => e.level == AppUserLevel.user)
                             .toList()
                             .length ==
                         zone.users.length,
                     onChanged: (value) {
                       setState(() {
-                        if (app.appUserList
+                        if (app.userList
                                 .where((e) => e.level == AppUserLevel.user)
                                 .toList()
                                 .length ==
                             zone.users.length) {
                           zone.users = [];
                         } else {
-                          zone.users = app.appUserList
+                          zone.users = app.userList
                               .where((e) => e.level == AppUserLevel.user)
                               .toList();
                         }
@@ -115,12 +115,12 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
                   });
                 },
                 selectedUsers: zone.users,
-                users: app.appUserList
+                users: app.userList
                     .where((e) => e.level == AppUserLevel.user)
                     .toList(),
               ),
               /*  for (final user
-                  in app.appUserList.where((e) => e.level == AppUserLevel.user))
+                  in app.userList.where((e) => e.level == AppUserLevel.user))
                 SwitchListTile(
                   title: Text(user.username),
                   controlAffinity: ListTileControlAffinity.leading,

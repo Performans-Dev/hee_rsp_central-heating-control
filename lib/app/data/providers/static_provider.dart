@@ -213,4 +213,52 @@ class StaticProvider {
       description: 'Serial Extension Board',
     ),
   ];
+
+  static const Map<String, String> termsOfUse = {
+    "en": """
+# Terms of Use
+
+Welcome to our application. Please read these terms carefully before using our services.
+- You agree to use the app responsibly.
+- You accept all conditions mentioned herein.
+    """,
+    "tr": """
+# Kullanım Koşulları
+
+Uygulamamıza hoş geldiniz. Lütfen hizmetlerimizi kullanmadan önce bu şartları dikkatlice okuyun.
+- Uygulamayı sorumlu bir şekilde kullanmayı kabul ediyorsunuz.
+- Burada belirtilen tüm koşulları kabul ediyorsunuz.
+    """,
+  };
+
+  static const Map<String, String> privacyPolicies = {
+    "en": """# Privacy Policy
+We value your privacy. This application collects minimal data required for its functionality. We do not share your data with third parties without your consent.
+    
+## What We Collect
+- Device information
+- User preferences
+- Anonymized analytics data
+    
+## How We Use Your Data
+- To improve user experience
+- To provide tailored functionality
+    
+For further details, please contact us at privacy@example.com.""",
+    "tr": """# Gizlilik Politikası
+Gizliliğinize değer veriyoruz. Bu uygulama yalnızca işlevsellik için gereken minimum veriyi toplar. Verilerinizi sizin izniniz olmadan üçüncü taraflarla paylaşmayız.
+
+## Toplanan Veriler
+- Cihaz bilgileri
+- Kullanıcı tercihleri
+- Anonim analiz verileri
+
+## Verileriniz Nasıl Kullanılır
+- Kullanıcı deneyimini iyileştirmek
+- Kişiselleştirilmiş işlevsellik sunmak
+
+Daha fazla bilgi için lütfen privacy@example.com adresinden bize ulaşın.""",
+  };
+  static int get lockDurationIdleTimeout => 30;
+  static int get slideShowTimer => 15;
 }

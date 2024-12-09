@@ -27,9 +27,11 @@ class _SetupScreenState extends State<SetupScreen> {
     Future.delayed(
       Duration.zero,
       () {
-        Get.offAndToNamed(
-          currentSequence == null ? Routes.home : currentSequence.route,
-        );
+        if (currentSequence == null) {
+          Get.offAndToNamed(Routes.setupSuccess);
+        } else {
+          Get.offAndToNamed(currentSequence.route);
+        }
       },
     );
   }

@@ -32,7 +32,7 @@ class _LogViewScreenState extends State<LogViewScreen> {
   void initState() {
     super.initState();
     _initializeDateDropdowns();
-    appController.setHasError(false);
+    appController.setDisplayErrorNotification(false);
   }
 
   void _initializeDateDropdowns() {
