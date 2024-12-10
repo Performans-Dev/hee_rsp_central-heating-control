@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:get/get.dart';
 
 class FileServices {
@@ -19,6 +20,10 @@ class FileServices {
   //#region MARK: Folders
   static Future<void> checkFoldersExists() async {
     AppController app = Get.find();
+    if (!isPi) {
+      app.setDidCheckFoldersExists(true);
+      app.setDoesFoldersExists(true);
+    }
     try {
       final List<bool> results = [];
       final List<String> paths = [
@@ -36,10 +41,12 @@ class FileServices {
       }
 
       app.setDoesFoldersExists(results.every((r) => r));
-    } on Exception catch (_) {
-      // TODO
+    } on Exception catch (e) {
+      // ignore: avoid_print
+      print(e);
+    } finally {
+      app.setDidCheckFoldersExists(true);
     }
-    app.setDidCheckFoldersExists(true);
   }
 
   static Future<void> checkProductionTestsCompleted() async {

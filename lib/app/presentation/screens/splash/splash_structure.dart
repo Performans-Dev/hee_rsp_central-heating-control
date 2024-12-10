@@ -31,7 +31,7 @@ class _SplashStructureAndProvisionCheckScreenState
     } else {
       setState(() => counter++);
       Future.delayed(
-        const Duration(milliseconds: 10),
+        const Duration(milliseconds: 100),
         () {
           runInitTask();
         },
