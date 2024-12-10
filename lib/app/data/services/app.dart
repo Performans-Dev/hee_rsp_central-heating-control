@@ -65,14 +65,17 @@ class AppController extends GetxController {
 
   void setDidCheckFoldersExists(bool value) {
     _didCheckFolders.value = value;
+    update();
   }
 
   void setDidCheckProvisionTestResults(bool value) {
     _didCheckedProvisionResults.value = value;
+    update();
   }
 
   void setReadDeviceInfoCompleted(bool value) {
     _didReadDeviceInfoCompleted.value = value;
+    update();
   }
   //#endregion
 
