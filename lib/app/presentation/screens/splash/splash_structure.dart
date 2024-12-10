@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/widgets/loading_indicator.dart';
@@ -24,6 +26,13 @@ class _SplashStructureAndProvisionCheckScreenState
 
   runInitTask() async {
     final AppController appController = Get.find();
+    print('--- $counter%');
+    print('didCheckFolders: ${appController.didCheckFolders}');
+    print(
+        'didCheckedProvisionResults: ${appController.didCheckedProvisionResults}');
+    print(
+        'didReadDeviceInfoCompleted: ${appController.didReadDeviceInfoCompleted}');
+    print('---');
     if (appController.didCheckFolders &&
         appController.didCheckedProvisionResults &&
         appController.didReadDeviceInfoCompleted) {

@@ -34,10 +34,12 @@ class AppController extends GetxController {
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
 
+    // Structure BOF
     FileServices.checkFoldersExists();
     FileServices.checkProductionTestsCompleted();
-
     readDevice();
+    // Structure EOF
+
     startSession();
     loadPreferencesFromBox();
     //TODO:loadaccountfrombox

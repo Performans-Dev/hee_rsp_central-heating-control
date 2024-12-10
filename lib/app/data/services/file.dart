@@ -52,7 +52,7 @@ class FileServices {
   static Future<void> checkProductionTestsCompleted() async {
     AppController app = Get.find();
     try {
-      File f = File("/db/path/production.json");
+      File f = File("/home/pi/Heethings/CC/databases/production.json");
       final content = await f.readAsString();
       final map = jsonDecode(content);
       app.setDoesProvisionExists(map['success']);
