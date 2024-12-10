@@ -25,22 +25,24 @@ class FileServices {
       app.setDoesFoldersExists(true);
     }
     try {
-      final List<bool> results = [];
-      final List<String> paths = [
-        '/home/pi/Heethings/CC/application',
-        '/home/pi/Heethings/CC/diagnose/app',
-        '/home/pi/Heethings/CC/databases',
-        '/home/pi/Heethings/CC/logs',
-        '/home/pi/Heethings/CC/elevator/app',
-      ];
+      // final List<bool> results = [];
+      // final List<String> paths = [
+      //   '/home/pi/Heethings/CC/application',
+      //   '/home/pi/Heethings/CC/diagnose/app',
+      //   '/home/pi/Heethings/CC/databases',
+      //   '/home/pi/Heethings/CC/logs',
+      //   '/home/pi/Heethings/CC/elevator/app',
+      // ];
 
-      for (final path in paths) {
-        final result = await Process.run(
-            'bash', ['-c', 'test -d "$path" && echo "exists"']);
-        results.add(result.exitCode == 0);
-      }
+      // for (final path in paths) {
+      //   final result = await Process.run(
+      //       'bash', ['-c', 'test -d "$path" && echo "exists"']);
+      //   results.add(result.exitCode == 0);
+      // }
 
-      app.setDoesFoldersExists(results.every((r) => r));
+      final result =
+          await Process.run('sudo', ['/home/pi/Heethings/folder-check.sh']);
+      app.setDoesFoldersExists(result.exitCode == 0);
     } on Exception catch (e) {
       // ignore: avoid_print
       print(e);

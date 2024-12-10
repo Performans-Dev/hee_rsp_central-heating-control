@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 
@@ -34,6 +36,11 @@ class AppController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    try {
+      _connectivitySubscription.cancel();
+    } on Exception catch (e) {
+      print(e);
+    }
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
 
