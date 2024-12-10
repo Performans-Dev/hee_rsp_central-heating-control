@@ -10,15 +10,15 @@ class AppBindings extends Bindings {
   @override
   Future<void> dependencies() async {
     await Get.putAsync(
+      () async => AppController(),
+      permanent: true,
+    );
+    await Get.putAsync(
       () async => ScreenSaverController(),
       permanent: true,
     );
     await Get.putAsync(
       () async => SetupController(),
-      permanent: true,
-    );
-    await Get.putAsync(
-      () async => AppController(),
       permanent: true,
     );
 

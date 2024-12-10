@@ -27,6 +27,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
+  late final StreamSubscription<List<ConnectivityResult>>
+      _connectivitySubscription;
+
   //#region MARK: Super
   @override
   void onInit() {
@@ -108,8 +111,6 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Connectivity
-  late final StreamSubscription<List<ConnectivityResult>>
-      _connectivitySubscription;
 
   final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
   NetworkIndicator get networkIndicator => _networkIndicator.value;
