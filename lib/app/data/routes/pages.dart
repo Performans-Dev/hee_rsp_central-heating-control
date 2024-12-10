@@ -1,26 +1,20 @@
-import 'package:central_heating_control/app/data/middlewares/admin_logged_in_middleware.dart';
-
-import 'package:central_heating_control/app/data/middlewares/initialize_app_middleware.dart';
 import 'package:central_heating_control/app/data/middlewares/setup_completed_middleware.dart';
-import 'package:central_heating_control/app/data/middlewares/tech_support_logged_in_middleware.dart';
-import 'package:central_heating_control/app/data/middlewares/user_logged_in_middleware.dart';
+import 'package:central_heating_control/app/data/middlewares/structure_middleware.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-
+import 'package:central_heating_control/app/presentation/screens/connection/connection.dart';
 import 'package:central_heating_control/app/presentation/screens/functions/function_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/initial_test/create_folders.dart';
 import 'package:central_heating_control/app/presentation/screens/initial_test/force_update.dart';
+import 'package:central_heating_control/app/presentation/screens/initial_test/initial_test.dart';
 import 'package:central_heating_control/app/presentation/screens/initial_test/invalid_serial.dart';
 import 'package:central_heating_control/app/presentation/screens/lock/user_list.dart';
 import 'package:central_heating_control/app/presentation/screens/misc/pi_info/pi_info_screen.dart';
-
 import 'package:central_heating_control/app/presentation/screens/mode/mode_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/entry.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/info.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/result.dart';
-
 import 'package:central_heating_control/app/presentation/screens/pin_reset/signin.dart';
-import 'package:central_heating_control/app/presentation/screens/initial_test/initial_test.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_list_screen.dart';
@@ -28,7 +22,6 @@ import 'package:central_heating_control/app/presentation/screens/settings/logs.d
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/settings_device_list_screen.dart';
-
 import 'package:central_heating_control/app/presentation/screens/settings/management/sensor/settings_sensor_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/settings_management_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/zone/settings_zone_add_screen.dart';
@@ -51,11 +44,8 @@ import 'package:central_heating_control/app/presentation/screens/settings/prefer
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/users/users_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/users/users_list_screen.dart';
-
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/admin.dart';
-import 'package:central_heating_control/app/presentation/screens/connection/connection.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/date_time.dart';
-
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/language.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/privacy.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/signin.dart';
@@ -66,11 +56,9 @@ import 'package:central_heating_control/app/presentation/screens/setup/sequences
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/theme.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/timezone.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_screen.dart';
-
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_user_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_device_info_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_structure.dart';
-
 import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
@@ -156,18 +144,14 @@ final List<GetPage> getPages = [
     name: Routes.home,
     page: () => const HomeScreen(),
     middlewares: [
-      InitializeAppMiddleware(),
+      StructureMiddleware(),
       SetupCompletedMiddleware(),
-      UserLoggedInMiddleware(),
     ],
     transition: Transition.fadeIn,
   ),
   GetPage(
     name: Routes.zone,
     page: () => const ZoneScreen(),
-    middlewares: [
-      UserLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.logs,
@@ -177,206 +161,119 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.functions,
     page: () => const FunctionListScreen(),
-    middlewares: [
-      UserLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settings,
     page: () => const SettingsScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsManagement,
     page: () => const SettingsManagementScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsZoneList,
     page: () => const SettingsZoneListScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsZoneAdd,
     page: () => const SettingsZoneAddScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsZoneEdit,
     page: () => const SettingsZoneEditScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsDeviceList,
     page: () => const SettingsDeviceListScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsDeviceAdd,
     page: () => const SettingsDeviceAddScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsDeviceEdit,
     page: () => const SettingsDeviceEditScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsSensorList,
     page: () => const SettingsSensorListScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
 
   GetPage(
     name: Routes.settingsUserList,
     page: () => SettingsUserListScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsUserAdd,
     page: () => const SettingsUserAddScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsFunctionList,
     page: () => const SettingsFunctionListScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsFunctionAdd,
     page: () => const SettingsFunctionAddScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsFunctionEdit,
     page: () => const SettingsFunctionEditScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferences,
     page: () => const SettingsPreferencesScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesTheme,
     page: () => const SettingsPreferencesThemeScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesLockScreen,
     page: () => const SettingsPreferencesLockScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesLanguage,
     page: () => const SettingsPreferencesLanguageScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesTimezone,
     page: () => const SettingsPreferencesTimezoneScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesDateFormat,
     page: () => const SettingsPreferencesDateFormatScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesConnection,
     page: () => const SettingsPreferencesConnectionScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesAdvanced,
     page: () => const SettingsPreferencesAdvancedScreen(),
-    middlewares: [
-      TechSupportLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesAdvancedHardwareConfig,
     page: () => const SettingsPreferencesAdvancedHardwareConfigScreen(),
-    middlewares: [
-      TechSupportLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesAdvancedHardwareConfigAddNew,
     page: () => const SettingsPreferencesAdvancedHardwareConfigAddNewScreen(),
-    middlewares: [
-      TechSupportLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesAdvancedDiagnostics,
     page: () => const SettingsPreferencesAdvancedDiagnosticsScreen(),
-    middlewares: [
-      TechSupportLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPreferencesAdvancedUpdates,
     page: () => const SettingsPreferencesAdvancedUpdatesScreen(),
-    middlewares: [
-      TechSupportLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPlanList,
     page: () => const SettingsPlanListScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.settingsPlanDetail,
     page: () => const SettingsPlanDetailScreen(),
-    middlewares: [
-      AdminLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.lockUserListScreen,
@@ -405,9 +302,6 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.mode,
     page: () => const ModeScreen(),
-    middlewares: [
-      UserLoggedInMiddleware(),
-    ],
   ),
   GetPage(
     name: Routes.splashDeviceInfo,

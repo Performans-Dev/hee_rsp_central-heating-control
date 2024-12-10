@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class SetupCompletedMiddleware extends GetMiddleware {
   @override
-  int? get priority => 20;
+  int? get priority => 10;
 
   @override
   RouteSettings? redirect(String? route) {
