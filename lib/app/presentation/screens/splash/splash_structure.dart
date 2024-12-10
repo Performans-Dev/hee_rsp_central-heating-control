@@ -14,6 +14,8 @@ class SplashStructureAndProvisionCheckScreen extends StatefulWidget {
 
 class _SplashStructureAndProvisionCheckScreenState
     extends State<SplashStructureAndProvisionCheckScreen> {
+  int counter = 0;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +29,7 @@ class _SplashStructureAndProvisionCheckScreenState
         appController.didReadDeviceInfoCompleted) {
       NavController.toHome();
     } else {
+      setState(() => counter++);
       Future.delayed(
         const Duration(milliseconds: 10),
         () {
@@ -39,6 +42,7 @@ class _SplashStructureAndProvisionCheckScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(actions: [Text('$counter%')]),
       body: Center(
         child: LoadingIndicatorWidget(
           text: 'Checking Structure'.tr,

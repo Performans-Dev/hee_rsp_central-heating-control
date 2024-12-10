@@ -34,7 +34,8 @@ class AppController extends GetxController {
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
 
-    FileServices.createMissingFolders();
+    FileServices.checkFoldersExists();
+    FileServices.checkProductionTestsCompleted();
 
     readDevice();
     startSession();
