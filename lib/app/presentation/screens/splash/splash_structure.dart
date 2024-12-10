@@ -22,7 +22,7 @@ class _SplashStructureAndProvisionCheckScreenState
 
   runInitTask() async {
     final AppController appController = Get.find();
-    if (appController.didCheckFoldersExists &&
+    if (appController.didCheckFolders &&
         appController.didCheckedProvisionResults &&
         appController.didReadDeviceInfoCompleted) {
       NavController.toHome();

@@ -26,17 +26,45 @@ import 'package:get_storage/get_storage.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
+  //#region MARK: Super
+  @override
+  void onInit() {
+    super.onInit();
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+
+    readDevice();
+    startSession();
+    loadPreferencesFromBox();
+    //TODO:loadaccountfrombox
+    //boxdaki account boş ise null olarak güncelle.
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    loadAppUserList();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription.cancel();
+    super.onClose();
+  }
+
+  //#endregion
+
   //#region Structure Flags
-  final RxBool _didCheckFoldersExists = false.obs;
+  final RxBool _didCheckFolders = false.obs;
   final RxBool _didCheckedProvisionResults = false.obs;
   final RxBool _didReadDeviceInfoCompleted = false.obs;
 
-  bool get didCheckFoldersExists => _didCheckFoldersExists.value;
+  bool get didCheckFolders => _didCheckFolders.value;
   bool get didCheckedProvisionResults => _didCheckedProvisionResults.value;
   bool get didReadDeviceInfoCompleted => _didReadDeviceInfoCompleted.value;
 
   void setDidCheckFoldersExists(bool value) {
-    _didCheckFoldersExists.value = value;
+    _didCheckFolders.value = value;
   }
 
   void setDidCheckProvisionTestResults(bool value) {
@@ -372,34 +400,6 @@ class AppController extends GetxController {
       _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
       update();
     }
-  }
-
-  //#endregion
-
-  //#region MARK: Super
-  @override
-  void onInit() {
-    super.onInit();
-    _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
-
-    readDevice();
-    startSession();
-    loadPreferencesFromBox();
-    //TODO:loadaccountfrombox
-    //boxdaki account boş ise null olarak güncelle.
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    loadAppUserList();
-  }
-
-  @override
-  void onClose() {
-    _connectivitySubscription.cancel();
-    super.onClose();
   }
 
   //#endregion

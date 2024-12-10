@@ -12,6 +12,8 @@ class SplashDeviceInfoScreen extends StatefulWidget {
 }
 
 class _SplashDeviceInfoScreenState extends State<SplashDeviceInfoScreen> {
+  int progress = 0;
+
   @override
   void initState() {
     super.initState();
@@ -20,13 +22,20 @@ class _SplashDeviceInfoScreenState extends State<SplashDeviceInfoScreen> {
 
   Future<void> runInitTask() async {
     final AppController appController = Get.find();
-    await appController.readDevice();
-    NavController.toHome();
+    if (appController.didReadDeviceInfoCompleted) {
+      NavController.toHome();
+    } else {
+      setState(() => progress++);
+      Future.delayed(const Duration(milliseconds: 10), () => runInitTask());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [Text('$progress%')],
+      ),
       body: Center(
         child: LoadingIndicatorWidget(
           text: 'Checking Device'.tr,
