@@ -11,6 +11,8 @@ class CreateFoldersScreen extends StatefulWidget {
 }
 
 class _CreateFoldersScreenState extends State<CreateFoldersScreen> {
+  int counter = 0;
+
   @override
   void initState() {
     super.initState();
@@ -22,14 +24,18 @@ class _CreateFoldersScreenState extends State<CreateFoldersScreen> {
     if (appController.didCheckFolders) {
       NavController.toHome();
     } else {
+      setState(() => counter++);
       Future.delayed(const Duration(milliseconds: 100), () => runInitTask());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        actions: [Text('$counter%')],
+      ),
+      body: const Center(
         child: CircularProgressIndicator(),
       ),
     );

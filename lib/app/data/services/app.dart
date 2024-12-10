@@ -19,6 +19,7 @@ import 'package:central_heating_control/app/data/models/subscription_result.dart
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/file.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,8 @@ class AppController extends GetxController {
     super.onInit();
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+
+    FileServices.createMissingFolders();
 
     readDevice();
     startSession();
