@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -20,48 +22,37 @@ class FileServices {
   //#region MARK: Folders
   static Future<void> checkFoldersExists() async {
     AppController app = Get.find();
-    if (!isPi) {
-      app.setDidCheckFoldersExists(true);
-      app.setDoesFoldersExists(true);
-    }
     try {
-      // final List<bool> results = [];
-      // final List<String> paths = [
-      //   '/home/pi/Heethings/CC/application',
-      //   '/home/pi/Heethings/CC/diagnose/app',
-      //   '/home/pi/Heethings/CC/databases',
-      //   '/home/pi/Heethings/CC/logs',
-      //   '/home/pi/Heethings/CC/elevator/app',
-      // ];
-
-      // for (final path in paths) {
-      //   final result = await Process.run(
-      //       'bash', ['-c', 'test -d "$path" && echo "exists"']);
-      //   results.add(result.exitCode == 0);
-      // }
-
       final result =
           await Process.run('sudo', ['/home/pi/Heethings/folder-check.sh']);
+      print(
+          'FOLDER CHECK RESULT: ${result.exitCode} ${result.stdout} ${result.stderr}');
       app.setDoesFoldersExists(result.exitCode == 0);
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      print("FOLDER CHECK RESULT: $e");
     } finally {
       app.setDidCheckFoldersExists(true);
     }
   }
 
-  static Future<void> checkProductionTestsCompleted() async {
+  static Future<void> checkProvisionStatusCompleted() async {
     AppController app = Get.find();
     try {
       File f = File("/home/pi/Heethings/CC/databases/production.json");
       final content = await f.readAsString();
       final map = jsonDecode(content);
       app.setDoesProvisionExists(map['success']);
-    } on Exception catch (_) {}
-    app.setDidCheckProvisionTestResults(true);
+    } on Exception catch (e) {
+      print("PROVISION CHECK RESULT: $e");
+    } finally {
+      app.setDidCheckProvisionTestResults(true);
+    }
   }
 //#endregion
+
+
+
+
 //TODO: factory reset buraya koy performfactory
 //TODO: getstorage ve db de silinecekleri sil
 // appcontrollerdaki preferences ,account değişkenlerini copywith ile güncelle.

@@ -13,19 +13,6 @@ import 'package:window_manager/window_manager.dart';
 // final Logger logger = Logger();
 bool isPi = !kDebugMode;
 Future<void> main() async {
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
 
   // shared preferences
   await GetStorage.init();

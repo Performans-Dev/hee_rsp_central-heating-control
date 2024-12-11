@@ -17,6 +17,7 @@ import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:central_heating_control/app/data/services/file.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -32,18 +33,13 @@ class AppController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _connectivitySubscription =
-        _connecivity.onConnectivityChanged.listen(_onConnectivityChanged);
+    initConnectivity();
 
-    // Structure BOF
-    FileServices.checkFoldersExists();
-    FileServices.checkProductionTestsCompleted();
-    readDevice();
-    // Structure EOF
+    startStructureCheck();
 
     startSession();
-    loadPreferencesFromBox();
-    loadAccountFromBox();
+
+    loadBoxVariables();
   }
 
   @override
@@ -61,6 +57,12 @@ class AppController extends GetxController {
   //#endregion
 
   //#region Structure Flags
+  Future<void> startStructureCheck() async {
+    await readDevice();
+    await FileServices.checkFoldersExists();
+    await FileServices.checkProvisionStatusCompleted();
+  }
+
   final RxBool _didCheckFolders = false.obs;
   final RxBool _didCheckedProvisionResults = false.obs;
   final RxBool _didReadDeviceInfoCompleted = false.obs;
@@ -108,6 +110,20 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Connectivity
+  Future<void> initConnectivity() async {
+    late List<ConnectivityResult> results;
+    try {
+      results = await _connecivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print('Couldn\'t check connectivity status $e');
+      return;
+    }
+
+    _connectivitySubscription =
+        _connecivity.onConnectivityChanged.listen(_onConnectivityChanged);
+    _onConnectivityChanged(results);
+  }
+
   final RxBool _didConnectivityResultReceived = false.obs;
   bool get didConnectivityResultReceived =>
       _didConnectivityResultReceived.value;
@@ -408,7 +424,16 @@ class AppController extends GetxController {
   //   return response;
   // }
 
-  //#region MARK: Load From Box
+  //#region MARK: Box Related
+  loadBoxVariables() {
+    loadPreferencesFromBox();
+    loadAccountFromBox();
+  }
+
+  savePreferencesToBox() async {
+    await Box.setString(
+        key: Keys.preferences, value: _preferencesDefinition.value.toJson());
+  }
 
   loadPreferencesFromBox() {
     final prefs = Box.getString(key: Keys.preferences);
@@ -416,6 +441,14 @@ class AppController extends GetxController {
       _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
       update();
     }
+  }
+
+  saveAccountToBox() async {
+    await Box.setString(
+        key: Keys.account,
+        value: _heethingsAccount.value != null
+            ? _heethingsAccount.value!.toJson()
+            : '');
   }
 
   loadAccountFromBox() {
