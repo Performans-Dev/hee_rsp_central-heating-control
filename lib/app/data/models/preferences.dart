@@ -18,7 +18,6 @@ class PreferencesDefinition {
   bool didSelectTimezone;
   bool didSelectDateFormat;
   bool didSelectTheme;
-  bool didSelectThemeMode;
   PreferencesDefinition({
     required this.language,
     required this.timezone,
@@ -32,7 +31,6 @@ class PreferencesDefinition {
     required this.didSelectTimezone,
     required this.didSelectDateFormat,
     required this.didSelectTheme,
-    required this.didSelectThemeMode,
   });
 //TODO: kullanıcı saati değiştirmişse aradaki farkı burada bir int ile tutmamız lazım. timeget gibi bir değişken
 //default değeri o
@@ -41,8 +39,7 @@ class PreferencesDefinition {
       didSelectLanguage &&
       didSelectTimezone &&
       didSelectDateFormat &&
-      didSelectTheme &&
-      didSelectThemeMode;
+      didSelectTheme;
 
   bool get isDark => themeMode == ThemeMode.dark.index;
 
@@ -60,7 +57,6 @@ class PreferencesDefinition {
         didSelectTimezone: false,
         didSelectDateFormat: false,
         didSelectTheme: false,
-        didSelectThemeMode: false,
       );
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -76,7 +72,6 @@ class PreferencesDefinition {
       'didSelectTimezone': didSelectTimezone,
       'didSelectDateFormat': didSelectDateFormat,
       'didSelectTheme': didSelectTheme,
-      'didSelectThemeMode': didSelectThemeMode,
     };
   }
 
@@ -102,7 +97,6 @@ class PreferencesDefinition {
       didSelectTimezone: (map['didSelectTimezone'] ?? false) as bool,
       didSelectDateFormat: (map['didSelectDateFormat'] ?? false) as bool,
       didSelectTheme: (map['didSelectTheme'] ?? false) as bool,
-      didSelectThemeMode: (map['didSelectThemeMode'] ?? false) as bool,
     );
   }
 
@@ -141,7 +135,6 @@ class PreferencesDefinition {
       didSelectTimezone: didSelectTimezone ?? this.didSelectTimezone,
       didSelectDateFormat: didSelectDateFormat ?? this.didSelectDateFormat,
       didSelectTheme: didSelectTheme ?? this.didSelectTheme,
-      didSelectThemeMode: didSelectThemeMode ?? this.didSelectThemeMode,
     );
   }
 }
