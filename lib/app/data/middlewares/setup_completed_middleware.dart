@@ -31,7 +31,7 @@ class SetupCompletedMiddleware extends GetMiddleware {
       print("SETUP MIDDLEWARE: hasRequiredAppUserRoles");
       return const RouteSettings(name: Routes.setup);
     }
-    if (!appController.shouldUpdateApp) {
+    if (appController.shouldUpdateApp) {
       print("SETUP MIDDLEWARE: shouldUpdateApp");
       return const RouteSettings(name: Routes.forceUpdate);
     }
