@@ -35,8 +35,9 @@ class _SetupSequenceTermsOfUseScreenState
               title: 'Terms of Use'.tr,
               nextCallback: isChecked
                   ? () async {
-                      await Box.setBool(
-                          key: Keys.didTermsAccepted, value: true);
+                      app.setHeethingsAccount(app.heethingsAccount?.copyWith(
+                        termsConsentStatus: true,
+                      ));
                       sc.refreshSetupSequenceList();
                       NavController.toHome();
                     }

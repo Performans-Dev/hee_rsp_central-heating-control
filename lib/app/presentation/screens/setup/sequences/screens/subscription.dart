@@ -1,5 +1,3 @@
-import 'package:central_heating_control/app/core/constants/keys.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
@@ -71,7 +69,12 @@ class _SetupSequenceSubscriptionResultScreenState
       });
     }
     if (response.success) {
-      await Box.setBool(key: Keys.didSubscriptionResultReceived, value: true);
+      final AppController app = Get.find();
+      app.setHeethingsAccount(app.heethingsAccount?.copyWith(
+        subscriptionResult: 0,
+        subscriptionExpireDate:
+            DateTime.now().add(const Duration(days: 90)).toIso8601String(),
+      ));
       setupController.refreshSetupSequenceList();
       NavController.toHome();
     } else {

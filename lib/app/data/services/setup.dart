@@ -19,10 +19,10 @@ class SetupController extends GetxController {
       SetupSequence.language(), //pref
       SetupSequence.timezone(), //pref
       SetupSequence.dateFormat(), //pref
-      SetupSequence.terms(), //account
-      SetupSequence.privacy(), //account
-      SetupSequence.signIn(), //account
-      SetupSequence.subscriptionResult(), //account
+      // SetupSequence.terms(), //account
+      // SetupSequence.privacy(), //account
+      // SetupSequence.signIn(), //account
+      // SetupSequence.subscriptionResult(), //account
       SetupSequence.techSupport(), //flag
       SetupSequence.adminUser(), //flag
       SetupSequence.theme(), //pref

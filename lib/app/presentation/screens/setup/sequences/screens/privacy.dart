@@ -35,8 +35,9 @@ class _SetupSequencePrivacyPolicyScreenState
               title: 'Privacy Policy'.tr,
               nextCallback: isChecked
                   ? () async {
-                      await Box.setBool(
-                          key: Keys.didPrivacyAccepted, value: true);
+                      app.setHeethingsAccount(app.heethingsAccount?.copyWith(
+                        privacyConsentStatus: true,
+                      ));
                       sc.refreshSetupSequenceList();
                       NavController.toHome();
                     }

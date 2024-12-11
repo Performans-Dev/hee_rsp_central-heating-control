@@ -26,8 +26,8 @@ class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
   @override
   void initState() {
     super.initState();
-    usernameController = TextEditingController(text: 'ilker@okutman.com');
-    passwordController = TextEditingController(text: '123456');
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
   }
 
   @override
@@ -66,6 +66,11 @@ class _SetupSequenceSignInScreenState extends State<SetupSequenceSignInScreen> {
                             );
                           }
                         } else {
+                          app.setHeethingsAccount(
+                              app.heethingsAccount?.copyWith(
+                            id: response.data?.id,
+                            email: response.data?.email,
+                          ));
                           sc.refreshSetupSequenceList();
                           NavController.toHome();
                         }
