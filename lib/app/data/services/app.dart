@@ -269,11 +269,12 @@ class AppController extends GetxController {
     // TODO: bu value box a yazıcak
   }
 
-  bool get hasAdmin => _appUserList.any((user) => user.level.name == 'admin');
-  bool get hasTechSupport =>
+  bool get hasAdminUser =>
+      _appUserList.any((user) => user.level.name == 'admin');
+  bool get hasTechSupportUser =>
       _appUserList.any((user) => user.level.name == 'techSupport');
 
-  bool get hasRequiredAppUserRoles => hasAdmin && hasTechSupport;
+  bool get hasRequiredAppUserRoles => hasAdminUser && hasTechSupportUser;
 
   final RxBool _shouldUpdateApp = false.obs;
   bool get shouldUpdateApp => _shouldUpdateApp.value;
