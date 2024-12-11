@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:get/get.dart';
 
 class FileServices {
@@ -49,9 +48,6 @@ class FileServices {
     }
   }
 //#endregion
-
-
-
 
 //TODO: factory reset buraya koy performfactory
 //TODO: getstorage ve db de silinecekleri sil
