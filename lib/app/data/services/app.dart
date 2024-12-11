@@ -280,10 +280,12 @@ class AppController extends GetxController {
   bool get shouldUpdateApp => _shouldUpdateApp.value;
 
   bool get isSerialNumberValid {
-    final cpuSerial = deviceInfo?.serialNumber;
-    final serialOnDisk = Box.getString(key: Keys.serialNumber);
+    return true;
+    // TODO: disabled check for dev
+    // final cpuSerial = deviceInfo?.serialNumber;
+    // final serialOnDisk = Box.getString(key: Keys.serialNumber);
 
-    return cpuSerial != null && cpuSerial == serialOnDisk;
+    // return cpuSerial != null && cpuSerial == serialOnDisk;
   }
 
   bool get hasLoggedInUser => loggedInAppUser != null;
