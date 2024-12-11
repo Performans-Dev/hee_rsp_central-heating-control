@@ -25,6 +25,7 @@ import 'package:network_info_plus/network_info_plus.dart';
 class AppController extends GetxController {
   late final StreamSubscription<List<ConnectivityResult>>
       _connectivitySubscription;
+  final Connectivity _connecivity = Connectivity();
 
   //#region MARK: Super
   @override
@@ -32,7 +33,7 @@ class AppController extends GetxController {
     super.onInit();
 
     _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+        _connecivity.onConnectivityChanged.listen(_onConnectivityChanged);
 
     // Structure BOF
     FileServices.checkFoldersExists();
