@@ -59,7 +59,8 @@ class HeethingsAccount {
           map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
       password: (map['password'] ?? '') as String,
       subscriptionResult: (map['subscriptionResult'] ?? 0) as int,
-      subscriptionExpireDate: (map['subscriptionExpireDate'] ?? 0),
+      subscriptionExpireDate:
+          (map['subscriptionExpireDate'] ?? DateTime.now().toIso8601String()),
       termsConsentStatus: (map['termsConsentStatus'] ?? false) as bool,
       privacyConsentStatus: (map['privacyConsentStatus'] ?? false) as bool,
     );

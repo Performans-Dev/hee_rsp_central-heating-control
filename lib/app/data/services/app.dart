@@ -419,10 +419,13 @@ class AppController extends GetxController {
 
   loadAccountFromBox() {
     final acc = Box.getString(key: Keys.account);
-    if (acc.isNotEmpty) {
-      _heethingsAccount.value = HeethingsAccount.fromJson(acc);
-      update();
+    try {
+      _heethingsAccount.value =
+          acc.isNotEmpty ? HeethingsAccount.fromJson(acc) : null;
+    } on Exception catch (e) {
+      print(e);
     }
+    update();
   }
 
   //#endregion
