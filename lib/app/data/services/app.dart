@@ -7,17 +7,11 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/device.dart';
-import 'package:central_heating_control/app/data/models/account.dart';
-import 'package:central_heating_control/app/data/models/activation_request.dart';
-import 'package:central_heating_control/app/data/models/activation_result.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/chc_device.dart';
-import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/heethings_account.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/preferences.dart';
-import 'package:central_heating_control/app/data/models/register_request.dart';
-import 'package:central_heating_control/app/data/models/subscription_result.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
@@ -36,11 +30,7 @@ class AppController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    try {
-      _connectivitySubscription.cancel();
-    } on Exception catch (e) {
-      print(e);
-    }
+
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
 
@@ -52,8 +42,7 @@ class AppController extends GetxController {
 
     startSession();
     loadPreferencesFromBox();
-    //TODO:loadaccountfrombox
-    //boxdaki account boş ise null olarak güncelle.
+    loadAccountFromBox();
   }
 
   @override
@@ -118,6 +107,15 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Connectivity
+  final RxBool _didConnectivityResultReceived = false.obs;
+  bool get didConnectivityResultReceived =>
+      _didConnectivityResultReceived.value;
+
+  final RxBool _didConnected = false.obs;
+  bool get didConnected => _didConnected.value;
+
+  final RxBool _didConnectionChecked = false.obs;
+  bool get didConnectionChecked => _didConnectionChecked.value;
 
   final Rx<NetworkIndicator> _networkIndicator = NetworkIndicator.none.obs;
   NetworkIndicator get networkIndicator => _networkIndicator.value;
@@ -345,71 +343,71 @@ class AppController extends GetxController {
     }
   }
 
-  Future<GenericResponse> accountRegister({
-    required String email,
-    required String fullName,
-    required String password,
-  }) async {
-    final response = await AppProvider.accountRegister(
-      request: RegisterRequest(
-        email: email,
-        fullName: fullName,
-        password: password,
-      ),
-    );
-    if (response.success && response.data != null) {
-      Account account = response.data!;
-      await Box.setString(key: Keys.account, value: account.toJson());
-      _didSignedIn.value = true;
-    } else {
-      _didSignedIn.value = false;
-    }
-    update();
-    return response;
-  }
+  // Future<GenericResponse> accountRegister({
+  //   required String email,
+  //   required String fullName,
+  //   required String password,
+  // }) async {
+  //   final response = await AppProvider.accountRegister(
+  //     request: RegisterRequest(
+  //       email: email,
+  //       fullName: fullName,
+  //       password: password,
+  //     ),
+  //   );
+  //   if (response.success && response.data != null) {
+  //     Account account = response.data!;
+  //     await Box.setString(key: Keys.account, value: account.toJson());
+  //     _didSignedIn.value = true;
+  //   } else {
+  //     _didSignedIn.value = false;
+  //   }
+  //   update();
+  //   return response;
+  // }
 
-  Future<GenericResponse<ActivationResult?>> performActivation({
-    required String deviceId,
-    required String accountId,
-  }) async {
-    final response = await AppProvider.activateDevice(
-      request: ActivationRequest(
-        userId: accountId,
-        chcDeviceId: deviceId,
-      ),
-    );
-    if (response.success && response.data != null) {
-      ActivationResult activationResult = response.data!;
-      await Box.setString(
-          key: Keys.activationResult, value: activationResult.toJson());
-      await Box.setBool(key: Keys.didActivated, value: true);
-      _didActivated.value = true;
-    } else {
-      await Box.setBool(key: Keys.didActivated, value: false);
-      _didActivated.value = false;
-    }
-    update();
-    return response;
-  }
+  // Future<GenericResponse<ActivationResult?>> performActivation({
+  //   required String deviceId,
+  //   required String accountId,
+  // }) async {
+  //   final response = await AppProvider.activateDevice(
+  //     request: ActivationRequest(
+  //       userId: accountId,
+  //       chcDeviceId: deviceId,
+  //     ),
+  //   );
+  //   if (response.success && response.data != null) {
+  //     ActivationResult activationResult = response.data!;
+  //     await Box.setString(
+  //         key: Keys.activationResult, value: activationResult.toJson());
+  //     await Box.setBool(key: Keys.didActivated, value: true);
+  //     _didActivated.value = true;
+  //   } else {
+  //     await Box.setBool(key: Keys.didActivated, value: false);
+  //     _didActivated.value = false;
+  //   }
+  //   update();
+  //   return response;
+  // }
 
-  Future<GenericResponse<SubscriptionResult?>> requestSubscription({
-    required String activationId,
-  }) async {
-    final response =
-        await AppProvider.requestSubscription(activationId: activationId);
-    if (response.success && response.data != null) {
-      SubscriptionResult subscriptionResult = response.data!;
-      await Box.setString(
-          key: Keys.subscriptionResult, value: subscriptionResult.toJson());
-      _didSubscriptionResultReceived.value = true;
-    } else {
-      _didSubscriptionResultReceived.value = false;
-    }
-    update();
-    return response;
-  }
+  // Future<GenericResponse<SubscriptionResult?>> requestSubscription({
+  //   required String activationId,
+  // }) async {
+  //   final response =
+  //       await AppProvider.requestSubscription(activationId: activationId);
+  //   if (response.success && response.data != null) {
+  //     SubscriptionResult subscriptionResult = response.data!;
+  //     await Box.setString(
+  //         key: Keys.subscriptionResult, value: subscriptionResult.toJson());
+  //     _didSubscriptionResultReceived.value = true;
+  //   } else {
+  //     _didSubscriptionResultReceived.value = false;
+  //   }
+  //   update();
+  //   return response;
+  // }
 
-  //#region MARK: Preferences
+  //#region MARK: Load From Box
 
   loadPreferencesFromBox() {
     final prefs = Box.getString(key: Keys.preferences);
@@ -419,30 +417,17 @@ class AppController extends GetxController {
     }
   }
 
+  loadAccountFromBox() {
+    final acc = Box.getString(key: Keys.account);
+    if (acc.isNotEmpty) {
+      _heethingsAccount.value = HeethingsAccount.fromJson(acc);
+      update();
+    }
+  }
+
   //#endregion
 
-  //#region MARK: Flags
-
-  final RxBool _didConnectivityResultReceived = false.obs;
-  bool get didConnectivityResultReceived =>
-      _didConnectivityResultReceived.value;
-
-  final RxBool _didConnected = false.obs;
-  bool get didConnected => _didConnected.value;
-
-  final RxBool _didConnectionChecked = false.obs;
-  bool get didConnectionChecked => _didConnectionChecked.value;
-
-  final RxBool _didActivated = false.obs;
-  bool get didActivated => _didActivated.value;
-
-  final RxBool _didSignedIn = false.obs;
-  bool get didSignedIn => _didSignedIn.value;
-
-  final RxBool _didSubscriptionResultReceived = false.obs;
-  bool get didSubscriptionResultReceived =>
-      _didSubscriptionResultReceived.value;
-
+  //#region MARK: Error Notification
   final RxBool _displayErrorNotification = false.obs;
   bool get displayErrorNotification => _displayErrorNotification.value;
 

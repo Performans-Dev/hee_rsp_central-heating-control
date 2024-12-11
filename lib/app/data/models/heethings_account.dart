@@ -29,7 +29,11 @@ class HeethingsAccount {
 //terms false ise terms göster privacy false ise privacy goster bunlar true olmadan ilerleyemecek.
 
   bool get isOkey =>
-      subscriptionResult != null && termsConsentStatus && privacyConsentStatus;
+      id.isNotEmpty &&
+      subscriptionResult != null &&
+      termsConsentStatus &&
+      privacyConsentStatus;
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,

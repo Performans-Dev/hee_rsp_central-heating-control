@@ -13,10 +13,12 @@ class AppBindings extends Bindings {
       () async => AppController(),
       permanent: true,
     );
+
     await Get.putAsync(
       () async => ScreenSaverController(),
       permanent: true,
     );
+    
     await Get.putAsync(
       () async => SetupController(),
       permanent: true,
