@@ -23,10 +23,10 @@ class SetupCompletedMiddleware extends GetMiddleware {
       print("SETUP MIDDLEWARE: preferencesDefinition.allSelected");
       return const RouteSettings(name: Routes.setup);
     }
-    if (appController.heethingsAccount?.isOkey != true) {
-      print("SETUP MIDDLEWARE: heethingsAccount.isOkey");
-      return const RouteSettings(name: Routes.setup);
-    }
+    // if (appController.heethingsAccount?.isOkey != true) {
+    //   print("SETUP MIDDLEWARE: heethingsAccount.isOkey");
+    //   return const RouteSettings(name: Routes.setup);
+    // }
     if (!appController.hasRequiredAppUserRoles) {
       print("SETUP MIDDLEWARE: hasRequiredAppUserRoles");
       return const RouteSettings(name: Routes.setup);
