@@ -30,7 +30,8 @@ class _SetupScreenState extends State<SetupScreen> {
       Duration.zero,
       () {
         if (currentSequence == null) {
-          Get.offAndToNamed(Routes.setupSuccess);
+          Get.offAndToNamed(
+              Routes.home); //TODO: replace withsetup success screen
         } else {
           Get.offAndToNamed(currentSequence.route);
         }
