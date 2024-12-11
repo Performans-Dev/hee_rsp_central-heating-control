@@ -16,6 +16,8 @@ class _SetupScreenState extends State<SetupScreen> {
   @override
   void initState() {
     super.initState();
+    // ignore: avoid_print
+    print("SETUP SCREEN INIT");
     navigateToNextSequence();
   }
 

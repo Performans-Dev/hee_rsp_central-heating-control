@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/data/models/setup_sequence.dart';
 import 'package:get/get.dart';
 
@@ -15,19 +17,20 @@ class SetupController extends GetxController {
     _setupSequenceList.clear();
     _setupSequenceList.addAll([
       SetupSequence.language(), //pref
-      SetupSequence.timezone(),//pref
-      SetupSequence.dateFormat(),//pref
+      SetupSequence.timezone(), //pref
+      SetupSequence.dateFormat(), //pref
       SetupSequence.terms(), //account
       SetupSequence.privacy(), //account
 
       SetupSequence.signIn(), //account
-      SetupSequence.activation(),//account
+      SetupSequence.activation(), //account
       SetupSequence.subscriptionResult(), //account
       SetupSequence.techSupport(), //flag
       SetupSequence.adminUser(), //flag
       SetupSequence.theme(), //pref
     ]);
     update();
+    print("SETUP SEQUENCE LIST REFRESHED");
   }
 
   double get progress =>
