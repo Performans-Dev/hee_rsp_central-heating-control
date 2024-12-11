@@ -1,9 +1,8 @@
 import 'dart:math' as math;
+
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
-import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
@@ -35,7 +34,12 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
               title: 'Select Theme'.tr,
               nextCallback: () async {
                 Buzz.feedback();
-                await Box.setBool(key: Keys.didThemeSelected, value: true);
+                // await Box.setBool(key: Keys.didThemeSelected, value: true);
+                app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
+                  theme: selectedIndex,
+                  didSelectTheme: true,
+                  didSelectThemeMode: true,
+                ));
 
                 sc.refreshSetupSequenceList();
                 NavController.toHome();
@@ -67,6 +71,8 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                               app.setPreferencesDefinition(
                                   app.preferencesDefinition.copyWith(
                                 theme: index,
+                                didSelectThemeMode: true,
+                                didSelectTheme: true,
                               ));
 
                               RestartWidget.restartApp(context);

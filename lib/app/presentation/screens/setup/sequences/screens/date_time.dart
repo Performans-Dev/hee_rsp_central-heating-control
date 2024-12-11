@@ -50,13 +50,10 @@ class _SetupSequenceDateTimeScreenState
               title: 'Date/Time'.tr,
               nextCallback: () async {
                 Buzz.feedback();
-                //save dateformat
-                await Box.setString(
-                    key: Keys.selectedDateFormat, value: _selectedDateFormat);
-                //save timeformat
-                await Box.setString(
-                    key: Keys.selectedTimeFormat, value: _selectedTimeFormat);
-                await Box.setBool(key: Keys.didDateFormatSelected, value: true);
+                app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
+                  dateFormat: _selectedDateFormat,
+                  didSelectDateFormat: true,
+                ));
 
                 sc.refreshSetupSequenceList();
                 NavController.toHome();
