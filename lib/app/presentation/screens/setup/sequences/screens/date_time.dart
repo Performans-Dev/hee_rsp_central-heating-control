@@ -52,7 +52,7 @@ class _SetupSequenceDateTimeScreenState
                 Buzz.feedback();
                 app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
                   dateFormat: _selectedDateFormat,
-                  didSelectDateFormat: true,
+                  didSelectedDateFormat: true,
                 ));
 
                 sc.refreshSetupSequenceList();

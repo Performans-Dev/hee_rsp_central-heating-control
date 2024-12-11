@@ -32,7 +32,7 @@ class _SetupSequenceLanguageScreenState
             app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
               language: StaticProvider.getLanguageList[selectedIndex]
                   ['languageCode'],
-              didSelectLanguage: true,
+              didSelectedLanguage: true,
             ));
 
             sc.refreshSetupSequenceList();

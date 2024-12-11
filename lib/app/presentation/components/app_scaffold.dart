@@ -64,7 +64,7 @@ class AppScaffold extends StatelessWidget {
                   height: 40,
                   child: Center(
                     child: SvgPicture.asset(
-                      app.preferencesDefinition.themeMode ==
+                      app.preferencesDefinition.themeModeIndex ==
                               ThemeMode.values.indexOf(ThemeMode.dark)
                           ? UiAssets.appIconDark
                           : UiAssets.appIconLight,

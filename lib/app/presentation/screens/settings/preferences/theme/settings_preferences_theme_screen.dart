@@ -38,10 +38,10 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                     child: ListView.builder(
                       itemBuilder: (context, index) => RadioListTile(
                         value: index,
-                        groupValue: app.preferencesDefinition.theme,
+                        groupValue: app.preferencesDefinition.themeIndex,
                         onChanged: (value) {
-                          app.setPreferencesDefinition(
-                              app.preferencesDefinition.copyWith(theme: index));
+                          app.setPreferencesDefinition(app.preferencesDefinition
+                              .copyWith(themeIndex: index));
 
                           RestartWidget.restartApp(context);
                         },
@@ -69,12 +69,12 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                               (e) =>
                                   e ==
                                   ThemeMode.values[
-                                      app.preferencesDefinition.themeMode],
+                                      app.preferencesDefinition.themeModeIndex],
                             )
                             .toList(),
                         onPressed: (index) async {
                           app.setPreferencesDefinition(app.preferencesDefinition
-                              .copyWith(themeMode: index));
+                              .copyWith(themeModeIndex: index));
                         },
                         borderRadius: UiDimens.formRadius,
                         children: ThemeMode.values

@@ -54,7 +54,7 @@ class _SetupSequenceTimezoneScreenState
             Buzz.feedback();
             app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
               timezone: StaticProvider.getTimezoneList[selectedIndex]['name'],
-              didSelectTimezone: true,
+              didSelectedTimezone: true,
             ));
 
             sc.refreshSetupSequenceList();

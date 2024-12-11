@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
@@ -16,7 +18,6 @@ class _SetupScreenState extends State<SetupScreen> {
   @override
   void initState() {
     super.initState();
-    // ignore: avoid_print
     print("SETUP SCREEN INIT");
     navigateToNextSequence();
   }
@@ -26,10 +27,13 @@ class _SetupScreenState extends State<SetupScreen> {
     final currentSequence =
         sc.setupSequenceList.firstWhereOrNull((e) => !e.isCompleted);
 
+    print("Current Sequence: ${currentSequence?.route}");
+
     Future.delayed(
       Duration.zero,
       () {
         if (currentSequence == null) {
+          print('SETUP COMPLETED');
           Get.offAndToNamed(
               Routes.home); //TODO: replace withsetup success screen
         } else {

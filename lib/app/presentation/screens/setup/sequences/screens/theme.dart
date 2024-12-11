@@ -36,9 +36,8 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                 Buzz.feedback();
                 // await Box.setBool(key: Keys.didThemeSelected, value: true);
                 app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
-                  theme: selectedIndex,
-                  didSelectTheme: true,
-                  didSelectThemeMode: true,
+                  themeIndex: selectedIndex,
+                  didSelectedTheme: true,
                 ));
 
                 sc.refreshSetupSequenceList();
@@ -70,9 +69,8 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                               });
                               app.setPreferencesDefinition(
                                   app.preferencesDefinition.copyWith(
-                                theme: index,
-                                didSelectThemeMode: true,
-                                didSelectTheme: true,
+                                themeIndex: index,
+                                didSelectedTheme: true,
                               ));
 
                               RestartWidget.restartApp(context);
@@ -139,15 +137,15 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                         .map(
                           (e) =>
                               e ==
-                              ThemeMode
-                                  .values[app.preferencesDefinition.themeMode],
+                              ThemeMode.values[
+                                  app.preferencesDefinition.themeModeIndex],
                         )
                         .toList(),
                     onPressed: (index) async {
                       app.setPreferencesDefinition(
                           app.preferencesDefinition.copyWith(
-                        themeMode: index,
-                        didSelectThemeMode: true,
+                        themeModeIndex: index,
+                        didSelectedTheme: true,
                       ));
 
                       if (context.mounted) {

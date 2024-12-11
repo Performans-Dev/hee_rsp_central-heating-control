@@ -20,7 +20,7 @@ class SetupSequence {
       title: 'Language'.tr,
       route: Routes.setupLanguage,
       contentIsExpanded: false,
-      isCompleted: app.preferencesDefinition.didSelectLanguage,
+      isCompleted: app.preferencesDefinition.didSelectedLanguage,
     );
   }
 
@@ -30,7 +30,7 @@ class SetupSequence {
       title: 'Timezone'.tr,
       route: Routes.setupTimezone,
       contentIsExpanded: false,
-      isCompleted: app.preferencesDefinition.didSelectTimezone,
+      isCompleted: app.preferencesDefinition.didSelectedTimezone,
     );
   }
 
@@ -40,7 +40,7 @@ class SetupSequence {
       title: 'Date Format'.tr,
       route: Routes.setupDateTime,
       contentIsExpanded: false,
-      isCompleted: app.preferencesDefinition.didSelectDateFormat,
+      isCompleted: app.preferencesDefinition.didSelectedDateFormat,
     );
   }
 
@@ -50,7 +50,7 @@ class SetupSequence {
       title: 'Theme'.tr,
       route: Routes.setupTheme,
       contentIsExpanded: true,
-      isCompleted: app.preferencesDefinition.didSelectTheme,
+      isCompleted: app.preferencesDefinition.didSelectedTheme,
     );
   }
 

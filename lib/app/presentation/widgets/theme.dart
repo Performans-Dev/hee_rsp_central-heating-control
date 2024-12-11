@@ -7,11 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ThemeWidget extends StatelessWidget {
-
-
   const ThemeWidget({
     super.key,
-
   });
 
   @override
@@ -34,10 +31,10 @@ class ThemeWidget extends StatelessWidget {
                 itemCount: StaticProvider.getThemeList.length,
                 itemBuilder: (context, index) => RadioListTile(
                   value: index,
-                  groupValue: app.preferencesDefinition.theme,
+                  groupValue: app.preferencesDefinition.themeIndex,
                   onChanged: (value) {
                     app.setPreferencesDefinition(
-                        app.preferencesDefinition.copyWith(theme: index));
+                        app.preferencesDefinition.copyWith(themeIndex: index));
                     RestartWidget.restartApp(context);
                   },
                   title: Text(
@@ -55,11 +52,12 @@ class ThemeWidget extends StatelessWidget {
                 isSelected: ThemeMode.values
                     .map((e) =>
                         e ==
-                        ThemeMode.values[app.preferencesDefinition.themeMode])
+                        ThemeMode
+                            .values[app.preferencesDefinition.themeModeIndex])
                     .toList(),
                 onPressed: (index) {
-                  app.setPreferencesDefinition(
-                      app.preferencesDefinition.copyWith(themeMode: index));
+                  app.setPreferencesDefinition(app.preferencesDefinition
+                      .copyWith(themeModeIndex: index));
                   RestartWidget.restartApp(context);
                 },
                 borderRadius: UiDimens.formRadius,
@@ -68,7 +66,6 @@ class ThemeWidget extends StatelessWidget {
                     .toList(),
               ),
             ),
-         
           ],
         );
       },

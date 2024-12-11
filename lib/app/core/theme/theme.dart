@@ -9,7 +9,7 @@ class MaterialTheme {
   const MaterialTheme(this.textTheme);
   ThemeData light() {
     final AppController app = Get.find();
-    switch (app.preferencesDefinition.theme) {
+    switch (app.preferencesDefinition.themeIndex) {
       case 2:
         return theme(ColorSchemes.warmyLightScheme());
       case 1:
@@ -23,7 +23,7 @@ class MaterialTheme {
 
   ThemeData lightMediumContrast() {
     final AppController app = Get.find();
-    switch (app.preferencesDefinition.theme) {
+    switch (app.preferencesDefinition.themeIndex) {
       case 2:
         return theme(ColorSchemes.warmyLightMediumContrastScheme());
       case 1:
@@ -37,7 +37,7 @@ class MaterialTheme {
 
   ThemeData lightHighContrast() {
     final AppController app = Get.find();
-    switch (app.preferencesDefinition.theme) {
+    switch (app.preferencesDefinition.themeIndex) {
       case 2:
         return theme(ColorSchemes.warmyLightHighContrastScheme());
       case 1:
@@ -51,7 +51,7 @@ class MaterialTheme {
 
   ThemeData dark() {
     final AppController app = Get.find();
-    switch (app.preferencesDefinition.theme) {
+    switch (app.preferencesDefinition.themeIndex) {
       case 2:
         return theme(ColorSchemes.warmyDarkScheme());
       case 1:
@@ -65,7 +65,7 @@ class MaterialTheme {
 
   ThemeData darkMediumContrast() {
     final AppController app = Get.find();
-    switch (app.preferencesDefinition.theme) {
+    switch (app.preferencesDefinition.themeIndex) {
       case 2:
         return theme(ColorSchemes.warmyDarkMediumContrastScheme());
       case 1:
@@ -79,7 +79,7 @@ class MaterialTheme {
 
   ThemeData darkHighContrast() {
     final AppController app = Get.find();
-    switch (app.preferencesDefinition.theme) {
+    switch (app.preferencesDefinition.themeIndex) {
       case 2:
         return theme(ColorSchemes.warmyDarkHighContrastScheme());
       case 1:
