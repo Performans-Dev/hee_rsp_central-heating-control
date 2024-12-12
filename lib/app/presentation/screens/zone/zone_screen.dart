@@ -99,7 +99,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                   child: ListTile(
                     tileColor: CommonUtils.hexToColor(
                             context, heaters[index].heater.color)
-                        .withOpacity(0.3),
+                        .withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                         borderRadius: UiDimens.formRadius),
                     title: Text(heaters[index].heater.name),

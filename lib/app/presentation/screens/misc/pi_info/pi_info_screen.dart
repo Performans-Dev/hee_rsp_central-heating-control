@@ -19,9 +19,9 @@ class _PiInfoScreenState extends State<PiInfoScreen> {
     const b87 = Colors.black87;
     const style = TextStyle(color: b87);
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.9),
+      backgroundColor: Colors.white.withValues(alpha: 0.9),
       appBar: AppBar(
-        backgroundColor: Colors.white.withOpacity(0.8),
+        backgroundColor: Colors.white.withValues(alpha: 0.8),
         automaticallyImplyLeading: false,
         actionsIconTheme: const IconThemeData(color: Colors.black87),
         title: const Text(

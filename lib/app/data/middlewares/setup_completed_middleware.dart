@@ -39,10 +39,11 @@ class SetupCompletedMiddleware extends GetMiddleware {
         return const RouteSettings(name: Routes.setup);
       }
     }
-
-    if (!appController.hasRequiredAppUserRoles) {
-      print('MIDDLEWARE: Should open setup screen for app users');
-      return const RouteSettings(name: Routes.setup);
+    if (!enabledLocalUsers) {
+      if (!appController.hasRequiredAppUserRoles) {
+        print('MIDDLEWARE: Should open setup screen for app users');
+        return const RouteSettings(name: Routes.setup);
+      }
     }
 
     if (appController.shouldUpdateApp) {

@@ -108,7 +108,7 @@ class _SetupSequenceThemeScreenState extends State<SetupSequenceThemeScreen> {
                                             ? Theme.of(context).highlightColor
                                             : Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity(0.8),
+                                                .withValues(alpha: 0.8),
                                         size: 240,
                                       ),
                                     ),

@@ -41,7 +41,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                           width: 28,
                           color: (z % 2 == 0)
                               ? Colors.transparent
-                              : Colors.grey.withOpacity(0.3),
+                              : Colors.grey.withValues(alpha: 0.3),
                           child: Center(
                               child: Text(
                             '$z',
@@ -86,7 +86,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                                             ? Colors.green
                                             : (z % 2 == 0)
                                                 ? Colors.transparent
-                                                : Colors.grey.withOpacity(0.3),
+                                                : Colors.grey.withValues(alpha: 0.3),
                                         padding: const EdgeInsets.all(2),
                                         child: const Center(
                                             child: Text(
@@ -101,7 +101,7 @@ class _DaySummaryScreenState extends State<DaySummaryScreen> {
                                       width: 26,
                                       color: (z % 2 == 0)
                                           ? Colors.transparent
-                                          : Colors.grey.withOpacity(0.3),
+                                          : Colors.grey.withValues(alpha: 0.3),
                                       padding: const EdgeInsets.all(2),
                                       child: const Center(
                                           child: Text(

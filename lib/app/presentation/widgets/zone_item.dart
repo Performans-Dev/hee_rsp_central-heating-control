@@ -38,7 +38,7 @@ class ZoneItemWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: CommonUtils.hexToColor(context, zone.zone.color)
-                        .withOpacity(0.3),
+                        .withValues(alpha: 0.3),
                   ),
                   child: Stack(
                     fit: StackFit.expand,

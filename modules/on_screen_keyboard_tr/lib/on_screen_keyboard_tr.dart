@@ -1517,41 +1517,41 @@ class _KeyWidget extends StatelessWidget {
       case _KeyType.hideKeyboard:
         width = 85;
         height = 57;
-        color = Theme.of(ctx).hoverColor.withOpacity(0.3);
+        color = Theme.of(ctx).hoverColor.withValues(alpha: 0.3);
       case _KeyType.shift:
       case _KeyType.alt:
         width = 90;
         height = 57;
-        color = Theme.of(ctx).hoverColor.withOpacity(0.3);
+        color = Theme.of(ctx).hoverColor.withValues(alpha: 0.3);
 
         break;
       case _KeyType.backspace:
         width = 185;
         height = 57;
-        color = Theme.of(ctx).hoverColor.withOpacity(0.3);
+        color = Theme.of(ctx).hoverColor.withValues(alpha: 0.3);
 
         break;
       case _KeyType.space:
         width = 400;
         height = 57;
         color = Get.isDarkMode
-            ? Theme.of(ctx).dividerColor.withOpacity(0.7)
-            : Theme.of(context).dividerColor.withOpacity(0.2);
+            ? Theme.of(ctx).dividerColor.withValues(alpha: 0.7)
+            : Theme.of(context).dividerColor.withValues(alpha: 0.2);
         break;
       case _KeyType.character:
         width = 56.5;
         height = 57;
         color = Get.isDarkMode
-            ? Theme.of(ctx).dividerColor.withOpacity(0.7)
-            : Theme.of(context).dividerColor.withOpacity(0.2);
+            ? Theme.of(ctx).dividerColor.withValues(alpha: 0.7)
+            : Theme.of(context).dividerColor.withValues(alpha: 0.2);
 
         break;
       default:
         width = 60;
         height = 57;
         color = Get.isDarkMode
-            ? Theme.of(ctx).hintColor.withOpacity(0.5)
-            : Theme.of(ctx).hintColor.withOpacity(0.1);
+            ? Theme.of(ctx).hintColor.withValues(alpha: 0.5)
+            : Theme.of(ctx).hintColor.withValues(alpha: 0.1);
 
         break;
     }
@@ -1700,7 +1700,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
         var kb = Container(
           padding: const EdgeInsets.only(top: 20),
           decoration: BoxDecoration(
-            color: Theme.of(widget.ctx).dividerColor.withOpacity(0.1),
+            color: Theme.of(widget.ctx).dividerColor.withValues(alpha: 0.1),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1746,7 +1746,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
                     .textTheme
                     .labelMedium!
                     .color
-                    ?.withOpacity(0.60)),
+                    ?.withValues(alpha: 0.60)),
           ),
         );
         String descriptionText = "";
@@ -1774,7 +1774,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
                     .textTheme
                     .labelMedium!
                     .color
-                    ?.withOpacity(0.60)),
+                    ?.withValues(alpha: 0.60)),
           ),
         );
 
@@ -1788,7 +1788,7 @@ class _OSKKeyScreenState extends State<_OSKKeyScreen> {
                   .textTheme
                   .labelMedium!
                   .color
-                  ?.withOpacity(0.60),
+                  ?.withValues(alpha: 0.60),
             ),
           ),
         );

@@ -233,7 +233,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
                   children: [
                     Container(
                       padding: const EdgeInsets.all(4),
-                      color: Colors.green.withOpacity(0.2),
+                      color: Colors.green.withValues(alpha: 0.2),
                       child: Obx(() => Text(
                           channelController.currentSerialMessage == null
                               ? '---'

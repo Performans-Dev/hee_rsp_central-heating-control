@@ -30,7 +30,7 @@ class _UserListScreenState extends State<UserListScreen> {
           InkWell(
             onTap: () => Get.back(),
             child: Container(
-              color: Theme.of(context).colorScheme.surface.withOpacity(0.4),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.4),
               constraints: const BoxConstraints.expand(),
             ),
           ),
@@ -99,7 +99,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                   context: context, username: user.username);
                               await Future.delayed(
                                   const Duration(milliseconds: 200));
-                              
+
                               final loginResult = await app.loginUser(
                                   username: user.username, pin: result ?? "");
 

@@ -170,7 +170,7 @@ class DialogUtils {
                                                       .textTheme
                                                       .bodyLarge
                                                       ?.color
-                                                      ?.withOpacity(0.8)),
+                                                      ?.withValues(alpha: 0.8)),
                                         ),
                                       ],
                                     ),
@@ -195,7 +195,7 @@ class DialogUtils {
                                   width: 35,
                                   height: 50,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: Colors.grey.withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   margin: const EdgeInsets.all(8),

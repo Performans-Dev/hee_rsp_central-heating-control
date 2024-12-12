@@ -94,7 +94,7 @@ class AppScaffold extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withOpacity(0.87),
+                                .withValues(alpha: 0.87),
                           ),
                         ),
                         const Divider(height: 8),
@@ -109,7 +109,7 @@ class AppScaffold extends StatelessWidget {
                                         .textTheme
                                         .labelSmall
                                         ?.color
-                                        ?.withOpacity(0.4),
+                                        ?.withValues(alpha: 0.4),
                                   ),
                         ),
                       ],

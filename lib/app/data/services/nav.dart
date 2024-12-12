@@ -161,7 +161,7 @@ class NavController {
             ).animate(animation),
             child: child,
           ),
-          barrierColor: Colors.black.withOpacity(0.3),
+          barrierColor: Colors.black.withValues(alpha: 0.3),
           barrierDismissible: true,
           opaque: false,
           pageBuilder: (_, __, ___) => PinScreen(

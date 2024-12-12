@@ -14,7 +14,7 @@ class PlanIconWidget extends StatelessWidget {
         style: TextStyle(
           fontSize: 12,
           color:
-              Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.2),
+              Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.2),
         ),
       );
     } else {
@@ -25,14 +25,14 @@ class PlanIconWidget extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             color:
-                Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.2),
+                Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.2),
           ),
         );
       } else {
         icon = Icon(
           Icons.light_mode,
           size: 14,
-          color: CCUtils.colorByLevel(planDetail!.level).withOpacity(0.83),
+          color: CCUtils.colorByLevel(planDetail!.level).withValues(alpha: 0.83),
         );
       }
 

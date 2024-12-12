@@ -217,7 +217,7 @@ class _SettingsPreferencesTimezoneScreenState
                                       child: Container(
                                         padding: const EdgeInsets.all(20),
                                         decoration: BoxDecoration(
-                                          color: Colors.red.withOpacity(0.3),
+                                          color: Colors.red.withValues(alpha: 0.3),
                                           borderRadius: UiDimens.formRadius,
                                         ),
                                         child: DateTextWidget(

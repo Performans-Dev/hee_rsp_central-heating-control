@@ -99,7 +99,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                       width: 27,
                       color: (z % 2 == 0)
                           ? Colors.transparent
-                          : Colors.grey.withOpacity(0.1),
+                          : Colors.grey.withValues(alpha: 0.1),
                       child: Center(
                         child: Text(
                           '0$z'.right(2),
@@ -139,7 +139,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                       ? Colors.greenAccent
                                       : (z % 2 == 0)
                                           ? Colors.transparent
-                                          : Colors.grey.withOpacity(0.1),
+                                          : Colors.grey.withValues(alpha: 0.1),
                               child: Center(
                                 child: PlanIconWidget(
                                   planDetail: planDetails.firstWhereOrNull(
@@ -157,7 +157,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   alignment: Alignment.centerLeft,
-                  color: Theme.of(context).highlightColor.withOpacity(0.3),
+                  color: Theme.of(context).highlightColor.withValues(alpha: 0.3),
                   child: selectedBoxes.isEmpty
                       ? null
                       : Row(
@@ -233,7 +233,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                             .textTheme
                                             .labelMedium
                                             ?.color
-                                            ?.withOpacity(0.4),
+                                            ?.withValues(alpha: 0.4),
                                         fontStyle: FontStyle.italic,
                                       )
                                     : null,
@@ -283,7 +283,7 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                                     size: 12,
                                     color: CCUtils.colorByLevel(
                                             selectedStateValues.indexOf(true))
-                                        .withOpacity(0.83),
+                                        .withValues(alpha: 0.83),
                                   ),
                                   SizedBox(
                                     width: 24,

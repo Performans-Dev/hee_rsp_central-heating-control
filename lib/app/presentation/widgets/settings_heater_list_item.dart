@@ -21,8 +21,8 @@ class SettingsHeaterListItemWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
           shape: RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
-          tileColor:
-              CommonUtils.hexToColor(context, heater.color).withOpacity(0.3),
+          tileColor: CommonUtils.hexToColor(context, heater.color)
+              .withValues(alpha: 0.3),
           title: Text(heater.name),
           subtitle: Text(
               '${heater.type.name.camelCaseToHumanReadable()} - ${heater.connectionType.name.camelCaseToHumanReadable()}'),

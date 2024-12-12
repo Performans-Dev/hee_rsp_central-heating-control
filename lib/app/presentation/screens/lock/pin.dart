@@ -45,7 +45,7 @@ class _PinScreenState extends State<PinScreen> {
                 color: Theme.of(context)
                     .colorScheme
                     .errorContainer
-                    .withOpacity(0.3),
+                    .withValues(alpha: 0.3),
                 constraints: const BoxConstraints.expand(),
               ),
             ),
@@ -100,7 +100,8 @@ class _PinScreenState extends State<PinScreen> {
                                                           .textTheme
                                                           .bodyLarge
                                                           ?.color
-                                                          ?.withOpacity(0.8)),
+                                                          ?.withValues(
+                                                              alpha: 0.8)),
                                             ),
                                           ],
                                         ),
@@ -125,7 +126,8 @@ class _PinScreenState extends State<PinScreen> {
                                       width: 35,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.3),
+                                        color:
+                                            Colors.grey.withValues(alpha: 0.3),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       margin: const EdgeInsets.all(8),

@@ -104,7 +104,7 @@ class _PinResetEntryScreenState extends State<PinResetEntryScreen> {
                       width: 35,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       margin: const EdgeInsets.all(8),

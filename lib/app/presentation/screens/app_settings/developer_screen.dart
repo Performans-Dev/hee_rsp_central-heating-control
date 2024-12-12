@@ -35,22 +35,22 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   const Text('oe:'),
                   Icon(
                     Icons.sunny,
-                    color: gc.oeState ? Colors.red : Colors.grey,
+                    color: gc.oeState ? Colors.red : Colors.grey.withValues(alpha: 0.3),
                   ),
                   const Text('ser:'),
                   Icon(
                     Icons.sunny,
-                    color: gc.serState ? Colors.red : Colors.grey,
+                    color: gc.serState ? Colors.red : Colors.grey.withValues(alpha: 0.3),
                   ),
                   const Text('srclk:'),
                   Icon(
                     Icons.sunny,
-                    color: gc.srclkState ? Colors.red : Colors.grey,
+                    color: gc.srclkState ? Colors.red : Colors.grey.withValues(alpha: 0.3),
                   ),
                   const Text('rclk:'),
                   Icon(
                     Icons.sunny,
-                    color: gc.rclkState ? Colors.red : Colors.grey,
+                    color: gc.rclkState ? Colors.red : Colors.grey.withValues(alpha: 0.3),
                   ),
                 ],
               ),
@@ -80,7 +80,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               //                       Icons.sunny,
               //                       color: gc.outStates[i]
               //                           ? Colors.red
-              //                           : Colors.grey.withOpacity(0.3),
+              //                           : Colors.grey.withValues(alpha: 0.3),
               //                     ),
               //                   ],
               //                 ),
@@ -109,7 +109,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                                 Icons.sunny,
                                 color: !gc.inStates[i]
                                     ? Colors.green
-                                    : Colors.grey.withOpacity(0.3),
+                                    : Colors.grey.withValues(alpha: 0.3),
                               )
                             ],
                           ),
@@ -136,7 +136,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                                 Icons.sunny,
                                 color: !gc.btnStates[i]
                                     ? Colors.green
-                                    : Colors.grey.withOpacity(0.3),
+                                    : Colors.grey.withValues(alpha: 0.3),
                               )
                             ],
                           ),

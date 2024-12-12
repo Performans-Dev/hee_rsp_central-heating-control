@@ -27,8 +27,8 @@ class ColorPickerWidget extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
-                      color:
-                          CommonUtils.hexToColor(context, e).withOpacity(0.3),
+                      color: CommonUtils.hexToColor(context, e)
+                          .withValues(alpha: 0.3),
                       padding: const EdgeInsets.all(8),
                       child: Icon(
                         selectedValue == e

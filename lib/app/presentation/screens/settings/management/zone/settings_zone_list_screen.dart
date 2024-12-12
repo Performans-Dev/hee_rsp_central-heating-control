@@ -43,7 +43,7 @@ class SettingsZoneListScreen extends StatelessWidget {
                         borderRadius: UiDimens.formRadius),
                     tileColor: CommonUtils.hexToColor(
                             context, dc.zoneList[index].color)
-                        .withOpacity(0.3),
+                        .withValues(alpha: 0.3),
                     title: Text(dc.zoneList[index].name),
                     subtitle: Text(dc.zoneList[index].users
                         .map((e) => e.username)
