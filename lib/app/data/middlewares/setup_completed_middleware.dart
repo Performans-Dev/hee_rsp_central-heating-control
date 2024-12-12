@@ -29,19 +29,19 @@ class SetupCompletedMiddleware extends GetMiddleware {
     }
 
     if (!appController.preferencesDefinition.allSelected) {
-      print('MIDDLEWARE: Should open setup screen');
+      print('MIDDLEWARE: Should open setup screen for preferences');
       return const RouteSettings(name: Routes.setup);
     }
 
     if (enabledAccount) {
       if (appController.heethingsAccount?.isOkey != true) {
-        print('MIDDLEWARE: Should open setup screen');
+        print('MIDDLEWARE: Should open setup screen for account');
         return const RouteSettings(name: Routes.setup);
       }
     }
 
     if (!appController.hasRequiredAppUserRoles) {
-      print('MIDDLEWARE: Should open setup screen');
+      print('MIDDLEWARE: Should open setup screen for app users');
       return const RouteSettings(name: Routes.setup);
     }
 
