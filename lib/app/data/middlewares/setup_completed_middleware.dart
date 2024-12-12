@@ -46,14 +46,18 @@ class SetupCompletedMiddleware extends GetMiddleware {
       }
     }
 
-    if (appController.shouldUpdateApp) {
-      print('MIDDLEWARE: Should open force update screen');
-      return const RouteSettings(name: Routes.forceUpdate);
+    if (enabledUpdates) {
+      if (appController.shouldUpdateApp) {
+        print('MIDDLEWARE: Should open force update screen');
+        return const RouteSettings(name: Routes.forceUpdate);
+      }
     }
 
-    if (!appController.isSerialNumberValid) {
-      print('MIDDLEWARE: Should open invalid serial screen');
-      return const RouteSettings(name: Routes.invalidSerial);
+    if (enabledSecurity) {
+      if (!appController.isSerialNumberValid) {
+        print('MIDDLEWARE: Should open invalid serial screen');
+        return const RouteSettings(name: Routes.invalidSerial);
+      }
     }
 
     if (enabledLocalUsers) {
