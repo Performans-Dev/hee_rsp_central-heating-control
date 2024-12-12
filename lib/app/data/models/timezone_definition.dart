@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:get/get.dart';
+
 class TimezoneDefinition {
   String zone;
   String gmt;
@@ -29,6 +33,26 @@ class TimezoneDefinition {
     final int hours = int.parse(hourPart);
     final int minutes = int.parse(minutePart);
     return Duration(hours: hours, minutes: minutes);
+  }
+
+  factory TimezoneDefinition.utc() {
+    return TimezoneDefinition(
+      zone: 'UTC',
+      gmt: '+00:00',
+      name: 'UTC',
+    );
+  }
+
+  factory TimezoneDefinition.fromApp() {
+    try {
+      final AppController app = Get.find();
+      final timezoneName = app.preferencesDefinition.timezone;
+      final map = StaticProvider.getTimezoneList
+          .firstWhere((e) => e["name"] == timezoneName);
+      return TimezoneDefinition.fromMap(map);
+    } on Exception catch (_) {
+      return TimezoneDefinition.utc();
+    }
   }
 
   factory TimezoneDefinition.fromMap(Map<String, dynamic> map) {

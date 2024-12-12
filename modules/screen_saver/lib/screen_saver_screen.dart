@@ -53,6 +53,7 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
         });
       },
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Stack(
           fit: StackFit.expand,
           children: [
