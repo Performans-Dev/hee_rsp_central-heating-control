@@ -87,6 +87,30 @@ class AppController extends GetxController {
   }
   //#endregion
 
+  //#region MARK: Preferences
+  final _preferencesDefinition = PreferencesDefinition.empty().obs;
+  PreferencesDefinition get preferencesDefinition =>
+      _preferencesDefinition.value;
+
+  void setPreferencesDefinition(PreferencesDefinition value) {
+    _preferencesDefinition.value = value;
+    update();
+    savePreferencesToBox();
+  }
+  //#endregion
+
+  //#region MARK: Heethings Account
+
+  final Rxn<HeethingsAccount> _heethingsAccount = Rxn();
+  HeethingsAccount? get heethingsAccount => _heethingsAccount.value;
+
+  void setHeethingsAccount(HeethingsAccount? value) {
+    _heethingsAccount.value = value;
+    update();
+    saveAccountToBox();
+  }
+  //#endregion
+
   //#region MARK: Session
   final RxString _sessionKey = ''.obs;
   String get sessionKey => _sessionKey.value;
@@ -250,25 +274,6 @@ class AppController extends GetxController {
     update();
   }
 
-  final _preferencesDefinition = PreferencesDefinition.empty().obs;
-  PreferencesDefinition get preferencesDefinition =>
-      _preferencesDefinition.value;
-
-  void setPreferencesDefinition(PreferencesDefinition value) {
-    _preferencesDefinition.value = value;
-    update();
-    // TODO: bu value box a yazıcak
-  }
-
-  final Rxn<HeethingsAccount> _heethingsAccount = Rxn();
-  HeethingsAccount? get heethingsAccount => _heethingsAccount.value;
-
-  void setHeethingsAccount(HeethingsAccount? value) {
-    _heethingsAccount.value = value;
-    update();
-    // TODO: bu value box a yazıcak
-  }
-
   bool get hasAdminUser =>
       _appUserList.any((user) => user.level.name == 'admin');
   bool get hasTechSupportUser =>
@@ -363,6 +368,56 @@ class AppController extends GetxController {
     }
   }
 
+  //#region MARK: Box Related
+  loadBoxVariables() {
+    loadPreferencesFromBox();
+    loadAccountFromBox();
+  }
+
+  savePreferencesToBox() async {
+    await Box.setString(
+        key: Keys.preferences, value: _preferencesDefinition.value.toJson());
+  }
+
+  loadPreferencesFromBox() {
+    final prefs = Box.getString(key: Keys.preferences);
+    if (prefs.isNotEmpty) {
+      _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
+      update();
+    }
+  }
+
+  saveAccountToBox() async {
+    await Box.setString(
+        key: Keys.account,
+        value: _heethingsAccount.value != null
+            ? _heethingsAccount.value!.toJson()
+            : '');
+  }
+
+  loadAccountFromBox() {
+    final acc = Box.getString(key: Keys.account);
+    try {
+      _heethingsAccount.value =
+          acc.isNotEmpty ? HeethingsAccount.fromJson(acc) : null;
+    } on Exception catch (e) {
+      print(e);
+    }
+    update();
+  }
+
+  //#endregion
+
+  //#region MARK: Error Notification
+  final RxBool _displayErrorNotification = false.obs;
+  bool get displayErrorNotification => _displayErrorNotification.value;
+
+  void setDisplayErrorNotification(bool value) {
+    _displayErrorNotification.value = value;
+    update();
+  }
+  //#endregion
+
   // Future<GenericResponse> accountRegister({
   //   required String email,
   //   required String fullName,
@@ -426,54 +481,4 @@ class AppController extends GetxController {
   //   update();
   //   return response;
   // }
-
-  //#region MARK: Box Related
-  loadBoxVariables() {
-    loadPreferencesFromBox();
-    loadAccountFromBox();
-  }
-
-  savePreferencesToBox() async {
-    await Box.setString(
-        key: Keys.preferences, value: _preferencesDefinition.value.toJson());
-  }
-
-  loadPreferencesFromBox() {
-    final prefs = Box.getString(key: Keys.preferences);
-    if (prefs.isNotEmpty) {
-      _preferencesDefinition.value = PreferencesDefinition.fromJson(prefs);
-      update();
-    }
-  }
-
-  saveAccountToBox() async {
-    await Box.setString(
-        key: Keys.account,
-        value: _heethingsAccount.value != null
-            ? _heethingsAccount.value!.toJson()
-            : '');
-  }
-
-  loadAccountFromBox() {
-    final acc = Box.getString(key: Keys.account);
-    try {
-      _heethingsAccount.value =
-          acc.isNotEmpty ? HeethingsAccount.fromJson(acc) : null;
-    } on Exception catch (e) {
-      print(e);
-    }
-    update();
-  }
-
-  //#endregion
-
-  //#region MARK: Error Notification
-  final RxBool _displayErrorNotification = false.obs;
-  bool get displayErrorNotification => _displayErrorNotification.value;
-
-  void setDisplayErrorNotification(bool value) {
-    _displayErrorNotification.value = value;
-    update();
-  }
-  //#endregion
 }

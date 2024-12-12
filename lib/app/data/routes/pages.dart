@@ -55,6 +55,7 @@ import 'package:central_heating_control/app/presentation/screens/setup/sequences
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/thank_you.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/theme.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/timezone.dart';
+import 'package:central_heating_control/app/presentation/screens/setup/sequences/screens/welcome.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/setup_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_user_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_device_info_screen.dart';
@@ -68,6 +69,14 @@ final List<GetPage> getPages = [
     name: Routes.setup,
     page: () => const SetupScreen(),
     transition: Transition.size,
+  ),
+  GetPage(
+    name: Routes.setupStart,
+    page: () => const SetupStartScreen(),
+  ),
+  GetPage(
+    name: Routes.setupFinish,
+    page: () => const SetupSuccessScreen(),
   ),
   GetPage(
     name: Routes.setupLanguage,
@@ -114,10 +123,6 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.connection,
     page: () => const ConnectionScreen(),
-  ),
-  GetPage(
-    name: Routes.setupSuccess,
-    page: () => const SetupSuccessScreen(),
   ),
   GetPage(
     name: Routes.initialTest,

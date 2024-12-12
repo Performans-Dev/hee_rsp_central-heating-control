@@ -6,8 +6,8 @@ import 'package:central_heating_control/app/presentation/screens/setup/sequences
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SetupSuccessScreen extends StatelessWidget {
-  const SetupSuccessScreen({super.key});
+class SetupStartScreen extends StatelessWidget {
+  const SetupStartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,18 +16,17 @@ class SetupSuccessScreen extends StatelessWidget {
         return GetBuilder<AppController>(
           builder: (app) {
             return SetupLayout(
-              title: 'Setup Completed'.tr,
-              isExpanded: true,
-              nextCallback: () {
+              title: 'Welcome to Central Controller'.tr,
+              nextCallback: () async {
                 Buzz.feedback();
                 app.setPreferencesDefinition(app.preferencesDefinition.copyWith(
-                  didThankyouShown: true,
+                  didWelcomeShown: true,
                 ));
                 sc.refreshSetupSequenceList();
                 NavController.toHome();
               },
               child: Text(
-                  'Setup is now completed. You may start using the Central Controller.'
+                  'Before starting, we need to know a few things. Proceed to setup sequence.'
                       .tr),
             );
           },

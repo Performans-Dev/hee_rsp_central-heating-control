@@ -19,6 +19,8 @@ class PreferencesDefinition {
   bool didSelectedTimezone;
   bool didSelectedDateFormat;
   bool didSelectedTheme;
+  bool didWelcomeShown;
+  bool didThankyouShown;
   PreferencesDefinition({
     required this.language,
     required this.timezone,
@@ -32,11 +34,15 @@ class PreferencesDefinition {
     required this.didSelectedTimezone,
     required this.didSelectedDateFormat,
     required this.didSelectedTheme,
+    this.didWelcomeShown = false,
+    this.didThankyouShown = false,
   });
 //TODO: kullanıcı saati değiştirmişse aradaki farkı burada bir int ile tutmamız lazım. timeget gibi bir değişken
 //default değeri o
 
   bool get allSelected =>
+      didWelcomeShown &&
+      didThankyouShown &&
       didSelectedLanguage &&
       didSelectedTimezone &&
       didSelectedDateFormat &&
@@ -58,6 +64,8 @@ class PreferencesDefinition {
         didSelectedTimezone: false,
         didSelectedDateFormat: false,
         didSelectedTheme: false,
+        didWelcomeShown: false,
+        didThankyouShown: false,
       );
 
   String toJson() => json.encode(toMap());
@@ -78,6 +86,8 @@ class PreferencesDefinition {
     bool? didSelectedTimezone,
     bool? didSelectedDateFormat,
     bool? didSelectedTheme,
+    bool? didWelcomeShown,
+    bool? didThankyouShown,
   }) {
     return PreferencesDefinition(
       language: language ?? this.language,
@@ -94,6 +104,8 @@ class PreferencesDefinition {
       didSelectedDateFormat:
           didSelectedDateFormat ?? this.didSelectedDateFormat,
       didSelectedTheme: didSelectedTheme ?? this.didSelectedTheme,
+      didWelcomeShown: didWelcomeShown ?? this.didWelcomeShown,
+      didThankyouShown: didThankyouShown ?? this.didThankyouShown,
     );
   }
 
@@ -111,6 +123,8 @@ class PreferencesDefinition {
       'didSelectedTimezone': didSelectedTimezone,
       'didSelectedDateFormat': didSelectedDateFormat,
       'didSelectedTheme': didSelectedTheme,
+      'didWelcomeShown': didWelcomeShown,
+      'didThankyouShown': didThankyouShown,
     };
   }
 
@@ -128,6 +142,8 @@ class PreferencesDefinition {
       didSelectedTimezone: map['didSelectedTimezone'] ?? false,
       didSelectedDateFormat: map['didSelectedDateFormat'] ?? false,
       didSelectedTheme: map['didSelectedTheme'] ?? false,
+      didWelcomeShown: map['didWelcomeShown'] ?? false,
+      didThankyouShown: map['didThankyouShown'] ?? false,
     );
   }
 }

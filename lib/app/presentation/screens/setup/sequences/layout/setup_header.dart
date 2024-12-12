@@ -21,6 +21,7 @@ class SetupHeaderWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: const LogoWidget(
               size: 180,
+              themeMode: ThemeMode.light,
             ),
           ),
           Container(

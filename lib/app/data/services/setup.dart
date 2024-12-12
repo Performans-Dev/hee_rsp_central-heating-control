@@ -16,6 +16,7 @@ class SetupController extends GetxController {
   void refreshSetupSequenceList() {
     _setupSequenceList.clear();
     _setupSequenceList.addAll([
+      SetupSequence.welcome(),
       SetupSequence.language(), //pref
       SetupSequence.timezone(), //pref
       SetupSequence.dateFormat(), //pref
@@ -26,6 +27,7 @@ class SetupController extends GetxController {
       SetupSequence.techSupport(), //flag
       SetupSequence.adminUser(), //flag
       SetupSequence.theme(), //pref
+      SetupSequence.thanks(),
     ]);
     update();
     print("SETUP SEQUENCE LIST REFRESHED");

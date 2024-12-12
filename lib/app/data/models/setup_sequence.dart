@@ -14,6 +14,24 @@ class SetupSequence {
     required this.isCompleted,
   });
 
+  factory SetupSequence.welcome() {
+    return SetupSequence(
+      title: 'Welcome'.tr,
+      route: Routes.setupStart,
+      contentIsExpanded: false,
+      isCompleted: false,
+    );
+  }
+
+  factory SetupSequence.thanks() {
+    return SetupSequence(
+      title: 'Thanks'.tr,
+      route: Routes.setupFinish,
+      contentIsExpanded: false,
+      isCompleted: false,
+    );
+  }
+
   factory SetupSequence.language() {
     final AppController app = Get.find();
     return SetupSequence(

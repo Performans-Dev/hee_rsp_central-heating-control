@@ -2,6 +2,8 @@ class Routes {
   static const String developer = '/dev';
 
   static const String setup = '/setup';
+  static const String setupStart = '/welcome';
+  static const String setupFinish = '/thank-you';
   static const String setupLanguage = '/setup-language';
   static const String setupTimezone = '/setup-timezone';
   static const String setupDateTime = '/setup-date-time';
@@ -15,7 +17,6 @@ class Routes {
   static const String setupTechSupport = '/setup-tech-support';
   static const String setupAdminUser = '/setup-admin-user';
   static const String connection = '/setup-connection';
-  static const String setupSuccess = '/setup-success';
   static const String initialTest = '/initial-test';
   static const String forceUpdate = '/force-update';
   static const String invalidSerial = '/invalid-serial';
