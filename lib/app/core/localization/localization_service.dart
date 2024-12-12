@@ -1,19 +1,21 @@
-import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/localization/langs/en_us.dart';
 import 'package:central_heating_control/app/core/localization/langs/tr_tr.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/providers/static_provider.dart';
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LocalizationService {
-  static final locale = Locale(
-    (Box.getString(key: Keys.localeLang, defaultVal: 'en').isNotEmpty
-        ? Box.getString(key: Keys.localeLang, defaultVal: 'en')
-        : 'en'),
-    (Box.getString(key: Keys.localeCulture, defaultVal: 'US').isNotEmpty
-        ? Box.getString(key: Keys.localeCulture, defaultVal: 'US')
-        : 'US'),
-  );
+  static final locale = _readLocale();
+
+  static Locale _readLocale() {
+    final AppController appController = Get.find();
+    final language = appController.preferencesDefinition.language;
+    final countryCode = StaticProvider.getLanguageList
+        .firstWhere((e) => e['languageCode'] == language)['countryCode'];
+    return Locale(language, countryCode);
+  }
+
   static const fallbackLocale = Locale('tr', 'TR');
 
   static final langs = [
@@ -32,8 +34,11 @@ class LocalizationService {
       };
 
   Future<Locale> applySavedLocale() async {
-    String localeLang = Box.getString(key: Keys.localeLang);
-    String localeCountry = Box.getString(key: Keys.localeCulture);
+    final AppController appController = Get.find();
+
+    String localeLang = appController.preferencesDefinition.language;
+    String localeCountry = StaticProvider.getLanguageList
+        .firstWhere((e) => e['languageCode'] == localeLang)['countryCode'];
     Locale l;
     if (localeLang.isEmpty || localeCountry.isEmpty) {
       l = Get.deviceLocale ?? const Locale('tr', 'TR');
@@ -42,9 +47,10 @@ class LocalizationService {
     }
 
     await Get.updateLocale(l);
-    await Box.setString(key: Keys.localeLang, value: l.languageCode);
-    await Box.setString(
-        key: Keys.localeCulture, value: locale.countryCode ?? 'TR');
+    // await Box.setString(key: Keys.localeLang, value: l.languageCode);
+    // await Box.setString(
+    //     key: Keys.localeCulture, value: locale.countryCode ?? 'TR');
+
     return l;
   }
 
@@ -54,9 +60,12 @@ class LocalizationService {
       locale = const Locale('en', 'US');
     }
     await Get.updateLocale(locale);
-    await Box.setString(key: Keys.localeLang, value: locale.languageCode);
-    await Box.setString(
-        key: Keys.localeCulture, value: locale.countryCode ?? 'US');
+    // await Box.setString(key: Keys.localeLang, value: locale.languageCode);
+    // await Box.setString(
+    //     key: Keys.localeCulture, value: locale.countryCode ?? 'US');
+    final AppController appController = Get.find();
+    appController.setPreferencesDefinition(appController.preferencesDefinition
+        .copyWith(language: locale.languageCode));
   }
 
   Locale _getLocaleFromLanguage(String lang) {

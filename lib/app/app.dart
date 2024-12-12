@@ -1,11 +1,8 @@
 import 'dart:ui';
 
-import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/constants/strings.dart';
 import 'package:central_heating_control/app/core/localization/localization_service.dart';
 import 'package:central_heating_control/app/core/theme/theme.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
-
 import 'package:central_heating_control/app/core/utils/theme.dart';
 import 'package:central_heating_control/app/data/routes/pages.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
@@ -20,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
-
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:screen_saver/screen_saver_definition.dart';
 import 'package:screen_saver/screen_saver_observer.dart';
@@ -74,9 +70,7 @@ class MainApp extends StatelessWidget {
               darkTheme: theme.dark(),
               highContrastTheme: theme.lightHighContrast(),
               highContrastDarkTheme: theme.darkHighContrast(),
-              themeMode: Box.getBool(key: Keys.isDarkMode)
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
+              themeMode: getThemeMode(),
               defaultTransition: Transition.circularReveal,
               getPages: getPages,
               initialRoute: Routes.home,
@@ -134,17 +128,16 @@ class MainApp extends StatelessWidget {
     // remove splash screen
     FlutterNativeSplash.remove();
 
-    // apply theme from disk
-    final AppController appController = Get.find();
-    ThemeMode themeModeOnDisk =
-        ThemeMode.values[Box.getInt(key: Keys.themeMode)];
-    appController.setPreferencesDefinition(appController.preferencesDefinition
-        .copyWith(themeModeIndex: ThemeMode.values.indexOf(themeModeOnDisk)));
-
     // localization
-
     initializeDateFormatting(
         '${LocalizationService.locale.languageCode}_${LocalizationService.locale.countryCode?.toUpperCase()}');
+  }
+
+  ThemeMode getThemeMode() {
+    final AppController appController = Get.find();
+    return appController.preferencesDefinition.isDark
+        ? ThemeMode.dark
+        : ThemeMode.light;
   }
 }
 

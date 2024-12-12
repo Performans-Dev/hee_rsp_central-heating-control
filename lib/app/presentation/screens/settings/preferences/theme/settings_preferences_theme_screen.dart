@@ -75,6 +75,8 @@ class SettingsPreferencesThemeScreen extends StatelessWidget {
                         onPressed: (index) async {
                           app.setPreferencesDefinition(app.preferencesDefinition
                               .copyWith(themeModeIndex: index));
+                          Get.changeThemeMode(ThemeMode.values[index]);
+                          // RestartWidget.restartApp(context);
                         },
                         borderRadius: UiDimens.formRadius,
                         children: ThemeMode.values
