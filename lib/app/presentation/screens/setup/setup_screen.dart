@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/app/presentation/screens/setup/sequences/layout/setup_layout.dart';
 import 'package:central_heating_control/app/presentation/widgets/loading_indicator.dart';
@@ -34,8 +34,7 @@ class _SetupScreenState extends State<SetupScreen> {
       () {
         if (currentSequence == null) {
           print('SETUP COMPLETED');
-          Get.offAndToNamed(
-              Routes.home); //TODO: replace withsetup success screen
+          NavController.toHome();
         } else {
           Get.offAndToNamed(currentSequence.route);
         }

@@ -1,10 +1,10 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/home/ozge/snap/flutter/common/flutter
-FLUTTER_APPLICATION_PATH=/home/ozge/Developer/Projects/chc/hee_rsp_central-heating-control
+FLUTTER_ROOT=/Users/io/Development/SDK/flutter
+FLUTTER_APPLICATION_PATH=/Users/io/Development/FlutterProjects/heethings/CentralHeatingControl/CHC
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
-FLUTTER_BUILD_NAME=1.0.38
-FLUTTER_BUILD_NUMBER=1038
+FLUTTER_BUILD_NAME=1.2.0.2
+FLUTTER_BUILD_NUMBER=1200
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false

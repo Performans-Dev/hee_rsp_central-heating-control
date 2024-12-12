@@ -36,35 +36,33 @@ class SettingsScreen extends StatelessWidget {
                   NavController.toSettingsManagement();
                 },
               ),
-              if (enabledFunctions) ...[
-                const SizedBox(height: 8),
-                ListTile(
-                  leading: const Icon(Icons.functions),
-                  title: const Text('Functions'),
-                  subtitle: const Text('Define custom functions and triggers'),
-                  trailing: const Icon(Icons.chevron_right),
-                  tileColor: Theme.of(context).highlightColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  onTap: () {},
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.functions),
+                title: const Text('Functions'),
+                subtitle: const Text('Define custom functions and triggers'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ],
-              if (enabledWeeklyPlan) ...[
-                const SizedBox(height: 8),
-                ListTile(
-                  leading: const Icon(Icons.add_task),
-                  title: const Text('Weekly Plan Settings'),
-                  subtitle:
-                      const Text('Define rules that runs on weekly schedule'),
-                  trailing: const Icon(Icons.chevron_right),
-                  tileColor: Theme.of(context).highlightColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  onTap: () => NavController.toSettingsWeeklySchedule(),
+                onTap: () {},
+                enabled: enabledFunctions,
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.add_task),
+                title: const Text('Weekly Plan Settings'),
+                subtitle:
+                    const Text('Define rules that runs on weekly schedule'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ],
+                onTap: () => NavController.toSettingsWeeklySchedule(),
+                enabled: enabledWeeklyPlan,
+              ),
               if (enabledLocalUsers) ...[
                 const SizedBox(height: 8),
                 ListTile(
