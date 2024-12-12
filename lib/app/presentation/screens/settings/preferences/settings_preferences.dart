@@ -1,11 +1,3 @@
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/constants/keys.dart';
-import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
-import 'package:central_heating_control/app/core/localization/localization_service.dart';
-import 'package:central_heating_control/app/core/utils/box.dart';
-import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -21,21 +13,19 @@ class SettingsPreferencesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(builder: (app) {
-      Locale currentLocale = LocalizationService.locale;
-      TimezoneDefinition currentTimezone = TimezoneDefinition.fromApp();
-
       return AppScaffold(
         title: 'Preferences',
         selectedIndex: 3,
         body: PiScrollView(
           child: Column(
+            spacing: 8,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 8),
               ListTile(
                 title: const Text('Theme'),
                 subtitle: Text(
-                  '${Box.getString(key: Keys.selectedTheme).camelCaseToHumanReadable()} - ${ThemeMode.values[Box.getInt(key: Keys.themeMode)].name.camelCaseToHumanReadable().tr}',
+                  '${app.preferencesDefinition.themeName} - '
+                  '${app.preferencesDefinition.themeModeName}',
                 ),
                 leading: const Icon(Icons.color_lens),
                 trailing: const Icon(Icons.chevron_right),
@@ -47,11 +37,10 @@ class SettingsPreferencesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              const SizedBox(height: 8),
               ListTile(
                 title: const Text('Lock Screen'),
-                subtitle: Text(CommonUtils.secondsToHumanReadable(
-                    Box.getInt(key: Keys.idleTimerInSeconds, defaultVal: 180))),
+                subtitle:
+                    Text(app.preferencesDefinition.lockDurationIdleTimeoutName),
                 leading: const Icon(Icons.screen_lock_landscape),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
@@ -62,12 +51,10 @@ class SettingsPreferencesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.translate),
                 title: const Text('Language'),
-                subtitle: Text(
-                    '${currentLocale.languageCode}-${currentLocale.countryCode}'),
+                subtitle: Text(app.preferencesDefinition.languageName),
                 trailing: const Icon(Icons.chevron_right),
                 tileColor: Theme.of(context).highlightColor,
                 shape: RoundedRectangleBorder(
@@ -77,7 +64,6 @@ class SettingsPreferencesScreen extends StatelessWidget {
                   Get.toNamed(Routes.settingsPreferencesLanguage);
                 },
               ),
-              const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.language),
                 title: const Text('Date, Time & Timezone Settings'),
@@ -85,7 +71,7 @@ class SettingsPreferencesScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const DateTextWidget(oneLine: true),
-                    Text(', ${currentTimezone.name}'),
+                    Text(', ${app.preferencesDefinition.timezoneName}'),
                   ],
                 ),
                 trailing: const Icon(Icons.chevron_right),
@@ -98,7 +84,6 @@ class SettingsPreferencesScreen extends StatelessWidget {
                 },
               ),
               if (enabledConnections) ...[
-                const SizedBox(height: 8),
                 ListTile(
                   leading: const Icon(Icons.wifi),
                   title: const Text('Internet Connection'),
@@ -113,7 +98,6 @@ class SettingsPreferencesScreen extends StatelessWidget {
                   },
                 ),
               ],
-              const SizedBox(height: 8),
               ListTile(
                 tileColor: Theme.of(context).highlightColor,
                 shape: RoundedRectangleBorder(
@@ -123,23 +107,23 @@ class SettingsPreferencesScreen extends StatelessWidget {
                 title: const Text('Advanced'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  final AppController app = Get.find();
-                  if (app.loggedInAppUser?.level == AppUserLevel.user ||
-                      app.loggedInAppUser?.level == AppUserLevel.admin) {
-                    DialogUtils.confirmDialog(
-                      context: context,
-                      title: 'Not Allowed',
-                      description:
-                          'You are not allowed to access advanced settings',
-                      positiveText: 'Enter PIN',
-                      negativeText: 'Back',
-                      positiveCallback: () {
-                        Get.toNamed(Routes.settingsPreferencesAdvanced);
-                      },
-                    );
-                  } else {
-                    Get.toNamed(Routes.settingsPreferencesAdvanced);
-                  }
+                  // final AppController app = Get.find();
+                  // if (app.loggedInAppUser?.level == AppUserLevel.user ||
+                  //     app.loggedInAppUser?.level == AppUserLevel.admin) {
+                  //   DialogUtils.confirmDialog(
+                  //     context: context,
+                  //     title: 'Not Allowed',
+                  //     description:
+                  //         'You are not allowed to access advanced settings',
+                  //     positiveText: 'Enter PIN',
+                  //     negativeText: 'Back',
+                  //     positiveCallback: () {
+                  //       Get.toNamed(Routes.settingsPreferencesAdvanced);
+                  //     },
+                  //   );
+                  // } else {
+                  Get.toNamed(Routes.settingsPreferencesAdvanced);
+                  // }
                 },
               ),
               const SizedBox(height: 28),

@@ -43,9 +43,7 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {
                       Get.toNamed(Routes.settingsPreferencesAdvanced);
                     },
-                    child: Text(
-                        'Serial Number: ${app.deviceInfo?.serialNumber}\n'
-                        'installationId: ${app.deviceInfo?.installationId}'),
+                    child: Text('${app.deviceInfo?.serialNumber}'),
                   ),
                 )
                 // PiScrollView(

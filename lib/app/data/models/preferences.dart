@@ -1,6 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
+import 'package:central_heating_control/app/core/localization/localization_service.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/data/models/timezone_definition.dart';
 import 'package:flutter/material.dart';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
@@ -49,6 +53,16 @@ class PreferencesDefinition {
       didSelectedTheme;
 
   bool get isDark => themeModeIndex == ThemeMode.dark.index;
+
+  String get timezoneName => TimezoneDefinition.fromApp().name;
+  String get languageName =>
+      '${LocalizationService.locale.languageCode}-${LocalizationService.locale.countryCode}';
+  String get themeName =>
+      StaticProvider.getThemeList[themeIndex].camelCaseToHumanReadable();
+  String get themeModeName =>
+      ThemeMode.values[themeModeIndex].name.camelCaseToHumanReadable();
+  String get lockDurationIdleTimeoutName =>
+      CommonUtils.secondsToHumanReadable(lockDurationIdleTimeout);
 
   factory PreferencesDefinition.empty() => PreferencesDefinition(
         language: StaticProvider.getLanguageList.first['languageCode'],
