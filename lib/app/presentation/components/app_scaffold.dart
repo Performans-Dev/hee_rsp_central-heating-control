@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/screens/home/appbar.dart';
 import 'package:central_heating_control/app/presentation/widgets/com_indicator_led.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -36,9 +37,10 @@ class AppScaffold extends StatelessWidget {
                     icon: Icon(Icons.dashboard),
                     label: Text('Zones'),
                   ),
-                  const NavigationRailDestination(
-                    icon: Icon(Icons.access_alarm),
-                    label: Text('Functions'),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.access_alarm),
+                    label: const Text('Functions'),
+                    disabled: !enabledFunctions,
                   ),
                   const NavigationRailDestination(
                     icon: Icon(Icons.auto_mode),

@@ -8,6 +8,7 @@ import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -129,174 +130,185 @@ class _SettingsPreferencesAdvancedScreenState
       body: PiScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.update),
-              title: const Text('Check Updates'),
-              trailing: const Icon(Icons.chevron_right),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: () async {
-                final app = Get.find<AppController>();
-                if (app.deviceInfo == null) return;
-
-                Future.delayed(const Duration(seconds: 1), () {
-                  Process.killPid(pid);
-                });
-                await Process.run('sudo', [
-                  '/home/pi/Heethings/CC/elevator/app/chc_updater',
-                  '--version-code="${app.deviceInfo!.appBuild}"',
-                  '--version-number="${app.deviceInfo!.appVersion}"'
-                ]);
-              },
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.hardware),
-              title: const Text('Hardware Config'),
-              trailing: const Icon(Icons.chevron_right),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onTap: () {
-                Get.toNamed(Routes.settingsPreferencesAdvancedHardwareConfig);
-              },
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    leading: const Icon(Icons.bug_report),
-                    title: const Text('Diagnostics Page'),
-                    trailing: const Icon(Icons.chevron_right),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onTap: () async {
-                      Get.toNamed(
-                        Routes.settingsPreferencesAdvancedDiagnostics,
-                      );
-                    },
-                  ),
+            if (enabledUpdates) ...[
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.update),
+                title: const Text('Check Updates'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ListTile(
-                    leading: const Icon(Icons.bug_report),
-                    title: const Text('Diagnostics App'),
-                    trailing: const Icon(Icons.chevron_right),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onTap: () async {
-                      final extList = await DbProvider.db.getHardwareDevices();
+                onTap: () async {
+                  final app = Get.find<AppController>();
+                  if (app.deviceInfo == null) return;
 
-                      try {
-                        final directory =
-                            Directory('/home/pi/Heethings/CC/databases');
-                        if (!await directory.exists()) {
-                          await directory.create(recursive: true);
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Process.killPid(pid);
+                  });
+                  await Process.run('sudo', [
+                    '/home/pi/Heethings/CC/elevator/app/chc_updater',
+                    '--version-code="${app.deviceInfo!.appBuild}"',
+                    '--version-number="${app.deviceInfo!.appVersion}"'
+                  ]);
+                },
+              ),
+            ],
+            if (enabledHardwareExtensions) ...[
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.hardware),
+                title: const Text('Hardware Config'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () {
+                  Get.toNamed(Routes.settingsPreferencesAdvancedHardwareConfig);
+                },
+              ),
+            ],
+            if (enabledDiagnostics) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      leading: const Icon(Icons.bug_report),
+                      title: const Text('Diagnostics Page'),
+                      trailing: const Icon(Icons.chevron_right),
+                      tileColor: Theme.of(context).highlightColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      onTap: () async {
+                        Get.toNamed(
+                          Routes.settingsPreferencesAdvancedDiagnostics,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ListTile(
+                      leading: const Icon(Icons.bug_report),
+                      title: const Text('Diagnostics App'),
+                      trailing: const Icon(Icons.chevron_right),
+                      tileColor: Theme.of(context).highlightColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      onTap: () async {
+                        final extList =
+                            await DbProvider.db.getHardwareDevices();
+
+                        try {
+                          final directory =
+                              Directory('/home/pi/Heethings/CC/databases');
+                          if (!await directory.exists()) {
+                            await directory.create(recursive: true);
+                          }
+
+                          final file =
+                              File('${directory.path}/external-devices.txt');
+                          final content = extList.map((e) => e.id).join(',');
+                          await file.writeAsString(content);
+                        } catch (e) {
+                          // Handle error silently
                         }
 
-                        final file =
-                            File('${directory.path}/external-devices.txt');
-                        final content = extList.map((e) => e.id).join(',');
-                        await file.writeAsString(content);
-                      } catch (e) {
-                        // Handle error silently
-                      }
+                        Future.delayed(const Duration(seconds: 1), () {
+                          Process.killPid(pid);
+                        });
 
-                      Future.delayed(const Duration(seconds: 1), () {
-                        Process.killPid(pid);
-                      });
-
-                      try {
-                        await Process.run(
-                          'sudo',
-                          ['/home/pi/Heethings/run-cc-diagnose.sh'],
-                        );
-                      } catch (e) {
-                        // Handle error silently
-                      }
-                    },
+                        try {
+                          await Process.run(
+                            'sudo',
+                            ['/home/pi/Heethings/run-cc-diagnose.sh'],
+                          );
+                        } catch (e) {
+                          // Handle error silently
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.lock_reset_outlined),
-              title: const Text('Factory Reset'),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                ],
               ),
-              onTap: () => factoryReset(context),
-            ),
-            const SizedBox(height: 8),
-            const Divider(),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    leading: const Icon(Icons.minimize),
-                    title: const Text('Minimize App'),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onTap: minimizeApp,
-                  ),
+            ],
+            if (enabledFactoryReset) ...[
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.lock_reset_outlined),
+                title: const Text('Factory Reset'),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ListTile(
-                    leading: const Icon(Icons.exit_to_app),
-                    title: const Text('Close App'),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                onTap: () => factoryReset(context),
+              ),
+            ],
+            if (enabledOsControls) ...[
+              const SizedBox(height: 8),
+              const Divider(),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      leading: const Icon(Icons.minimize),
+                      title: const Text('Minimize App'),
+                      tileColor: Theme.of(context).highlightColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      onTap: minimizeApp,
                     ),
-                    onTap: () => killProcess(context),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    leading: const Icon(Icons.power_settings_new_rounded),
-                    title: const Text('Shutdown'),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ListTile(
+                      leading: const Icon(Icons.exit_to_app),
+                      title: const Text('Close App'),
+                      tileColor: Theme.of(context).highlightColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      onTap: () => killProcess(context),
                     ),
-                    onTap: () => shutdownDevice(context),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ListTile(
-                    leading: const Icon(Icons.refresh),
-                    title: const Text('Reboot'),
-                    tileColor: Theme.of(context).highlightColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      leading: const Icon(Icons.power_settings_new_rounded),
+                      title: const Text('Shutdown'),
+                      tileColor: Theme.of(context).highlightColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      onTap: () => shutdownDevice(context),
                     ),
-                    onTap: () => rebootDevice(context),
                   ),
-                ),
-              ],
-            ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ListTile(
+                      leading: const Icon(Icons.refresh),
+                      title: const Text('Reboot'),
+                      tileColor: Theme.of(context).highlightColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      onTap: () => rebootDevice(context),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

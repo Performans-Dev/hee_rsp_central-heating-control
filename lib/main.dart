@@ -5,15 +5,29 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_storage/get_storage.dart';
-// import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
 
-// final Logger logger = Logger();
 bool isPi = !kDebugMode;
-Future<void> main() async {
 
+bool enabledUsers = false;
+bool enabledFunctions = false;
+bool enabledWeeklyPlan = true;
+bool enabledAccount = false;
+bool enabledHardwareExtensions = true;
+bool enabledUpdates = true;
+bool enabledSecurity = true;
+bool enabledDiagnostics = true;
+bool enabledFactoryReset = true;
+bool enabledAlarmShutdown = true;
+bool enabledConnections = true;
+bool enabledOsControls = true;
+int zoneLimit = 6;
+int deviceLimit = 40;
+int planLimit = 4;
+
+Future<void> main() async {
   // shared preferences
   await GetStorage.init();
   final documentsDirectory = await getApplicationDocumentsDirectory();

@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,43 +36,49 @@ class SettingsScreen extends StatelessWidget {
                   NavController.toSettingsManagement();
                 },
               ),
-              const SizedBox(height: 8),
-              ListTile(
-                leading: const Icon(Icons.functions),
-                title: const Text('Functions'),
-                subtitle: const Text('Define custom functions and triggers'),
-                trailing: const Icon(Icons.chevron_right),
-                tileColor: Theme.of(context).highlightColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              if (enabledFunctions) ...[
+                const SizedBox(height: 8),
+                ListTile(
+                  leading: const Icon(Icons.functions),
+                  title: const Text('Functions'),
+                  subtitle: const Text('Define custom functions and triggers'),
+                  trailing: const Icon(Icons.chevron_right),
+                  tileColor: Theme.of(context).highlightColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  onTap: () {},
                 ),
-                onTap: () {},
-              ),
-              const SizedBox(height: 8),
-              ListTile(
-                leading: const Icon(Icons.add_task),
-                title: const Text('Weekly Plan Settings'),
-                subtitle:
-                    const Text('Define rules that runs on weekly schedule'),
-                trailing: const Icon(Icons.chevron_right),
-                tileColor: Theme.of(context).highlightColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              ],
+              if (enabledWeeklyPlan) ...[
+                const SizedBox(height: 8),
+                ListTile(
+                  leading: const Icon(Icons.add_task),
+                  title: const Text('Weekly Plan Settings'),
+                  subtitle:
+                      const Text('Define rules that runs on weekly schedule'),
+                  trailing: const Icon(Icons.chevron_right),
+                  tileColor: Theme.of(context).highlightColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  onTap: () => NavController.toSettingsWeeklySchedule(),
                 ),
-                onTap: () => NavController.toSettingsWeeklySchedule(),
-              ),
-              const SizedBox(height: 8),
-              ListTile(
-                leading: const Icon(Icons.group),
-                title: const Text('User Management'),
-                subtitle: const Text('Add/Remove/Modify users and admins'),
-                trailing: const Icon(Icons.chevron_right),
-                tileColor: Theme.of(context).highlightColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              ],
+              if (enabledUsers) ...[
+                const SizedBox(height: 8),
+                ListTile(
+                  leading: const Icon(Icons.group),
+                  title: const Text('User Management'),
+                  subtitle: const Text('Add/Remove/Modify users and admins'),
+                  trailing: const Icon(Icons.chevron_right),
+                  tileColor: Theme.of(context).highlightColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  onTap: () => NavController.toSettingsUserList(),
                 ),
-                onTap: () => NavController.toSettingsUserList(),
-              ),
+              ],
               const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.settings_applications),

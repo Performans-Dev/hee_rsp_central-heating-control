@@ -12,6 +12,7 @@ import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -104,20 +105,22 @@ class SettingsPreferencesScreen extends StatelessWidget {
                 Get.toNamed(Routes.settingsPreferencesTimezone);
               },
             ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.wifi),
-              title: const Text('Internet Connection'),
-              subtitle: const Text('WiFi & Ethernet Settings'),
-              trailing: const Icon(Icons.chevron_right),
-              tileColor: Theme.of(context).highlightColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+            if (enabledConnections) ...[
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.wifi),
+                title: const Text('Internet Connection'),
+                subtitle: const Text('WiFi & Ethernet Settings'),
+                trailing: const Icon(Icons.chevron_right),
+                tileColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () {
+                  Get.toNamed(Routes.settingsConnection);
+                },
               ),
-              onTap: () {
-                Get.toNamed(Routes.settingsConnection);
-              },
-            ),
+            ],
             const SizedBox(height: 8),
             ListTile(
               tileColor: Theme.of(context).highlightColor,
