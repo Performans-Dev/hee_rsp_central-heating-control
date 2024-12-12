@@ -1466,8 +1466,6 @@ class _OSKController extends GetxController {
           }
         }
         break;
-      default:
-        break;
     }
     if (feedbackFunction != null) {
       feedbackFunction!();
@@ -1546,14 +1544,14 @@ class _KeyWidget extends StatelessWidget {
             : Theme.of(context).dividerColor.withValues(alpha: 0.2);
 
         break;
-      default:
-        width = 60;
-        height = 57;
-        color = Get.isDarkMode
-            ? Theme.of(ctx).hintColor.withValues(alpha: 0.5)
-            : Theme.of(ctx).hintColor.withValues(alpha: 0.1);
+      // default:
+      //   width = 60;
+      //   height = 57;
+      //   color = Get.isDarkMode
+      //       ? Theme.of(ctx).hintColor.withValues(alpha: 0.5)
+      //       : Theme.of(ctx).hintColor.withValues(alpha: 0.1);
 
-        break;
+      //   break;
     }
 
     return Card(
