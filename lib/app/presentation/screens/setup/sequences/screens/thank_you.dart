@@ -26,9 +26,11 @@ class SetupSuccessScreen extends StatelessWidget {
                 sc.refreshSetupSequenceList();
                 NavController.toHome();
               },
-              child: Text(
-                  'Setup is now completed. You may start using the Central Controller.'
-                      .tr),
+              child: Center(
+                child: Text(
+                    'Setup is now completed. You may start using the Central Controller.'
+                        .tr),
+              ),
             );
           },
         );

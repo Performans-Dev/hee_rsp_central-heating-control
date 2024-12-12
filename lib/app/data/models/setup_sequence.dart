@@ -15,20 +15,22 @@ class SetupSequence {
   });
 
   factory SetupSequence.welcome() {
+    final AppController app = Get.find();
     return SetupSequence(
       title: 'Welcome'.tr,
       route: Routes.setupStart,
-      contentIsExpanded: false,
-      isCompleted: false,
+      contentIsExpanded: true,
+      isCompleted: app.preferencesDefinition.didWelcomeShown,
     );
   }
 
   factory SetupSequence.thanks() {
+    final AppController app = Get.find();
     return SetupSequence(
-      title: 'Thanks'.tr,
+      title: 'Setup Completed'.tr,
       route: Routes.setupFinish,
-      contentIsExpanded: false,
-      isCompleted: false,
+      contentIsExpanded: true,
+      isCompleted: app.preferencesDefinition.didThankyouShown,
     );
   }
 
