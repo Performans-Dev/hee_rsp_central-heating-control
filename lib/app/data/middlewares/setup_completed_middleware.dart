@@ -39,10 +39,10 @@ class SetupCompletedMiddleware extends GetMiddleware {
       print("SETUP MIDDLEWARE: isSerialNumberValid");
       return const RouteSettings(name: Routes.invalidSerial);
     }
-    if (!appController.hasLoggedInUser) {
-      print("SETUP MIDDLEWARE: hasLoggedInUser");
-      return const RouteSettings(name: Routes.lockScreen);
-    }
+    // if (!appController.hasLoggedInUser) {
+    //   print("SETUP MIDDLEWARE: hasLoggedInUser");
+    //   return const RouteSettings(name: Routes.lockScreen);
+    // }
     return null;
   }
 }
