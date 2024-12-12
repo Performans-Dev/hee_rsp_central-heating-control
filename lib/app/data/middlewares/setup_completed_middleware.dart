@@ -48,7 +48,7 @@ class SetupCompletedMiddleware extends GetMiddleware {
       return const RouteSettings(name: Routes.invalidSerial);
     }
 
-    if (enabledUsers) {
+    if (enabledLocalUsers) {
       if (!appController.hasLoggedInUser) {
         return const RouteSettings(name: Routes.lockScreen);
       }

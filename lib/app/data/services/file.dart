@@ -3,8 +3,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class FileServices {
   static Future<bool> createMissingFolders() async {
@@ -36,21 +39,36 @@ class FileServices {
 
   static Future<void> checkProvisionStatusCompleted() async {
     AppController app = Get.find();
-    try {
-      File f = File("/home/pi/Heethings/CC/databases/production.json");
-      final content = await f.readAsString();
-      final map = jsonDecode(content);
-      app.setDoesProvisionExists(map['success']);
-    } on Exception catch (e) {
-      print("PROVISION CHECK RESULT: $e");
-    } finally {
+    if (enabledAccount) {
+      try {
+        File f = File("/home/pi/Heethings/CC/databases/production.json");
+        final content = await f.readAsString();
+        final map = jsonDecode(content);
+        app.setDoesProvisionExists(map['success']);
+      } on Exception catch (e) {
+        print("PROVISION CHECK RESULT: $e");
+      } finally {
+        app.setDidCheckProvisionTestResults(true);
+      }
+    } else {
+      app.setDoesProvisionExists(true);
       app.setDidCheckProvisionTestResults(true);
     }
   }
 //#endregion
 
-//TODO: factory reset buraya koy performfactory
-//TODO: getstorage ve db de silinecekleri sil
-// appcontrollerdaki preferences ,account değişkenlerini copywith ile güncelle.
-//reboot
+  static Future<void> performFactoryReset() async {
+    if (enabledFactoryReset) {
+      final box = GetStorage();
+      await box.erase();
+      await DbProvider.db.resetDb();
+      final AppController appController = Get.find();
+      appController.logoutUser();
+      if (Platform.isLinux) {
+        Process.run('sudo', ['reboot', 'now']);
+      } else {
+        exit(0);
+      }
+    }
+  }
 }

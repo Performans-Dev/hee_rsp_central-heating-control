@@ -7,12 +7,14 @@ class ScreenSaverWrapper extends StatefulWidget {
   final List<String> excludedRoutes;
   final int timerDuration;
   final ScreenSaverDefinition definition;
+  final bool allowNoUser;
   const ScreenSaverWrapper({
     super.key,
     required this.child,
     required this.excludedRoutes,
     required this.definition,
     this.timerDuration = 10,
+    this.allowNoUser = false,
   });
 
   @override
@@ -28,6 +30,7 @@ class _ScreenSaverWrapperState extends State<ScreenSaverWrapper> {
       definition: widget.definition,
       excludedRoutes: widget.excludedRoutes,
       timerDuration: widget.timerDuration,
+      allowNoUser: widget.allowNoUser,
     );
   }
 

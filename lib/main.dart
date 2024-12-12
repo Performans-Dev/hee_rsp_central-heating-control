@@ -11,7 +11,7 @@ import 'package:window_manager/window_manager.dart';
 
 bool isPi = !kDebugMode;
 
-bool enabledUsers = false;
+bool enabledLocalUsers = false;
 bool enabledFunctions = false;
 bool enabledWeeklyPlan = true;
 bool enabledAccount = false;
@@ -24,7 +24,7 @@ bool enabledAlarmShutdown = true;
 bool enabledConnections = true;
 bool enabledOsControls = true;
 int zoneLimit = 6;
-int deviceLimit = 40;
+int deviceLimit = 18;
 int planLimit = 4;
 
 Future<void> main() async {

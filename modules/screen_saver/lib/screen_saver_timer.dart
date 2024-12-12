@@ -8,6 +8,8 @@ class ScreenSaverTimer {
   static final ScreenSaverTimer _instance = ScreenSaverTimer._internal();
   Timer? _timer;
   bool isActive = false;
+  bool _allowNoUser = false;
+  bool get allowNoUser => _allowNoUser;
 
   late List<String> _excludedRoutes;
 
@@ -27,10 +29,12 @@ class ScreenSaverTimer {
     required List<String> excludedRoutes,
     required int timerDuration,
     required ScreenSaverDefinition definition,
+    required bool allowNoUser,
   }) {
     _excludedRoutes = excludedRoutes;
     _timerDuration = timerDuration;
     _definition = definition;
+    _allowNoUser = allowNoUser;
 
     startTimer();
   }

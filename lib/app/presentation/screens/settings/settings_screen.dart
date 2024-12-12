@@ -65,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => NavController.toSettingsWeeklySchedule(),
                 ),
               ],
-              if (enabledUsers) ...[
+              if (enabledLocalUsers) ...[
                 const SizedBox(height: 8),
                 ListTile(
                   leading: const Icon(Icons.group),

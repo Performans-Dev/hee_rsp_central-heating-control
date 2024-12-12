@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:screen_saver/screen_saver_definition.dart';
+import 'package:screen_saver/screen_saver_timer.dart';
 
 class ScreenSaverScreen extends StatefulWidget {
   final ScreenSaverDefinition definition;
@@ -83,23 +84,28 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
               onTap: () {
                 Future.delayed(Duration.zero, () {
                   if (context.mounted) {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) =>
-                                SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0, 1),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: child,
+                    ScreenSaverTimer sst = ScreenSaverTimer();
+                    if (sst.allowNoUser) {
+                      Navigator.of(context).pushReplacementNamed('/home');
+                    } else {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) =>
+                                  SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, 1),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: child,
+                          ),
+                          barrierColor: Colors.black.withOpacity(0.3),
+                          barrierDismissible: true,
+                          opaque: false,
+                          pageBuilder: (_, __, ___) => widget.definition.target,
                         ),
-                        barrierColor: Colors.black.withOpacity(0.3),
-                        barrierDismissible: true,
-                        opaque: false,
-                        pageBuilder: (_, __, ___) => widget.definition.target,
-                      ),
-                    );
+                      );
+                    }
                   }
                 });
               },

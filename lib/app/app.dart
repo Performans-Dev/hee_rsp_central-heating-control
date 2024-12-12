@@ -15,6 +15,7 @@ import 'package:central_heating_control/app/presentation/screens/lock/user_list.
 import 'package:central_heating_control/app/presentation/widgets/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/logo.dart';
 import 'package:central_heating_control/app/presentation/widgets/wallpaper.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -55,6 +56,7 @@ class MainApp extends StatelessWidget {
       return ScreenSaverWrapper(
         definition: screenSaverDefinition,
         excludedRoutes: autoLockExcludedRoutes,
+        allowNoUser: !enabledLocalUsers,
         timerDuration: 600,
         child: RestartWidget(
           child: Builder(builder: (context) {

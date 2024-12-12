@@ -82,7 +82,7 @@ class Routes {
   static const String splashDeviceInfo = '/reading-device-info';
   static const String splashAppUserList = '/checking-app-user-list';
   static const String splashAppSettings = '/loading-app-settings';
-  static const String splashStructureProgress = '/loading-structure-progress';
+  static const String splashStructureProgress = '/initializing-structure';
   static const String splashInternetConnectionProgress =
       '/loading-internet-connection';
 

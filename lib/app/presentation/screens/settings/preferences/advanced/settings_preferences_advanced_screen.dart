@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/models/shell_command.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/file.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:central_heating_control/main.dart';
@@ -466,16 +467,25 @@ class _SettingsPreferencesAdvancedScreenState
   }
 
   void factoryReset(BuildContext context) async {
-    DialogUtils.confirmDialog(
-      context: context,
-      title: "Factory Reset",
-      description: "Are you sure you want to factory reset?",
-      positiveText: "Yes",
-      positiveCallback: () async {
-        final AppController app = Get.find();
-        await app.performFactoryReset();
-      },
-      negativeText: "Cancel",
-    );
+    if (enabledFactoryReset) {
+      DialogUtils.confirmDialog(
+        context: context,
+        title: "Factory Reset",
+        description: "Are you sure you want to factory reset?",
+        positiveText: "Yes",
+        positiveCallback: () async {
+          await FileServices.performFactoryReset();
+        },
+        negativeText: "Cancel",
+      );
+    } else {
+      DialogUtils.alertDialog(
+        context: context,
+        title: "Factory Reset",
+        description: "Factory reset is disabled",
+        positiveText: "Ok",
+        positiveCallback: () {},
+      );
+    }
   }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:central_heating_control/app/data/models/setup_sequence.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:get/get.dart';
 
 class SetupController extends GetxController {
@@ -20,12 +21,16 @@ class SetupController extends GetxController {
       SetupSequence.language(), //pref
       SetupSequence.timezone(), //pref
       SetupSequence.dateFormat(), //pref
-      // SetupSequence.terms(), //account
-      // SetupSequence.privacy(), //account
-      // SetupSequence.signIn(), //account
-      // SetupSequence.subscriptionResult(), //account
-      SetupSequence.techSupport(), //flag
-      SetupSequence.adminUser(), //flag
+      if (enabledAccount) ...[
+        SetupSequence.terms(), //account
+        SetupSequence.privacy(), //account
+        SetupSequence.signIn(), //account
+        SetupSequence.subscriptionResult(), //account
+      ],
+      if (enabledLocalUsers) ...[
+        SetupSequence.techSupport(), //flag
+        SetupSequence.adminUser(), //flag
+      ],
       SetupSequence.theme(), //pref
       SetupSequence.thanks(),
     ]);

@@ -20,7 +20,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
@@ -355,18 +354,6 @@ class AppController extends GetxController {
     return result;
   }
   //#endregion
-
-  Future<void> performFactoryReset() async {
-    final box = GetStorage();
-    await box.erase();
-    await DbProvider.db.resetDb();
-    logoutUser();
-    if (Platform.isLinux) {
-      Process.run('sudo', ['reboot', 'now']);
-    } else {
-      exit(0);
-    }
-  }
 
   //#region MARK: Box Related
   loadBoxVariables() {
