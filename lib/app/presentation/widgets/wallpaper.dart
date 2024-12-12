@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class WallpaperWidget extends StatefulWidget {
   const WallpaperWidget({super.key});
@@ -16,12 +18,18 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
   double opacity = 0.4;
   int index = 0;
   Duration duration = const Duration(milliseconds: 200);
-  late Timer timer;
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
     _loadImages();
+  }
+
+  @override
+  dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -57,13 +65,21 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
   }
 
   void startSlideShow() {
-    timer = Timer.periodic(const Duration(seconds: 11), (t) {
+    final AppController appController = Get.find();
+    timer = Timer.periodic(
+        Duration(seconds: appController.preferencesDefinition.slideShowTimer),
+        (t) {
+      if (!mounted) {
+        timer?.cancel();
+        return;
+      }
       setState(() {
         opacity = 0;
       });
       Future.delayed(duration, () {
+        if (!mounted) return;
         setState(() {
-          index = index == images.length ? 0 : index + 1;
+          index = index >= images.length - 1 ? 0 : index + 1;
           opacity = 0.4;
         });
       });
