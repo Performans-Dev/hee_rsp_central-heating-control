@@ -180,7 +180,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       //MARK: LEVEL 1 OUTPUT
-                                      Expanded(
+                                      const Expanded(
                                         child: FormItemComponent(
                                           label: 'On/Level 1 Output Channel',
                                           child: ChannelDropdownWidget(),
