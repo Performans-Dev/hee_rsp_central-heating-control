@@ -31,7 +31,7 @@ class ChannelDropdownWidget extends StatelessWidget {
           .map((e) => e.errorChannel)
           .where((e) => e != null)
           .toList();
-      final usedOutChannels = [...l1List, ...l2List];
+      final usedOutChannels = [...l1List, ...l2List];¬
 
       final data = UiData.getChannelsDropdown(group);
       var selectedValue = value;

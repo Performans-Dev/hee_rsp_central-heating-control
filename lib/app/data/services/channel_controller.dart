@@ -100,6 +100,7 @@ class ChannelController extends GetxController {
     final extList = await DbProvider.db.getHardwareDevices();
     _hardwareList.assignAll(extList);
     update();
+    print("Hardware devices loaded {${_hardwareList.length}}");
   }
 
   //#endregion
@@ -144,17 +145,20 @@ class ChannelController extends GetxController {
       in7 = GPIO(26, GPIOdirection.gpioDirIn);
       in8 = GPIO(20, GPIOdirection.gpioDirIn);
       txEnablePin = GPIO(21, GPIOdirection.gpioDirOut);
+      print("GPIO pins initialized");
     } on Exception catch (e) {
       LogService.addLog(LogDefinition(
         message: e.toString(),
         type: LogType.error,
       ));
+      print(e);
     }
   }
   //#endregion
 
   //#region MARK: Serial Pins
   Future<void> initSerialPins() async {
+    print("Initializing serial pins");
     serialPort = SerialPort(serialKey);
     serialPort.openReadWrite();
     config.baudRate = 9600;
@@ -187,9 +191,11 @@ class ChannelController extends GetxController {
 
     _allowSerialLoop.value = hardwareList.length > 1;
     update();
+    print("Serial pins initialized");
   }
 
   void registerSerialListener() {
+    print("Registering serial listener");
     handler.onMessage.listen(
       (Uint8List data) {
         List<int> rawData = ByteUtils.intListToUint8List(data);
