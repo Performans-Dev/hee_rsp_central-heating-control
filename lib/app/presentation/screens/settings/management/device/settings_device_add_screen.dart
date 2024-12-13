@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
@@ -34,15 +36,15 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
   int currentPage = 0;
   late TextEditingController nameController;
   late TextEditingController ipAddressController;
-  late TextEditingController level1ConsumptionController;
-  late TextEditingController level1UnitController;
-  late TextEditingController level1CarbonController;
-  late TextEditingController level2ConsumptionController;
-  late TextEditingController level2UnitController;
-  late TextEditingController level2CarbonController;
-  late TextEditingController level3ConsumptionController;
-  late TextEditingController level3UnitController;
-  late TextEditingController level3CarbonController;
+  // late TextEditingController level1ConsumptionController;
+  // late TextEditingController level1UnitController;
+  // late TextEditingController level1CarbonController;
+  // late TextEditingController level2ConsumptionController;
+  // late TextEditingController level2UnitController;
+  // late TextEditingController level2CarbonController;
+  // late TextEditingController level3ConsumptionController;
+  // late TextEditingController level3UnitController;
+  // late TextEditingController level3CarbonController;
 
   @override
   void initState() {
@@ -57,36 +59,36 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
       });
     nameController = TextEditingController()
       ..addListener(() => setState(() => heater.name = nameController.text));
-    ipAddressController = TextEditingController()
-      ..addListener(
-          () => setState(() => heater.ipAddress = ipAddressController.text));
-    level1ConsumptionController = TextEditingController()
-      ..addListener(() => setState(() => heater.level1ConsumptionAmount =
-          double.tryParse(level1ConsumptionController.text)));
+    // ipAddressController = TextEditingController()
+    //   ..addListener(
+    //       () => setState(() => heater.ipAddress = ipAddressController.text));
+    // level1ConsumptionController = TextEditingController()
+    //   ..addListener(() => setState(() => heater.level1ConsumptionAmount =
+    //       double.tryParse(level1ConsumptionController.text)));
     // level1UnitController = TextEditingController()
     //   ..addListener(() => setState(
     //       () => heater.level1ConsumptionUnit = level1UnitController.text));
-    level1CarbonController = TextEditingController()
-      ..addListener(() => setState(() =>
-          heater.level1Carbon = double.tryParse(level1CarbonController.text)));
-    level2ConsumptionController = TextEditingController()
-      ..addListener(() => setState(() => heater.level2ConsumptionAmount =
-          double.tryParse(level2ConsumptionController.text)));
+    // level1CarbonController = TextEditingController()
+    //   ..addListener(() => setState(() =>
+    //       heater.level1Carbon = double.tryParse(level1CarbonController.text)));
+    // level2ConsumptionController = TextEditingController()
+    //   ..addListener(() => setState(() => heater.level2ConsumptionAmount =
+    //       double.tryParse(level2ConsumptionController.text)));
     // level2UnitController = TextEditingController()
     //   ..addListener(() => setState(
     //       () => heater.level2ConsumptionUnit = level2UnitController.text));
-    level2CarbonController = TextEditingController()
-      ..addListener(() => setState(() =>
-          heater.level2Carbon = double.tryParse(level2CarbonController.text)));
-    level3ConsumptionController = TextEditingController()
-      ..addListener(() => setState(() => heater.level3ConsumptionAmount =
-          double.tryParse(level3ConsumptionController.text)));
+    // level2CarbonController = TextEditingController()
+    //   ..addListener(() => setState(() =>
+    //       heater.level2Carbon = double.tryParse(level2CarbonController.text)));
+    // level3ConsumptionController = TextEditingController()
+    //   ..addListener(() => setState(() => heater.level3ConsumptionAmount =
+    //       double.tryParse(level3ConsumptionController.text)));
     // level3UnitController = TextEditingController()
     //   ..addListener(() => setState(
     //       () => heater.level3ConsumptionUnit = level3UnitController.text));
-    level3CarbonController = TextEditingController()
-      ..addListener(() => setState(() =>
-          heater.level3Carbon = double.tryParse(level3CarbonController.text)));
+    // level3CarbonController = TextEditingController()
+    //   ..addListener(() => setState(() =>
+    //       heater.level3Carbon = double.tryParse(level3CarbonController.text)));
   }
 
   @override
@@ -180,10 +182,15 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       //MARK: LEVEL 1 OUTPUT
-                                      const Expanded(
+                                      Expanded(
                                         child: FormItemComponent(
                                           label: 'On/Level 1 Output Channel',
-                                          child: ChannelDropdownWidget(),
+                                          child: ChannelDropdownWidget(
+                                            group: GpioGroup.outPin,
+                                            onChanged: (p0) {
+                                              print('onChanged $p0');
+                                            },
+                                          ),
                                         ),
 
                                         /* FormItemComponent(
@@ -385,7 +392,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
-                            controller: level1ConsumptionController,
+                            // controller: level1ConsumptionController,
                             decoration: InputDecoration(
                               border: UiDimens.formBorder,
                               hintText: '0.0',
@@ -395,7 +402,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
-                            controller: level1UnitController,
+                            // controller: level1UnitController,
                             decoration: InputDecoration(
                               border: UiDimens.formBorder,
                               hintText: heater.type == HeaterDeviceType.electric
@@ -407,7 +414,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
-                            controller: level1CarbonController,
+                            // controller: level1CarbonController,
                             decoration: InputDecoration(
                               border: UiDimens.formBorder,
                               hintText: 'kt',
@@ -429,7 +436,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: level2ConsumptionController,
+                              // controller: level2ConsumptionController,
                               decoration: InputDecoration(
                                 border: UiDimens.formBorder,
                                 hintText: '0.0',
@@ -439,7 +446,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: level2UnitController,
+                              // controller: level2UnitController,
                               decoration: InputDecoration(
                                 border: UiDimens.formBorder,
                                 hintText:
@@ -452,7 +459,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: level2CarbonController,
+                              // controller: level2CarbonController,
                               decoration: InputDecoration(
                                 border: UiDimens.formBorder,
                                 hintText: 'kt',
@@ -472,7 +479,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: level3ConsumptionController,
+                              // controller: level3ConsumptionController,
                               decoration: InputDecoration(
                                 border: UiDimens.formBorder,
                                 hintText: '0.0',
@@ -482,7 +489,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: level3UnitController,
+                              // controller: level3UnitController,
                               decoration: InputDecoration(
                                 border: UiDimens.formBorder,
                                 hintText:
@@ -495,7 +502,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: level3CarbonController,
+                              // controller: level3CarbonController,
                               decoration: InputDecoration(
                                 border: UiDimens.formBorder,
                                 hintText: 'kt',
