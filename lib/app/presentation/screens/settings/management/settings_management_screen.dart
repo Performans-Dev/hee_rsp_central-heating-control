@@ -1,5 +1,8 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,6 +59,23 @@ class SettingsManagementScreen extends StatelessWidget {
                 NavController.toSettingsSensorList();
               },
             ),
+            const SizedBox(height: 8),
+            GetBuilder<ChannelController>(builder: (cc) {
+              return ListTile(
+                title: const Text('Alarm'),
+                subtitle: Text('Configure alarm inputs'.tr),
+                trailing: SizedBox(
+                  width: 100,
+                  child: ChannelDropdownWidget(
+                    group: GpioGroup.inPin,
+                    value: null, //TODO: read from db via data controller
+                    onChanged: (value) {
+                      //TODO: save to db via data controller
+                    },
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),

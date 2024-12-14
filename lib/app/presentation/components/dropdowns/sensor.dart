@@ -11,27 +11,34 @@ class SensorDropdownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(builder: (dc) {
-      final sensor = dc.sensorList.firstWhere(
+      final sensor = dc.sensorList.firstWhereOrNull(
           (e) => e.device == channel.deviceId && e.index == channel.pinIndex);
 
-      final zone = dc.zoneList.firstWhereOrNull((e) => e.id == sensor.zone);
+      final zone = dc.zoneList.firstWhereOrNull((e) => e.id == sensor?.zone);
 
-      return Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(channel.name),
-            Text('${channel.deviceId} ${channel.pinIndex}'),
-            ZoneDropdownWidget(
-              value: zone,
-              onChanged: (value) {
-                final updatedSensor = sensor.copyWith(zone: value?.id);
-                dc.updateSensor(updatedSensor);
-              },
-            ),
-          ],
-        ),
-      );
+      return sensor == null
+          ? Card(
+              child: Center(
+                child: Text(
+                    'Sensor ${channel.name} not found\n\n${channel.deviceId} ${channel.pinIndex}'),
+              ),
+            )
+          : Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(channel.name),
+                  Text('${channel.deviceId} ${channel.pinIndex}'),
+                  ZoneDropdownWidget(
+                    value: zone,
+                    onChanged: (value) {
+                      final updatedSensor = sensor.copyWith(zone: value?.id);
+                      dc.updateSensor(updatedSensor);
+                    },
+                  ),
+                ],
+              ),
+            );
     });
   }
 }
