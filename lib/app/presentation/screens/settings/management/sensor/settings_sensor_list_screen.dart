@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/dropdowns/sensor.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,39 +24,28 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
       title: "Sensors",
       body: GetBuilder<ChannelController>(
         builder: (cc) {
-          return GetBuilder<DataController>(
-            builder: (dc) {
-              final onboardAnalogInputs = cc.inputChannels
-                  .where((e) => e.type == PinType.onboardAnalogInput)
-                  .toList();
-              final uartAnalogInputs = cc.inputChannels
-                  .where((e) => e.type == PinType.uartAnalogInput)
-                  .toList();
-              return Column(
-                spacing: 8,
-                children: [
-                  onboardAnalogInputs.isEmpty
-                      ? const Text('No onboard analog inputs')
-                      : Row(
-                          spacing: 8,
-                          children: onboardAnalogInputs
-                              .map((e) => Text(e.name))
-                              .toList(),
-                        ),
-                  const Divider(),
-                  uartAnalogInputs.isEmpty
-                      ? const Text('No external analog inputs')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: uartAnalogInputs
-                              .map((e) => Text(e.name))
-                              .toList(),
-                        ),
-                ],
-              );
-            },
-          );
+          final onboardAnalogInputs = cc.inputChannels
+              .where((e) => e.type == PinType.onboardAnalogInput)
+              .toList();
+          final uartAnalogInputs = cc.inputChannels
+              .where((e) => e.type == PinType.uartAnalogInput)
+              .toList();
+          final data = [...onboardAnalogInputs, ...uartAnalogInputs];
+
+          return data.isEmpty
+              ? Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(50),
+                    child: const Text('No sensors'),
+                  ),
+                )
+              : Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: data
+                      .map((e) => SensorDropdownWidget(channel: e))
+                      .toList(),
+                );
         },
       ),
     );
