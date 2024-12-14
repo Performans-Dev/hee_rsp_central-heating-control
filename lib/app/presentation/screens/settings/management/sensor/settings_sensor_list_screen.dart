@@ -1,4 +1,5 @@
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 
@@ -20,28 +21,43 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
     return AppScaffold(
       selectedIndex: 3,
       title: "Sensors",
-      body: GetBuilder<DataController>(builder: (dc) {
-        return dc.sensorList.isEmpty
-            ? const Center(child: Text("No sensors found"))
-            : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Wrap(
-                  spacing: 20.0,
-                  runSpacing: 12.0,
-                  children: dc.sensorList
-                      .map((sensor) => sensorCard(
-                            sensor,
-                            (value) {
-                              if (value != null) {
-                                sensor.zone = int.parse(value);
-                                dc.updateSensor(sensor);
-                              }
-                            },
-                          ))
-                      .toList(),
-                ),
+      body: GetBuilder<ChannelController>(
+        builder: (cc) {
+          return GetBuilder<DataController>(
+            builder: (dc) {
+              final onboardAnalogInputs = cc.inputChannels
+                  .where((e) => e.type == PinType.onboardAnalogInput)
+                  .toList();
+              final uartAnalogInputs = cc.inputChannels
+                  .where((e) => e.type == PinType.uartAnalogInput)
+                  .toList();
+              return Column(
+                spacing: 8,
+                children: [
+                  onboardAnalogInputs.isEmpty
+                      ? const Text('No onboard analog inputs')
+                      : Row(
+                          spacing: 8,
+                          children: onboardAnalogInputs
+                              .map((e) => Text(e.name))
+                              .toList(),
+                        ),
+                  const Divider(),
+                  uartAnalogInputs.isEmpty
+                      ? const Text('No external analog inputs')
+                      : Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: uartAnalogInputs
+                              .map((e) => Text(e.name))
+                              .toList(),
+                        ),
+                ],
               );
-      }),
+            },
+          );
+        },
+      ),
     );
   }
 
