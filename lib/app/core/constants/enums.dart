@@ -102,7 +102,7 @@ enum HeaterState {
 }
 
 enum ErrorChannelType {
-  nA,
+  nC,
   nO,
 }
 

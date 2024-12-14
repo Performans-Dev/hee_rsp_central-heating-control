@@ -194,22 +194,6 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                             value: heater.outputChannel1,
                                           ),
                                         ),
-
-                                        /* FormItemComponent(
-                                          label: 'On/Level1 Output Channel',
-                                          child: ChannelDropdownWidget(
-                                            group: GpioGroup.outPin,
-                                            value: heater.outputChannel1,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                heater.outputChannel1 =
-                                                    (value?.id ?? '').isEmpty
-                                                        ? null
-                                                        : value;
-                                              });
-                                            },
-                                          ),
-                                        ), */
                                       ),
 
                                       //MARK: LEVEL 2 OUTPUT
@@ -223,23 +207,18 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                           heater.levelType ==
                                               HeaterDeviceLevel.twoLevels)
                                         Expanded(
-                                          child:
-                                              Container(color: Colors.orange),
-                                          /* FormItemComponent(
-                                            label: 'Level2 Output Channel',
+                                          child: FormItemComponent(
+                                            label:
+                                                'High/Level 2 Output Channel',
                                             child: ChannelDropdownWidget(
                                               group: GpioGroup.outPin,
-                                              value: heater.level2Relay,
                                               onChanged: (value) {
-                                                setState(() {
-                                                  heater.level2Relay =
-                                                      (value?.id ?? '').isEmpty
-                                                          ? null
-                                                          : value;
-                                                });
+                                                setState(() => heater
+                                                    .outputChannel2 = value);
                                               },
+                                              value: heater.outputChannel2,
                                             ),
-                                          ), */
+                                          ),
                                         ),
 
                                       //MARK: LEVEL 3 OUTPUT
@@ -249,23 +228,17 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       if (heater.levelType ==
                                           HeaterDeviceLevel.threeLevels)
                                         Expanded(
-                                          child:
-                                              Container(color: Colors.orange),
-                                          /*  FormItemComponent(
-                                            label: 'Level3 Output Channel',
+                                          child: FormItemComponent(
+                                            label: 'Max/Level 3 Output Channel',
                                             child: ChannelDropdownWidget(
                                               group: GpioGroup.outPin,
-                                              value: heater.level3Relay,
                                               onChanged: (value) {
-                                                setState(() {
-                                                  heater.level3Relay =
-                                                      (value?.id ?? '').isEmpty
-                                                          ? null
-                                                          : value;
-                                                });
+                                                setState(() => heater
+                                                    .outputChannel3 = value);
                                               },
+                                              value: heater.outputChannel3,
                                             ),
-                                          ), */
+                                          ),
                                         ),
                                     ],
                                   ),
@@ -276,22 +249,17 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       //MARK: INPUT
                                       Expanded(
                                         flex: 3,
-                                        child: Container(color: Colors.orange),
-                                        /*  FormItemComponent(
-                                          label: 'Please Select Input Channel',
+                                        child: FormItemComponent(
+                                          label: 'Error Input Channel',
                                           child: ChannelDropdownWidget(
                                             group: GpioGroup.inPin,
-                                            value: heater.errorChannel,
                                             onChanged: (value) {
-                                              setState(() {
-                                                heater.errorChannel =
-                                                    (value?.id ?? '').isEmpty
-                                                        ? null
-                                                        : value;
-                                              });
+                                              setState(() =>
+                                                  heater.errorChannel = value);
                                             },
+                                            value: heater.errorChannel,
                                           ),
-                                        ), */
+                                        ),
                                       ),
                                       const SizedBox(width: 8),
 
@@ -307,7 +275,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                               setState(() {
                                                 heater.errorChannelType =
                                                     value ??
-                                                        ErrorChannelType.nA;
+                                                        ErrorChannelType.nC;
                                               });
                                             },
                                           ),
