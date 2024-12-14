@@ -450,19 +450,13 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                   ),
                 ),
               ),
-              Container(
-                height: 50,
-                color: Colors.transparent,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    cancelButton,
-                    const SizedBox(width: 12),
-                    saveButton,
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 12,
+                children: [
+                  cancelButton,
+                  saveButton,
+                ],
               ),
             ],
           ),
@@ -472,8 +466,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
   }
 
   Widget get saveButton => ActionButton(
-        label: 'Save'.tr,
-        onTap: heater.name.isNotEmpty &&
+        labelText: 'Save'.tr,
+        onPressed: heater.name.isNotEmpty &&
                 heater.type != HeaterDeviceType.none &&
                 heater.connectionType != HeaterDeviceConnectionType.none
             ? () async {
@@ -498,12 +492,12 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 }
               }
             : null,
-        suffixIcon: const Icon(Icons.save_rounded),
+        suffixIcon: const Icon(Icons.check),
       );
 
   Widget get cancelButton => ActionButton(
-        label: 'Cancel'.tr,
-        onTap: () => Get.back(),
-        prefixIcon: const Icon(Icons.cancel_rounded),
+        labelText: 'Cancel'.tr,
+        onPressed: () => Get.back(),
+        prefixIcon: const Icon(Icons.chevron_left),
       );
 }

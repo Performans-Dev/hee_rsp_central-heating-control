@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
-  final String label;
-  final GestureTapCallback? onTap;
+  final String labelText;
+  final GestureTapCallback? onPressed;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   const ActionButton({
     super.key,
-    required this.label,
-    this.onTap,
+    required this.labelText,
+    this.onPressed,
     this.suffixIcon,
     this.prefixIcon,
   });
@@ -16,23 +16,18 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-        bottom: 20,
-        top: 4,
-      ),
+      padding: const EdgeInsets.all(16),
       alignment: Alignment.centerRight,
       child: SizedBox(
         height: 50,
         child: OutlinedButton(
-          onPressed: onTap,
+          onPressed: onPressed,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             spacing: 8,
             children: [
               prefixIcon ?? Container(),
-              Text(label),
+              Text(labelText),
               suffixIcon ?? Container(),
             ],
           ),
