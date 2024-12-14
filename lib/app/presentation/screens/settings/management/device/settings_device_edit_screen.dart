@@ -1,9 +1,11 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/connection_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/error_channel_type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/level_type.dart';
@@ -31,9 +33,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
   late TextEditingController l1ConsumptionController;
   late TextEditingController l2ConsumptionController;
   late TextEditingController l3ConsumptionController;
-  late TextEditingController l1UnitController;
-  late TextEditingController l2UnitController;
-  late TextEditingController l3UnitController;
+  late TextEditingController unitController;
   late TextEditingController l1CarbonController;
   late TextEditingController l2CarbonController;
   late TextEditingController l3CarbonController;
@@ -56,12 +56,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
         text: (heater.level2ConsumptionAmount ?? 0).toString());
     l3ConsumptionController = TextEditingController(
         text: (heater.level3ConsumptionAmount ?? 0).toString());
-    // l1UnitController =
-    //     TextEditingController(text: heater.level1ConsumptionUnit ?? '');
-    // l2UnitController =
-    //     TextEditingController(text: heater.level2ConsumptionUnit ?? '');
-    // l3UnitController =
-    //     TextEditingController(text: heater.level3ConsumptionUnit ?? '');
+    unitController = TextEditingController(text: heater.consumptionUnit ?? '');
     l1CarbonController =
         TextEditingController(text: (heater.level1Carbon ?? 0).toString());
     l2CarbonController =
@@ -75,470 +70,362 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
-      builder: (dc) => AppScaffold(
-        title: 'Edit Heater',
-        selectedIndex: 3,
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
+      builder: (dc) {
+        final viewName = FormItemComponent(
+          label: 'Name',
+          child: TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              border: UiDimens.formBorder,
+            ),
+            onTap: () async {
+              final result = await OnScreenKeyboard.show(
+                context: context,
+                initialValue: nameController.text,
+                label: 'Heater Name',
+                hintText: 'Type a name for your heater',
+                maxLength: 16,
+                minLength: 1,
+                type: OSKInputType.name,
+              );
+              if (result != null) {
+                nameController.text = result;
+                setState(() {
+                  heater.name = result;
+                });
+              }
+            },
+          ),
+        );
+
+        final viewColor = FormItemComponent(
+          label: 'Display Color',
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(),
+                color: Theme.of(context)
+                    .inputDecorationTheme
+                    .border
+                    ?.borderSide
+                    .color,
+                borderRadius: UiDimens.formRadius),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.all(4),
+            child: ColorPickerWidget(
+              onSelected: (v) => setState(() => heater.color = v),
+              selectedValue: heater.color,
+            ),
+          ),
+        );
+
+        final viewHeaterType = FormItemComponent(
+          label: 'Type',
+          child: TypeDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.type = value ?? HeaterDeviceType.none;
+              });
+            },
+            value: heater.type,
+          ),
+        );
+
+        final viewConnectionType = FormItemComponent(
+          label: 'Connection',
+          child: ConnectionTypeDropdownWidget(
+            showNoneOption: false,
+            onChanged: (value) {
+              setState(() {
+                heater.connectionType =
+                    value ?? HeaterDeviceConnectionType.none;
+              });
+            },
+            value: heater.connectionType,
+          ),
+        );
+
+        final viewZone = FormItemComponent(
+          label: 'Zone',
+          child: ZoneDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.zoneId = value?.id;
+              });
+            },
+            value: dc.zoneList.firstWhereOrNull((e) => e.id == heater.zoneId),
+          ),
+        );
+
+        final viewLevel = FormItemComponent(
+          label: 'Level',
+          child: LevelTypeDropdownWidget(
+            showNoneOption: false,
+            value: heater.levelType,
+            onChanged: (value) {
+              setState(() {
+                heater.levelType = value!;
+              });
+            },
+          ),
+        );
+
+        final viewIpAddress = FormItemComponent(
+          label: 'Ip Addres',
+          child: TextInputWidget(
+            controller: ipAddressController,
+            labelText: "Ip Address",
+          ),
+        );
+
+        final viewLevel1Channel = FormItemComponent(
+          label: 'Level 1 Channel',
+          child: ChannelDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.outputChannel1 = value;
+              });
+            },
+            value: heater.outputChannel1,
+            group: GpioGroup.outPin,
+          ),
+        );
+
+        final viewLevel2Channel = FormItemComponent(
+          label: 'Level 2 Channel',
+          child: ChannelDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.outputChannel2 = value;
+              });
+            },
+            value: heater.outputChannel2,
+            group: GpioGroup.outPin,
+          ),
+        );
+
+        final viewLevel3Channel = FormItemComponent(
+          label: 'Level 3 Channel',
+          child: ChannelDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.outputChannel3 = value;
+              });
+            },
+            value: heater.outputChannel3,
+            group: GpioGroup.outPin,
+          ),
+        );
+
+        final viewErrorChannel = FormItemComponent(
+          label: 'Error Channel',
+          child: ChannelDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.errorChannel = value;
+              });
+            },
+            value: heater.errorChannel,
+            group: GpioGroup.inPin,
+          ),
+        );
+
+        final viewErrorType = FormItemComponent(
+          label: 'Error Channel Type',
+          child: ErrorChannelTypeDropdownWidget(
+            onChanged: (value) {
+              setState(() {
+                heater.errorChannelType = value;
+              });
+            },
+            value: heater.errorChannelType ?? ErrorChannelType.nO,
+          ),
+        );
+
+        final viewError = Row(
+          spacing: 8,
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //MARK: NAME
-                      FormItemComponent(
-                        label: 'Name',
-                        child: TextField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            border: UiDimens.formBorder,
-                          ),
-                          onTap: () async {
-                            final result = await OnScreenKeyboard.show(
-                              context: context,
-                              initialValue: nameController.text,
-                              label: 'Heater Name',
-                              hintText: 'Type a name for your heater',
-                              maxLength: 16,
-                              minLength: 1,
-                              type: OSKInputType.name,
-                            );
-                            if (result != null) {
-                              nameController.text = result;
-                              setState(() {
-                                heater.name = result;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 12),
+            Expanded(child: viewErrorChannel),
+            Expanded(child: viewErrorType),
+          ],
+        );
 
-                      Row(
-                        children: [
-                          //MARK: TYPE-CONNECTION-ZONE
+        final viewLevel1Consumption = FormItemComponent(
+          label: 'Consumption L1',
+          child: TextField(
+            controller: l1ConsumptionController,
+            decoration: InputDecoration(
+              border: UiDimens.formBorder,
+            ),
+            onTap: () async {
+              final result = await OnScreenKeyboard.show(
+                context: context,
+                initialValue: l1ConsumptionController.text,
+                label: 'Consumption',
+                type: OSKInputType.number,
+              );
+              if (result != null) {
+                l1ConsumptionController.text = result;
+                setState(() {
+                  heater.level1ConsumptionAmount = double.tryParse(result);
+                });
+              }
+            },
+          ),
+        );
 
-                          //#region TYPE
-                          Expanded(
-                            child: FormItemComponent(
-                              label: 'Type',
-                              child: TypeDropdownWidget(
-                                onChanged: (value) {
-                                  setState(() {
-                                    heater.type =
-                                        value ?? HeaterDeviceType.none;
-                                  });
-                                },
-                                value: heater.type,
-                              ),
-                            ),
-                          ),
-                          //#endregion
-                          const SizedBox(width: 8),
+        final viewLevel2Consumption = FormItemComponent(
+          label: 'Consumption L2',
+          child: TextField(
+            controller: l2ConsumptionController,
+            decoration: InputDecoration(
+              border: UiDimens.formBorder,
+            ),
+            onTap: () async {
+              final result = await OnScreenKeyboard.show(
+                context: context,
+                initialValue: l2ConsumptionController.text,
+                label: 'Consumption',
+                type: OSKInputType.number,
+              );
+              if (result != null) {
+                l2ConsumptionController.text = result;
+                setState(() {
+                  heater.level2ConsumptionAmount = double.tryParse(result);
+                });
+              }
+            },
+          ),
+        );
 
-                          //#region CONNECTION
-                          Expanded(
-                            child: FormItemComponent(
-                              label: 'Connection',
-                              child: ConnectionTypeDropdownWidget(
-                                showNoneOption: false,
-                                onChanged: (value) {
-                                  setState(() {
-                                    heater.connectionType = value ??
-                                        HeaterDeviceConnectionType.none;
-                                  });
-                                },
-                                value: heater.connectionType,
-                              ),
-                            ),
-                          ),
-                          //#endregion
-                          const SizedBox(width: 8),
-                          //#region ZONE
-                          Expanded(
-                            child: FormItemComponent(
-                              label: 'Zone',
-                              child: ZoneDropdownWidget(
-                                onChanged: (value) {
-                                  setState(() {
-                                    heater.zoneId = value?.id;
-                                  });
-                                },
-                                value: dc.zoneList.firstWhereOrNull(
-                                    (e) => e.id == heater.zoneId),
-                              ),
-                            ),
-                          ),
-                          //#endregion
-                          const SizedBox(width: 8),
+        final viewLevel3Consumption = FormItemComponent(
+          label: 'Consumption L3',
+          child: TextField(
+            controller: l3ConsumptionController,
+            decoration: InputDecoration(
+              border: UiDimens.formBorder,
+            ),
+            onTap: () async {
+              final result = await OnScreenKeyboard.show(
+                context: context,
+                initialValue: l3ConsumptionController.text,
+                label: 'Consumption',
+                type: OSKInputType.number,
+              );
+              if (result != null) {
+                l3ConsumptionController.text = result;
+                setState(() {
+                  heater.level3ConsumptionAmount = double.tryParse(result);
+                });
+              }
+            },
+          ),
+        );
 
-                          //#region LEVEL
+        final viewUnit = FormItemComponent(
+          label: 'Unit',
+          child: TextField(
+            controller: unitController,
+            decoration: InputDecoration(
+              border: UiDimens.formBorder,
+            ),
+            onTap: () async {
+              final result = await OnScreenKeyboard.show(
+                context: context,
+                initialValue: unitController.text,
+                label: 'Unit',
+                type: OSKInputType.text,
+              );
+              if (result != null) {
+                unitController.text = result;
+                setState(() {
+                  heater.consumptionUnit = result;
+                });
+              }
+            },
+          ),
+        );
 
-                          Expanded(
-                            child: FormItemComponent(
-                              label: 'Level',
-                              child: LevelTypeDropdownWidget(
-                                showNoneOption: false,
-                                value: heater.levelType,
-                                onChanged: (value) {
-                                  setState(() {
-                                    heater.levelType = value!;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                          //#endregion
-                        ],
-                      ),
-                      const SizedBox(height: 12),
+        final List<Widget> viewChannels = [
+          ...(heater.levelType == HeaterDeviceLevel.onOff
+              ? [viewLevel1Channel, viewError]
+              : heater.levelType == HeaterDeviceLevel.twoLevels
+                  ? [
+                      viewLevel1Channel,
+                      viewLevel2Channel,
+                      viewError,
+                    ]
+                  : [
+                      viewLevel1Channel,
+                      viewLevel2Channel,
+                      viewLevel3Channel,
+                      viewError,
+                    ]),
+          ...(heater.levelType == HeaterDeviceLevel.onOff
+              ? [viewLevel1Consumption]
+              : heater.levelType == HeaterDeviceLevel.twoLevels
+                  ? [
+                      viewLevel1Consumption,
+                      viewLevel2Consumption,
+                    ]
+                  : [
+                      viewLevel1Consumption,
+                      viewLevel2Consumption,
+                      viewLevel3Consumption,
+                    ]),
+          viewUnit,
+        ];
 
-                      //MARK: IP
-                      if (heater.connectionType ==
-                          HeaterDeviceConnectionType.ethernet)
-                        //#region IP ADDRESS
-                        FormItemComponent(
-                          label: 'Ip Addres',
-                          child: TextInputWidget(
-                            controller: ipAddressController,
-                            labelText: "Ip Address",
-                          ),
-                        ),
-                      //#endregion
-                      //MARK: RELAY
-                      if (heater.connectionType ==
-                          HeaterDeviceConnectionType.relay)
-                        heater.levelType == HeaterDeviceLevel.onOff
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [level1, errorChanel],
-                              )
-                            : heater.levelType == HeaterDeviceLevel.twoLevels
-                                ? Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [level1, level2, errorChanel],
-                                  )
-                                : Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      level1,
-                                      level2,
-                                      level3,
-                                      errorChanel
-                                    ],
-                                  ),
-                      const SizedBox(height: 12),
-
-                      FormItemComponent(
-                        label: 'Display Color',
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(),
-                              color: Theme.of(context)
-                                  .inputDecorationTheme
-                                  .border
-                                  ?.borderSide
-                                  .color,
-                              borderRadius: UiDimens.formRadius),
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.all(4),
-                          child: ColorPickerWidget(
-                            onSelected: (v) => setState(() => heater.color = v),
-                            selectedValue: heater.color,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
+        return AppScaffold(
+          title: 'Edit Heater',
+          selectedIndex: 3,
+          body: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        viewName,
+                        viewColor,
+                        viewHeaterType,
+                        viewConnectionType,
+                        viewZone,
+                        viewLevel,
+                        ...(heater.connectionType ==
+                                HeaterDeviceConnectionType.relay
+                            ? viewChannels
+                            : [viewIpAddress]),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              height: 50,
-              color: Colors.transparent,
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  cancelButton,
-                  const SizedBox(width: 12),
-                  saveButton,
-                ],
+              Container(
+                height: 50,
+                color: Colors.transparent,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    cancelButton,
+                    const SizedBox(width: 12),
+                    saveButton,
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget get level1 => Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Container(color: Colors.orange),
-            /* FormItemComponent(
-              label: 'Level 1 Relay',
-              child: ChannelDropdownWidget(
-                onChanged: (value) {
-                  setState(() {
-                    heater.outputChannel1 =
-                        (value?.id ?? '').isEmpty ? null : value;
-                  });
-                },
-                value: heater.outputChannel1,
-                group: GpioGroup.outPin,
-              ),
-            ), */
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 3,
-            child: FormItemComponent(
-              label: 'Consumption',
-              child: TextField(
-                controller: l1ConsumptionController,
-                decoration: InputDecoration(
-                  border: UiDimens.formBorder,
-                ),
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: l1ConsumptionController.text,
-                    label: 'Consumption',
-                    type: OSKInputType.number,
-                  );
-                  if (result != null) {
-                    l1ConsumptionController.text = result;
-                    setState(() {
-                      heater.level1ConsumptionAmount = double.tryParse(result);
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 1,
-            child: FormItemComponent(
-              label: 'Unit',
-              child: TextField(
-                controller: l1UnitController,
-                decoration: InputDecoration(
-                  border: UiDimens.formBorder,
-                ),
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: l1UnitController.text,
-                    label: 'Unit',
-                    type: OSKInputType.text,
-                  );
-                  if (result != null) {
-                    l1UnitController.text = result;
-                    setState(() {
-                      // heater.level1ConsumptionUnit = result;
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-        ],
-      );
-
-  Widget get level2 => Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Container(color: Colors.orange),
-            /* FormItemComponent(
-              label: 'Level 2 Relay',
-              child: ChannelDropdownWidget(
-                onChanged: (value) {
-                  setState(() {
-                    heater.level2Relay =
-                        (value?.id ?? '').isEmpty ? null : value;
-                  });
-                },
-                value: heater.level2Relay,
-                group: GpioGroup.outPin,
-              ),
-            ), */
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 3,
-            child: FormItemComponent(
-              label: 'Consumption',
-              child: TextField(
-                controller: l2ConsumptionController,
-                decoration: InputDecoration(border: UiDimens.formBorder),
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: l2ConsumptionController.text,
-                    label: 'Consumption',
-                    type: OSKInputType.number,
-                  );
-                  if (result != null) {
-                    l2ConsumptionController.text = result;
-                    setState(() {
-                      heater.level2ConsumptionAmount = double.tryParse(result);
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 1,
-            child: FormItemComponent(
-              label: 'Unit',
-              child: TextField(
-                controller: l2UnitController,
-                decoration: InputDecoration(border: UiDimens.formBorder),
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: l2UnitController.text,
-                    label: 'Unit',
-                    type: OSKInputType.text,
-                  );
-                  if (result != null) {
-                    l2UnitController.text = result;
-                    setState(() {
-                      // heater.level2ConsumptionUnit = result;
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-        ],
-      );
-  Widget get level3 => Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Container(color: Colors.orange),
-            /*  FormItemComponent(
-              label: 'Level 3 Relay',
-              child: ChannelDropdownWidget(
-                onChanged: (value) {
-                  setState(() {
-                    heater.level3Relay =
-                        (value?.id ?? '').isEmpty ? null : value;
-                  });
-                },
-                value: heater.level3Relay,
-                group: GpioGroup.outPin,
-              ),
-            ), */
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 3,
-            child: FormItemComponent(
-              label: 'Consumption',
-              child: TextField(
-                controller: l3ConsumptionController,
-                decoration: InputDecoration(border: UiDimens.formBorder),
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: l3ConsumptionController.text,
-                    label: 'Consumption',
-                    type: OSKInputType.number,
-                  );
-                  if (result != null) {
-                    l3ConsumptionController.text = result;
-                    setState(() {
-                      heater.level3ConsumptionAmount = double.tryParse(result);
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 1,
-            child: FormItemComponent(
-              label: 'Unit',
-              child: TextField(
-                controller: l3UnitController,
-                decoration: InputDecoration(border: UiDimens.formBorder),
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: l3UnitController.text,
-                    label: 'Unit',
-                    type: OSKInputType.text,
-                  );
-                  if (result != null) {
-                    l3UnitController.text = result;
-                    setState(() {
-                      // heater.level3ConsumptionUnit = result;
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-        ],
-      );
-  Widget get errorChanel => Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Container(color: Colors.orange),
-            /* FormItemComponent(
-                label: 'Error Channel',
-                child: ChannelDropdownWidget(
-                  onChanged: (value) {
-                    setState(() {
-                      heater.errorChannel =
-                          (value?.id ?? '').isEmpty ? null : value;
-                    });
-                  },
-                  value: heater.errorChannel,
-                  group: GpioGroup.inPin,
-                )), */
-          ),
-          Expanded(
-            flex: 3,
-            child: FormItemComponent(
-              label: 'Error Channel Type',
-              child: ErrorChannelTypeDropdownWidget(
-                onChanged: (value) {
-                  setState(() {
-                    heater.errorChannelType = value;
-                  });
-                },
-                value: heater.errorChannelType ?? ErrorChannelType.nO,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(),
-          ),
-        ],
-      );
   Widget get saveButton => ElevatedButton(
         onPressed: heater.name.isNotEmpty &&
                 heater.type != HeaterDeviceType.none &&
@@ -546,11 +433,22 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             ? () async {
                 final result = await dataController.updateHeater(heater);
                 if (result) {
-                  //TODO: snackbar success
-
+                  if (mounted) {
+                    DialogUtils.snackbar(
+                      context: context,
+                      message: 'Changes saved',
+                      type: SnackbarType.success,
+                    );
+                  }
                   Get.back();
                 } else {
-                  //TODO: snackbar error
+                  if (mounted) {
+                    DialogUtils.snackbar(
+                      context: context,
+                      message: 'Could not save changes',
+                      type: SnackbarType.error,
+                    );
+                  }
                 }
               }
             : null,
