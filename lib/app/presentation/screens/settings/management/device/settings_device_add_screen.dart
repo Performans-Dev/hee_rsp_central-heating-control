@@ -159,6 +159,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                 WizardPageContentWidget(
                   title: 'Select Channels',
                   children: [
+                    Text(heater.toJson()),
                     heater.levelType == HeaterDeviceLevel.none
                         ? Center(
                             child: ElevatedButton(
@@ -179,6 +180,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
+                                    spacing: 8,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       //MARK: LEVEL 1 OUTPUT
@@ -201,11 +203,6 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                               HeaterDeviceLevel.threeLevels ||
                                           heater.levelType ==
                                               HeaterDeviceLevel.twoLevels)
-                                        const SizedBox(width: 8),
-                                      if (heater.levelType ==
-                                              HeaterDeviceLevel.threeLevels ||
-                                          heater.levelType ==
-                                              HeaterDeviceLevel.twoLevels)
                                         Expanded(
                                           child: FormItemComponent(
                                             label:
@@ -222,9 +219,6 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                         ),
 
                                       //MARK: LEVEL 3 OUTPUT
-                                      if (heater.levelType ==
-                                          HeaterDeviceLevel.threeLevels)
-                                        const SizedBox(width: 8),
                                       if (heater.levelType ==
                                           HeaterDeviceLevel.threeLevels)
                                         Expanded(
@@ -245,6 +239,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                   const Divider(),
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
+                                    spacing: 8,
                                     children: [
                                       //MARK: INPUT
                                       Expanded(
@@ -261,7 +256,6 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
 
                                       //MARK: INPUT Type
                                       Expanded(
