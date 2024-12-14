@@ -643,7 +643,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                 onPageChanged: (p) {},
               ),
               if (currentPage > 0) previousButton,
-              currentPage > (pages.length - 1)
+              currentPage > (pages.length - 2)
                   ? saveButton(context)
                   : nextButton,
             ],
