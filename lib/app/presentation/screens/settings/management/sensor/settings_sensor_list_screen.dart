@@ -39,12 +39,15 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
                     child: const Text('No sensors'),
                   ),
                 )
-              : Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: data
-                      .map((e) => SensorDropdownWidget(channel: e))
-                      .toList(),
+              : GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                  ),
+                  itemCount: data.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => SensorDropdownWidget(
+                    channel: data[index],
+                  ),
                 );
         },
       ),
