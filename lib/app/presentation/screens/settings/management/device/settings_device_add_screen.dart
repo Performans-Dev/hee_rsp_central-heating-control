@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_local_variable
 
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
@@ -94,509 +94,494 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
-      builder: (dc) => AppScaffold(
-        title: 'Add a Heater ${currentPage + 1} / 7',
-        selectedIndex: 3,
-        body: Stack(
+      builder: (dc) {
+        final Widget viewSelectType = //MARK: HEATER TYPE
+            WizardPageContentWidget(
+          title: 'Select Type',
           children: [
-            PageView(
-              controller: pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                //MARK: HEATER TYPE
-                WizardPageContentWidget(
-                  title: 'Select Type',
-                  children: [
-                    FormItemComponent(
-                      label: 'What is the type of your Heater',
-                      child: TypeDropdownWidget(
-                        onChanged: (value) {
-                          setState(() {
-                            heater.type = value ?? HeaterDeviceType.none;
-                          });
-                        },
-                        value: heater.type,
-                      ),
+            FormItemComponent(
+              label: 'What is the type of your Heater',
+              child: TypeDropdownWidget(
+                onChanged: (value) {
+                  setState(() {
+                    heater.type = value ?? HeaterDeviceType.none;
+                  });
+                },
+                value: heater.type,
+              ),
+            ),
+          ],
+        );
+
+        final Widget viewSelectConnectionType = //MARK: CONNECTION TYPE
+            WizardPageContentWidget(
+          title: 'Select Connection',
+          children: [
+            FormItemComponent(
+              label: 'How do you connect heater?',
+              child: ConnectionTypeDropdownWidget(
+                onChanged: (value) {
+                  setState(() {
+                    heater.connectionType =
+                        value ?? HeaterDeviceConnectionType.none;
+                  });
+                },
+                value: heater.connectionType,
+              ),
+            ),
+          ],
+        );
+
+        final Widget viewSelectLevel = //MARK: LEVEL
+            WizardPageContentWidget(
+          title: 'Select Level Option',
+          children: [
+            FormItemComponent(
+              label: 'How many levels does your heater has',
+              child: LevelTypeDropdownWidget(
+                value: heater.levelType,
+                onChanged: (value) {
+                  setState(() {
+                    heater.levelType = value ?? HeaterDeviceLevel.none;
+                  });
+                },
+              ),
+            ),
+          ],
+        );
+
+        final Widget viewSelectChannel = //MARK: CHANNEL
+            WizardPageContentWidget(
+          title: 'Select Channels',
+          children: [
+            heater.levelType == HeaterDeviceLevel.none
+                ? Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        pageController.animateToPage(
+                          2,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                      child: const Text('Select Level Option'),
                     ),
-                  ],
-                ),
-                //MARK: CONNECTION TYPE
-                WizardPageContentWidget(
-                  title: 'Select Connection',
-                  children: [
-                    FormItemComponent(
-                      label: 'How do you connect heater?',
-                      child: ConnectionTypeDropdownWidget(
-                        onChanged: (value) {
-                          setState(() {
-                            heater.connectionType =
-                                value ?? HeaterDeviceConnectionType.none;
-                          });
-                        },
-                        value: heater.connectionType,
-                      ),
-                    ),
-                  ],
-                ),
-                //MARK: LEVEL
-                WizardPageContentWidget(
-                  title: 'Select Level Option',
-                  children: [
-                    FormItemComponent(
-                      label: 'How many levels does your heater has',
-                      child: LevelTypeDropdownWidget(
-                        value: heater.levelType,
-                        onChanged: (value) {
-                          setState(() {
-                            heater.levelType = value ?? HeaterDeviceLevel.none;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                //MARK: ERROR INPUT CHANNEL || IP ADDRESS
-                WizardPageContentWidget(
-                  title: 'Select Channels',
-                  children: [
-                    Text(heater.toJson()),
-                    heater.levelType == HeaterDeviceLevel.none
-                        ? Center(
+                  )
+                : heater.connectionType == HeaterDeviceConnectionType.relay
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            spacing: 8,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              //MARK: LEVEL 1 OUTPUT
+                              Expanded(
+                                child: FormItemComponent(
+                                  label: 'On/Level 1 Output Channel',
+                                  child: ChannelDropdownWidget(
+                                    group: GpioGroup.outPin,
+                                    onChanged: (value) {
+                                      setState(
+                                          () => heater.outputChannel1 = value);
+                                    },
+                                    value: heater.outputChannel1,
+                                  ),
+                                ),
+                              ),
+
+                              //MARK: LEVEL 2 OUTPUT
+                              if (heater.levelType ==
+                                      HeaterDeviceLevel.threeLevels ||
+                                  heater.levelType ==
+                                      HeaterDeviceLevel.twoLevels)
+                                Expanded(
+                                  child: FormItemComponent(
+                                    label: 'High/Level 2 Output Channel',
+                                    child: ChannelDropdownWidget(
+                                      group: GpioGroup.outPin,
+                                      onChanged: (value) {
+                                        setState(() =>
+                                            heater.outputChannel2 = value);
+                                      },
+                                      value: heater.outputChannel2,
+                                    ),
+                                  ),
+                                ),
+
+                              //MARK: LEVEL 3 OUTPUT
+                              if (heater.levelType ==
+                                  HeaterDeviceLevel.threeLevels)
+                                Expanded(
+                                  child: FormItemComponent(
+                                    label: 'Max/Level 3 Output Channel',
+                                    child: ChannelDropdownWidget(
+                                      group: GpioGroup.outPin,
+                                      onChanged: (value) {
+                                        setState(() =>
+                                            heater.outputChannel3 = value);
+                                      },
+                                      value: heater.outputChannel3,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            spacing: 8,
+                            children: [
+                              //MARK: INPUT
+                              Expanded(
+                                flex: 3,
+                                child: FormItemComponent(
+                                  label: 'Error Input Channel',
+                                  child: ChannelDropdownWidget(
+                                    group: GpioGroup.inPin,
+                                    onChanged: (value) {
+                                      setState(
+                                          () => heater.errorChannel = value);
+                                    },
+                                    value: heater.errorChannel,
+                                  ),
+                                ),
+                              ),
+
+                              //MARK: INPUT Type
+                              Expanded(
+                                flex: 2,
+                                child: FormItemComponent(
+                                  label: 'Please Select Input Channel Type',
+                                  child: ErrorChannelTypeDropdownWidget(
+                                    value: heater.errorChannelType,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        heater.errorChannelType =
+                                            value ?? ErrorChannelType.nC;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : heater.connectionType ==
+                            HeaterDeviceConnectionType.ethernet
+                        ?
+                        // MARK: IP Address
+                        Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FormItemComponent(
+                                label: 'Enter the IP Address of your heater',
+                                child: TextField(
+                                  controller: ipAddressController,
+                                  decoration: InputDecoration(
+                                    border: UiDimens.formBorder,
+                                    hintText: 'eg: 192.168.1.156',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Center(
                             child: ElevatedButton(
                               onPressed: () {
                                 pageController.animateToPage(
-                                  2,
+                                  1,
                                   duration: const Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                 );
                               },
-                              child: const Text('Select Level Option'),
+                              child: const Text('Select Connection Type'),
                             ),
-                          )
-                        : heater.connectionType ==
-                                HeaterDeviceConnectionType.relay
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    spacing: 8,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      //MARK: LEVEL 1 OUTPUT
-                                      Expanded(
-                                        child: FormItemComponent(
-                                          label: 'On/Level 1 Output Channel',
-                                          child: ChannelDropdownWidget(
-                                            group: GpioGroup.outPin,
-                                            onChanged: (value) {
-                                              setState(() => heater
-                                                  .outputChannel1 = value);
-                                            },
-                                            value: heater.outputChannel1,
-                                          ),
-                                        ),
-                                      ),
+                          ),
+          ],
+        );
 
-                                      //MARK: LEVEL 2 OUTPUT
-                                      if (heater.levelType ==
-                                              HeaterDeviceLevel.threeLevels ||
-                                          heater.levelType ==
-                                              HeaterDeviceLevel.twoLevels)
-                                        Expanded(
-                                          child: FormItemComponent(
-                                            label:
-                                                'High/Level 2 Output Channel',
-                                            child: ChannelDropdownWidget(
-                                              group: GpioGroup.outPin,
-                                              onChanged: (value) {
-                                                setState(() => heater
-                                                    .outputChannel2 = value);
-                                              },
-                                              value: heater.outputChannel2,
-                                            ),
-                                          ),
-                                        ),
-
-                                      //MARK: LEVEL 3 OUTPUT
-                                      if (heater.levelType ==
-                                          HeaterDeviceLevel.threeLevels)
-                                        Expanded(
-                                          child: FormItemComponent(
-                                            label: 'Max/Level 3 Output Channel',
-                                            child: ChannelDropdownWidget(
-                                              group: GpioGroup.outPin,
-                                              onChanged: (value) {
-                                                setState(() => heater
-                                                    .outputChannel3 = value);
-                                              },
-                                              value: heater.outputChannel3,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  const Divider(),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    spacing: 8,
-                                    children: [
-                                      //MARK: INPUT
-                                      Expanded(
-                                        flex: 3,
-                                        child: FormItemComponent(
-                                          label: 'Error Input Channel',
-                                          child: ChannelDropdownWidget(
-                                            group: GpioGroup.inPin,
-                                            onChanged: (value) {
-                                              setState(() =>
-                                                  heater.errorChannel = value);
-                                            },
-                                            value: heater.errorChannel,
-                                          ),
-                                        ),
-                                      ),
-
-                                      //MARK: INPUT Type
-                                      Expanded(
-                                        flex: 2,
-                                        child: FormItemComponent(
-                                          label:
-                                              'Please Select Input Channel Type',
-                                          child: ErrorChannelTypeDropdownWidget(
-                                            value: heater.errorChannelType,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                heater.errorChannelType =
-                                                    value ??
-                                                        ErrorChannelType.nC;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : heater.connectionType ==
-                                    HeaterDeviceConnectionType.ethernet
-                                ?
-                                // MARK: IP Address
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      FormItemComponent(
-                                        label:
-                                            'Enter the IP Address of your heater',
-                                        child: TextField(
-                                          controller: ipAddressController,
-                                          decoration: InputDecoration(
-                                            border: UiDimens.formBorder,
-                                            hintText: 'eg: 192.168.1.156',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Center(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        pageController.animateToPage(
-                                          1,
-                                          duration:
-                                              const Duration(milliseconds: 200),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      },
-                                      child:
-                                          const Text('Select Connection Type'),
-                                    ),
-                                  ),
-                  ],
+        final Widget viewEnterConsumption = //MARK: CONSUMPTION
+            WizardPageContentWidget(
+          title: 'Enter Consumption & Emissions',
+          children: [
+            const Text('Please enter Consumption Values and CO2 emissions'),
+            const SizedBox(height: 20),
+            //MARK: Consumption Header
+            Row(
+              children: [
+                Expanded(child: Container()),
+                const Expanded(
+                  child: Text(
+                    'Consumption\nAmount',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                //MARK: CONSUMPTION
-                WizardPageContentWidget(
-                  title: 'Enter Consumption & Emissions',
-                  children: [
-                    const Text(
-                        'Please enter Consumption Values and CO2 emissions'),
-                    const SizedBox(height: 20),
-                    //MARK: Consumption Header
-                    Row(
-                      children: [
-                        Expanded(child: Container()),
-                        const Expanded(
-                          child: Text(
-                            'Consumption\nAmount',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const Expanded(
-                          child: Text(
-                            'Consumption\nUnit',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const Expanded(
-                          child: Text(
-                            'CO2\nEmission',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                    //MARK: LEVEL 1 CONSUMPTION
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        const Expanded(child: Text('Level 1')),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            // controller: level1ConsumptionController,
-                            decoration: InputDecoration(
-                              border: UiDimens.formBorder,
-                              hintText: '0.0',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            // controller: level1UnitController,
-                            decoration: InputDecoration(
-                              border: UiDimens.formBorder,
-                              hintText: heater.type == HeaterDeviceType.electric
-                                  ? 'kwH'
-                                  : 'm³',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            // controller: level1CarbonController,
-                            decoration: InputDecoration(
-                              border: UiDimens.formBorder,
-                              hintText: 'kt',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    //MARK: LEVEL 2 CONSUMPTION
-                    if (heater.levelType == HeaterDeviceLevel.twoLevels ||
-                        heater.levelType == HeaterDeviceLevel.threeLevels)
-                      const SizedBox(height: 12),
-                    if (heater.levelType == HeaterDeviceLevel.twoLevels ||
-                        heater.levelType == HeaterDeviceLevel.threeLevels)
-                      Row(
-                        children: [
-                          const Expanded(child: Text('Level 2')),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              // controller: level2ConsumptionController,
-                              decoration: InputDecoration(
-                                border: UiDimens.formBorder,
-                                hintText: '0.0',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              // controller: level2UnitController,
-                              decoration: InputDecoration(
-                                border: UiDimens.formBorder,
-                                hintText:
-                                    heater.type == HeaterDeviceType.electric
-                                        ? 'kwH'
-                                        : 'm³',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              // controller: level2CarbonController,
-                              decoration: InputDecoration(
-                                border: UiDimens.formBorder,
-                                hintText: 'kt',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    //MARK: LEVEL 3 CONSUMPTION
-                    if (heater.levelType == HeaterDeviceLevel.threeLevels)
-                      const SizedBox(height: 12),
-                    if (heater.levelType == HeaterDeviceLevel.threeLevels)
-                      Row(
-                        children: [
-                          const Expanded(child: Text('Level 3')),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              // controller: level3ConsumptionController,
-                              decoration: InputDecoration(
-                                border: UiDimens.formBorder,
-                                hintText: '0.0',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              // controller: level3UnitController,
-                              decoration: InputDecoration(
-                                border: UiDimens.formBorder,
-                                hintText:
-                                    heater.type == HeaterDeviceType.electric
-                                        ? 'kwH'
-                                        : 'm³',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              // controller: level3CarbonController,
-                              decoration: InputDecoration(
-                                border: UiDimens.formBorder,
-                                hintText: 'kt',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                  ],
+                const Expanded(
+                  child: Text(
+                    'Consumption\nUnit',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                //MARK: NAME-COLOR
-                WizardPageContentWidget(
-                  title: 'Labeling',
-                  children: [
-                    FormItemComponent(
-                      label: 'Select Zone',
-                      child: ZoneDropdownWidget(
-                        value: dc.zoneList
-                            .firstWhereOrNull((e) => e.id == heater.zoneId),
-                        onChanged: (value) {
-                          if (value == null) {
-                            setState(() {
-                              heater.zoneId = null;
-                            });
-                          } else {
-                            setState(() {
-                              heater.zoneId = value.id;
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    FormItemComponent(
-                      label: 'Name',
-                      child: TextField(
-                        onTap: () async {
-                          final result = await OnScreenKeyboard.show(
-                            context: context,
-                            initialValue: heater.name,
-                            label: 'Heater Name',
-                            type: OSKInputType.name,
-                          );
-                          setState(() {
-                            nameController.text = result;
-                          });
-                        },
-                        controller: nameController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          border: UiDimens.formBorder,
-                          hintText: 'Type a name here',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    FormItemComponent(
-                      label: 'Pick a color',
-                      child: ColorPickerWidget(
-                        selectedValue: heater.color,
-                        onSelected: (value) {
-                          setState(() {
-                            heater.color = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
+                const Expanded(
+                  child: Text(
+                    'CO2\nEmission',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
+              ],
+            ),
+            //MARK: LEVEL 1 CONSUMPTION
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Expanded(child: Text('Level 1')),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    // controller: level1ConsumptionController,
+                    decoration: InputDecoration(
+                      border: UiDimens.formBorder,
+                      hintText: '0.0',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    // controller: level1UnitController,
+                    decoration: InputDecoration(
+                      border: UiDimens.formBorder,
+                      hintText: heater.type == HeaterDeviceType.electric
+                          ? 'kwH'
+                          : 'm³',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    // controller: level1CarbonController,
+                    decoration: InputDecoration(
+                      border: UiDimens.formBorder,
+                      hintText: 'kt',
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
-                //MARK: SUMMARY
-                WizardPageContentWidget(
-                  title: 'Summary',
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FormItemComponent(
-                                label: 'Heater Name',
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: CommonUtils.hexToColor(
-                                        context, heater.color),
-                                    borderRadius: UiDimens.formRadius,
-                                  ),
-                                  child: Text(heater.name),
-                                ),
-                              ),
-                              FormItemComponent(
-                                  label: 'Zone',
-                                  child: Text(heater.zoneId == null
-                                      ? 'No zone'
-                                      : dc.zoneList
-                                              .firstWhereOrNull(
-                                                  (e) => e.id == heater.zoneId)
-                                              ?.name ??
-                                          '')),
-                              FormItemComponent(
-                                label: 'Type',
-                                child: Text(heater.type.name
-                                    .camelCaseToHumanReadable()),
-                              ),
-                              FormItemComponent(
-                                label: 'Connection',
-                                child: Text(heater.connectionType.name
-                                    .camelCaseToHumanReadable()),
-                              ),
-                              FormItemComponent(
-                                label: 'Level Option',
-                                child: Text(heater.levelType.name
-                                    .camelCaseToHumanReadable()),
-                              ),
-                            ],
+            //MARK: LEVEL 2 CONSUMPTION
+            if (heater.levelType == HeaterDeviceLevel.twoLevels ||
+                heater.levelType == HeaterDeviceLevel.threeLevels)
+              const SizedBox(height: 12),
+            if (heater.levelType == HeaterDeviceLevel.twoLevels ||
+                heater.levelType == HeaterDeviceLevel.threeLevels)
+              Row(
+                children: [
+                  const Expanded(child: Text('Level 2')),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      // controller: level2ConsumptionController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        hintText: '0.0',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      // controller: level2UnitController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        hintText: heater.type == HeaterDeviceType.electric
+                            ? 'kwH'
+                            : 'm³',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      // controller: level2CarbonController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        hintText: 'kt',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+            //MARK: LEVEL 3 CONSUMPTION
+            if (heater.levelType == HeaterDeviceLevel.threeLevels)
+              const SizedBox(height: 12),
+            if (heater.levelType == HeaterDeviceLevel.threeLevels)
+              Row(
+                children: [
+                  const Expanded(child: Text('Level 3')),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      // controller: level3ConsumptionController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        hintText: '0.0',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      // controller: level3UnitController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        hintText: heater.type == HeaterDeviceType.electric
+                            ? 'kwH'
+                            : 'm³',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      // controller: level3CarbonController,
+                      decoration: InputDecoration(
+                        border: UiDimens.formBorder,
+                        hintText: 'kt',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        );
+
+        final Widget viewEnterName = //MARK: NAME-COLOR
+            WizardPageContentWidget(
+          title: 'Labeling',
+          children: [
+            FormItemComponent(
+              label: 'Select Zone',
+              child: ZoneDropdownWidget(
+                value:
+                    dc.zoneList.firstWhereOrNull((e) => e.id == heater.zoneId),
+                onChanged: (value) {
+                  if (value == null) {
+                    setState(() {
+                      heater.zoneId = null;
+                    });
+                  } else {
+                    setState(() {
+                      heater.zoneId = value.id;
+                    });
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
+            FormItemComponent(
+              label: 'Name',
+              child: TextField(
+                onTap: () async {
+                  final result = await OnScreenKeyboard.show(
+                    context: context,
+                    initialValue: heater.name,
+                    label: 'Heater Name',
+                    type: OSKInputType.name,
+                  );
+                  setState(() {
+                    nameController.text = result;
+                  });
+                },
+                controller: nameController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: UiDimens.formBorder,
+                  hintText: 'Type a name here',
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            FormItemComponent(
+              label: 'Pick a color',
+              child: ColorPickerWidget(
+                selectedValue: heater.color,
+                onSelected: (value) {
+                  setState(() {
+                    heater.color = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        );
+
+        final Widget viewDisplaySummary = //MARK: SUMMARY
+            WizardPageContentWidget(
+          title: 'Summary',
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FormItemComponent(
+                        label: 'Heater Name',
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
                           ),
+                          decoration: BoxDecoration(
+                            color:
+                                CommonUtils.hexToColor(context, heater.color),
+                            borderRadius: UiDimens.formRadius,
+                          ),
+                          child: Text(heater.name),
                         ),
-                        const Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /* FormItemComponent(
+                      ),
+                      FormItemComponent(
+                          label: 'Zone',
+                          child: Text(heater.zoneId == null
+                              ? 'No zone'
+                              : dc.zoneList
+                                      .firstWhereOrNull(
+                                          (e) => e.id == heater.zoneId)
+                                      ?.name ??
+                                  '')),
+                      FormItemComponent(
+                        label: 'Type',
+                        child:
+                            Text(heater.type.name.camelCaseToHumanReadable()),
+                      ),
+                      FormItemComponent(
+                        label: 'Connection',
+                        child: Text(heater.connectionType.name
+                            .camelCaseToHumanReadable()),
+                      ),
+                      FormItemComponent(
+                        label: 'Level Option',
+                        child: Text(
+                            heater.levelType.name.camelCaseToHumanReadable()),
+                      ),
+                    ],
+                  ),
+                ),
+                const Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /* FormItemComponent(
                                 label: 'Channels',
                                 child: Text(
                                     'out: ${heater.outputChannel1?.name}'
@@ -628,21 +613,43 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                   consumptionUnit: heater.level3ConsumptionUnit,
                                 )}  (${CCUtils.displayCarbon(heater.level3Carbon)})'),
                               ), */
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
-              onPageChanged: (p) {},
             ),
-            if (currentPage > 0) previousButton,
-            currentPage > 5 ? saveButton(context) : nextButton,
           ],
-        ),
-      ),
+        );
+
+        final List<Widget> pages = [
+          viewSelectType,
+          viewSelectConnectionType,
+          viewSelectLevel,
+          viewSelectChannel,
+          // viewEnterConsumption,
+          viewEnterName,
+          viewDisplaySummary,
+        ];
+
+        return AppScaffold(
+          title: 'Add a Heater ${currentPage + 1} / ${pages.length}',
+          selectedIndex: 3,
+          body: Stack(
+            children: [
+              PageView(
+                controller: pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: pages,
+                onPageChanged: (p) {},
+              ),
+              if (currentPage > 0) previousButton,
+              currentPage > (pages.length - 1)
+                  ? saveButton(context)
+                  : nextButton,
+            ],
+          ),
+        );
+      },
     );
   }
 
