@@ -251,99 +251,107 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
           ),
         );
 
-        final viewLevel1Consumption = FormItemComponent(
-          label: 'Consumption L1',
-          child: TextField(
-            controller: l1ConsumptionController,
-            decoration: InputDecoration(
-              border: UiDimens.formBorder,
+        final viewLevel1Consumption = Expanded(
+          child: FormItemComponent(
+            label: 'Consumption L1',
+            child: TextField(
+              controller: l1ConsumptionController,
+              decoration: InputDecoration(
+                border: UiDimens.formBorder,
+              ),
+              onTap: () async {
+                final result = await OnScreenKeyboard.show(
+                  context: context,
+                  initialValue: l1ConsumptionController.text,
+                  label: 'Consumption',
+                  type: OSKInputType.number,
+                );
+                if (result != null) {
+                  l1ConsumptionController.text = result;
+                  setState(() {
+                    heater.level1ConsumptionAmount = double.tryParse(result);
+                  });
+                }
+              },
             ),
-            onTap: () async {
-              final result = await OnScreenKeyboard.show(
-                context: context,
-                initialValue: l1ConsumptionController.text,
-                label: 'Consumption',
-                type: OSKInputType.number,
-              );
-              if (result != null) {
-                l1ConsumptionController.text = result;
-                setState(() {
-                  heater.level1ConsumptionAmount = double.tryParse(result);
-                });
-              }
-            },
           ),
         );
 
-        final viewLevel2Consumption = FormItemComponent(
-          label: 'Consumption L2',
-          child: TextField(
-            controller: l2ConsumptionController,
-            decoration: InputDecoration(
-              border: UiDimens.formBorder,
+        final viewLevel2Consumption = Expanded(
+          child: FormItemComponent(
+            label: 'Consumption L2',
+            child: TextField(
+              controller: l2ConsumptionController,
+              decoration: InputDecoration(
+                border: UiDimens.formBorder,
+              ),
+              onTap: () async {
+                final result = await OnScreenKeyboard.show(
+                  context: context,
+                  initialValue: l2ConsumptionController.text,
+                  label: 'Consumption',
+                  type: OSKInputType.number,
+                );
+                if (result != null) {
+                  l2ConsumptionController.text = result;
+                  setState(() {
+                    heater.level2ConsumptionAmount = double.tryParse(result);
+                  });
+                }
+              },
             ),
-            onTap: () async {
-              final result = await OnScreenKeyboard.show(
-                context: context,
-                initialValue: l2ConsumptionController.text,
-                label: 'Consumption',
-                type: OSKInputType.number,
-              );
-              if (result != null) {
-                l2ConsumptionController.text = result;
-                setState(() {
-                  heater.level2ConsumptionAmount = double.tryParse(result);
-                });
-              }
-            },
           ),
         );
 
-        final viewLevel3Consumption = FormItemComponent(
-          label: 'Consumption L3',
-          child: TextField(
-            controller: l3ConsumptionController,
-            decoration: InputDecoration(
-              border: UiDimens.formBorder,
+        final viewLevel3Consumption = Expanded(
+          child: FormItemComponent(
+            label: 'Consumption L3',
+            child: TextField(
+              controller: l3ConsumptionController,
+              decoration: InputDecoration(
+                border: UiDimens.formBorder,
+              ),
+              onTap: () async {
+                final result = await OnScreenKeyboard.show(
+                  context: context,
+                  initialValue: l3ConsumptionController.text,
+                  label: 'Consumption',
+                  type: OSKInputType.number,
+                );
+                if (result != null) {
+                  l3ConsumptionController.text = result;
+                  setState(() {
+                    heater.level3ConsumptionAmount = double.tryParse(result);
+                  });
+                }
+              },
             ),
-            onTap: () async {
-              final result = await OnScreenKeyboard.show(
-                context: context,
-                initialValue: l3ConsumptionController.text,
-                label: 'Consumption',
-                type: OSKInputType.number,
-              );
-              if (result != null) {
-                l3ConsumptionController.text = result;
-                setState(() {
-                  heater.level3ConsumptionAmount = double.tryParse(result);
-                });
-              }
-            },
           ),
         );
 
-        final viewUnit = FormItemComponent(
-          label: 'Unit',
-          child: TextField(
-            controller: unitController,
-            decoration: InputDecoration(
-              border: UiDimens.formBorder,
+        final viewUnit = Expanded(
+          child: FormItemComponent(
+            label: 'Unit',
+            child: TextField(
+              controller: unitController,
+              decoration: InputDecoration(
+                border: UiDimens.formBorder,
+              ),
+              onTap: () async {
+                final result = await OnScreenKeyboard.show(
+                  context: context,
+                  initialValue: unitController.text,
+                  label: 'Unit',
+                  type: OSKInputType.text,
+                );
+                if (result != null) {
+                  unitController.text = result;
+                  setState(() {
+                    heater.consumptionUnit = result;
+                  });
+                }
+              },
             ),
-            onTap: () async {
-              final result = await OnScreenKeyboard.show(
-                context: context,
-                initialValue: unitController.text,
-                label: 'Unit',
-                type: OSKInputType.text,
-              );
-              if (result != null) {
-                unitController.text = result;
-                setState(() {
-                  heater.consumptionUnit = result;
-                });
-              }
-            },
           ),
         );
 
