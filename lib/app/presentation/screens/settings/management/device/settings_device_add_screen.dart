@@ -187,9 +187,11 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                           label: 'On/Level 1 Output Channel',
                                           child: ChannelDropdownWidget(
                                             group: GpioGroup.outPin,
-                                            onChanged: (p0) {
-                                              print('onChanged $p0');
+                                            onChanged: (value) {
+                                              setState(() => heater
+                                                  .outputChannel1 = value);
                                             },
+                                            value: heater.outputChannel1,
                                           ),
                                         ),
 
