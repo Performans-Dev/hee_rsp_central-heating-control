@@ -62,8 +62,12 @@ class SettingsManagementScreen extends StatelessWidget {
             const SizedBox(height: 8),
             GetBuilder<ChannelController>(builder: (cc) {
               return ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                tileColor: Theme.of(context).highlightColor,
                 title: const Text('Alarm'),
-                subtitle: Text('Configure alarm inputs'.tr),
+                subtitle: Text('Configure alarm input'.tr),
                 trailing: SizedBox(
                   width: 100,
                   child: ChannelDropdownWidget(
