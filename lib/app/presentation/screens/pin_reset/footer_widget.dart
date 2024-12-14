@@ -23,13 +23,13 @@ class PinResetFooterWidget extends StatelessWidget {
       width: double.infinity,
       child: !hasCancelButton
           ? Center(
-              child: ActionButton(text: nextLabel, onTap: nextAction),
+              child: ActionButton(label: nextLabel, onTap: nextAction),
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ActionButton(text: prevLabel, onTap: prevAction),
-                ActionButton(text: nextLabel, onTap: nextAction),
+                ActionButton(label: prevLabel, onTap: prevAction),
+                ActionButton(label: nextLabel, onTap: nextAction),
               ],
             ),
     );

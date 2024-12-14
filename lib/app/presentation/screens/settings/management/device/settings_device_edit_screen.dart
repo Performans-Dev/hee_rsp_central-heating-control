@@ -12,6 +12,7 @@ import 'package:central_heating_control/app/presentation/components/dropdowns/le
 import 'package:central_heating_control/app/presentation/components/dropdowns/type.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/zone.dart';
 import 'package:central_heating_control/app/presentation/components/form_item.dart';
+import 'package:central_heating_control/app/presentation/widgets/action_button.dart';
 import 'package:central_heating_control/app/presentation/widgets/color_picker.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
@@ -118,54 +119,62 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
           ),
         );
 
-        final viewHeaterType = FormItemComponent(
-          label: 'Type',
-          child: TypeDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.type = value ?? HeaterDeviceType.none;
-              });
-            },
-            value: heater.type,
+        final viewHeaterType = Expanded(
+          child: FormItemComponent(
+            label: 'Type',
+            child: TypeDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.type = value ?? HeaterDeviceType.none;
+                });
+              },
+              value: heater.type,
+            ),
           ),
         );
 
-        final viewConnectionType = FormItemComponent(
-          label: 'Connection',
-          child: ConnectionTypeDropdownWidget(
-            showNoneOption: false,
-            onChanged: (value) {
-              setState(() {
-                heater.connectionType =
-                    value ?? HeaterDeviceConnectionType.none;
-              });
-            },
-            value: heater.connectionType,
+        final viewConnectionType = Expanded(
+          child: FormItemComponent(
+            label: 'Connection',
+            child: ConnectionTypeDropdownWidget(
+              showNoneOption: false,
+              onChanged: (value) {
+                setState(() {
+                  heater.connectionType =
+                      value ?? HeaterDeviceConnectionType.none;
+                });
+              },
+              value: heater.connectionType,
+            ),
           ),
         );
 
-        final viewZone = FormItemComponent(
-          label: 'Zone',
-          child: ZoneDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.zoneId = value?.id;
-              });
-            },
-            value: dc.zoneList.firstWhereOrNull((e) => e.id == heater.zoneId),
+        final viewZone = Expanded(
+          child: FormItemComponent(
+            label: 'Zone',
+            child: ZoneDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.zoneId = value?.id;
+                });
+              },
+              value: dc.zoneList.firstWhereOrNull((e) => e.id == heater.zoneId),
+            ),
           ),
         );
 
-        final viewLevel = FormItemComponent(
-          label: 'Level',
-          child: LevelTypeDropdownWidget(
-            showNoneOption: false,
-            value: heater.levelType,
-            onChanged: (value) {
-              setState(() {
-                heater.levelType = value!;
-              });
-            },
+        final viewLevel = Expanded(
+          child: FormItemComponent(
+            label: 'Level',
+            child: LevelTypeDropdownWidget(
+              showNoneOption: false,
+              value: heater.levelType,
+              onChanged: (value) {
+                setState(() {
+                  heater.levelType = value!;
+                });
+              },
+            ),
           ),
         );
 
@@ -416,10 +425,20 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                       children: [
                         viewName,
                         viewColor,
-                        viewHeaterType,
-                        viewConnectionType,
-                        viewZone,
-                        viewLevel,
+                        Row(
+                          spacing: 8,
+                          children: [
+                            viewHeaterType,
+                            viewConnectionType,
+                          ],
+                        ),
+                        Row(
+                          spacing: 8,
+                          children: [
+                            viewZone,
+                            viewLevel,
+                          ],
+                        ),
                         heater.connectionType ==
                                 HeaterDeviceConnectionType.relay
                             ? viewChannels
@@ -452,8 +471,9 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
     );
   }
 
-  Widget get saveButton => ElevatedButton(
-        onPressed: heater.name.isNotEmpty &&
+  Widget get saveButton => ActionButton(
+        label: 'Save'.tr,
+        onTap: heater.name.isNotEmpty &&
                 heater.type != HeaterDeviceType.none &&
                 heater.connectionType != HeaterDeviceConnectionType.none
             ? () async {
@@ -478,11 +498,12 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 }
               }
             : null,
-        child: const Text("Save"),
+        suffixIcon: const Icon(Icons.save_rounded),
       );
 
-  Widget get cancelButton => ElevatedButton(
-        onPressed: () => Get.back(),
-        child: const Text("Cancel"),
+  Widget get cancelButton => ActionButton(
+        label: 'Cancel'.tr,
+        onTap: () => Get.back(),
+        prefixIcon: const Icon(Icons.cancel_rounded),
       );
 }
