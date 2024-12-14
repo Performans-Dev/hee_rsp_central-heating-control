@@ -645,7 +645,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
               if (currentPage > 0) previousButton,
               currentPage > (pages.length - 2)
                   ? saveButton(context)
-                  : nextButton,
+                  : nextButton(pages.length),
             ],
           ),
         );
@@ -678,12 +678,12 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
   //   );
   // }
 
-  Widget get nextButton => Align(
+  Widget nextButton(int pagesLength) => Align(
         alignment: Alignment.bottomRight,
         child: Container(
           padding: const EdgeInsets.all(16),
           child: ElevatedButton(
-            onPressed: currentPage <= 5
+            onPressed: currentPage <= (pagesLength - 2)
                 ? () {
                     Buzz.feedback();
                     pageController.animateToPage(
