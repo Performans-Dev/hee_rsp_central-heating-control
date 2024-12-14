@@ -14,7 +14,7 @@ class SensorDropdownWidget extends StatelessWidget {
       final sensor = dc.sensorList.firstWhere(
           (e) => e.device == channel.deviceId && e.index == channel.pinIndex);
 
-      final zone = dc.zoneList.firstWhere((e) => e.id == sensor.zone);
+      final zone = dc.zoneList.firstWhereOrNull((e) => e.id == sensor.zone);
 
       return Card(
         child: Column(
