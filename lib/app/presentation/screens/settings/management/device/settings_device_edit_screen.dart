@@ -424,9 +424,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                                 HeaterDeviceConnectionType.relay
                             ? viewChannels
                             : viewIpAddress,
-                        if (heater.connectionType ==
-                            HeaterDeviceConnectionType.relay)
-                          viewConsumptions,
+                        viewConsumptions,
                         const SizedBox(height: 12),
                       ],
                     ),
