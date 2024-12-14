@@ -17,7 +17,7 @@ class SensorDropdownWidget extends StatelessWidget {
           children: [
             Text(channel.name),
             Text('${channel.deviceId} ${channel.pinIndex}'),
-            ZoneDropdownWidget(
+            const ZoneDropdownWidget(
               value: null,
               onChanged: null,
             ),
