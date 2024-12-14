@@ -177,76 +177,78 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
           ),
         );
 
-        final viewLevel1Channel = FormItemComponent(
-          label: 'Level 1 Channel',
-          child: ChannelDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.outputChannel1 = value;
-              });
-            },
-            value: heater.outputChannel1,
-            group: GpioGroup.outPin,
+        final viewLevel1Channel = Expanded(
+          child: FormItemComponent(
+            label: 'Level 1 Channel',
+            child: ChannelDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.outputChannel1 = value;
+                });
+              },
+              value: heater.outputChannel1,
+              group: GpioGroup.outPin,
+            ),
           ),
         );
 
-        final viewLevel2Channel = FormItemComponent(
-          label: 'Level 2 Channel',
-          child: ChannelDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.outputChannel2 = value;
-              });
-            },
-            value: heater.outputChannel2,
-            group: GpioGroup.outPin,
+        final viewLevel2Channel = Expanded(
+          child: FormItemComponent(
+            label: 'Level 2 Channel',
+            child: ChannelDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.outputChannel2 = value;
+                });
+              },
+              value: heater.outputChannel2,
+              group: GpioGroup.outPin,
+            ),
           ),
         );
 
-        final viewLevel3Channel = FormItemComponent(
-          label: 'Level 3 Channel',
-          child: ChannelDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.outputChannel3 = value;
-              });
-            },
-            value: heater.outputChannel3,
-            group: GpioGroup.outPin,
+        final viewLevel3Channel = Expanded(
+          child: FormItemComponent(
+            label: 'Level 3 Channel',
+            child: ChannelDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.outputChannel3 = value;
+                });
+              },
+              value: heater.outputChannel3,
+              group: GpioGroup.outPin,
+            ),
           ),
         );
 
-        final viewErrorChannel = FormItemComponent(
-          label: 'Error Channel',
-          child: ChannelDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.errorChannel = value;
-              });
-            },
-            value: heater.errorChannel,
-            group: GpioGroup.inPin,
+        final viewErrorChannel = Expanded(
+          child: FormItemComponent(
+            label: 'Error Channel',
+            child: ChannelDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.errorChannel = value;
+                });
+              },
+              value: heater.errorChannel,
+              group: GpioGroup.inPin,
+            ),
           ),
         );
 
-        final viewErrorType = FormItemComponent(
-          label: 'Error Channel Type',
-          child: ErrorChannelTypeDropdownWidget(
-            onChanged: (value) {
-              setState(() {
-                heater.errorChannelType = value;
-              });
-            },
-            value: heater.errorChannelType ?? ErrorChannelType.nO,
+        final viewErrorType = Expanded(
+          child: FormItemComponent(
+            label: 'Error Channel Type',
+            child: ErrorChannelTypeDropdownWidget(
+              onChanged: (value) {
+                setState(() {
+                  heater.errorChannelType = value;
+                });
+              },
+              value: heater.errorChannelType ?? ErrorChannelType.nO,
+            ),
           ),
-        );
-
-        final viewError = Row(
-          spacing: 8,
-          children: [
-            Expanded(child: viewErrorChannel),
-            Expanded(child: viewErrorType),
-          ],
         );
 
         final viewLevel1Consumption = FormItemComponent(
@@ -345,35 +347,50 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
           ),
         );
 
-        final List<Widget> viewChannels = [
-          ...(heater.levelType == HeaterDeviceLevel.onOff
-              ? [viewLevel1Channel, viewError]
-              : heater.levelType == HeaterDeviceLevel.twoLevels
-                  ? [
-                      viewLevel1Channel,
-                      viewLevel2Channel,
-                      viewError,
-                    ]
-                  : [
-                      viewLevel1Channel,
-                      viewLevel2Channel,
-                      viewLevel3Channel,
-                      viewError,
-                    ]),
-          ...(heater.levelType == HeaterDeviceLevel.onOff
-              ? [viewLevel1Consumption]
-              : heater.levelType == HeaterDeviceLevel.twoLevels
-                  ? [
-                      viewLevel1Consumption,
-                      viewLevel2Consumption,
-                    ]
-                  : [
-                      viewLevel1Consumption,
-                      viewLevel2Consumption,
-                      viewLevel3Consumption,
-                    ]),
-          viewUnit,
-        ];
+        final viewChannels = Row(
+          spacing: 8,
+          children: [
+            ...(heater.levelType == HeaterDeviceLevel.onOff
+                ? [
+                    viewLevel1Channel,
+                    viewErrorChannel,
+                    viewErrorType,
+                  ]
+                : heater.levelType == HeaterDeviceLevel.twoLevels
+                    ? [
+                        viewLevel1Channel,
+                        viewLevel2Channel,
+                        viewErrorChannel,
+                        viewErrorType,
+                      ]
+                    : [
+                        viewLevel1Channel,
+                        viewLevel2Channel,
+                        viewLevel3Channel,
+                        viewErrorChannel,
+                        viewErrorType,
+                      ]),
+          ],
+        );
+
+        final viewConsumptions = Row(
+          spacing: 8,
+          children: [
+            ...(heater.levelType == HeaterDeviceLevel.onOff
+                ? [viewLevel1Consumption]
+                : heater.levelType == HeaterDeviceLevel.twoLevels
+                    ? [
+                        viewLevel1Consumption,
+                        viewLevel2Consumption,
+                      ]
+                    : [
+                        viewLevel1Consumption,
+                        viewLevel2Consumption,
+                        viewLevel3Consumption,
+                      ]),
+            viewUnit,
+          ],
+        );
 
         return AppScaffold(
           title: 'Edit Heater',
@@ -395,10 +412,13 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                         viewConnectionType,
                         viewZone,
                         viewLevel,
-                        ...(heater.connectionType ==
+                        heater.connectionType ==
                                 HeaterDeviceConnectionType.relay
                             ? viewChannels
-                            : [viewIpAddress]),
+                            : viewIpAddress,
+                        if (heater.connectionType ==
+                            HeaterDeviceConnectionType.relay)
+                          viewConsumptions,
                         const SizedBox(height: 12),
                       ],
                     ),
