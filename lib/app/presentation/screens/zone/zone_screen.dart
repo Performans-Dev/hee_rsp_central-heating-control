@@ -101,7 +101,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               ),
                               Expanded(
                                 child: Container(
-                                  width: 140,
+                                  width: 160,
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     borderRadius: UiDimens.formRadius,
@@ -118,12 +118,13 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                   zoneDefinition?.selectedPlan,
                                               onChanged: (p0) {
                                                 if (zoneDefinition != null) {
-                                                  dataController.updateZone(
-                                                    zoneDefinition!.copyWith(
-                                                      selectedPlan: p0,
-                                                    ),
+                                                  final zd =
+                                                      zoneDefinition!.copyWith(
+                                                    selectedPlan: p0,
                                                   );
-
+                                                  dataController.updateZone(zd);
+                                                  processController
+                                                      .initZone(zd);
                                                   setState(() {});
                                                 }
                                               },
