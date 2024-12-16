@@ -1,4 +1,3 @@
-import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:flutter/material.dart';
@@ -50,11 +49,12 @@ class ZoneControlWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: radius,
         child: Container(
-          width: height * 2,
+          width: height * 2.4,
           height: height,
           decoration: BoxDecoration(
             borderRadius: radius,
-            color: Colors.blueGrey.withValues(alpha: 0.4),
+            color: Colors.blueGrey
+                .withValues(alpha: state == currentState ? 0.7 : 0.4),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,12 +64,11 @@ class ZoneControlWidget extends StatelessWidget {
                 width: 20,
                 height: height,
                 decoration: BoxDecoration(
-                  borderRadius: UiDimens.formRadius,
                   color: CCUtils.stateColor(state),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   CCUtils.stateDisplay(state).toUpperCase(),
                   style: const TextStyle(fontSize: 22),
