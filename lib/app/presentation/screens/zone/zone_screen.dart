@@ -252,29 +252,35 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           CrossAxisAlignment.center,
                                       spacing: 12,
                                       children: [
-                                        Text(selectedHeater!.heater.name),
-                                        ToggleButtons(
-                                          borderRadius: UiDimens.formRadius,
-                                          isSelected: [
-                                            selectedHeater!.selectedState ==
-                                                HeaterState.auto,
-                                            selectedHeater!.selectedState !=
-                                                HeaterState.auto
-                                          ],
-                                          onPressed: (index) {
-                                            processController
-                                                .onHeaterStateCalled(
-                                              heaterId:
-                                                  selectedHeater!.heater.id,
-                                              state: index == 0
-                                                  ? HeaterState.auto
-                                                  : HeaterState.off,
-                                            );
-                                            setState(() {});
-                                          },
-                                          children: const [
-                                            Text('Zone'),
-                                            Text('Custom'),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(selectedHeater!.heater.name),
+                                            ToggleButtons(
+                                              borderRadius: UiDimens.formRadius,
+                                              isSelected: [
+                                                selectedHeater!.selectedState ==
+                                                    HeaterState.auto,
+                                                selectedHeater!.selectedState !=
+                                                    HeaterState.auto
+                                              ],
+                                              onPressed: (index) {
+                                                processController
+                                                    .onHeaterStateCalled(
+                                                  heaterId:
+                                                      selectedHeater!.heater.id,
+                                                  state: index == 0
+                                                      ? HeaterState.auto
+                                                      : HeaterState.off,
+                                                );
+                                                setState(() {});
+                                              },
+                                              children: const [
+                                                Text(' Zone '),
+                                                Text(' Custom '),
+                                              ],
+                                            ),
                                           ],
                                         ),
                                         if (selectedHeater!.selectedState !=
@@ -282,6 +288,8 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           ToggleButtons(
                                             borderRadius: UiDimens.formRadius,
                                             direction: Axis.vertical,
+                                            verticalDirection:
+                                                VerticalDirection.up,
                                             isSelected: [
                                               ...HeaterState.values
                                                   .where((e) =>
