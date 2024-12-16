@@ -330,11 +330,16 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               : ListView.builder(
                                   itemBuilder: (context, index) => ListTile(
                                     title: Text(heaters[index].heater.name),
-                                    subtitle:
-                                        Text(heaters[index].heater.type.name),
                                     leading: CircleAvatar(
                                       child: Text(
-                                          heaters[index].selectedState.name),
+                                          '${heaters[index].currentLevel}'),
+                                    ),
+                                    subtitle: Text(
+                                      heaters[index]
+                                          .selectedState
+                                          .name
+                                          .replaceAll('auto', 'zone')
+                                          .toUpperCase(),
                                     ),
                                     onTap: () {
                                       setState(() {
