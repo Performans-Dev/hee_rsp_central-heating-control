@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
@@ -97,8 +98,13 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                 ),
                               ),
                               Expanded(
-                                child: SizedBox(
+                                child: Container(
                                   width: 140,
+                                  decoration: BoxDecoration(
+                                    borderRadius: UiDimens.formRadius,
+                                    color:
+                                        Colors.blueGrey.withValues(alpha: 0.7),
+                                  ),
                                   child: zone.selectedState == HeaterState.auto
                                       ? Column(
                                           mainAxisSize: MainAxisSize.min,
@@ -126,6 +132,13 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 SwitchListTile(
+                                                    title: const Text(
+                                                        'Thermostat'),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          UiDimens.formRadius,
+                                                    ),
                                                     value: zone.hasThermostat,
                                                     onChanged: (p0) {
                                                       processController
@@ -141,23 +154,41 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                       ? 1
                                                       : 0.3,
                                                   child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       IconButton(
                                                         icon: const Icon(
                                                             Icons.remove),
+                                                        iconSize: 36,
                                                         onPressed:
                                                             zone.hasThermostat
-                                                                ? () {}
+                                                                ? () {
+                                                                    processController
+                                                                        .onZoneThermostatDecreased(
+                                                                            zoneId:
+                                                                                zoneDefinition!.id);
+                                                                  }
                                                                 : null,
                                                       ),
                                                       Text(
-                                                          '${zone.desiredTemperature} °C'),
+                                                        ' ${(zone.desiredTemperature / 10).toInt()} °C ',
+                                                        style: const TextStyle(
+                                                            fontSize: 24),
+                                                      ),
                                                       IconButton(
                                                         icon: const Icon(
                                                             Icons.add),
+                                                        iconSize: 36,
                                                         onPressed:
                                                             zone.hasThermostat
-                                                                ? () {}
+                                                                ? () {
+                                                                    processController
+                                                                        .onZoneThermostatIncreased(
+                                                                            zoneId:
+                                                                                zoneDefinition!.id);
+                                                                  }
                                                                 : null,
                                                       ),
                                                     ],
