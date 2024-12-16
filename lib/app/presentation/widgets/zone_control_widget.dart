@@ -20,8 +20,8 @@ class ZoneControlWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         buildRow(context, HeaterState.auto),
-        buildRow(context, HeaterState.level3),
-        buildRow(context, HeaterState.level2),
+        if (maxLevel >= 3) buildRow(context, HeaterState.level3),
+        if (maxLevel >= 2) buildRow(context, HeaterState.level2),
         buildRow(context, HeaterState.level1),
         buildRow(context, HeaterState.off),
       ],
@@ -29,39 +29,49 @@ class ZoneControlWidget extends StatelessWidget {
   }
 
   Widget buildRow(context, HeaterState state) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: 30,
+    BorderRadius radius = BorderRadius.circular(0);
+    if (state == HeaterState.off) {
+      radius = const BorderRadius.only(
+        bottomLeft: Radius.circular(10),
+        bottomRight: Radius.circular(10),
+      );
+    } else if (state == HeaterState.auto) {
+      radius = const BorderRadius.only(
+        topLeft: Radius.circular(10),
+        topRight: Radius.circular(10),
+      );
+    }
+    return InkWell(
+      onTap: () => onStateChanged(state),
+      borderRadius: radius,
+      child: ClipRRect(
+        borderRadius: radius,
+        child: Container(
+          width: kToolbarHeight * 3,
           height: kToolbarHeight,
-          margin: const EdgeInsets.only(right: 20),
-          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            borderRadius: UiDimens.formRadius,
+            borderRadius: radius,
             color: Colors.blueGrey.withValues(alpha: 0.4),
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: UiDimens.formRadius,
-              color: CCUtils.stateColor(state),
-            ),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: UiDimens.formRadius,
+                  color: CCUtils.stateColor(state),
+                ),
+              ),
+              Text(
+                CCUtils.stateDisplay(state).toUpperCase(),
+                style: const TextStyle(fontSize: 22),
+              ),
+            ],
           ),
         ),
-        InkWell(
-          onTap: () => onStateChanged(state),
-          borderRadius: UiDimens.formRadius,
-          child: Container(
-            width: kToolbarHeight * 3,
-            height: kToolbarHeight,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(borderRadius: UiDimens.formRadius),
-            child: Text(CCUtils.stateDisplay(state)),
-          ),
-        ),
-        const Spacer(),
-      ],
+      ),
     );
   }
 }
