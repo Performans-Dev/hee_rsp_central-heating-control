@@ -227,13 +227,14 @@ class _ZoneScreenState extends State<ZoneScreen> {
                           alignment: Alignment.centerLeft,
                           child: selectedHeater == null
                               ? const Text('Heaters')
-                              : TextButton(
+                              : TextButton.icon(
                                   onPressed: () {
                                     setState(() {
                                       selectedHeater = null;
                                     });
                                   },
-                                  child: const Text('Back to Heater List'),
+                                  icon: const Icon(Icons.chevron_left),
+                                  label: const Text('Back to Heater List'),
                                 ),
                         ),
                         Expanded(
@@ -280,6 +281,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             HeaterState.auto)
                                           ToggleButtons(
                                             borderRadius: UiDimens.formRadius,
+                                            direction: Axis.vertical,
                                             isSelected: [
                                               ...HeaterState.values
                                                   .where((e) =>
