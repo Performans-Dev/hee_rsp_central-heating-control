@@ -71,24 +71,30 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
-                          child: const Text('Zone'),
+                          child: const Text('Zone Controls'),
                         ),
                         Expanded(
-                          child: Center(
-                            child: ZoneControlWidget(
-                              currentState: zone.selectedState,
-                              onStateChanged: (s) {
-                                processController.onZoneStateCalled(
-                                  zoneId: zone.zone.id,
-                                  state: s,
-                                );
-                              },
-                              maxLevel: maxLevel,
-                            ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Center(
+                                  child: ZoneControlWidget(
+                                    currentState: zone.selectedState,
+                                    onStateChanged: (s) {
+                                      processController.onZoneStateCalled(
+                                        zoneId: zone.zone.id,
+                                        state: s,
+                                      );
+                                    },
+                                    maxLevel: maxLevel,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text('dropdown'),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          child: Text('dropdown'),
                         ),
                       ],
                     ),
@@ -103,7 +109,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
-                          child: const Text('Zone'),
+                          child: const Text('Heaters'),
                         ),
                         Expanded(
                           child: ListView.builder(
@@ -128,10 +134,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                ...sensors.map(((e) => Chip(label: Text('${e.id}: 23 °C')))),
+                ...sensors
+                    .map(((e) => Chip(label: Text('Sensor${e.id}: 23 °C')))),
                 const Spacer(),
-                const CircleAvatar(
-                  child: Text('23.4 °C'),
+                const Chip(
+                  label: Text('Avg: 23.4 °C'),
                 ),
               ],
             ),

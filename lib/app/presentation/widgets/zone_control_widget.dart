@@ -19,10 +19,8 @@ class ZoneControlWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         buildRow(context, HeaterState.auto),
-        // if (maxLevel >= 3)
-        buildRow(context, HeaterState.level3),
-        // if (maxLevel >= 2)
-        buildRow(context, HeaterState.level2),
+        if (maxLevel >= 3) buildRow(context, HeaterState.level3),
+        if (maxLevel >= 2) buildRow(context, HeaterState.level2),
         buildRow(context, HeaterState.level1),
         buildRow(context, HeaterState.off),
       ],
@@ -64,7 +62,8 @@ class ZoneControlWidget extends StatelessWidget {
                 width: 20,
                 height: height,
                 decoration: BoxDecoration(
-                  color: CCUtils.stateColor(state),
+                  color:
+                      state == currentState ? CCUtils.stateColor(state) : null,
                 ),
               ),
               Padding(
