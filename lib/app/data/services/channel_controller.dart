@@ -709,6 +709,16 @@ class ChannelController extends GetxController {
     return String.fromCharCodes(bytes).replaceAll(RegExp(r'[^\x20-\x7E]'), '?');
   }
   //#endregion
+
+  double getSensorValue(int id) {
+    return inputChannels
+            .firstWhere((e) =>
+                (e.type == PinType.onboardAnalogInput ||
+                    e.type == PinType.uartAnalogInput) &&
+                e.pinIndex == id)
+            .analogValue ??
+        0;
+  }
 }
 
 class ChannelDefinition {

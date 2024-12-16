@@ -62,6 +62,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
+                  flex: 5,
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     child: Column(
@@ -102,6 +103,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     child: Column(
@@ -131,19 +133,29 @@ class _ZoneScreenState extends State<ZoneScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                ...sensors
-                    .map(((e) => Chip(label: Text('Sensor${e.id}: 23 °C')))),
-                const Spacer(),
-                const Chip(
-                  label: Text('Avg: 23.4 °C'),
-                ),
-              ],
+          if (sensors.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: Chip(
+                          label: Text(
+                              'Sensor${sensors[index].id}: ${channelController.getSensorValue(sensors[index].id)} °C'),
+                        ),
+                      ),
+                      itemCount: sensors.length,
+                    ),
+                  ),
+                  const Chip(
+                    label: Text('Avg: 23.4 °C'),
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
