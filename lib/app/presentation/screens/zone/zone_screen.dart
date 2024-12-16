@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
@@ -250,6 +251,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                       children: [
                                         Text(selectedHeater!.heater.name),
                                         ToggleButtons(
+                                          borderRadius: UiDimens.formRadius,
                                           isSelected: [
                                             selectedHeater!.selectedState ==
                                                 HeaterState.auto,
@@ -273,20 +275,23 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           ],
                                         ),
                                         if (selectedHeater!.selectedState !=
-                                            HeaterState.auto) ...[
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text('MAX')),
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text('HIGH')),
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text('ON')),
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text('OFF')),
-                                        ]
+                                            HeaterState.auto)
+                                          ToggleButtons(
+                                            borderRadius: UiDimens.formRadius,
+                                            isSelected: [
+                                              ...HeaterState.values
+                                                  .where((e) =>
+                                                      e != HeaterState.auto)
+                                                  .map((e) => false),
+                                            ],
+                                            children: [
+                                              ...HeaterState.values
+                                                  .where((e) =>
+                                                      e != HeaterState.auto)
+                                                  .map((e) => Text(
+                                                      CCUtils.stateDisplay(e))),
+                                            ],
+                                          ),
                                       ],
                                     ),
                                   ),
