@@ -97,25 +97,76 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                 ),
                               ),
                               Expanded(
-                                child: zone.selectedState == HeaterState.auto
-                                    ? SizedBox(
-                                        width: 160,
-                                        child: PlanDropdownWidget(
-                                          value: zoneDefinition?.selectedPlan,
-                                          onChanged: (p0) {
-                                            if (zoneDefinition != null) {
-                                              dataController.updateZone(
-                                                zoneDefinition!.copyWith(
-                                                  selectedPlan: p0,
+                                child: SizedBox(
+                                  width: 140,
+                                  child: zone.selectedState == HeaterState.auto
+                                      ? Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text('Select Plan for AUTO'),
+                                            PlanDropdownWidget(
+                                              value:
+                                                  zoneDefinition?.selectedPlan,
+                                              onChanged: (p0) {
+                                                if (zoneDefinition != null) {
+                                                  dataController.updateZone(
+                                                    zoneDefinition!.copyWith(
+                                                      selectedPlan: p0,
+                                                    ),
+                                                  );
+
+                                                  setState(() {});
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      : zone.selectedState != HeaterState.off
+                                          ? Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                SwitchListTile(
+                                                    value: zone.hasThermostat,
+                                                    onChanged: (p0) {
+                                                      processController
+                                                          .onZoneThermostatOptionCalled(
+                                                              zoneId:
+                                                                  zoneDefinition!
+                                                                      .id,
+                                                              value: p0);
+                                                      setState(() {});
+                                                    }),
+                                                Opacity(
+                                                  opacity: zone.hasThermostat
+                                                      ? 1
+                                                      : 0.3,
+                                                  child: Row(
+                                                    children: [
+                                                      IconButton(
+                                                        icon: const Icon(
+                                                            Icons.remove),
+                                                        onPressed:
+                                                            zone.hasThermostat
+                                                                ? () {}
+                                                                : null,
+                                                      ),
+                                                      Text(
+                                                          '${zone.desiredTemperature} °C'),
+                                                      IconButton(
+                                                        icon: const Icon(
+                                                            Icons.add),
+                                                        onPressed:
+                                                            zone.hasThermostat
+                                                                ? () {}
+                                                                : null,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      )
-                                    : zone.selectedState != HeaterState.off
-                                        ? const Text('thermostat')
-                                        : Container(),
+                                              ],
+                                            )
+                                          : Container(),
+                                ),
                               ),
                             ],
                           ),
