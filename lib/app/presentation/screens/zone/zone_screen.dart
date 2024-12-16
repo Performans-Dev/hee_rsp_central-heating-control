@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
@@ -6,6 +8,7 @@ import 'package:central_heating_control/app/data/services/channel_controller.dar
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/widgets/zone_control_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,6 +46,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
         .where((e) => e.zone == zoneDefinition.id)
         .toList();
 
+    int maxLevel = 1;
+    for (final heater in heaters) {
+      maxLevel = max(maxLevel, heater.heater.levelType.index);
+    }
+
     return AppScaffold(
       selectedIndex: 0,
       title: zone.zone.name,
@@ -50,49 +58,84 @@ class _ZoneScreenState extends State<ZoneScreen> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: const Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text('Zone'),
-                      Expanded(
-                        child: Center(
-                          child: Text('controls'),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Zone'),
                         ),
-                      ),
-                      Text('supplementary'),
-                    ],
+                        Expanded(
+                          child: Center(
+                            child: ZoneControlWidget(
+                              currentState: zone.selectedState,
+                              onStateChanged: (s) {
+                                processController.onZoneStateCalled(
+                                  zoneId: zone.zone.id,
+                                  state: s,
+                                );
+                              },
+                              maxLevel: maxLevel,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 140,
+                          child: Text('dropdown'),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: const Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text('heaters'),
-                      Text('H1'),
-                      Text('H1'),
-                      Text('H1'),
-                      Spacer(),
-                    ],
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Zone'),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemBuilder: (context, index) => ListTile(
+                              title: Text(heaters[index].heater.name),
+                              subtitle: Text(heaters[index].heater.type.name),
+                              leading: CircleAvatar(
+                                child: Text(heaters[index].selectedState.name),
+                              ),
+                            ),
+                            itemCount: heaters.length,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
-          const Row(
-            children: [
-              Text('S1'),
-              Text('S2'),
-              Text('S3'),
-              Spacer(),
-              Text('SA'),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                ...sensors.map(((e) => Chip(label: Text('${e.id}: 23 °C')))),
+                const Spacer(),
+                const CircleAvatar(
+                  child: Text('23.4 °C'),
+                ),
+              ],
+            ),
           ),
         ],
       ),
