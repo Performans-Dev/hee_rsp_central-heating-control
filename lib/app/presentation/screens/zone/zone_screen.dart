@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
@@ -30,6 +31,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
   late ZoneProcess zone;
   List<HeaterProcess> heaters = <HeaterProcess>[];
   late List<SensorDevice> sensors;
+  HeaterDevice? selectedHeater;
 
   @override
   void initState() {
@@ -100,6 +102,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               Expanded(
                                 child: Container(
                                   width: 140,
+                                  padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     borderRadius: UiDimens.formRadius,
                                     color:
@@ -162,15 +165,16 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                         icon: const Icon(
                                                             Icons.remove),
                                                         iconSize: 36,
-                                                        onPressed:
-                                                            zone.hasThermostat
-                                                                ? () {
-                                                                    processController
-                                                                        .onZoneThermostatDecreased(
-                                                                            zoneId:
-                                                                                zoneDefinition!.id);
-                                                                  }
-                                                                : null,
+                                                        onPressed: zone
+                                                                .hasThermostat
+                                                            ? () {
+                                                                processController
+                                                                    .onZoneThermostatDecreased(
+                                                                        zoneId:
+                                                                            zoneDefinition!.id);
+                                                                setState(() {});
+                                                              }
+                                                            : null,
                                                       ),
                                                       Text(
                                                         ' ${(zone.desiredTemperature / 10).toInt()} °C ',
@@ -181,22 +185,26 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                         icon: const Icon(
                                                             Icons.add),
                                                         iconSize: 36,
-                                                        onPressed:
-                                                            zone.hasThermostat
-                                                                ? () {
-                                                                    processController
-                                                                        .onZoneThermostatIncreased(
-                                                                            zoneId:
-                                                                                zoneDefinition!.id);
-                                                                  }
-                                                                : null,
+                                                        onPressed: zone
+                                                                .hasThermostat
+                                                            ? () {
+                                                                processController
+                                                                    .onZoneThermostatIncreased(
+                                                                        zoneId:
+                                                                            zoneDefinition!.id);
+                                                                setState(() {});
+                                                              }
+                                                            : null,
                                                       ),
                                                     ],
                                                   ),
                                                 ),
                                               ],
                                             )
-                                          : Container(),
+                                          : const Icon(
+                                              Icons.energy_savings_leaf,
+                                              size: 48,
+                                            ),
                                 ),
                               ),
                             ],
@@ -206,6 +214,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                     ),
                   ),
                 ),
+                const VerticalDivider(),
                 Expanded(
                   flex: 3,
                   child: Container(
@@ -216,19 +225,54 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
-                          child: const Text('Heaters'),
+                          child: selectedHeater == null
+                              ? const Text('Heaters')
+                              : TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedHeater = null;
+                                    });
+                                  },
+                                  child: const Text('Back to Heater List'),
+                                ),
                         ),
                         Expanded(
-                          child: ListView.builder(
-                            itemBuilder: (context, index) => ListTile(
-                              title: Text(heaters[index].heater.name),
-                              subtitle: Text(heaters[index].heater.type.name),
-                              leading: CircleAvatar(
-                                child: Text(heaters[index].selectedState.name),
-                              ),
-                            ),
-                            itemCount: heaters.length,
-                          ),
+                          child: selectedHeater != null
+                              ? Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: UiDimens.formRadius,
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(16),
+                                    child: const Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('heater name'),
+                                        Text('heater state'),
+                                        Text('heater controls'),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemBuilder: (context, index) => ListTile(
+                                    title: Text(heaters[index].heater.name),
+                                    subtitle:
+                                        Text(heaters[index].heater.type.name),
+                                    leading: CircleAvatar(
+                                      child: Text(
+                                          heaters[index].selectedState.name),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        selectedHeater = heaters[index].heater;
+                                      });
+                                    },
+                                  ),
+                                  itemCount: heaters.length,
+                                ),
                         ),
                       ],
                     ),
