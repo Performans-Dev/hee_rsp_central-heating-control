@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
@@ -31,7 +30,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
   late ZoneProcess zone;
   List<HeaterProcess> heaters = <HeaterProcess>[];
   late List<SensorDevice> sensors;
-  HeaterDevice? selectedHeater;
+  HeaterProcess? selectedHeater;
 
   @override
   void initState() {
@@ -136,8 +135,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 SwitchListTile(
-                                                    title: const Text(
-                                                        'Thermostat'),
+                                                    title: const Text('Thermo'),
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
@@ -245,14 +243,50 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                   ),
                                   child: Container(
                                     padding: const EdgeInsets.all(16),
-                                    child: const Column(
+                                    child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text('heater name'),
-                                        Text('heater state'),
-                                        Text('heater controls'),
+                                        Text(selectedHeater!.heater.name),
+                                        ToggleButtons(
+                                          isSelected: [
+                                            selectedHeater!.selectedState ==
+                                                HeaterState.auto,
+                                            selectedHeater!.selectedState !=
+                                                HeaterState.auto
+                                          ],
+                                          onPressed: (index) {
+                                            processController
+                                                .onHeaterStateCalled(
+                                              heaterId:
+                                                  selectedHeater!.heater.id,
+                                              state: index == 0
+                                                  ? HeaterState.auto
+                                                  : HeaterState.off,
+                                            );
+                                            setState(() {});
+                                          },
+                                          children: const [
+                                            Text('Zone'),
+                                            Text('Custom'),
+                                          ],
+                                        ),
+                                        if (selectedHeater!.selectedState !=
+                                            HeaterState.auto) ...[
+                                          ElevatedButton(
+                                              onPressed: () {},
+                                              child: const Text('MAX')),
+                                          ElevatedButton(
+                                              onPressed: () {},
+                                              child: const Text('HIGH')),
+                                          ElevatedButton(
+                                              onPressed: () {},
+                                              child: const Text('ON')),
+                                          ElevatedButton(
+                                              onPressed: () {},
+                                              child: const Text('OFF')),
+                                        ]
                                       ],
                                     ),
                                   ),
@@ -268,7 +302,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     ),
                                     onTap: () {
                                       setState(() {
-                                        selectedHeater = heaters[index].heater;
+                                        selectedHeater = heaters[index];
                                       });
                                     },
                                   ),

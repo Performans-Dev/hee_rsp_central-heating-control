@@ -68,6 +68,15 @@ class ProcessController extends GetxController {
     sortZoneList();
   }
 
+  void onHeaterStateCalled(
+      {required int heaterId, required HeaterState state}) {
+    var h = heaterProcessList.firstWhere((e) => e.heater.id == heaterId);
+    h.selectedState = state;
+    _heaterProcessList.removeWhere((e) => e.heater.id == heaterId);
+    _heaterProcessList.add(h);
+    update();
+  }
+
   void onZoneThermostatOptionCalled(
       {required int zoneId, required bool value}) {
     var z = zoneProcessList.firstWhere((e) => e.zone.id == zoneId);
