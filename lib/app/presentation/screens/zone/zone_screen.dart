@@ -90,7 +90,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                   ),
                                 ),
                               ),
-                              Expanded(
+                              const Expanded(
                                 child: Text('dropdown'),
                               ),
                             ],
