@@ -23,7 +23,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
   final ProcessController processController = Get.find();
   final DataController dataController = Get.find();
   final ChannelController channelController = Get.find();
-  late ZoneDefinition zoneDefinition;
+  ZoneDefinition? zoneDefinition;
   late ZoneProcess zone;
   List<HeaterProcess> heaters = <HeaterProcess>[];
   late List<SensorDevice> sensors;
@@ -37,14 +37,16 @@ class _ZoneScreenState extends State<ZoneScreen> {
 
   @override
   Widget build(BuildContext context) {
-    zone = processController.zoneProcessList
-        .firstWhere((e) => e.zone.id == zoneDefinition.id);
-    heaters = processController.heaterProcessList
-        .where((e) => e.heater.zoneId == zoneDefinition.id)
-        .toList();
-    sensors = dataController.sensorList
-        .where((e) => e.zone == zoneDefinition.id)
-        .toList();
+    if (zoneDefinition != null) {
+      zone = processController.zoneProcessList
+          .firstWhere((e) => e.zone.id == zoneDefinition!.id);
+      heaters = processController.heaterProcessList
+          .where((e) => e.heater.zoneId == zoneDefinition!.id)
+          .toList();
+      sensors = dataController.sensorList
+          .where((e) => e.zone == zoneDefinition!.id)
+          .toList();
+    }
 
     int maxLevel = 1;
     for (final heater in heaters) {
@@ -297,7 +299,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
       setState(() {
         zoneDefinition = zoneOnDb;
       });
-      processController.initZone(zoneDefinition);
+      processController.initZone(zoneDefinition!);
     } else {
       Future.delayed(Duration.zero, () => Get.back());
     }
