@@ -88,4 +88,29 @@ class ZoneDefinition {
 
   factory ZoneDefinition.fromJson(String source) =>
       ZoneDefinition.fromMap(json.decode(source));
+
+  ZoneDefinition copyWith({
+    int? id,
+    String? name,
+    List<HeaterDevice>? heaters,
+    List<SensorDevice>? sensors,
+    String? color,
+    List<AppUser>? users,
+    HeaterState? state,
+    int? setValue,
+    int? selectedPlan,
+  }) {
+    return ZoneDefinition(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      heaters: heaters ?? this.heaters,
+      sensors: sensors ?? this.sensors,
+      color: color ?? this.color,
+      users: users ?? this.users,
+      state: state ?? this.state,
+      setValue: setValue ?? this.setValue,
+      selectedPlan: selectedPlan ?? this.selectedPlan,
+    );
+  }
+
 }

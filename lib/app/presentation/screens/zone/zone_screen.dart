@@ -9,6 +9,7 @@ import 'package:central_heating_control/app/data/services/channel_controller.dar
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_control_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -97,7 +98,21 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               ),
                               Expanded(
                                 child: zone.selectedState == HeaterState.auto
-                                    ? const Text('dropdown')
+                                    ? SizedBox(
+                                        width: 160,
+                                        child: PlanDropdownWidget(
+                                          value: zoneDefinition?.selectedPlan,
+                                          onChanged: (p0) {
+                                            if (zoneDefinition != null) {
+                                              dataController.updateZone(
+                                                zoneDefinition!.copyWith(
+                                                  selectedPlan: p0,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      )
                                     : zone.selectedState != HeaterState.off
                                         ? const Text('thermostat')
                                         : Container(),
