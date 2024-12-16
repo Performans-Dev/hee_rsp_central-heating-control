@@ -88,7 +88,6 @@ class _ZoneScreenState extends State<ZoneScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 140,
                           child: Text('dropdown'),
                         ),
                       ],

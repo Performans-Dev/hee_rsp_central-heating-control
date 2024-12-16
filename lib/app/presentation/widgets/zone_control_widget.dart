@@ -20,8 +20,10 @@ class ZoneControlWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         buildRow(context, HeaterState.auto),
-        if (maxLevel >= 3) buildRow(context, HeaterState.level3),
-        if (maxLevel >= 2) buildRow(context, HeaterState.level2),
+        // if (maxLevel >= 3)
+        buildRow(context, HeaterState.level3),
+        // if (maxLevel >= 2)
+        buildRow(context, HeaterState.level2),
         buildRow(context, HeaterState.level1),
         buildRow(context, HeaterState.off),
       ],
@@ -29,6 +31,7 @@ class ZoneControlWidget extends StatelessWidget {
   }
 
   Widget buildRow(context, HeaterState state) {
+    double height = 48;
     BorderRadius radius = BorderRadius.circular(0);
     if (state == HeaterState.off) {
       radius = const BorderRadius.only(
@@ -47,26 +50,30 @@ class ZoneControlWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: radius,
         child: Container(
-          width: kToolbarHeight * 3,
-          height: kToolbarHeight,
+          width: height * 2,
+          height: height,
           decoration: BoxDecoration(
             borderRadius: radius,
             color: Colors.blueGrey.withValues(alpha: 0.4),
           ),
-          padding: const EdgeInsets.all(8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
+                width: 20,
+                height: height,
                 decoration: BoxDecoration(
                   borderRadius: UiDimens.formRadius,
                   color: CCUtils.stateColor(state),
                 ),
               ),
-              Text(
-                CCUtils.stateDisplay(state).toUpperCase(),
-                style: const TextStyle(fontSize: 22),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  CCUtils.stateDisplay(state).toUpperCase(),
+                  style: const TextStyle(fontSize: 22),
+                ),
               ),
             ],
           ),
