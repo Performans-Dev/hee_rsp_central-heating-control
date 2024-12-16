@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
@@ -94,8 +95,12 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                   ),
                                 ),
                               ),
-                              const Expanded(
-                                child: Text('dropdown'),
+                              Expanded(
+                                child: zone.selectedState == HeaterState.auto
+                                    ? Text('dropdown')
+                                    : zone.selectedState != HeaterState.off
+                                        ? Text('thermostat')
+                                        : Container(),
                               ),
                             ],
                           ),
@@ -135,29 +140,31 @@ class _ZoneScreenState extends State<ZoneScreen> {
               ],
             ),
           ),
-          // if (sensors.isNotEmpty)
-          //   Padding(
-          //     padding: const EdgeInsets.all(8.0),
-          //     child: Row(
-          //       children: [
-          //         Expanded(
-          //           child: ListView.builder(
-          //             itemBuilder: (context, index) => Padding(
-          //               padding: const EdgeInsets.only(right: 4),
-          //               child: Chip(
-          //                 label: Text(
-          //                     'Sensor${sensors[index].id}: ${channelController.getSensorValue(sensors[index].id)} °C'),
-          //               ),
-          //             ),
-          //             itemCount: sensors.length,
-          //           ),
-          //         ),
-          //         const Chip(
-          //           label: Text('Avg: 23.4 °C'),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
+          if (sensors.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child:
+                        //  ListView.builder(
+                        //   itemBuilder: (context, index) => Padding(
+                        //     padding: const EdgeInsets.only(right: 4),
+                        //     child: Chip(
+                        //       label: Text(
+                        //           'Sensor${sensors[index].id}: ${channelController.getSensorValue(sensors[index].id)} °C'),
+                        //     ),
+                        //   ),
+                        //   itemCount: sensors.length,
+                        // ),
+                        Text('${sensors.length} sensors'),
+                  ),
+                  const Chip(
+                    label: Text('Avg: 23.4 °C'),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
