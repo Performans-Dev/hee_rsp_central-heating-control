@@ -12,7 +12,7 @@ class ProcessController extends GetxController {
   final RxList<HeaterProcess> _heaterProcessList = <HeaterProcess>[].obs;
   List<HeaterProcess> get heaterProcessList => _heaterProcessList;
 
-  initZone(ZoneDefinition z) async {
+  void initZone(ZoneDefinition z) async {
     final heaters = z.heaters;
     if (!zoneProcessList.map((e) => e.zone.id).contains(z.id)) {
       _zoneProcessList.add(ZoneProcess(

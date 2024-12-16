@@ -1,16 +1,11 @@
-import 'package:central_heating_control/app/core/constants/dimens.dart';
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/utils/buzz.dart';
-import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
-import 'package:central_heating_control/app/presentation/widgets/label.dart';
-import 'package:central_heating_control/app/presentation/widgets/zone_state_control.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +19,8 @@ class ZoneScreen extends StatefulWidget {
 class _ZoneScreenState extends State<ZoneScreen> {
   final ProcessController processController = Get.find();
   final DataController dataController = Get.find();
+  final ChannelController channelController = Get.find();
+  late ZoneDefinition zoneDefinition;
   late ZoneProcess zone;
   List<HeaterProcess> heaters = <HeaterProcess>[];
   late List<SensorDevice> sensors;
@@ -31,10 +28,76 @@ class _ZoneScreenState extends State<ZoneScreen> {
   @override
   void initState() {
     super.initState();
+    int zoneId = int.parse('${Get.arguments[0]}');
+    initZone(zoneId);
   }
 
   @override
   Widget build(BuildContext context) {
+    zone = processController.zoneProcessList
+        .firstWhere((e) => e.zone.id == zoneDefinition.id);
+    heaters = processController.heaterProcessList
+        .where((e) => e.heater.zoneId == zoneDefinition.id)
+        .toList();
+    sensors = dataController.sensorList
+        .where((e) => e.zone == zoneDefinition.id)
+        .toList();
+
+    return AppScaffold(
+      selectedIndex: 0,
+      title: zone.zone.name,
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text('Zone'),
+                      Expanded(
+                        child: Center(
+                          child: Text('controls'),
+                        ),
+                      ),
+                      Text('supplementary'),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text('heaters'),
+                      Text('H1'),
+                      Text('H1'),
+                      Text('H1'),
+                      Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ]),
+          ),
+          const Row(
+            children: [
+              Text('S1'),
+              Text('S2'),
+              Text('S3'),
+              Spacer(),
+              Text('SA'),
+            ],
+          ),
+        ],
+      ),
+    );
+    /* 
     return GetBuilder<ProcessController>(builder: (pc) {
       zone =
           pc.zoneProcessList.firstWhere((e) => e.zone.id == Get.arguments[0]);
@@ -163,6 +226,18 @@ class _ZoneScreenState extends State<ZoneScreen> {
           ),
         ),
       );
-    });
+    }); */
+  }
+
+  Future<void> initZone(int zoneId) async {
+    final zoneOnDb = await DbProvider.db.getZone(id: zoneId);
+    if (zoneOnDb != null) {
+      setState(() {
+        zoneDefinition = zoneOnDb;
+      });
+      processController.initZone(zoneDefinition);
+    } else {
+      Future.delayed(Duration.zero, () => Get.back());
+    }
   }
 }
