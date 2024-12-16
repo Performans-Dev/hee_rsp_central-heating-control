@@ -712,11 +712,11 @@ class ChannelController extends GetxController {
 
   double getSensorValue(int id) {
     return inputChannels
-            .firstWhere((e) =>
+            .firstWhereOrNull((e) =>
                 (e.type == PinType.onboardAnalogInput ||
                     e.type == PinType.uartAnalogInput) &&
                 e.pinIndex == id)
-            .analogValue ??
+            ?.analogValue ??
         0;
   }
 }
