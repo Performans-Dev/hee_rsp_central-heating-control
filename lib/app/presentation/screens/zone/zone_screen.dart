@@ -97,9 +97,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               ),
                               Expanded(
                                 child: zone.selectedState == HeaterState.auto
-                                    ? Text('dropdown')
+                                    ? const Text('dropdown')
                                     : zone.selectedState != HeaterState.off
-                                        ? Text('thermostat')
+                                        ? const Text('thermostat')
                                         : Container(),
                               ),
                             ],
