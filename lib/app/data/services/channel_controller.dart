@@ -721,6 +721,7 @@ class ChannelController extends GetxController {
   }
 }
 
+// MARK: CHANNEL DEFINITION
 class ChannelDefinition {
   int id; // starts with 1
   String name; // CH-O 1
@@ -769,6 +770,7 @@ class ChannelDefinition {
   }
 }
 
+// MARK: STATEValue
 enum StateValue {
   off, //false
   on, //true
@@ -829,6 +831,7 @@ class SensorData {
   String toString() => 'SensorData(timestamp: $timestamp, sensors: $sensors)';
 }
 
+// MARK: SENSOR
 class Sensor {
   int sensor;
   int rawValue;
@@ -881,6 +884,7 @@ class Sensor {
   int get hashCode => sensor.hashCode ^ rawValue.hashCode;
 }
 
+// MARK: SERIAL QUERY
 class SerialQuery {
   int deviceId;
   int command; // limited to TestSignal, GetSerialNumber, GetModelNumber,
