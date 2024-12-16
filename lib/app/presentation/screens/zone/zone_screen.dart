@@ -243,11 +243,13 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     borderRadius: UiDimens.formRadius,
                                   ),
                                   child: Container(
-                                    padding: const EdgeInsets.all(16),
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(20),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
+                                      spacing: 12,
                                       children: [
                                         Text(selectedHeater!.heater.name),
                                         ToggleButtons(
@@ -282,8 +284,27 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                               ...HeaterState.values
                                                   .where((e) =>
                                                       e != HeaterState.auto)
-                                                  .map((e) => false),
+                                                  .map((e) =>
+                                                      heaters
+                                                          .firstWhere((h) =>
+                                                              h.heater.id ==
+                                                              selectedHeater
+                                                                  ?.heater.id)
+                                                          .selectedState ==
+                                                      e),
                                             ],
+                                            onPressed: (index) {
+                                              processController
+                                                  .onHeaterStateCalled(
+                                                heaterId:
+                                                    selectedHeater!.heater.id,
+                                                state: HeaterState.values
+                                                    .where((e) =>
+                                                        e != HeaterState.auto)
+                                                    .toList()[index],
+                                              );
+                                              setState(() {});
+                                            },
                                             children: [
                                               ...HeaterState.values
                                                   .where((e) =>
