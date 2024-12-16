@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:flutter/material.dart';
@@ -33,15 +34,32 @@ class ZoneControlWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 80,
+          width: 30,
           height: kToolbarHeight,
-          padding: const EdgeInsets.all(4),
-          color: Theme.of(context).colorScheme.primaryContainer,
+          margin: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: UiDimens.formRadius,
+            color: Colors.blueGrey.withValues(alpha: 0.4),
+          ),
           child: Container(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            decoration: BoxDecoration(
+              borderRadius: UiDimens.formRadius,
+              color: CCUtils.stateColor(state),
+            ),
           ),
         ),
-        Text(CCUtils.stateDisplay(state)),
+        InkWell(
+          onTap: () => onStateChanged(state),
+          borderRadius: UiDimens.formRadius,
+          child: Container(
+            width: kToolbarHeight * 3,
+            height: kToolbarHeight,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(borderRadius: UiDimens.formRadius),
+            child: Text(CCUtils.stateDisplay(state)),
+          ),
+        ),
         const Spacer(),
       ],
     );

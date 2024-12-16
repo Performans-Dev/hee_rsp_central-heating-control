@@ -32,6 +32,21 @@ class CCUtils {
     }
   }
 
+  static Color stateColor(HeaterState s) {
+    switch (s) {
+      case HeaterState.off:
+        return Colors.grey;
+      case HeaterState.auto:
+        return Colors.blue;
+      case HeaterState.level1:
+        return Colors.orange;
+      case HeaterState.level2:
+        return Colors.deepOrange;
+      case HeaterState.level3:
+        return Colors.red;
+    }
+  }
+
   static String temperature(
     int t, {
     bool divideBy10 = true,
