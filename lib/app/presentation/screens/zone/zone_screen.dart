@@ -85,6 +85,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                         zoneId: zone.zone.id,
                                         state: s,
                                       );
+                                      setState(() {});
                                     },
                                     maxLevel: maxLevel,
                                   ),

@@ -67,7 +67,7 @@ class ZoneControlWidget extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.only(left: 16, right: 30),
                 child: Text(
                   CCUtils.stateDisplay(state).toUpperCase(),
                   style: const TextStyle(fontSize: 22),
