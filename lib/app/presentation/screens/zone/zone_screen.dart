@@ -110,6 +110,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           .withValues(alpha: 0.7),
                                     ),
                                     child: Column(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Container(
                                           height: 20,
