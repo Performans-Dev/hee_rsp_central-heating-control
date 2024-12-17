@@ -252,11 +252,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           CrossAxisAlignment.center,
                                       spacing: 12,
                                       children: [
+                                        Text(selectedHeater!.heater.name),
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            Text(selectedHeater!.heater.name),
                                             ToggleButtons(
                                               borderRadius: UiDimens.formRadius,
                                               isSelected: [
@@ -265,6 +265,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                 selectedHeater!.selectedState !=
                                                     HeaterState.auto
                                               ],
+                                              direction: Axis.vertical,
                                               onPressed: (index) {
                                                 processController
                                                     .onHeaterStateCalled(
@@ -295,62 +296,65 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                 ),
                                               ],
                                             ),
+                                            if (selectedHeater!.selectedState !=
+                                                HeaterState.auto)
+                                              ToggleButtons(
+                                                borderRadius:
+                                                    UiDimens.formRadius,
+                                                direction: Axis.vertical,
+                                                verticalDirection:
+                                                    VerticalDirection.up,
+                                                isSelected: [
+                                                  ...HeaterState.values
+                                                      .where((e) =>
+                                                          e != HeaterState.auto)
+                                                      .map((e) =>
+                                                          heaters
+                                                              .firstWhere((h) =>
+                                                                  h.heater.id ==
+                                                                  selectedHeater
+                                                                      ?.heater
+                                                                      .id)
+                                                              .selectedState ==
+                                                          e),
+                                                ],
+                                                onPressed: (index) {
+                                                  processController
+                                                      .onHeaterStateCalled(
+                                                    heaterId: selectedHeater!
+                                                        .heater.id,
+                                                    state: HeaterState.values
+                                                        .where((e) =>
+                                                            e !=
+                                                            HeaterState.auto)
+                                                        .toList()[index],
+                                                  );
+                                                  setState(() {});
+                                                },
+                                                children: [
+                                                  ...HeaterState.values
+                                                      .where((e) =>
+                                                          e != HeaterState.auto)
+                                                      .map((e) => e ==
+                                                              selectedHeater
+                                                                  ?.selectedState
+                                                          ? Row(
+                                                              spacing: 8,
+                                                              children: [
+                                                                const Icon(Icons
+                                                                    .check),
+                                                                Text(CCUtils
+                                                                    .stateDisplay(
+                                                                        e))
+                                                              ],
+                                                            )
+                                                          : Text(CCUtils
+                                                              .stateDisplay(
+                                                                  e))),
+                                                ],
+                                              ),
                                           ],
                                         ),
-                                        if (selectedHeater!.selectedState !=
-                                            HeaterState.auto)
-                                          ToggleButtons(
-                                            borderRadius: UiDimens.formRadius,
-                                            direction: Axis.vertical,
-                                            verticalDirection:
-                                                VerticalDirection.up,
-                                            isSelected: [
-                                              ...HeaterState.values
-                                                  .where((e) =>
-                                                      e != HeaterState.auto)
-                                                  .map((e) =>
-                                                      heaters
-                                                          .firstWhere((h) =>
-                                                              h.heater.id ==
-                                                              selectedHeater
-                                                                  ?.heater.id)
-                                                          .selectedState ==
-                                                      e),
-                                            ],
-                                            onPressed: (index) {
-                                              processController
-                                                  .onHeaterStateCalled(
-                                                heaterId:
-                                                    selectedHeater!.heater.id,
-                                                state: HeaterState.values
-                                                    .where((e) =>
-                                                        e != HeaterState.auto)
-                                                    .toList()[index],
-                                              );
-                                              setState(() {});
-                                            },
-                                            children: [
-                                              ...HeaterState.values
-                                                  .where((e) =>
-                                                      e != HeaterState.auto)
-                                                  .map((e) => e ==
-                                                          selectedHeater
-                                                              ?.selectedState
-                                                      ? Row(
-                                                          spacing: 8,
-                                                          children: [
-                                                            const Icon(
-                                                                Icons.check),
-                                                            Text(CCUtils
-                                                                .stateDisplay(
-                                                                    e))
-                                                          ],
-                                                        )
-                                                      : Text(
-                                                          CCUtils.stateDisplay(
-                                                              e))),
-                                            ],
-                                          ),
                                       ],
                                     ),
                                   ),
