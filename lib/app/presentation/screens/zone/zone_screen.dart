@@ -277,8 +277,22 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                 setState(() {});
                                               },
                                               children: const [
-                                                Text(' Zone '),
-                                                Text(' Custom '),
+                                                Row(
+                                                  spacing: 8,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(Icons.auto_awesome),
+                                                    Text('Zone'),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  spacing: 8,
+                                                  children: [
+                                                    Icon(Icons.settings),
+                                                    Text('Custom'),
+                                                  ],
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -319,8 +333,22 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                               ...HeaterState.values
                                                   .where((e) =>
                                                       e != HeaterState.auto)
-                                                  .map((e) => Text(
-                                                      CCUtils.stateDisplay(e))),
+                                                  .map((e) => e ==
+                                                          selectedHeater
+                                                              ?.selectedState
+                                                      ? Row(
+                                                          spacing: 8,
+                                                          children: [
+                                                            const Icon(
+                                                                Icons.check),
+                                                            Text(CCUtils
+                                                                .stateDisplay(
+                                                                    e))
+                                                          ],
+                                                        )
+                                                      : Text(
+                                                          CCUtils.stateDisplay(
+                                                              e))),
                                             ],
                                           ),
                                       ],
