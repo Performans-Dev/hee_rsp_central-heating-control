@@ -278,81 +278,107 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                 setState(() {});
                                               },
                                               children: const [
-                                                Row(
-                                                  spacing: 8,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Icon(Icons.auto_awesome),
-                                                    Text('Zone'),
-                                                  ],
+                                                Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    spacing: 8,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(Icons.auto_awesome),
+                                                      Text('Zone'),
+                                                    ],
+                                                  ),
                                                 ),
-                                                Row(
-                                                  spacing: 8,
-                                                  children: [
-                                                    Icon(Icons.settings),
-                                                    Text('Custom'),
-                                                  ],
+                                                Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    spacing: 8,
+                                                    children: [
+                                                      Icon(Icons.settings),
+                                                      Text('Custom'),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                            if (selectedHeater!.selectedState !=
-                                                HeaterState.auto)
-                                              ToggleButtons(
-                                                borderRadius:
-                                                    UiDimens.formRadius,
-                                                direction: Axis.vertical,
-                                                verticalDirection:
-                                                    VerticalDirection.up,
-                                                isSelected: [
-                                                  ...HeaterState.values
-                                                      .where((e) =>
-                                                          e != HeaterState.auto)
-                                                      .map((e) =>
-                                                          heaters
-                                                              .firstWhere((h) =>
-                                                                  h.heater.id ==
+                                            (selectedHeater!.selectedState ==
+                                                    HeaterState.auto)
+                                                ? Container(width: 74)
+                                                : ToggleButtons(
+                                                    borderRadius:
+                                                        UiDimens.formRadius,
+                                                    direction: Axis.vertical,
+                                                    verticalDirection:
+                                                        VerticalDirection.up,
+                                                    isSelected: [
+                                                      ...HeaterState.values
+                                                          .where((e) =>
+                                                              e !=
+                                                              HeaterState.auto)
+                                                          .map((e) =>
+                                                              heaters
+                                                                  .firstWhere((h) =>
+                                                                      h.heater
+                                                                          .id ==
+                                                                      selectedHeater
+                                                                          ?.heater
+                                                                          .id)
+                                                                  .selectedState ==
+                                                              e),
+                                                    ],
+                                                    onPressed: (index) {
+                                                      processController
+                                                          .onHeaterStateCalled(
+                                                        heaterId:
+                                                            selectedHeater!
+                                                                .heater.id,
+                                                        state: HeaterState
+                                                            .values
+                                                            .where((e) =>
+                                                                e !=
+                                                                HeaterState
+                                                                    .auto)
+                                                            .toList()[index],
+                                                      );
+                                                      setState(() {});
+                                                    },
+                                                    children: [
+                                                      ...HeaterState.values
+                                                          .where((e) =>
+                                                              e !=
+                                                              HeaterState.auto)
+                                                          .map((e) => e ==
                                                                   selectedHeater
-                                                                      ?.heater
-                                                                      .id)
-                                                              .selectedState ==
-                                                          e),
-                                                ],
-                                                onPressed: (index) {
-                                                  processController
-                                                      .onHeaterStateCalled(
-                                                    heaterId: selectedHeater!
-                                                        .heater.id,
-                                                    state: HeaterState.values
-                                                        .where((e) =>
-                                                            e !=
-                                                            HeaterState.auto)
-                                                        .toList()[index],
-                                                  );
-                                                  setState(() {});
-                                                },
-                                                children: [
-                                                  ...HeaterState.values
-                                                      .where((e) =>
-                                                          e != HeaterState.auto)
-                                                      .map((e) => e ==
-                                                              selectedHeater
-                                                                  ?.selectedState
-                                                          ? Row(
-                                                              spacing: 8,
-                                                              children: [
-                                                                const Icon(Icons
-                                                                    .check),
-                                                                Text(CCUtils
-                                                                    .stateDisplay(
-                                                                        e))
-                                                              ],
-                                                            )
-                                                          : Text(CCUtils
-                                                              .stateDisplay(
-                                                                  e))),
-                                                ],
-                                              ),
+                                                                      ?.selectedState
+                                                              ? Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    spacing: 8,
+                                                                    children: [
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .check),
+                                                                      Text(CCUtils
+                                                                          .stateDisplay(
+                                                                              e))
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              : Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child: Text(CCUtils
+                                                                      .stateDisplay(
+                                                                          e)),
+                                                                )),
+                                                    ],
+                                                  ),
                                           ],
                                         ),
                                       ],
