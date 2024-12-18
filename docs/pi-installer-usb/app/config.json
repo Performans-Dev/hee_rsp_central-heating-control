@@ -1,0 +1,20 @@
+{
+  "display": {
+    "width": 800,
+    "height": 480,
+    "brightness": 100,
+    "rotation": 0
+  },
+  "hardware": {
+    "spi_device": "/dev/spidev0.0",
+    "i2c_device": "/dev/i2c-1",
+    "gpio_export": [17, 18, 27],
+    "serial_port": "/dev/ttyAMA0",
+    "serial_baud": 115200
+  },
+  "application": {
+    "log_level": "info",
+    "update_interval": 1000,
+    "data_directory": "/opt/heethings/data"
+  }
+}

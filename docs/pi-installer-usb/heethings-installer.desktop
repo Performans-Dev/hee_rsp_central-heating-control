@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Heethings Installer
+Comment=Install Heethings Central Heating Control
+Exec=bash -c 'cd "$(dirname "%k")" && ./install.sh'
+Icon=heethings.png
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/heethings;
