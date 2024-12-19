@@ -9,9 +9,11 @@ class StructureMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final AppController appController = Get.find();
-    if (!appController.didCheckFolders &&
-        !appController.didCheckedProvisionResults &&
-        !appController.didReadDeviceInfoCompleted) {
+    if (
+        // !appController.didCheckFolders &&
+        //   !appController.didCheckedProvisionResults &&
+        //   !
+        appController.didReadDeviceInfoCompleted) {
       return const RouteSettings(name: Routes.splashStructureProgress);
     }
     return null;

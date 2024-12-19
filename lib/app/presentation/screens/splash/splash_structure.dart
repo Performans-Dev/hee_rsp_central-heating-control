@@ -33,8 +33,10 @@ class _SplashStructureAndProvisionCheckScreenState
     print(
         'didReadDeviceInfoCompleted: ${appController.didReadDeviceInfoCompleted}');
     print('---');
-    if (appController.didCheckFolders &&
-        appController.didCheckedProvisionResults &&
+    if (
+        // appController.didCheckFolders &&
+        //   appController.didCheckedProvisionResults &&
+
         appController.didReadDeviceInfoCompleted) {
       NavController.toHome();
     } else {
