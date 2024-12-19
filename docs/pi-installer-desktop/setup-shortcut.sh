@@ -48,17 +48,44 @@ SENSOR_ZIP="https://releases.api2.run/heethings/cc/sensor.zip"
 SCRIPTS_ZIP="https://releases.api2.run/heethings/cc/scripts.zip"
 API_URL="https://chc-api.globeapp.dev/api/v1/settings/app/version"
 
+# Function to backup existing installation
+backup_existing() {
+    if [ -d "$BASE_DIR" ]; then
+        echo "Backing up existing installation..."
+        BACKUP_DIR="${BASE_DIR}_backup_$(date +%Y%m%d_%H%M%S)"
+        mv "$BASE_DIR" "$BACKUP_DIR"
+        echo "Existing installation backed up to: $BACKUP_DIR"
+    fi
+}
+
+# Function to clean up old backups
+cleanup_old_backups() {
+    echo "Cleaning up old backups..."
+    # Keep only the 3 most recent backups
+    ls -dt "${BASE_DIR}_backup_"* 2>/dev/null | tail -n +4 | xargs -r rm -rf
+}
+
 echo "Running Heethings installer..."
 
-# 1. Enable interfaces
-echo "Setting up interfaces..."
-raspi-config nonint do_spi 0
-raspi-config nonint do_i2c 0
-raspi-config nonint do_serial 1
+# Install required packages
+echo "Installing required packages..."
+apt-get update
+apt-get install -y libsqlite3-0 libsqlite3-dev i2c-tools jq
 
-# 2. Set up RTC
+# 1. Enable interfaces (only if not already enabled)
+echo "Setting up interfaces..."
+raspi-config nonint get_spi || raspi-config nonint do_spi 0
+raspi-config nonint get_i2c || raspi-config nonint do_i2c 0
+raspi-config nonint get_serial || raspi-config nonint do_serial 1
+
+# 2. Set up RTC (only if not already set)
 echo "Setting up RTC..."
-echo "dtoverlay=i2c-rtc,ds3231" >> /boot/firmware/config.txt
+if ! grep -q "dtoverlay=i2c-rtc,ds3231" /boot/firmware/config.txt; then
+    echo "dtoverlay=i2c-rtc,ds3231" >> /boot/firmware/config.txt
+fi
+
+# Backup existing installation
+backup_existing
 
 # 3. Create directories
 echo "Creating directories..."
@@ -164,6 +191,9 @@ chmod +x "$BASE_DIR/CC/application/central_heating_control"
 
 # Clean up
 rm -f /tmp/*.zip
+
+# Clean up old backups
+cleanup_old_backups
 
 echo "Installation complete! System will reboot to apply changes."
 echo "Press Enter to reboot..."
