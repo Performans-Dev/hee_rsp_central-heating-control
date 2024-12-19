@@ -14,7 +14,7 @@ show_message() {
 
 # Install required packages
 apt-get update
-apt-get install -y zenity lxterminal jq pcmanfm libsqlite3-0 libsqlite3-dev i2c-tools
+apt-get install -y zenity lxterminal jq pcmanfm libsqlite3-0 libsqlite3-dev i2c-tools zip unzip
 
 # Create the desktop entry
 cat > /usr/share/applications/heethings-installer.desktop << 'EOF'
@@ -52,9 +52,10 @@ API_URL="https://chc-api.globeapp.dev/api/v1/settings/app/version"
 backup_existing() {
     if [ -d "$BASE_DIR" ]; then
         echo "Backing up existing installation..."
-        BACKUP_DIR="${BASE_DIR}_backup_$(date +%Y%m%d_%H%M%S)"
-        mv "$BASE_DIR" "$BACKUP_DIR"
-        echo "Existing installation backed up to: $BACKUP_DIR"
+        BACKUP_NAME="Heethings_backup_$(date +%Y%m%d_%H%M%S).zip"
+        cd /home/pi
+        zip -r "$BACKUP_NAME" Heethings/
+        echo "Existing installation backed up to: /home/pi/$BACKUP_NAME"
     fi
 }
 
@@ -62,7 +63,8 @@ backup_existing() {
 cleanup_old_backups() {
     echo "Cleaning up old backups..."
     # Keep only the 3 most recent backups
-    ls -dt "${BASE_DIR}_backup_"* 2>/dev/null | tail -n +4 | xargs -r rm -rf
+    cd /home/pi
+    ls -t Heethings_backup_*.zip 2>/dev/null | tail -n +4 | xargs -r rm -f
 }
 
 echo "Running Heethings installer..."
@@ -70,7 +72,7 @@ echo "Running Heethings installer..."
 # Install required packages
 echo "Installing required packages..."
 apt-get update
-apt-get install -y libsqlite3-0 libsqlite3-dev i2c-tools jq
+apt-get install -y libsqlite3-0 libsqlite3-dev i2c-tools jq zip unzip
 
 # 1. Enable interfaces (only if not already enabled)
 echo "Setting up interfaces..."
@@ -86,6 +88,9 @@ fi
 
 # Backup existing installation
 backup_existing
+
+# Remove existing installation to ensure clean state
+rm -rf "$BASE_DIR"
 
 # 3. Create directories
 echo "Creating directories..."
@@ -168,9 +173,24 @@ Name=Heethings
 Exec=/home/pi/Heethings/CC/application/central_heating_control
 Icon=/home/pi/Heethings/app_icon.png
 Terminal=false
-Categories=Utility;
+X-GNOME-Autostart-enabled=true
 INNEREOF
+
 chmod +x /home/pi/.config/autostart/heethings.desktop
+chown pi:pi /home/pi/.config/autostart/heethings.desktop
+
+# Also create system-wide autostart (as backup)
+cat > /etc/xdg/autostart/heethings.desktop << 'INNEREOF'
+[Desktop Entry]
+Type=Application
+Name=Heethings
+Exec=/home/pi/Heethings/CC/application/central_heating_control
+Icon=/home/pi/Heethings/app_icon.png
+Terminal=false
+X-GNOME-Autostart-enabled=true
+INNEREOF
+
+chmod +x /etc/xdg/autostart/heethings.desktop
 
 # 12. Create application menu shortcut
 cat > /usr/share/applications/heethings.desktop << 'INNEREOF'
@@ -182,6 +202,7 @@ Icon=/home/pi/Heethings/app_icon.png
 Terminal=false
 Categories=Utility;
 INNEREOF
+
 chmod +x /usr/share/applications/heethings.desktop
 
 # 13. Set permissions
