@@ -155,11 +155,51 @@ chown -R pi:pi /home/pi/.config/pcmanfm
 
 # 9. Download screensaver images
 echo "Downloading screensaver images..."
+download_image() {
+    local num=$1
+    local formatted_num=$(printf "%02d" $num)
+    local url="https://releases.api2.run/heethings/cc/images/$num.jpg"
+    local output="$PICTURES_DIR/wp$formatted_num.jpg"
+    
+    # Try up to 3 times to download
+    for attempt in {1..3}; do
+        if wget --no-check-certificate -q "$url" -O "$output"; then
+            # Verify if it's a valid JPEG file
+            if file "$output" | grep -q "JPEG image data"; then
+                echo "Successfully downloaded wp$formatted_num.jpg"
+                return 0
+            else
+                echo "Downloaded file is not a valid JPEG, retrying..."
+                rm -f "$output"
+            fi
+        else
+            echo "Failed to download wp$formatted_num.jpg (attempt $attempt)"
+        fi
+    done
+    return 1
+}
+
+# Clear existing images first
+rm -f "$PICTURES_DIR"/wp*.jpg
+
+# Download all images
+failed_downloads=0
 for i in {1..19}; do
-    # Format number with leading zero
-    num=$(printf "%02d" $i)
-    wget -q --show-progress "https://releases.api2.run/heethings/cc/images/$i.jpg" -O "$PICTURES_DIR/wp$num.jpg"
+    if ! download_image $i; then
+        failed_downloads=$((failed_downloads + 1))
+        echo "Failed to download image $i after all attempts"
+    fi
 done
+
+if [ $failed_downloads -gt 0 ]; then
+    echo "Warning: $failed_downloads images failed to download"
+else
+    echo "All wallpaper images downloaded successfully"
+fi
+
+# Set proper permissions
+chown -R pi:pi "$PICTURES_DIR"
+chmod 644 "$PICTURES_DIR"/wp*.jpg
 
 # 10. Run sensor installation
 echo "Installing sensor..."
