@@ -158,7 +158,7 @@ echo "Downloading screensaver images..."
 download_image() {
     local num=$1
     local formatted_num=$(printf "%02d" $num)
-    local url="https://releases.api2.run/heethings/cc/images/$num.jpg"
+    local url="https://releases.api2.run/heethings/cc/images/wp$formatted_num.jpg"
     local output="$PICTURES_DIR/wp$formatted_num.jpg"
     
     echo "Downloading $url to $output"
