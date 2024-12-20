@@ -41,6 +41,9 @@ class _SplashStructureAndProvisionCheckScreenState
       NavController.toHome();
     } else {
       setState(() => counter++);
+      if (counter == 40) {
+        appController.readDevice();
+      }
       Future.delayed(
         const Duration(milliseconds: 100),
         () {

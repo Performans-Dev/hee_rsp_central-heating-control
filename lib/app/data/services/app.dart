@@ -129,6 +129,7 @@ class AppController extends GetxController {
     _deviceInfo.value = device;
     _didReadDeviceInfoCompleted.value = true;
     update();
+    setReadDeviceInfoCompleted(true);
   }
   //#endregion
 
