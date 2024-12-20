@@ -25,9 +25,10 @@ class SetupStartScreen extends StatelessWidget {
                 sc.refreshSetupSequenceList();
                 NavController.toHome();
               },
+              isExpanded: true,
               child: Center(
                 child: Text(
-                    'Before starting, we need to know a few things. Proceed to setup sequence.'
+                    'Before starting, we need to know a few things. Please proceed to setup sequence.'
                         .tr),
               ),
             );
