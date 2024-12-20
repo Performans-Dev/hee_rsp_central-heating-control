@@ -161,20 +161,24 @@ download_image() {
     local url="https://releases.api2.run/heethings/cc/images/$num.jpg"
     local output="$PICTURES_DIR/wp$formatted_num.jpg"
     
+    echo "Downloading $url to $output"
+    
     # Try up to 3 times to download
     for attempt in {1..3}; do
-        if wget --no-check-certificate -q "$url" -O "$output"; then
-            # Verify if it's a valid JPEG file
-            if file "$output" | grep -q "JPEG image data"; then
-                echo "Successfully downloaded wp$formatted_num.jpg"
+        # Use curl with error reporting
+        if curl -L -f -s "$url" -o "$output"; then
+            # Check if file exists and has size greater than 0
+            if [ -s "$output" ]; then
+                echo "Successfully downloaded wp$formatted_num.jpg ($(stat -f%z "$output") bytes)"
                 return 0
             else
-                echo "Downloaded file is not a valid JPEG, retrying..."
+                echo "Downloaded file is empty, retrying..."
                 rm -f "$output"
             fi
         else
-            echo "Failed to download wp$formatted_num.jpg (attempt $attempt)"
+            echo "Failed to download wp$formatted_num.jpg (attempt $attempt, curl exit code: $?)"
         fi
+        sleep 1
     done
     return 1
 }
