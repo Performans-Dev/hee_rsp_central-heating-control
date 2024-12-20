@@ -156,7 +156,9 @@ chown -R pi:pi /home/pi/.config/pcmanfm
 # 9. Download screensaver images
 echo "Downloading screensaver images..."
 for i in {1..19}; do
-    wget -q --show-progress "https://releases.api2.run/heethings/cc/images/$i.jpg" -O "$PICTURES_DIR/$i.jpg"
+    # Format number with leading zero
+    num=$(printf "%02d" $i)
+    wget -q --show-progress "https://releases.api2.run/heethings/cc/images/$i.jpg" -O "$PICTURES_DIR/wp$num.jpg"
 done
 
 # 10. Run sensor installation
@@ -216,6 +218,13 @@ rm -f /tmp/*.zip
 
 # Clean up old backups
 cleanup_old_backups
+
+# Clean up old preference files
+echo "Cleaning up old preference files..."
+rm -f "/home/pi/Documents/CC_prefs.bak"
+rm -f "/home/pi/Documents/CC_prefs.gs"
+rm -f "/home/pi/Documents/GetStorage.bak"
+rm -f "/home/pi/Documents/GetStorage.gs"
 
 echo "Installation complete! System will reboot to apply changes."
 echo "Press Enter to reboot..."
