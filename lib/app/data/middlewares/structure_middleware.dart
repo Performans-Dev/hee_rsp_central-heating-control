@@ -13,7 +13,7 @@ class StructureMiddleware extends GetMiddleware {
         // !appController.didCheckFolders &&
         //   !appController.didCheckedProvisionResults &&
         //   !
-        appController.didReadDeviceInfoCompleted) {
+        !appController.didReadDeviceInfoCompleted) {
       return const RouteSettings(name: Routes.splashStructureProgress);
     }
     return null;
