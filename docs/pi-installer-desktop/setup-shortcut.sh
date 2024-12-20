@@ -97,6 +97,7 @@ echo "Creating directories..."
 mkdir -p "$BASE_DIR/CC/application"
 mkdir -p "$BASE_DIR/CC/elevator/app"
 mkdir -p "$BASE_DIR/CC/diagnose/app"
+mkdir -p "$BASE_DIR/CC/sensor"
 mkdir -p "$PICTURES_DIR"
 
 # 4. Download Flutter apps
@@ -125,7 +126,7 @@ unzip -o "$BASE_DIR/CC/diagnose/app/diagnose.zip" -d "$BASE_DIR/CC/diagnose/app"
 # 7. Extract support files
 echo "Extracting support files..."
 unzip -o "/tmp/images.zip" -d "$BASE_DIR"
-unzip -o "/tmp/sensor.zip" -d "$BASE_DIR"
+unzip -o "/tmp/sensor.zip" -d "$BASE_DIR/CC"
 unzip -o "/tmp/scripts.zip" -d "$BASE_DIR"
 
 # 8. Set up wallpaper and splash
