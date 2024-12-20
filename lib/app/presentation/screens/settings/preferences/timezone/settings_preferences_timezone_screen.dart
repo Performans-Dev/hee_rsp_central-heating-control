@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
@@ -49,23 +51,44 @@ class _SettingsPreferencesTimezoneScreenState
   @override
   void initState() {
     super.initState();
-    _selectedTimezone = (StaticProvider.getTimezoneList.firstWhereOrNull((e) =>
-            e["zone"] ==
-            (TimezoneDefinition.fromJson(
-                    Box.getString(key: Keys.selectedTimezone)))
-                .zone) ??
-        StaticProvider.getTimezoneList.first) as TimezoneDefinition;
-    _selectedYear = DateTime.now().year;
-    _selectedMonth = DateTime.now().month;
-    _selectedDay = DateTime.now().day;
-    _selectedHour = DateTime.now().hour;
-    _selectedMinute = DateTime.now().minute;
-    _selectedDateFormat = Box.getString(
-        key: Keys.selectedDateFormat,
-        defaultVal: StaticProvider.getDateFormatList.first);
-    _selectedTimeFormat = Box.getString(
-        key: Keys.selectedTimeFormat,
-        defaultVal: StaticProvider.getTimeFormatList.first);
+    initTime();
+  }
+
+  void initTime() {
+    try {
+      _selectedTimezone = (StaticProvider.getTimezoneList.firstWhereOrNull(
+              (e) =>
+                  e["zone"] ==
+                  (TimezoneDefinition.fromJson(
+                          Box.getString(key: Keys.selectedTimezone)))
+                      .zone) ??
+          StaticProvider.getTimezoneList.first) as TimezoneDefinition;
+      _selectedYear = DateTime.now().year;
+      _selectedMonth = DateTime.now().month;
+      _selectedDay = DateTime.now().day;
+      _selectedHour = DateTime.now().hour;
+      _selectedMinute = DateTime.now().minute;
+      _selectedDateFormat = Box.getString(
+          key: Keys.selectedDateFormat,
+          defaultVal: StaticProvider.getDateFormatList.first);
+      _selectedTimeFormat = Box.getString(
+          key: Keys.selectedTimeFormat,
+          defaultVal: StaticProvider.getTimeFormatList.first);
+    } on Exception catch (e) {
+      print(e);
+      _selectedTimezone = TimezoneDefinition(
+        gmt: '(GMT+02:00)',
+        zone: 'Europe/Istanbul',
+        name: 'Istanbul',
+      );
+      _selectedYear = DateTime.now().year;
+      _selectedMonth = DateTime.now().month;
+      _selectedDay = DateTime.now().day;
+      _selectedHour = DateTime.now().hour;
+      _selectedMinute = DateTime.now().minute;
+      _selectedDateFormat = StaticProvider.getDateFormatList.first;
+      _selectedTimeFormat = StaticProvider.getTimeFormatList.first;
+    }
   }
 
   @override
@@ -217,7 +240,8 @@ class _SettingsPreferencesTimezoneScreenState
                                       child: Container(
                                         padding: const EdgeInsets.all(20),
                                         decoration: BoxDecoration(
-                                          color: Colors.red.withValues(alpha: 0.3),
+                                          color:
+                                              Colors.red.withValues(alpha: 0.3),
                                           borderRadius: UiDimens.formRadius,
                                         ),
                                         child: DateTextWidget(
