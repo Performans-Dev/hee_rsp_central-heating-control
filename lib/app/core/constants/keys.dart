@@ -154,6 +154,14 @@ class Keys {
       selectedPlan INTEGER
     )
   ''';
+  static const String dbInsertSampleZones = '''
+    INSERT INTO zones (name, color, state, setValue, selectedPlan) VALUES
+      ('Zone 1', '#FF0000', 0, 0, 0),
+      ('Zone 2', '#00FF00', 0, 0, 0),
+      ('Zone 3', '#0000FF', 0, 0, 0),
+      ('Zone 4', '#FFFF00', 0, 0, 1)
+  ''';
+
   static const String dbDropZoneUsers = '''
     DROP TABLE IF EXISTS zoneUsers
   ''';

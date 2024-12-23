@@ -107,6 +107,7 @@ class DbProvider {
 
     await db.execute(Keys.dbDropZones);
     await db.execute(Keys.dbCreateZones);
+    await db.execute(Keys.dbInsertSampleZones);
 
     await db.execute(Keys.dbDropZoneUsers);
     await db.execute(Keys.dbCreateZoneUsers);
