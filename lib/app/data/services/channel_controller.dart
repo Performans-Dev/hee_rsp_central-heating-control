@@ -682,6 +682,14 @@ class ChannelController extends GetxController {
     } else {}
   }
 
+  void turnOffOutput(int device, int index) {
+    //
+  }
+
+  void turnOnOutput(int device, int index) {
+    //
+  }
+
   void toggleRelay(int index) {
     // updateChannelValue(index, !getPinValue(hwId: 0x00, pinIndex: index));
   }

@@ -51,7 +51,7 @@ class ZoneItemWidget extends StatelessWidget {
                       if (!heaters.every((e) => e.inputSignal))
                         const ZoneCardWarningDisplayWidget(),
                       ZoneCardModeDisplayWidget(
-                        desiredState: zone.selectedState,
+                        desiredState: zone.currentState,
                         currentState: 0,
                         currentTemperature: zone.currentTemperature,
                         desiredTemperature:

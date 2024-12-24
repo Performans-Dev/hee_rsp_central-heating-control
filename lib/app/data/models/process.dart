@@ -6,7 +6,7 @@ import 'package:central_heating_control/app/data/models/zone_definition.dart';
 
 class HeaterProcess {
   HeaterDevice heater;
-  HeaterState selectedState;
+  HeaterState currentState;
   bool hasThermostat;
   int desiredTemperature;
   int currentLevel;
@@ -14,7 +14,7 @@ class HeaterProcess {
   DateTime lastHeartbeat;
   HeaterProcess({
     required this.heater,
-    required this.selectedState,
+    required this.currentState,
     required this.hasThermostat,
     required this.desiredTemperature,
     required this.currentLevel,
@@ -25,7 +25,7 @@ class HeaterProcess {
   Map<String, dynamic> toMap() {
     return {
       'heater': heater.toMap(),
-      'selectedState': selectedState.index,
+      'currentState': currentState.index,
       'hasThermostat': hasThermostat,
       'desiredTemperature': desiredTemperature,
       'currentLevel': currentLevel,
@@ -37,7 +37,7 @@ class HeaterProcess {
   factory HeaterProcess.fromMap(Map<String, dynamic> map) {
     return HeaterProcess(
       heater: HeaterDevice.fromMap(map['heater']),
-      selectedState: HeaterState.values[map['selectedState']?.toInt() ?? 0],
+      currentState: HeaterState.values[map['currentState']?.toInt() ?? 0],
       hasThermostat: map['hasThermostat'] ?? false,
       desiredTemperature: map['desiredTemperature']?.toInt() ?? 0,
       currentLevel: map['currentLevel']?.toInt() ?? 0,
@@ -54,7 +54,7 @@ class HeaterProcess {
 
 class ZoneProcess {
   ZoneDefinition zone;
-  HeaterState selectedState;
+  HeaterState currentState;
   bool hasThermostat;
   bool hasSensor;
   int desiredTemperature;
@@ -62,7 +62,7 @@ class ZoneProcess {
   DateTime lastHeartbeat;
   ZoneProcess({
     required this.zone,
-    required this.selectedState,
+    required this.currentState,
     required this.hasThermostat,
     required this.hasSensor,
     required this.desiredTemperature,
@@ -70,10 +70,15 @@ class ZoneProcess {
     required this.lastHeartbeat,
   });
 
+  bool get hasWeeklyPlan => zone.selectedPlan != null;
+  bool get hasThermostatAndSensor => hasThermostat && hasSensor;
+  bool get currentTemperatureIsHigh => desiredTemperature > currentTemperature;
+  bool get currentTemperatureIsLow => desiredTemperature < currentTemperature;
+
   Map<String, dynamic> toMap() {
     return {
       'zone': zone.toMap(),
-      'selectedState': selectedState.index,
+      'currentState': currentState.index,
       'hasThermostat': hasThermostat,
       'hasSensor': hasSensor,
       'desiredTemperature': desiredTemperature,
@@ -85,7 +90,7 @@ class ZoneProcess {
   factory ZoneProcess.fromMap(Map<String, dynamic> map) {
     return ZoneProcess(
       zone: ZoneDefinition.fromMap(map['zone']),
-      selectedState: HeaterState.values[map['selectedState']?.toInt() ?? 0],
+      currentState: HeaterState.values[map['currentState']?.toInt() ?? 0],
       hasThermostat: map['hasThermostat'] ?? false,
       hasSensor: map['hasSensor'] ?? false,
       desiredTemperature: map['desiredTemperature']?.toInt() ?? 0,

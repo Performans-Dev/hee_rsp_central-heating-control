@@ -617,7 +617,7 @@ class DbProvider {
       final zoneMap = {
         'name': zone.name,
         'color': zone.color,
-        'state': zone.state.index,
+        'state': zone.desiredState.index,
         'selectedPlan': zone.selectedPlan,
       };
       final int id = await db.insert(Keys.tableZones, zoneMap);
@@ -678,7 +678,7 @@ class DbProvider {
         'id': zone.id,
         'name': zone.name,
         'color': zone.color,
-        'state': zone.state.index,
+        'state': zone.desiredState.index,
         'selectedPlan': zone.selectedPlan,
       };
       final int updateResult = await db.update(

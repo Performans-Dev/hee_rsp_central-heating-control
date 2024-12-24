@@ -62,7 +62,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 27;
+  static const int databaseVersion = 28;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -137,7 +137,7 @@ class Keys {
       level3ConsumptionAmount DOUBLE,
       level3Carbon DOUBLE,
       consumptionUnit TEXT,
-      state INTEGER NOT NULL DEFAULT 0,
+      desiredState INTEGER NOT NULL DEFAULT 0,
       zoneId INTEGER NOT NULL DEFAULT 0
     )
   ''';
@@ -149,13 +149,13 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       color TEXT,
-      state INTEGER NOT NULL DEFAULT 0,
+      desiredState INTEGER NOT NULL DEFAULT 0,
       setValue INTEGER,
       selectedPlan INTEGER
     )
   ''';
   static const String dbInsertSampleZones = '''
-    INSERT INTO zones (name, color, state, setValue, selectedPlan) VALUES
+    INSERT INTO zones (name, color, desiredState, setValue, selectedPlan) VALUES
       ('Zone 1', '#FF0000', 0, 0, 0),
       ('Zone 2', '#00FF00', 0, 0, 0),
       ('Zone 3', '#0000FF', 0, 0, 0),
