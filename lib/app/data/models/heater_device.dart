@@ -1,4 +1,4 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 
@@ -145,3 +145,4 @@ class HeaterDevice {
   factory HeaterDevice.fromJson(String source) =>
       HeaterDevice.fromMap(json.decode(source));
 }
+ */

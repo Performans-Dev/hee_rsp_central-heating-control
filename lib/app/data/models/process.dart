@@ -1,7 +1,8 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 
 class HeaterProcess {
@@ -60,6 +61,7 @@ class ZoneProcess {
   int desiredTemperature;
   int currentTemperature;
   DateTime lastHeartbeat;
+  List<SensorDeviceWithValues> sensors;
   ZoneProcess({
     required this.zone,
     required this.currentState,
@@ -68,6 +70,7 @@ class ZoneProcess {
     required this.desiredTemperature,
     required this.currentTemperature,
     required this.lastHeartbeat,
+    required this.sensors,
   });
 
   bool get hasWeeklyPlan => zone.selectedPlan != null;
@@ -84,6 +87,7 @@ class ZoneProcess {
       'desiredTemperature': desiredTemperature,
       'currentTemperature': currentTemperature,
       'lastHeartbeat': lastHeartbeat.millisecondsSinceEpoch,
+      'sensors': sensors.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -96,6 +100,8 @@ class ZoneProcess {
       desiredTemperature: map['desiredTemperature']?.toInt() ?? 0,
       currentTemperature: map['currentTemperature']?.toInt() ?? 0,
       lastHeartbeat: DateTime.fromMillisecondsSinceEpoch(map['lastHeartbeat']),
+      sensors: List<SensorDeviceWithValues>.from(
+          map['sensors']?.map((x) => SensorDeviceWithValues.fromMap(x)) ?? []),
     );
   }
 
@@ -104,3 +110,4 @@ class ZoneProcess {
   factory ZoneProcess.fromJson(String source) =>
       ZoneProcess.fromMap(json.decode(source));
 }
+ */

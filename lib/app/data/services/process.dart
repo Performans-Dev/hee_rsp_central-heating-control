@@ -4,9 +4,11 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/models/heater_device.dart';
 import 'package:central_heating_control/app/data/models/process.dart';
+import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone_definition.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:get/get.dart';
 
 class ProcessController extends GetxController {
@@ -15,6 +17,32 @@ class ProcessController extends GetxController {
 
   final RxList<HeaterProcess> _heaterProcessList = <HeaterProcess>[].obs;
   List<HeaterProcess> get heaterProcessList => _heaterProcessList;
+
+  final RxList<SensorDeviceWithValues> _sensorList =
+      <SensorDeviceWithValues>[].obs;
+  List<SensorDeviceWithValues> get sensorList => _sensorList;
+
+  void loadData() {
+    final DataController dataController = Get.find();
+    final ChannelController channelController = Get.find();
+
+    final sensors = dataController.sensorList.map(
+      (e) => SensorDeviceWithValues(
+        id: e.id,
+        device: e.device,
+        index: e.index,
+        zone: e.zone,
+        color: e.color,
+        name: e.name,
+        value: channelController.inputChannels
+            .firstWhere((i) => i.pinIndex == e.id)
+            .analogValue,
+      ),
+    );
+    _sensorList.assignAll(sensors);
+
+    final heaters = dataController.heaterList.map((e) => HeaterProcess(heater: e, currentState: , hasThermostat: hasThermostat, desiredTemperature: desiredTemperature, currentLevel: currentLevel, inputSignal: inputSignal, lastHeartbeat: lastHeartbeat)
+  }
 
   void initZone(ZoneDefinition z) async {
     final heaters = z.heaters;
@@ -27,6 +55,7 @@ class ProcessController extends GetxController {
         desiredTemperature: 200,
         currentTemperature: 0,
         lastHeartbeat: DateTime.now(),
+        sensors: [],
       ));
     } else {
       _zoneProcessList.firstWhere((e) => e.zone.id == z.id).zone = z;

@@ -93,13 +93,22 @@ enum HeaterDeviceLevel {
   threeLevels,
 }
 
-enum HeaterState {
+// enum HeaterState {
+//   off,
+//   auto,
+//   level1,
+//   level2,
+//   level3,
+// }
+
+enum ControlMode {
   off,
+  on,
+  high,
+  max,
   auto,
-  level1,
-  level2,
-  level3,
 }
+
 
 enum ErrorChannelType {
   nC,

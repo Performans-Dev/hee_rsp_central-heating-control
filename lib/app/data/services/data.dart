@@ -1,8 +1,8 @@
 import 'package:central_heating_control/app/data/models/hardware.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:flutter/foundation.dart';
@@ -34,23 +34,22 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: ZONES
-  final List<ZoneDefinition> _zoneList = <ZoneDefinition>[].obs;
-  List<ZoneDefinition> get zoneList => _zoneList;
+  final List<Zone> _zoneList = <Zone>[].obs;
+  List<Zone> get zoneList => _zoneList;
 
-  List<ZoneDefinition> getZoneListForDropdown() =>
-      [ZoneDefinition.initial(), ...zoneList];
+  List<Zone> getZoneListForDropdown() => [Zone.initial(), ...zoneList];
 
   Future<void> loadZoneList() async {
     final data = await DbProvider.db.getZoneList();
     _zoneList.assignAll(data);
     update();
-    final ProcessController pc = Get.find();
-    for (final z in data) {
-      pc.initZone(z);
-    }
+    // final ProcessController pc = Get.find();
+    // for (final z in data) {
+    //   pc.initZone(z);
+    // }
   }
 
-  Future<bool> addZone(ZoneDefinition zone) async {
+  Future<bool> addZone(Zone zone) async {
     final result = await DbProvider.db.addZone(zone);
     if (result > 0) {
       await loadZoneList();
@@ -59,7 +58,7 @@ class DataController extends GetxController {
     return false;
   }
 
-  Future<bool> updateZone(ZoneDefinition zone) async {
+  Future<bool> updateZone(Zone zone) async {
     final result = await DbProvider.db.updateZone(zone);
     if (result > 0) {
       await loadZoneList();
@@ -69,20 +68,20 @@ class DataController extends GetxController {
   }
 
   Future<bool> updateZonePlan({required int zoneId, int? planId}) async {
-    var zone = zoneList.firstWhere((e) => e.id == zoneId);
-    zone.selectedPlan = planId;
+    var zone = zoneList.firstWhere((e) => e.id == zoneId).copyWith(
+          selectedPlan: planId,
+        );
+
     final result = await updateZone(zone);
-
-    ProcessController processController = Get.find();
-    processController.initZone(zone);
-
+    // ProcessController processController = Get.find();
+    // processController.initZone(zone);
     return result;
   }
   //#endregion
 
   //#region MARK: HEATERS
-  final List<HeaterDevice> _heaterList = <HeaterDevice>[].obs;
-  List<HeaterDevice> get heaterList => _heaterList;
+  final List<Heater> _heaterList = <Heater>[].obs;
+  List<Heater> get heaterList => _heaterList;
   Future<void> loadHeaterList() async {
     final data = await DbProvider.db.getHeaters();
     _heaterList.assignAll(data);
@@ -93,7 +92,7 @@ class DataController extends GetxController {
     }
   }
 
-  Future<bool> addHeater(HeaterDevice heater) async {
+  Future<bool> addHeater(Heater heater) async {
     final result = await DbProvider.db.addHeater(heater);
     if (result > 0) {
       await loadHeaterList();
@@ -102,7 +101,7 @@ class DataController extends GetxController {
     return false;
   }
 
-  Future<bool> updateHeater(HeaterDevice heater) async {
+  Future<bool> updateHeater(Heater heater) async {
     final result = await DbProvider.db.updateHeater(heater);
     if (result > 0) {
       await loadHeaterList();
@@ -111,7 +110,7 @@ class DataController extends GetxController {
     return false;
   }
 
-  Future<bool> deleteHeater(HeaterDevice heater) async {
+  Future<bool> deleteHeater(Heater heater) async {
     final result = await DbProvider.db.deleteHeater(heater);
     if (result > 0) {
       await loadHeaterList();

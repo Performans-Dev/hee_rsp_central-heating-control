@@ -5,12 +5,12 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/temperature_value.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -26,7 +26,7 @@ class DbProvider {
     return _database;
   }
 
-  //#region INIT
+  //#region MARK: INIT
 
   /// Initializes the database by opening a connection to the database file.
   ///
@@ -61,6 +61,7 @@ class DbProvider {
     );
   }
 
+  //MARK: PATH
   Future<String?> getDbPath() async {
     try {
       String dbPath = p.join(
@@ -93,6 +94,7 @@ class DbProvider {
   ///
   /// Returns:
   /// - A [Future] that completes when the database structure is created.
+  /// MARK: SRUCTURE
   Future<void> createDatabaseStructure(Database db) async {
     await db.execute(Keys.dbDropUsers);
     await db.execute(Keys.dbCreateUsers);
@@ -142,17 +144,24 @@ class DbProvider {
     await db.execute(Keys.dbCreateUsers);
   }
 
+  // MARK: RESET DB
   Future<void> resetDb() async {
     final db = await database;
     if (db == null) return;
     await createDatabaseStructure(db);
   }
-
   //#endregion
 
-  //MARK: USERS
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
 
-  //#region USER INSERT
+  //#region MARK: USER INSERT
   /// Inserts a new user into the database.
   ///
   /// The [user] parameter represents the user object to be inserted.
@@ -193,7 +202,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region USER DELETE
+  //#region MARK: USER DELETE
   /// Deletes a user from the database.
   ///
   /// The [user] parameter represents the user object to be deleted.
@@ -220,7 +229,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region USER UPDATE
+  //#region MARK: USER UPDATE
   Future<int> updateUser(AppUser user) async {
     final db = await database;
     if (db == null) return -1;
@@ -242,7 +251,26 @@ class DbProvider {
   }
   //#endregion
 
-  //#region USER SELECT ALL
+  //#region MARK: USER PIN
+  Future<int> savePin(String newPin, String username) async {
+    final db = await database;
+    if (db == null) return -1;
+
+    try {
+      final result = await db.update(
+        Keys.tableUsers,
+        {"pin": newPin},
+        where: Keys.queryUsername,
+        whereArgs: [username],
+      );
+      return result;
+    } on Exception catch (_) {
+      return -2;
+    }
+  }
+  //#endregion
+
+  //#region MARK: USER SELECT ALL
   Future<List<AppUser>> getUsers() async {
     final users = <AppUser>[];
     final db = await database;
@@ -266,7 +294,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region GET USER BY NAME
+  //#region MARK: GET USER BY NAME
   Future<AppUser?> getUserByName({required String username}) async {
     final db = await database;
     if (db == null) return null;
@@ -291,7 +319,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region USER SELECT BY ZONE
+  //#region MARK: USER SELECT BY ZONE
   Future<List<AppUser>> getUsersByZone() async {
     final users = <AppUser>[];
     final db = await database;
@@ -319,7 +347,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region USER SELECT ADMINS
+  //#region MARK: USER ADMINS
   Future<List<AppUser>> getAdminUsers() async {
     final users = <AppUser>[];
     final db = await database;
@@ -347,7 +375,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region USER SELECT ONE
+  //#region MARK: USER ONE
   Future<AppUser?> getUser({
     required String username,
     required String pin,
@@ -375,9 +403,7 @@ class DbProvider {
   }
   //#endregion
 
-  //MARK: SENSORS
-
-  //#region SENSOR INSERT
+  //#region MARK: SENSOR INSERT
   Future<int> addSensor(SensorDevice sensor) async {
     final db = await database;
     if (db == null) return -1;
@@ -398,7 +424,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region SENSOR DELETE
+  //#region MARK: SENSOR DELETE
   Future<int> deleteSensor(SensorDevice sensor) async {
     final db = await database;
     if (db == null) return -1;
@@ -419,7 +445,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region SENSORS UPDATE
+  //#region MARK: SENSORS UPDATE
   Future<int> updateSensor(SensorDevice sensor) async {
     final db = await database;
     if (db == null) return -1;
@@ -441,7 +467,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region SENSORS SELECT ALL
+  //#region MARK: SENSORS SELECT ALL
   Future<List<SensorDevice>> getSensors() async {
     final sensors = <SensorDevice>[];
     final db = await database;
@@ -465,7 +491,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region SENSORS SELECT ONE
+  //#region MARK: SENSORS SELECT ONE
   Future<SensorDevice?> getSensor({required int id}) async {
     final db = await database;
     if (db == null) return null;
@@ -490,10 +516,8 @@ class DbProvider {
   }
   //#endregion
 
-  //MARK: HEATER
-
-  //#region HEATER INSERT
-  Future<int> addHeater(HeaterDevice heater) async {
+  //#region MARK: HEATER INSERT
+  Future<int> addHeater(Heater heater) async {
     final db = await database;
     if (db == null) return -1;
     try {
@@ -513,8 +537,8 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HEATER DELETE
-  Future<int> deleteHeater(HeaterDevice heater) async {
+  //#region MARK: HEATER DELETE
+  Future<int> deleteHeater(Heater heater) async {
     final db = await database;
     if (db == null) return -1;
     try {
@@ -534,8 +558,8 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HEATER UPDATE
-  Future<int> updateHeater(HeaterDevice heater) async {
+  //#region MARK: HEATER UPDATE
+  Future<int> updateHeater(Heater heater) async {
     final db = await database;
     if (db == null) return -1;
     try {
@@ -556,16 +580,16 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HEATER SELECT ALL
-  Future<List<HeaterDevice>> getHeaters() async {
-    final heaters = <HeaterDevice>[];
+  //#region MARK: HEATER SELECT ALL
+  Future<List<Heater>> getHeaters() async {
+    final heaters = <Heater>[];
     final db = await database;
     if (db == null) return heaters;
     try {
       final result = await db.query(Keys.tableHeaters);
       if (result.isNotEmpty) {
         for (final map in result) {
-          final h = HeaterDevice.fromMap(map);
+          final h = Heater.fromMap(map);
           heaters.add(h);
         }
       }
@@ -581,8 +605,8 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HEATERS SELECT ONE
-  Future<HeaterDevice?> getHeater({required int id}) async {
+  //#region MARK: HEATERS SELECT ONE
+  Future<Heater?> getHeater({required int id}) async {
     final db = await database;
     if (db == null) return null;
     try {
@@ -592,7 +616,7 @@ class DbProvider {
         whereArgs: [id],
       );
       if (result.isNotEmpty) {
-        return HeaterDevice.fromMap(result.first);
+        return Heater.fromMap(result.first);
       }
       return null;
     } on Exception catch (err) {
@@ -606,21 +630,14 @@ class DbProvider {
   }
   //#endregion
 
-  //MARK: ZONE
-
-  //#region ZONE INSERT
-  Future<int> addZone(ZoneDefinition zone) async {
+  //#region MARK: ZONE INSERT
+  Future<int> addZone(Zone zone) async {
     final db = await database;
     if (db == null) return -1;
     try {
       final zoneUsers = zone.users;
-      final zoneMap = {
-        'name': zone.name,
-        'color': zone.color,
-        'state': zone.desiredState.index,
-        'selectedPlan': zone.selectedPlan,
-      };
-      final int id = await db.insert(Keys.tableZones, zoneMap);
+
+      final int id = await db.insert(Keys.tableZones, zone.toDb());
       for (final user in zoneUsers) {
         await db.insert(Keys.tableZoneUsers, {'zoneId': id, 'userId': user.id});
       }
@@ -637,14 +654,12 @@ class DbProvider {
   }
   //#endregion
 
-  //#region ZONE DELETE
-  Future<int> deleteZone(ZoneDefinition zone) async {
+  //#region MARK: ZONE DELETE
+  Future<int> deleteZone(Zone zone) async {
     final db = await database;
     if (db == null) return -1;
     try {
       final int zoneUsersToDelete = await db.delete(Keys.tableZoneUsers,
-          where: Keys.queryZoneId, whereArgs: [zone.id]);
-      final int zoneSensorsToDelete = await db.delete(Keys.tableZoneSensors,
           where: Keys.queryZoneId, whereArgs: [zone.id]);
       final int zoneHeatersToDelete = await db.delete(Keys.tableZoneHeaters,
           where: Keys.queryZoneId, whereArgs: [zone.id]);
@@ -653,7 +668,7 @@ class DbProvider {
         where: Keys.queryId,
         whereArgs: [zone.id],
       );
-      log('Deleting zone #${zone.id}, with $zoneUsersToDelete users, $zoneSensorsToDelete sensors, $zoneHeatersToDelete heaters with result $result');
+      log('Deleting zone #${zone.id}, with $zoneUsersToDelete users, $zoneHeatersToDelete heaters with result $result');
       return result;
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(
@@ -666,24 +681,18 @@ class DbProvider {
   }
   //#endregion
 
-  //#region ZONE UPDATE
-  Future<int> updateZone(ZoneDefinition zone) async {
+  //#region MARK: ZONE UPDATE
+  Future<int> updateZone(Zone zone) async {
     final db = await database;
     if (db == null) return -1;
     try {
       final zoneUsers = zone.users;
       // final zoneSensors = zone.sensors;
       // final zoneDevices = zone.heaters;
-      final zoneMap = {
-        'id': zone.id,
-        'name': zone.name,
-        'color': zone.color,
-        'state': zone.desiredState.index,
-        'selectedPlan': zone.selectedPlan,
-      };
+
       final int updateResult = await db.update(
         Keys.tableZones,
-        zoneMap,
+        zone.toDb(),
         where: Keys.queryId,
         whereArgs: [zone.id],
       );
@@ -707,8 +716,8 @@ class DbProvider {
   }
   //#endregion
 
-  //#region ZONE SELECT ONE
-  Future<ZoneDefinition?> getZone({required int id}) async {
+  //#region MARK: ZONE ONE
+  Future<Zone?> getZone({required int id}) async {
     final db = await database;
     if (db == null) return null;
     try {
@@ -718,12 +727,8 @@ class DbProvider {
         whereArgs: [id],
       );
       if (result.isNotEmpty) {
-        var zone = ZoneDefinition.fromMap(result.first);
-
-        zone.users = await getZoneUsers(zoneId: id);
-        //zone.sensors = await getZoneSensors(zoneId: id);
-        //zone.heaters = await getZoneHeaters(zoneId: id);
-        //
+        final users = await getZoneUsers(zoneId: id);
+        final zone = Zone.fromDb(result.first, users);
         return zone;
       }
     } on Exception catch (err) {
@@ -738,18 +743,17 @@ class DbProvider {
   }
   //#endregion
 
-  //#region ZONE SELECT ALL
-  Future<List<ZoneDefinition>> getZoneList() async {
-    final zones = <ZoneDefinition>[];
+  //#region MARK: ZONE  ALL
+  Future<List<Zone>> getZoneList() async {
+    final zones = <Zone>[];
     final db = await database;
     if (db == null) return zones;
     try {
       final data = await db.query(Keys.tableZones);
       for (final map in data) {
-        var zone = ZoneDefinition.fromMap(map);
-        zone.users = await getZoneUsers(zoneId: zone.id);
-        //zone.sensors = await getZoneSensors(zoneId: zone.id);
-        //zone.heaters = await getZoneHeaters(zoneId: zone.id);
+        final users =
+            await getZoneUsers(zoneId: int.parse(map['id'].toString()));
+        final zone = Zone.fromDb(map, users);
         zones.add(zone);
       }
       return zones;
@@ -764,9 +768,7 @@ class DbProvider {
   }
   //#endregion
 
-  //MARK: RELATIONS
-
-  //#region ZONE USERS
+  //#region MARK: ZONE USERS
   Future<List<AppUser>> getZoneUsers({required int zoneId}) async {
     final zoneUsers = <AppUser>[];
     final db = await database;
@@ -777,14 +779,6 @@ class DbProvider {
         where: Keys.queryZoneId,
         whereArgs: [zoneId],
       );
-      // var whereArgs =
-      //     userIds.map((e) => e['userId']).toList().join(',').toString();
-
-      // final result = await db.query(
-      //   Keys.tableUsers,
-      //   where: Keys.queryIdIn,
-      //   whereArgs: [whereArgs],
-      // );
 
       final result = await db.rawQuery(
           "SELECT * FROM users WHERE id IN (${userIds.map((e) => e['userId']).toList().join(',')}) LIMIT 100");
@@ -806,76 +800,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region ZONE SENSORS
-  // Future<List<SensorDevice>> getZoneSensors({required int zoneId}) async {
-  //   final zoneSensors = <SensorDevice>[];
-  //   final db = await database;
-  //   if (db == null) return zoneSensors;
-  //   try {
-  //     final sensorIds = await db.query(
-  //       Keys.tableZoneSensors,
-  //       where: Keys.queryZoneId,
-  //       whereArgs: [zoneId],
-  //     );
-  //     final result = await db.query(
-  //       Keys.tableSensors,
-  //       where: Keys.queryIdIn,
-  //       whereArgs: [
-  //         sensorIds.map((e) => e['sensorId']).toList().join(',').toString()
-  //       ],
-  //     );
-  //     if (result.isNotEmpty) {
-  //       for (final map in result) {
-  //         zoneSensors.add(SensorDevice.fromMap(map));
-  //       }
-  //     }
-  //     return zoneSensors;
-  //   } on Exception catch (err) {
-  //     LogService.addLog(LogDefinition(
-  //   message: err.toString(),
-  //   level: LogLevel.error,
-  //   type: LogType.database,
-  // ));
-  //     return zoneSensors;
-  //   }
-  // }
-  //#endregion
-
-  //#region ZONE HEATERS
-  // Future<List<HeaterDevice>> getZoneHeaters({required int zoneId}) async {
-  //   final zoneHeaters = <HeaterDevice>[];
-  //   final db = await database;
-  //   if (db == null) return zoneHeaters;
-  //   try {
-  //     final heaterIds = await db.query(Keys.tableZoneHeaters,
-  //         where: Keys.queryZoneId, whereArgs: [zoneId], columns: ['heaterId']);
-  //     final result = await db.query(
-  //       Keys.tableHeaters,
-  //       where: Keys.queryIdIn,
-  //       whereArgs: [
-  //         heaterIds.map((e) => e['heaterId']).toList().join(',').toString()
-  //       ],
-  //     );
-  //     if (result.isNotEmpty) {
-  //       for (final map in result) {
-  //         zoneHeaters.add(HeaterDevice.fromMap(map));
-  //       }
-  //     }
-  //     return zoneHeaters;
-  //   } on Exception catch (err) {
-  //     LogService.addLog(LogDefinition(
-  //   message: err.toString(),
-  //   level: LogLevel.error,
-  //   type: LogType.database,
-  // ));
-  //     return zoneHeaters;
-  //   }
-  // }
-  //#endregion
-
-  //MARK: PLANS
-
-  //#region PLAN LIST
+  //#region MARK: PLAN LIST
   Future<List<PlanDefinition>> getPlanDefinitions() async {
     final plans = <PlanDefinition>[];
     final db = await database;
@@ -896,6 +821,9 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: PLAN BY ID
   Future<PlanDefinition?> getPlanById({required int planId}) async {
     final db = await database;
     if (db == null) return null;
@@ -920,6 +848,9 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: ADD PLAN
   Future<PlanDefinition?> addPlanDefinition(
       {required PlanDefinition plan}) async {
     final db = await database;
@@ -950,6 +881,9 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: UPDATE PLAN
   Future<PlanDefinition?> updatePlanDefinition(
       {required PlanDefinition plan}) async {
     final db = await database;
@@ -981,6 +915,9 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: DELETE PLAN + DETAILS
   Future<bool> deletePlanAndDetails({required int planId}) async {
     final db = await database;
     if (db == null) return false;
@@ -1012,7 +949,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region PLAN DETAILS
+  //#region MARK: PLAN DETAILS
   Future<List<PlanDetail>> getPlanDetails({
     int? planId,
   }) async {
@@ -1041,6 +978,9 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: ADD PLAN DETAILS
   Future<List<PlanDetail>> addPlanDetails({
     required List<PlanDetail> planDetails,
   }) async {
@@ -1054,7 +994,6 @@ class DbProvider {
           where: Keys.queryDayAndHourAndPlanId,
           whereArgs: [item.day, item.hour, item.planId],
         );
-
         await db.insert(
           Keys.tablePlanDetails,
           item.toMap(),
@@ -1072,13 +1011,16 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: REMOVE PLAN DETAILS
   Future<List<PlanDetail>> removePlanDetails(
       {required List<PlanDetail> planDetails}) async {
     final result = <PlanDetail>[];
     final db = await database;
     if (db == null) return result;
     try {
-      for (var item in result) {
+      for (var item in planDetails) {
         await db.delete(
           Keys.tablePlanDetails,
           where: Keys.queryId,
@@ -1096,6 +1038,9 @@ class DbProvider {
     }
   }
 
+  //#endregion
+
+  //#region MARK: COPY PLAN DETAILS
   Future<List<PlanDetail>> copyPlanDetails({
     required int sourcePlanId,
     required int targetPlanId,
@@ -1121,9 +1066,7 @@ class DbProvider {
   }
   //#endregion
 
-  //MARK: HARDWARE CONFIG
-
-  //#region HARDWARE LIST
+  //#region MARK: HARDWARE LIST
   Future<List<Hardware>> getHardwareDevices() async {
     final hwList = <Hardware>[];
     final db = await database;
@@ -1146,7 +1089,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HARDWARE ADD
+  //#region MARK: HARDWARE ADD
   Future<int> addHardwareDevice(Hardware hw) async {
     final db = await database;
     if (db == null) return -1;
@@ -1168,7 +1111,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HARDWARE DELETE
+  //#region MARK: HARDWARE DELETE
   Future<int> deleteHardwareDevice(Hardware hw) async {
     final db = await database;
     if (db == null) return -1;
@@ -1189,7 +1132,7 @@ class DbProvider {
   }
   //#endregion
 
-  //#region HARDWARE UPDATE
+  //#region MARK: HARDWARE UPDATE
   Future<int> updateHardwareDevice(Hardware hw) async {
     final db = await database;
     if (db == null) return -1;
@@ -1211,25 +1154,7 @@ class DbProvider {
   }
   //#endregion
 
-  Future<int> savePin(String newPin, String username) async {
-    final db = await database;
-    if (db == null) return -1;
-
-    try {
-      final result = await db.update(
-        Keys.tableUsers,
-        {"pin": newPin},
-        where: Keys.queryUsername,
-        whereArgs: [username],
-      );
-      return result;
-    } on Exception catch (_) {
-      return -2;
-    }
-  }
-
-//#region TEMPERATURE VALUES
-
+  //#region MARK: ADD TEMPERATURE VALUES
   Future<int> insertTemperatureValues(
       List<TemperatureValue> temperatureValues) async {
     final db = await database;
@@ -1252,7 +1177,9 @@ class DbProvider {
       return -1;
     }
   }
+  //#endregion
 
+  //#region MARK: GET TEMPERATURE VALUES
   Future<List<TemperatureValue>> getTemperatureValues(String name) async {
     final db = await database;
     if (db == null) return [];
@@ -1269,7 +1196,9 @@ class DbProvider {
       return [];
     }
   }
+  //#endregion
 
+  //#region MARK: GET ALL TEMPERATURE
   Future<List<TemperatureValue>> getAllTemperatureValues() async {
     final db = await database;
     if (db == null) return [];
@@ -1287,7 +1216,9 @@ class DbProvider {
       return [];
     }
   }
+  //#endregion
 
+  //#region MARK: GET TEMPERATURE VALUE NAMES
   Future<List<String>> getTemperatureValueNames() async {
     final db = await database;
     if (db == null) return [];
@@ -1309,7 +1240,9 @@ class DbProvider {
       return [];
     }
   }
+  //#endregion
 
+  //#region MARK: DELETE TEMPERATURE VALUES
   Future<int> deleteTemperatureValues() async {
     final db = await database;
     if (db == null) return -2;
@@ -1326,6 +1259,5 @@ class DbProvider {
       return -1;
     }
   }
-
   //#endregion
 }
