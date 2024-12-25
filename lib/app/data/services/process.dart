@@ -236,8 +236,32 @@ class ProcessController extends GetxController {
       }
     }
 
-    // if channel state != desired state
-    // then send command
-    // else ignore
+    if (ch2 != null) {
+      if (ch2.status != out2) {
+        if (out2) {
+          channelController.turnOnOutput(ch2.deviceId, ch2.pinIndex);
+        } else {
+          channelController.turnOffOutput(ch2.deviceId, ch2.pinIndex);
+        }
+      } else {
+        if (!out2) {
+          channelController.turnOffOutput(ch2.deviceId, ch2.pinIndex);
+        }
+      }
+    }
+
+    if (ch3 != null) {
+      if (ch3.status != out3) {
+        if (out3) {
+          channelController.turnOnOutput(ch3.deviceId, ch3.pinIndex);
+        } else {
+          channelController.turnOffOutput(ch3.deviceId, ch3.pinIndex);
+        }
+      } else {
+        if (!out3) {
+          channelController.turnOffOutput(ch3.deviceId, ch3.pinIndex);
+        }
+      }
+    }
   }
 }

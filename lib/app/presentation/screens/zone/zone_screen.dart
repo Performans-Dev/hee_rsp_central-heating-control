@@ -87,7 +87,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               Expanded(
                                 child: Center(
                                   child: ZoneControlWidget(
-                                    currentState: zone.selectedState,
+                                    currentState: zone.currentState,
                                     onStateChanged: (s) {
                                       processController.onZoneStateCalled(
                                         zoneId: zone.zone.id,
@@ -116,11 +116,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           height: 20,
                                           width: double.infinity,
                                           color: CCUtils.stateColor(
-                                              zone.selectedState),
+                                              zone.currentState),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(16),
-                                          child: zone.selectedState ==
+                                          child: zone.currentState ==
                                                   HeaterState.auto
                                               ? Column(
                                                   mainAxisSize:
@@ -149,7 +149,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                     ),
                                                   ],
                                                 )
-                                              : zone.selectedState !=
+                                              : zone.currentState !=
                                                       HeaterState.off
                                                   ? Column(
                                                       mainAxisSize:
@@ -288,9 +288,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             ToggleButtons(
                                               borderRadius: UiDimens.formRadius,
                                               isSelected: [
-                                                selectedHeater!.selectedState ==
+                                                selectedHeater!.currentState ==
                                                     HeaterState.auto,
-                                                selectedHeater!.selectedState !=
+                                                selectedHeater!.currentState !=
                                                     HeaterState.auto
                                               ],
                                               direction: Axis.vertical,
@@ -330,7 +330,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                 ),
                                               ],
                                             ),
-                                            (selectedHeater!.selectedState ==
+                                            (selectedHeater!.currentState ==
                                                     HeaterState.auto)
                                                 ? Container(width: 74)
                                                 : ToggleButtons(
@@ -352,7 +352,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                                       selectedHeater
                                                                           ?.heater
                                                                           .id)
-                                                                  .selectedState ==
+                                                                  .currentState ==
                                                               e),
                                                     ],
                                                     onPressed: (index) {
@@ -378,7 +378,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                               HeaterState.auto)
                                                           .map((e) => e ==
                                                                   selectedHeater
-                                                                      ?.selectedState
+                                                                      ?.currentState
                                                               ? Padding(
                                                                   padding:
                                                                       const EdgeInsets
@@ -422,7 +422,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     ),
                                     subtitle: Text(
                                       heaters[index]
-                                          .selectedState
+                                          .currentState
                                           .name
                                           .replaceAll('auto', 'zone')
                                           .toUpperCase(),

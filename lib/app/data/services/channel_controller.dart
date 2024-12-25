@@ -41,7 +41,7 @@ class ChannelController extends GetxController {
   StreamSubscription<Uint8List>? messageSubscription;
   late StreamController<SerialQuery> serialQueryStreamController;
   late StreamController<String> logMessageController;
-  // int _lastSensorDataFetch = 0;
+  int _lastSensorDataFetch = 0;
   //#endregion
 
   //#region MARK: Lifecycle
@@ -79,6 +79,9 @@ class ChannelController extends GetxController {
       initGpioPins();
     }
     await wait(100);
+    runGpioInputPolling();
+
+    readObSensorData();
 
     // Initialize Serial pins
     await initSerialPins();
@@ -379,12 +382,19 @@ class ChannelController extends GetxController {
     update();
   }
 
-  updateChannelValue(int id, double value) {
-    //TODO:
-  }
+  updateChannelValue(int id, double value) {}
 
   updateChannelState(int id, bool value) {
-    //TODO:
+    _outputChannels.firstWhere((e) => e.id == id).status = value;
+    update();
+  }
+
+  bool getOutputChannelState({required int hwId, required int pinIndex}) {
+    return outputChannels
+            .firstWhereOrNull(
+                (e) => e.deviceId == hwId && e.pinIndex == pinIndex)
+            ?.status ??
+        false;
   }
   //#endregion
 
@@ -675,23 +685,186 @@ class ChannelController extends GetxController {
   }
   //#endregion
 
+  //#region MARK: SENSOR POLLING
+  void readObSensorData() async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (now - _lastSensorDataFetch >= 30000) {
+      _lastSensorDataFetch = now;
+      final data = await readSensorData();
+      if (data != null) {
+        try {
+          final sensor1 =
+              data.sensors.firstWhere((e) => e.sensor == 4).rawValue;
+          _inputChannels
+              .firstWhere((e) =>
+                  e.type == PinType.onboardAnalogInput && e.pinIndex == 1)
+              .analogValue = sensor1.toDouble();
+          final sensor2 =
+              data.sensors.firstWhere((e) => e.sensor == 5).rawValue;
+          _inputChannels
+              .firstWhere((e) =>
+                  e.type == PinType.onboardAnalogInput && e.pinIndex == 2)
+              .analogValue = sensor2.toDouble();
+          final sensor3 =
+              data.sensors.firstWhere((e) => e.sensor == 6).rawValue;
+          _inputChannels
+              .firstWhere((e) =>
+                  e.type == PinType.onboardAnalogInput && e.pinIndex == 3)
+              .analogValue = sensor3.toDouble();
+          final sensor4 =
+              data.sensors.firstWhere((e) => e.sensor == 7).rawValue;
+          _inputChannels
+              .firstWhere((e) =>
+                  e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
+              .analogValue = sensor4.toDouble();
+          update();
+        } on Exception catch (e) {
+          print(e);
+        }
+      }
+    }
+  }
+  //#endregion
+
+  //#region MARK: GPIO INPUT POLLING
+  void runGpioInputPolling() {
+    try {
+      for (var c in inputChannels.where((e) => e.deviceId == 0x00).toList()) {
+        switch (c.pinIndex) {
+          case 1:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in1.read();
+            break;
+          case 2:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in2.read();
+            break;
+          case 3:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in3.read();
+            break;
+          case 4:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in4.read();
+            break;
+          case 5:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in5.read();
+            break;
+          case 6:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in6.read();
+            break;
+          case 7:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in7.read();
+            break;
+          case 8:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = in8.read();
+            break;
+        }
+        update();
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+    Future.delayed(
+        const Duration(milliseconds: 100), () => runGpioInputPolling());
+  }
+  //#endregion
+
   //#region MARK: TOGGLE OUTPUT
   void toggleOutput(int device, int index) {
     if (device == 0x00) {
       toggleRelay(index);
-    } else {}
+    } else {
+      // extension board
+    }
   }
 
   void turnOffOutput(int device, int index) {
-    //
+    if (device == 0x00) {
+      turnOffRelay(index);
+    } else {
+      // extension board
+    }
   }
 
   void turnOnOutput(int device, int index) {
-    //
+    if (device == 0x00) {
+      turnOnRelay(index);
+    } else {
+      // extension board
+    }
   }
 
   void toggleRelay(int index) {
-    // updateChannelValue(index, !getPinValue(hwId: 0x00, pinIndex: index));
+    ChannelDefinition c =
+        outputChannels.firstWhere((e) => e.id == index && e.deviceId == 0x00);
+    if (c.status) {
+      turnOffRelay(c.id);
+    } else {
+      turnOnRelay(c.id);
+    }
+  }
+
+  Future<void> turnOnRelay(int id) async {
+    ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
+    await sendOutput(c.pinIndex, true);
+    _outputChannels.firstWhere((e) => e.id == id).status = true;
+    update();
+  }
+
+  Future<void> turnOffRelay(int id) async {
+    ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
+    await sendOutput(c.pinIndex, false);
+    _outputChannels.firstWhere((e) => e.id == id).status = false;
+    update();
+  }
+
+  Future<void> sendOutput(int index, bool value) async {
+    writeOE(true);
+    await wait(1);
+    for (int i = 1; i <= 8; i++) {
+      writeSER(i == index
+          ? value
+          : outputChannels
+              .firstWhere((e) => e.deviceId == 0x00 && e.pinIndex == i)
+              .status);
+      writeSRCLK(true);
+      await wait(1);
+      writeSRCLK(false);
+      await wait(1);
+    }
+    await wait(1);
+    writeRCLK(true);
+    await wait(1);
+    writeRCLK(false);
+  }
+
+  void writeOE(bool value) {
+    try {
+      txEnablePin.write(value);
+    } on Exception catch (e) {
+      print('writeOE: $e');
+    }
+  }
+
+  void writeSRCLK(bool value) {
+    try {
+      outPinSRCLK.write(value);
+    } on Exception catch (e) {
+      print('writeSRCLK: $e');
+    }
+  }
+
+  void writeRCLK(bool value) {
+    try {
+      outPinRCLK.write(value);
+    } on Exception catch (e) {
+      print('writeRCLK: $e');
+    }
+  }
+
+  void writeSER(bool value) {
+    try {
+      outPinSER.write(value);
+    } on Exception catch (e) {
+      print('writeSER: $e');
+    }
   }
   //#endregion
 
@@ -715,6 +888,21 @@ class ChannelController extends GetxController {
 
   String _bytesToAscii(List<int> bytes) {
     return String.fromCharCodes(bytes).replaceAll(RegExp(r'[^\x20-\x7E]'), '?');
+  }
+
+  Future<SensorData?> readSensorData() async {
+    try {
+      Dio dio = Dio();
+      final response = await dio.get('http://localhost:5000/sensors');
+      if (response.statusCode == 200) {
+        return SensorData.fromMap(response.data);
+      } else {
+        return null;
+      }
+    } on Exception catch (e) {
+      print('Error getting sensor data: $e');
+      return null;
+    }
   }
   //#endregion
 
