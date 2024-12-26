@@ -1,5 +1,5 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,8 +10,8 @@ class ZoneDropdownWidget extends StatelessWidget {
     this.onChanged,
     this.value,
   });
-  final Function(ZoneDefinition?)? onChanged;
-  final ZoneDefinition? value;
+  final Function(Zone?)? onChanged;
+  final Zone? value;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +24,12 @@ class ZoneDropdownWidget extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 8),
           margin: const EdgeInsets.symmetric(vertical: 8),
-          child: DropdownButton<ZoneDefinition>(
+          child: DropdownButton<Zone>(
             underline: Container(), isExpanded: true,
 
             items: dc
                 .getZoneListForDropdown()
-                .map((e) => DropdownMenuItem<ZoneDefinition>(
+                .map((e) => DropdownMenuItem<Zone>(
                       value: e,
                       child: Text(e.name),
                     ))

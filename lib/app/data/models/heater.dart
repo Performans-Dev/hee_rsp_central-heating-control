@@ -211,6 +211,18 @@ class Heater {
     );
   }
 
+  factory Heater.initial() => Heater(
+        id: -1,
+        name: '',
+        color: '',
+        icon: '',
+        connectionType: HeaterDeviceConnectionType.none,
+        type: HeaterDeviceType.none,
+        levelType: HeaterDeviceLevel.none,
+        desiredMode: ControlMode.off,
+        currentMode: ControlMode.off,
+      );
+
   String toJson() => json.encode(toMap());
 
   factory Heater.fromJson(String source) => Heater.fromMap(json.decode(source));

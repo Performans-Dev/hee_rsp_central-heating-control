@@ -17,32 +17,32 @@ class CCUtils {
     return 'CO₂ emission ${carbonEmission.toStringAsPrecision(1)} kt';
   }
 
-  static String stateDisplay(HeaterState s) {
-    switch (s) {
-      case HeaterState.off:
+  static String stateDisplay(ControlMode mode) {
+    switch (mode) {
+      case ControlMode.off:
         return 'Off';
-      case HeaterState.auto:
+      case ControlMode.auto:
         return 'Auto';
-      case HeaterState.level1:
+      case ControlMode.on:
         return 'On';
-      case HeaterState.level2:
+      case ControlMode.high:
         return 'High';
-      case HeaterState.level3:
+      case ControlMode.max:
         return 'Max';
     }
   }
 
-  static Color stateColor(HeaterState s) {
-    switch (s) {
-      case HeaterState.off:
+  static Color stateColor(ControlMode mode) {
+    switch (mode) {
+      case ControlMode.off:
         return Colors.grey;
-      case HeaterState.auto:
+      case ControlMode.auto:
         return Colors.blue;
-      case HeaterState.level1:
+      case ControlMode.on:
         return Colors.orange;
-      case HeaterState.level2:
+      case ControlMode.high:
         return Colors.deepOrange;
-      case HeaterState.level3:
+      case ControlMode.max:
         return Colors.red;
     }
   }

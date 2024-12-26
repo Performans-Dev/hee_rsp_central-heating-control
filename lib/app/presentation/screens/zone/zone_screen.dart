@@ -1,15 +1,8 @@
-import 'dart:math';
-
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
-import 'package:central_heating_control/app/data/models/process.dart';
-import 'package:central_heating_control/app/data/models/sensor_device.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
-import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/services/channel_controller.dart';
+import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
-import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_control_widget.dart';
@@ -17,460 +10,472 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ZoneScreen extends StatefulWidget {
-  const ZoneScreen({super.key});
+  const ZoneScreen({super.key, required this.zone});
+  final Zone zone;
 
   @override
   State<ZoneScreen> createState() => _ZoneScreenState();
 }
 
 class _ZoneScreenState extends State<ZoneScreen> {
-  final ProcessController processController = Get.find();
-  final DataController dataController = Get.find();
-  final ChannelController channelController = Get.find();
-  ZoneDefinition? zoneDefinition;
-  late ZoneProcess zone;
-  List<HeaterProcess> heaters = <HeaterProcess>[];
-  late List<SensorDevice> sensors;
-  HeaterProcess? selectedHeater;
+  // final ProcessController processController = Get.find();
+  // final DataController dataController = Get.find();
+  // final ChannelController channelController = Get.find();
+  // Zone? zone;
+  // late ZoneProcess zone;
+  // List<HeaterProcess> heaters = <HeaterProcess>[];
+  // late List<SensorDevice> sensors;
+  // HeaterProcess? selectedHeater;
 
   @override
   void initState() {
     super.initState();
-    int zoneId = int.parse('${Get.arguments[0]}');
-    initZone(zoneId);
+    // int zoneId = int.parse('${Get.arguments[0]}');
+    // initZone(zoneId);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (zoneDefinition != null) {
-      zone = processController.zoneProcessList
-          .firstWhere((e) => e.zone.id == zoneDefinition!.id);
-      heaters = processController.heaterProcessList
-          .where((e) => e.heater.zoneId == zoneDefinition!.id)
-          .toList();
-      sensors = dataController.sensorList
-          .where((e) => e.zone == zoneDefinition!.id)
-          .toList();
-    }
+    // if (Zone != null) {
+    //   zone = processController.zoneProcessList
+    //       .firstWhere((e) => e.zone.id == Zone!.id);
+    //   heaters = processController.heaterProcessList
+    //       .where((e) => e.heater.zoneId == Zone!.id)
+    //       .toList();
+    //   sensors =
+    //       dataController.sensorList.where((e) => e.zone == Zone!.id).toList();
+    // }
 
-    int maxLevel = 1;
-    for (final heater in heaters) {
-      maxLevel = max(maxLevel, heater.heater.levelType.index);
-    }
+    // int maxLevel = 1;
+    // for (final heater in heaters) {
+    //   maxLevel = max(maxLevel, heater.heater.levelType.index);
+    // }
 
-    return AppScaffold(
-      selectedIndex: 0,
-      title: zone.zone.name,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          alignment: Alignment.centerLeft,
-                          child: const Text('Zone Controls'),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Center(
-                                  child: ZoneControlWidget(
-                                    currentState: zone.currentState,
-                                    onStateChanged: (s) {
-                                      processController.onZoneStateCalled(
-                                        zoneId: zone.zone.id,
-                                        state: s,
-                                      );
-                                      setState(() {});
-                                    },
-                                    maxLevel: maxLevel,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: UiDimens.formRadius,
-                                  child: Container(
-                                    width: 160,
-                                    decoration: BoxDecoration(
-                                      borderRadius: UiDimens.formRadius,
-                                      color: Colors.blueGrey
-                                          .withValues(alpha: 0.7),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          height: 20,
-                                          width: double.infinity,
-                                          color: CCUtils.stateColor(
-                                              zone.currentState),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(16),
-                                          child: zone.currentState ==
-                                                  HeaterState.auto
-                                              ? Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    const Text(
-                                                        'Select Plan for AUTO'),
-                                                    PlanDropdownWidget(
-                                                      value: zoneDefinition
-                                                          ?.selectedPlan,
-                                                      onChanged: (p0) {
-                                                        if (zoneDefinition !=
-                                                            null) {
-                                                          final zd =
-                                                              zoneDefinition!
-                                                                  .copyWith(
-                                                            selectedPlan: p0,
-                                                          );
-                                                          dataController
-                                                              .updateZone(zd);
-                                                          processController
-                                                              .initZone(zd);
-                                                          setState(() {});
-                                                        }
-                                                      },
-                                                    ),
-                                                  ],
-                                                )
-                                              : zone.currentState !=
-                                                      HeaterState.off
-                                                  ? Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        SwitchListTile(
-                                                            title: const Text(
-                                                                'Thermo'),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  UiDimens
-                                                                      .formRadius,
-                                                            ),
-                                                            value: zone
-                                                                .hasThermostat,
-                                                            onChanged: (p0) {
-                                                              processController
-                                                                  .onZoneThermostatOptionCalled(
-                                                                      zoneId:
-                                                                          zoneDefinition!
-                                                                              .id,
-                                                                      value:
-                                                                          p0);
-                                                              setState(() {});
-                                                            }),
-                                                        Opacity(
-                                                          opacity:
-                                                              zone.hasThermostat
-                                                                  ? 1
-                                                                  : 0.3,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              IconButton(
-                                                                icon: const Icon(
-                                                                    Icons
-                                                                        .remove),
-                                                                iconSize: 36,
-                                                                onPressed:
-                                                                    zone.hasThermostat
-                                                                        ? () {
-                                                                            processController.onZoneThermostatDecreased(zoneId: zoneDefinition!.id);
-                                                                            setState(() {});
-                                                                          }
-                                                                        : null,
-                                                              ),
-                                                              Text(
-                                                                ' ${(zone.desiredTemperature / 10).toInt()} °C ',
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            24),
-                                                              ),
-                                                              IconButton(
-                                                                icon: const Icon(
-                                                                    Icons.add),
-                                                                iconSize: 36,
-                                                                onPressed:
-                                                                    zone.hasThermostat
-                                                                        ? () {
-                                                                            processController.onZoneThermostatIncreased(zoneId: zoneDefinition!.id);
-                                                                            setState(() {});
-                                                                          }
-                                                                        : null,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : const Icon(
-                                                      Icons.energy_savings_leaf,
-                                                      size: 48,
-                                                    ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+    return GetBuilder<DataController>(builder: (dc) {
+      return AppScaffold(
+        selectedIndex: 0,
+        title: '', //zone.zone.name,
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            alignment: Alignment.centerLeft,
+                            child: const Text('Zone Controls'),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const VerticalDivider(),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          alignment: Alignment.centerLeft,
-                          child: selectedHeater == null
-                              ? const Text('Heaters')
-                              : TextButton.icon(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedHeater = null;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.chevron_left),
-                                  label: const Text('Back to Heater List'),
-                                ),
-                        ),
-                        Expanded(
-                          child: selectedHeater != null
-                              ? Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: UiDimens.formRadius,
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Center(
+                                    child: ZoneControlWidget(
+                                      currentState: widget.zone.currentMode,
+                                      onStateChanged: (s) {
+                                        // TODO:
+                                        // processController.onZoneStateCalled(
+                                        //   zoneId: widget.zone.id,
+                                        //   state: s,
+                                        // );
+                                        // setState(() {});
+                                      },
+                                      maxLevel: 3, //TODO: maxLevel,
+                                    ),
                                   ),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      spacing: 12,
-                                      children: [
-                                        Text(selectedHeater!.heater.name),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ToggleButtons(
-                                              borderRadius: UiDimens.formRadius,
-                                              isSelected: [
-                                                selectedHeater!.currentState ==
-                                                    HeaterState.auto,
-                                                selectedHeater!.currentState !=
-                                                    HeaterState.auto
-                                              ],
-                                              direction: Axis.vertical,
-                                              onPressed: (index) {
-                                                processController
-                                                    .onHeaterStateCalled(
-                                                  heaterId:
-                                                      selectedHeater!.heater.id,
-                                                  state: index == 0
-                                                      ? HeaterState.auto
-                                                      : HeaterState.off,
-                                                );
-                                                setState(() {});
-                                              },
-                                              children: const [
-                                                Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    spacing: 8,
+                                ),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: UiDimens.formRadius,
+                                    child: Container(
+                                      width: 160,
+                                      decoration: BoxDecoration(
+                                        borderRadius: UiDimens.formRadius,
+                                        color: Colors.blueGrey
+                                            .withValues(alpha: 0.7),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            height: 20,
+                                            width: double.infinity,
+                                            color: CCUtils.stateColor(
+                                                widget.zone.currentMode),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(16),
+                                            child: widget.zone.currentMode ==
+                                                    ControlMode.auto
+                                                ? Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      Icon(Icons.auto_awesome),
-                                                      Text('Zone'),
+                                                      const Text(
+                                                          'Select Plan for AUTO'),
+                                                      PlanDropdownWidget(
+                                                        value: widget
+                                                            .zone.selectedPlan,
+                                                        onChanged: (p0) {
+                                                          final zd = widget.zone
+                                                              .copyWith(
+                                                            selectedPlan: p0,
+                                                          );
+                                                          dc.updateZone(zd);
+                                                          // TODO:
+                                                          // processController
+                                                          //     .initZone(zd);
+                                                          setState(() {});
+                                                        },
+                                                      ),
                                                     ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    spacing: 8,
-                                                    children: [
-                                                      Icon(Icons.settings),
-                                                      Text('Custom'),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            (selectedHeater!.currentState ==
-                                                    HeaterState.auto)
-                                                ? Container(width: 74)
-                                                : ToggleButtons(
-                                                    borderRadius:
-                                                        UiDimens.formRadius,
-                                                    direction: Axis.vertical,
-                                                    verticalDirection:
-                                                        VerticalDirection.up,
-                                                    isSelected: [
-                                                      ...HeaterState.values
-                                                          .where((e) =>
-                                                              e !=
-                                                              HeaterState.auto)
-                                                          .map((e) =>
-                                                              heaters
-                                                                  .firstWhere((h) =>
-                                                                      h.heater
-                                                                          .id ==
-                                                                      selectedHeater
-                                                                          ?.heater
-                                                                          .id)
-                                                                  .currentState ==
-                                                              e),
-                                                    ],
-                                                    onPressed: (index) {
-                                                      processController
-                                                          .onHeaterStateCalled(
-                                                        heaterId:
-                                                            selectedHeater!
-                                                                .heater.id,
-                                                        state: HeaterState
-                                                            .values
-                                                            .where((e) =>
-                                                                e !=
-                                                                HeaterState
-                                                                    .auto)
-                                                            .toList()[index],
-                                                      );
-                                                      setState(() {});
-                                                    },
-                                                    children: [
-                                                      ...HeaterState.values
-                                                          .where((e) =>
-                                                              e !=
-                                                              HeaterState.auto)
-                                                          .map((e) => e ==
-                                                                  selectedHeater
-                                                                      ?.currentState
-                                                              ? Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: Row(
-                                                                    spacing: 8,
-                                                                    children: [
-                                                                      const Icon(
-                                                                          Icons
-                                                                              .check),
-                                                                      Text(CCUtils
-                                                                          .stateDisplay(
-                                                                              e))
-                                                                    ],
-                                                                  ),
-                                                                )
-                                                              : Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: Text(CCUtils
-                                                                      .stateDisplay(
-                                                                          e)),
-                                                                )),
-                                                    ],
-                                                  ),
-                                          ],
-                                        ),
-                                      ],
+                                                  )
+                                                : widget.zone.currentMode !=
+                                                        ControlMode.off
+                                                    ? Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          SwitchListTile(
+                                                              title: const Text(
+                                                                  'Thermo'),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    UiDimens
+                                                                        .formRadius,
+                                                              ),
+                                                              value: widget.zone
+                                                                  .hasThermostat,
+                                                              onChanged: (p0) {
+                                                                // TODO:
+                                                                // processController
+                                                                //     .onZoneThermostatOptionCalled(
+                                                                //         zoneId: widget.zone
+                                                                //             .id,
+                                                                //         value:
+                                                                //             p0);
+                                                                // setState(() {});
+                                                              }),
+                                                          Opacity(
+                                                            opacity: widget.zone
+                                                                    .hasThermostat
+                                                                ? 1
+                                                                : 0.3,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                IconButton(
+                                                                  icon: const Icon(
+                                                                      Icons
+                                                                          .remove),
+                                                                  iconSize: 36,
+                                                                  onPressed: widget
+                                                                          .zone
+                                                                          .hasThermostat
+                                                                      ? () {
+                                                                          // TODO:
+                                                                          // processController.onZoneThermostatDecreased(zoneId: Zone!.id);
+                                                                          // setState(() {});
+                                                                        }
+                                                                      : null,
+                                                                ),
+                                                                Text(
+                                                                  ' ${(widget.zone.desiredTemperature ?? 0).toStringAsPrecision(1)} °C ',
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          24),
+                                                                ),
+                                                                IconButton(
+                                                                  icon: const Icon(
+                                                                      Icons
+                                                                          .add),
+                                                                  iconSize: 36,
+                                                                  onPressed: widget
+                                                                          .zone
+                                                                          .hasThermostat
+                                                                      ? () {
+                                                                          // TODO:
+                                                                          // processController.onZoneThermostatIncreased(zoneId: Zone!.id);
+                                                                          // setState(() {});
+                                                                        }
+                                                                      : null,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : const Icon(
+                                                        Icons
+                                                            .energy_savings_leaf,
+                                                        size: 48,
+                                                      ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                )
-                              : ListView.builder(
-                                  itemBuilder: (context, index) => ListTile(
-                                    title: Text(heaters[index].heater.name),
-                                    leading: CircleAvatar(
-                                      child: Text(
-                                          '${heaters[index].currentLevel}'),
-                                    ),
-                                    subtitle: Text(
-                                      heaters[index]
-                                          .currentState
-                                          .name
-                                          .replaceAll('auto', 'zone')
-                                          .toUpperCase(),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        selectedHeater = heaters[index];
-                                      });
-                                    },
-                                  ),
-                                  itemCount: heaters.length,
                                 ),
-                        ),
-                      ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          if (sensors.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
+                  const VerticalDivider(),
                   Expanded(
-                    child:
-                        //  ListView.builder(
-                        //   itemBuilder: (context, index) => Padding(
-                        //     padding: const EdgeInsets.only(right: 4),
-                        //     child: Chip(
-                        //       label: Text(
-                        //           'Sensor${sensors[index].id}: ${channelController.getSensorValue(sensors[index].id)} °C'),
+                    flex: 3,
+                    child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: const Text("/TODO:")
+                        // Column(
+                        //   mainAxisSize: MainAxisSize.max,
+                        //   children: [
+                        //     Container(
+                        //       padding: const EdgeInsets.all(8),
+                        //       alignment: Alignment.centerLeft,
+                        //       child: selectedHeater == null
+                        //           ? const Text('Heaters')
+                        //           : TextButton.icon(
+                        //               onPressed: () {
+                        //                 setState(() {
+                        //                   selectedHeater = null;
+                        //                 });
+                        //               },
+                        //               icon: const Icon(Icons.chevron_left),
+                        //               label: const Text('Back to Heater List'),
+                        //             ),
                         //     ),
-                        //   ),
-                        //   itemCount: sensors.length,
+                        //     Expanded(
+                        //       child: selectedHeater != null
+                        //           ? Card(
+                        //               shape: RoundedRectangleBorder(
+                        //                 borderRadius: UiDimens.formRadius,
+                        //               ),
+                        //               child: Container(
+                        //                 width: double.infinity,
+                        //                 padding: const EdgeInsets.all(20),
+                        //                 child: Column(
+                        //                   mainAxisSize: MainAxisSize.min,
+                        //                   crossAxisAlignment:
+                        //                       CrossAxisAlignment.center,
+                        //                   spacing: 12,
+                        //                   children: [
+                        //                     Text(selectedHeater!.heater.name),
+                        //                     Row(
+                        //                       mainAxisAlignment:
+                        //                           MainAxisAlignment.spaceEvenly,
+                        //                       crossAxisAlignment:
+                        //                           CrossAxisAlignment.start,
+                        //                       children: [
+                        //                         ToggleButtons(
+                        //                           borderRadius:
+                        //                               UiDimens.formRadius,
+                        //                           isSelected: [
+                        //                             selectedHeater!
+                        //                                     .currentState ==
+                        //                                 HeaterState.auto,
+                        //                             selectedHeater!
+                        //                                     .currentState !=
+                        //                                 HeaterState.auto
+                        //                           ],
+                        //                           direction: Axis.vertical,
+                        //                           onPressed: (index) {
+                        //                             processController
+                        //                                 .onHeaterStateCalled(
+                        //                               heaterId: selectedHeater!
+                        //                                   .heater.id,
+                        //                               state: index == 0
+                        //                                   ? HeaterState.auto
+                        //                                   : HeaterState.off,
+                        //                             );
+                        //                             setState(() {});
+                        //                           },
+                        //                           children: const [
+                        //                             Padding(
+                        //                               padding:
+                        //                                   EdgeInsets.all(8.0),
+                        //                               child: Row(
+                        //                                 spacing: 8,
+                        //                                 mainAxisSize:
+                        //                                     MainAxisSize.min,
+                        //                                 children: [
+                        //                                   Icon(
+                        //                                       Icons.auto_awesome),
+                        //                                   Text('Zone'),
+                        //                                 ],
+                        //                               ),
+                        //                             ),
+                        //                             Padding(
+                        //                               padding:
+                        //                                   EdgeInsets.all(8.0),
+                        //                               child: Row(
+                        //                                 spacing: 8,
+                        //                                 children: [
+                        //                                   Icon(Icons.settings),
+                        //                                   Text('Custom'),
+                        //                                 ],
+                        //                               ),
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                         (selectedHeater!.currentState ==
+                        //                                 HeaterState.auto)
+                        //                             ? Container(width: 74)
+                        //                             : ToggleButtons(
+                        //                                 borderRadius:
+                        //                                     UiDimens.formRadius,
+                        //                                 direction: Axis.vertical,
+                        //                                 verticalDirection:
+                        //                                     VerticalDirection.up,
+                        //                                 isSelected: [
+                        //                                   ...HeaterState.values
+                        //                                       .where((e) =>
+                        //                                           e !=
+                        //                                           HeaterState
+                        //                                               .auto)
+                        //                                       .map((e) =>
+                        //                                           heaters
+                        //                                               .firstWhere((h) =>
+                        //                                                   h.heater
+                        //                                                       .id ==
+                        //                                                   selectedHeater
+                        //                                                       ?.heater
+                        //                                                       .id)
+                        //                                               .currentState ==
+                        //                                           e),
+                        //                                 ],
+                        //                                 onPressed: (index) {
+                        //                                   processController
+                        //                                       .onHeaterStateCalled(
+                        //                                     heaterId:
+                        //                                         selectedHeater!
+                        //                                             .heater.id,
+                        //                                     state: HeaterState
+                        //                                         .values
+                        //                                         .where((e) =>
+                        //                                             e !=
+                        //                                             HeaterState
+                        //                                                 .auto)
+                        //                                         .toList()[index],
+                        //                                   );
+                        //                                   setState(() {});
+                        //                                 },
+                        //                                 children: [
+                        //                                   ...HeaterState.values
+                        //                                       .where((e) =>
+                        //                                           e !=
+                        //                                           HeaterState
+                        //                                               .auto)
+                        //                                       .map((e) => e ==
+                        //                                               selectedHeater
+                        //                                                   ?.currentState
+                        //                                           ? Padding(
+                        //                                               padding:
+                        //                                                   const EdgeInsets
+                        //                                                       .all(
+                        //                                                       8.0),
+                        //                                               child: Row(
+                        //                                                 spacing:
+                        //                                                     8,
+                        //                                                 children: [
+                        //                                                   const Icon(
+                        //                                                       Icons.check),
+                        //                                                   Text(CCUtils
+                        //                                                       .stateDisplay(e))
+                        //                                                 ],
+                        //                                               ),
+                        //                                             )
+                        //                                           : Padding(
+                        //                                               padding:
+                        //                                                   const EdgeInsets
+                        //                                                       .all(
+                        //                                                       8.0),
+                        //                                               child: Text(
+                        //                                                   CCUtils.stateDisplay(
+                        //                                                       e)),
+                        //                                             )),
+                        //                                 ],
+                        //                               ),
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //             )
+                        //           : ListView.builder(
+                        //               itemBuilder: (context, index) => ListTile(
+                        //                 title: Text(heaters[index].heater.name),
+                        //                 leading: CircleAvatar(
+                        //                   child: Text(
+                        //                       '${heaters[index].currentLevel}'),
+                        //                 ),
+                        //                 subtitle: Text(
+                        //                   heaters[index]
+                        //                       .currentState
+                        //                       .name
+                        //                       .replaceAll('auto', 'zone')
+                        //                       .toUpperCase(),
+                        //                 ),
+                        //                 onTap: () {
+                        //                   setState(() {
+                        //                     selectedHeater = heaters[index];
+                        //                   });
+                        //                 },
+                        //               ),
+                        //               itemCount: heaters.length,
+                        //             ),
+                        //     ),
+                        //   ],
                         // ),
-                        Text('${sensors.length} sensors'),
-                  ),
-                  const Chip(
-                    label: Text('Avg: 23.4 °C'),
+                        ),
                   ),
                 ],
               ),
             ),
-        ],
-      ),
-    );
+            // if (sensors.isNotEmpty)
+            //   Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: Row(
+            //       children: [
+            //         Expanded(
+            //           child:
+            //               //  ListView.builder(
+            //               //   itemBuilder: (context, index) => Padding(
+            //               //     padding: const EdgeInsets.only(right: 4),
+            //               //     child: Chip(
+            //               //       label: Text(
+            //               //           'Sensor${sensors[index].id}: ${channelController.getSensorValue(sensors[index].id)} °C'),
+            //               //     ),
+            //               //   ),
+            //               //   itemCount: sensors.length,
+            //               // ),
+            //               Text('${sensors.length} sensors'),
+            //         ),
+            //         const Chip(
+            //           label: Text('Avg: 23.4 °C'),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+          ],
+        ),
+      );
+    });
     /* 
     return GetBuilder<ProcessController>(builder: (pc) {
       zone =
@@ -603,15 +608,15 @@ class _ZoneScreenState extends State<ZoneScreen> {
     }); */
   }
 
-  Future<void> initZone(int zoneId) async {
-    final zoneOnDb = await DbProvider.db.getZone(id: zoneId);
-    if (zoneOnDb != null) {
-      setState(() {
-        zoneDefinition = zoneOnDb;
-      });
-      processController.initZone(zoneDefinition!);
-    } else {
-      Future.delayed(Duration.zero, () => Get.back());
-    }
-  }
+  // Future<void> initZone(int zoneId) async {
+  //   final zoneOnDb = await DbProvider.db.getZone(id: zoneId);
+  //   if (zoneOnDb != null) {
+  //     setState(() {
+  //       Zone = zoneOnDb;
+  //     });
+  //     processController.initZone(Zone!);
+  //   } else {
+  //     Future.delayed(Duration.zero, () => Get.back());
+  //   }
+  // }
 }

@@ -2,7 +2,7 @@ import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 class SettingsHeaterListItemWidget extends StatelessWidget {
   const SettingsHeaterListItemWidget({super.key, required this.heater});
-  final HeaterDevice heater;
+  final Heater heater;
 
   @override
   Widget build(BuildContext context) {

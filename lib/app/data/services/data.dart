@@ -4,7 +4,6 @@ import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -86,10 +85,10 @@ class DataController extends GetxController {
     final data = await DbProvider.db.getHeaters();
     _heaterList.assignAll(data);
     update();
-    final ProcessController pc = Get.find();
-    for (final h in data) {
-      pc.initHeater(h);
-    }
+    // final ProcessController pc = Get.find();
+    // for (final h in data) {
+    //   pc.initHeater(h);
+    // }
   }
 
   Future<bool> addHeater(Heater heater) async {

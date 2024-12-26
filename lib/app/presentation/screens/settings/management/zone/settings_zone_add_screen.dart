@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -21,7 +21,7 @@ class SettingsZoneAddScreen extends StatefulWidget {
 }
 
 class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
-  ZoneDefinition zone = ZoneDefinition.initial();
+  Zone zone = Zone.initial();
   late TextEditingController nameController;
 
   @override
@@ -30,7 +30,7 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
     nameController = TextEditingController()
       ..addListener(() {
         setState(() {
-          zone.name = nameController.text;
+          zone = zone.copyWith(name: nameController.text);
         });
       });
   }
@@ -72,7 +72,8 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
               const SizedBox(height: 20),
               const LabelWidget(text: 'Select Zone color'),
               ColorPickerWidget(
-                onSelected: (v) => setState(() => zone.color = v),
+                onSelected: (v) =>
+                    setState(() => zone = zone.copyWith(color: v)),
                 selectedValue: zone.color,
               ),
 
@@ -96,11 +97,12 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
                                 .toList()
                                 .length ==
                             zone.users.length) {
-                          zone.users = [];
+                          zone = zone.copyWith(users: []);
                         } else {
-                          zone.users = app.appUserList
-                              .where((e) => e.level == AppUserLevel.user)
-                              .toList();
+                          zone = zone.copyWith(
+                              users: app.appUserList
+                                  .where((e) => e.level == AppUserLevel.user)
+                                  .toList());
                         }
                       });
                     },
@@ -110,9 +112,7 @@ class _SettingsZoneAddScreenState extends State<SettingsZoneAddScreen> {
               ),
               MultiSelectUserWidget(
                 onSelected: (p0) {
-                  setState(() {
-                    zone.users = p0;
-                  });
+                  setState(() => zone = zone.copyWith(users: p0));
                 },
                 selectedUsers: zone.users,
                 users: app.appUserList

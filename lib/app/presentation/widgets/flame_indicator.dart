@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:flutter/material.dart';
 
 class FlameIndicatorWidget extends StatefulWidget {
   const FlameIndicatorWidget({super.key, required this.value});
-  final int value;
+  final ControlMode value;
 
   @override
   State<FlameIndicatorWidget> createState() => _FlameIndicatorWidgetState();
@@ -35,7 +37,7 @@ class _FlameIndicatorWidgetState extends State<FlameIndicatorWidget> {
       width: 20,
       height: 20,
       child: AnimatedOpacity(
-        opacity: widget.value == 0
+        opacity: widget.value == ControlMode.off
             ? 0.3
             : b
                 ? 1
@@ -44,7 +46,7 @@ class _FlameIndicatorWidgetState extends State<FlameIndicatorWidget> {
         child: Icon(
           Icons.sunny,
           size: 20,
-          color: widget.value == 0 ? null : Colors.red,
+          color: CCUtils.stateColor(widget.value),
         ),
       ),
     );

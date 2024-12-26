@@ -6,7 +6,7 @@ import 'package:central_heating_control/app/core/extensions/string_extensions.da
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/channel.dart';
@@ -31,7 +31,7 @@ class SettingsDeviceAddScreen extends StatefulWidget {
 }
 
 class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
-  HeaterDevice heater = HeaterDevice.initial();
+  Heater heater = Heater.initial();
   late PageController pageController;
   int currentPage = 0;
   late TextEditingController nameController;
@@ -58,7 +58,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
         });
       });
     nameController = TextEditingController()
-      ..addListener(() => setState(() => heater.name = nameController.text));
+      ..addListener(() => setState(() => heater = heater.copyWith(name: nameController.text)));
     // ipAddressController = TextEditingController()
     //   ..addListener(
     //       () => setState(() => heater.ipAddress = ipAddressController.text));
@@ -104,7 +104,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
               child: TypeDropdownWidget(
                 onChanged: (value) {
                   setState(() {
-                    heater.type = value ?? HeaterDeviceType.none;
+                    heater = heater.copyWith(type: value ?? HeaterDeviceType.none);
                   });
                 },
                 value: heater.type,
@@ -122,8 +122,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
               child: ConnectionTypeDropdownWidget(
                 onChanged: (value) {
                   setState(() {
-                    heater.connectionType =
-                        value ?? HeaterDeviceConnectionType.none;
+                    heater = heater.copyWith(connectionType: value ?? HeaterDeviceConnectionType.none);
                   });
                 },
                 value: heater.connectionType,
@@ -142,7 +141,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                 value: heater.levelType,
                 onChanged: (value) {
                   setState(() {
-                    heater.levelType = value ?? HeaterDeviceLevel.none;
+                    heater = heater.copyWith(levelType: value ?? HeaterDeviceLevel.none);
                   });
                 },
               ),
@@ -184,7 +183,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                     group: GpioGroup.outPin,
                                     onChanged: (value) {
                                       setState(
-                                          () => heater.outputChannel1 = value);
+                                          () => heater = heater.copyWith(outputChannel1: value));
                                     },
                                     value: heater.outputChannel1,
                                   ),
@@ -203,7 +202,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       group: GpioGroup.outPin,
                                       onChanged: (value) {
                                         setState(() =>
-                                            heater.outputChannel2 = value);
+                                            heater = heater.copyWith(outputChannel2: value));
                                       },
                                       value: heater.outputChannel2,
                                     ),
@@ -220,7 +219,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                       group: GpioGroup.outPin,
                                       onChanged: (value) {
                                         setState(() =>
-                                            heater.outputChannel3 = value);
+                                            heater = heater.copyWith(outputChannel3: value));
                                       },
                                       value: heater.outputChannel3,
                                     ),
@@ -242,7 +241,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                     group: GpioGroup.inPin,
                                     onChanged: (value) {
                                       setState(
-                                          () => heater.errorChannel = value);
+                                          () => heater = heater.copyWith(errorChannel: value));
                                     },
                                     value: heater.errorChannel,
                                   ),
@@ -258,8 +257,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                                     value: heater.errorChannelType,
                                     onChanged: (value) {
                                       setState(() {
-                                        heater.errorChannelType =
-                                            value ?? ErrorChannelType.nC;
+                                        heater = heater.copyWith(errorChannelType: value ?? ErrorChannelType.nC);
                                       });
                                     },
                                   ),
@@ -474,11 +472,11 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                 onChanged: (value) {
                   if (value == null) {
                     setState(() {
-                      heater.zoneId = null;
+                      heater = heater.copyWith(zoneId: null);
                     });
                   } else {
                     setState(() {
-                      heater.zoneId = value.id;
+                      heater = heater.copyWith(zoneId: value.id);
                     });
                   }
                 },
@@ -514,7 +512,7 @@ class _SettingsDeviceAddScreenState extends State<SettingsDeviceAddScreen> {
                 selectedValue: heater.color,
                 onSelected: (value) {
                   setState(() {
-                    heater.color = value;
+                    heater = heater.copyWith(color: value);
                   });
                 },
               ),
