@@ -81,6 +81,9 @@ class DataController extends GetxController {
   //#region MARK: HEATERS
   final List<Heater> _heaterList = <Heater>[].obs;
   List<Heater> get heaterList => _heaterList;
+  List<Heater> getHeatersOfZone(int zoneId) =>
+      heaterList.where((element) => element.zoneId == zoneId).toList();
+
   Future<void> loadHeaterList() async {
     final data = await DbProvider.db.getHeaters();
     _heaterList.assignAll(data);
@@ -122,6 +125,9 @@ class DataController extends GetxController {
   //#region MARK: SENSORS
   final List<SensorDevice> _sensorList = <SensorDevice>[].obs;
   List<SensorDevice> get sensorList => _sensorList;
+  List<SensorDevice> getSensorsOfZone(int zoneId) =>
+      sensorList.where((element) => element.zone == zoneId).toList();
+
   Future<void> loadSensorList() async {
     final data = await DbProvider.db.getSensors();
     _sensorList.assignAll(data);
@@ -246,5 +252,9 @@ class DataController extends GetxController {
   //   await loadHardwareDevices();
   //   return result;
   // }
+  //#endregion
+
+  //#region MARK: ACTIONS
+
   //#endregion
 }

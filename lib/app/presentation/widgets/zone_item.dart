@@ -1,5 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/utils/common.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
+import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -17,6 +19,9 @@ class ZoneItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(builder: (app) {
       return GetBuilder<DataController>(builder: (dc) {
+        final List<Heater> heaters = dc.getHeatersOfZone(zone.id);
+        final List<SensorDevice> sensors = dc.getSensorsOfZone(zone.id);
+
         return Card(
           margin: const EdgeInsets.all(10),
           shape: RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
@@ -40,11 +45,9 @@ class ZoneItemWidget extends StatelessWidget {
                   children: [
                     ZoneCardTitleWidget(
                       title: zone.name,
-                      subtitle: 'TODO: ',
-                      // '${heaters.length} Heater(s) ${(zone.hasSensor) ? ' with Sensor' : ''}',
+                      subtitle:
+                          '${heaters.length} Heater(s), ${sensors.length} Sensor(s)',
                     ),
-                    // if (!heaters.every((e) => e.inputSignal))
-                    //   const ZoneCardWarningDisplayWidget(),
                     ZoneCardModeDisplayWidget(
                       desiredMode: zone.desiredMode,
                       currentMode: zone.currentMode,
