@@ -66,31 +66,36 @@ class _ZoneScreenState extends State<ZoneScreen> {
                             Row(
                               children: [
                                 // ControlMode list
-                                ListView.builder(
-                                  itemBuilder: (context, index) => ListTile(
-                                      title: Text(ControlMode.values[index].name
-                                          .toUpperCase()),
-                                      trailing: zone.desiredMode ==
-                                              ControlMode.values[index]
-                                          ? const Icon(
-                                              Icons.check,
-                                              color: Colors.green,
-                                            )
-                                          : null,
-                                      onTap: () {
-                                        dc.onZoneModeCalled(
-                                            zoneId: zone.id,
-                                            mode: ControlMode.values[index]);
-                                      }),
-                                  itemCount: ControlMode.values.length,
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) => ListTile(
+                                        title: Text(ControlMode
+                                            .values[index].name
+                                            .toUpperCase()),
+                                        trailing: zone.desiredMode ==
+                                                ControlMode.values[index]
+                                            ? const Icon(
+                                                Icons.check,
+                                                color: Colors.green,
+                                              )
+                                            : null,
+                                        onTap: () {
+                                          dc.onZoneModeCalled(
+                                              zoneId: zone.id,
+                                              mode: ControlMode.values[index]);
+                                        }),
+                                    itemCount: ControlMode.values.length,
+                                  ),
                                 ),
                                 // control mode detail
-                                zone.desiredMode == ControlMode.auto
-                                    ? const Text('weekly plan')
-                                    : zone.desiredMode == ControlMode.off
-                                        ? const Text('off')
-                                        : const Text(
-                                            'has thermostat, + - buttons')
+                                Expanded(
+                                  child: zone.desiredMode == ControlMode.auto
+                                      ? const Text('weekly plan')
+                                      : zone.desiredMode == ControlMode.off
+                                          ? const Text('off')
+                                          : const Text(
+                                              'has thermostat, + - buttons'),
+                                )
                               ],
                             ),
                           ],
