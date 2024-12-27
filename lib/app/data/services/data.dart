@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -144,6 +145,37 @@ class DataController extends GetxController {
           .updateSensor(updatedSensor); // Veritabanına güncelleme işlemi
       update();
     }
+  }
+
+  List<SensorDeviceWithValues> sensorListWithValues(zoneId) {
+    final ChannelController cc = Get.find();
+    List<SensorDeviceWithValues> result = [];
+    for (var sensor in sensorList.where((e) => e.zone == zoneId)) {
+      result.add(SensorDeviceWithValues(
+        id: sensor.id,
+        device: sensor.device,
+        index: sensor.index,
+        zone: sensor.zone,
+        color: sensor.color,
+        name: sensor.name,
+        value: cc.getSensorValue(sensor.id),
+      ));
+    }
+    return result;
+  }
+
+  double? getSensorAverageOfZone(int zoneId) {
+    final List<SensorDeviceWithValues> sensors = sensorListWithValues(zoneId);
+    if (sensors.isEmpty) {
+      return 0.0;
+    }
+
+    // Use null safety and a non-nullable initial value
+    double sum = sensors.fold<double>(0.0, (previousValue, sensor) {
+      return previousValue + (sensor.value ?? 0.0); // Use null-aware operator
+    });
+
+    return sum / sensors.length;
   }
   //#endregion
 

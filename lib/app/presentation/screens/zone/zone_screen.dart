@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
@@ -22,43 +23,22 @@ class ZoneScreen extends StatefulWidget {
 }
 
 class _ZoneScreenState extends State<ZoneScreen> {
-  // final ProcessController processController = Get.find();
-  // final DataController dataController = Get.find();
-  // final ChannelController channelController = Get.find();
-  // Zone? zone;
-  // late ZoneProcess zone;
-  // List<HeaterProcess> heaters = <HeaterProcess>[];
-  // late List<SensorDevice> sensors;
-  // HeaterProcess? selectedHeater;
+  final ChannelController channelController = Get.find();
+  late Zone zone;
 
   @override
   void initState() {
     super.initState();
-    // int zoneId = int.parse('${Get.arguments[0]}');
-    // initZone(zoneId);
+    zone = widget.zone;
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (Zone != null) {
-    //   zone = processController.zoneProcessList
-    //       .firstWhere((e) => e.zone.id == Zone!.id);
-    //   heaters = processController.heaterProcessList
-    //       .where((e) => e.heater.zoneId == Zone!.id)
-    //       .toList();
-    //   sensors =
-    //       dataController.sensorList.where((e) => e.zone == Zone!.id).toList();
-    // }
-
-    // int maxLevel = 1;
-    // for (final heater in heaters) {
-    //   maxLevel = max(maxLevel, heater.heater.levelType.index);
-    // }
-
     return GetBuilder<DataController>(builder: (dc) {
-      final List<Heater> heaters = dc.getHeatersOfZone(widget.zone.id);
-      // ignore: unused_local_variable
-      final List<SensorDevice> sensors = dc.getSensorsOfZone(widget.zone.id);
+      final List<Heater> heaters = dc.getHeatersOfZone(zone.id);
+      final List<SensorDeviceWithValues> sensors =
+          dc.sensorListWithValues(zone.id);
+      final double? sensorAverage = dc.getSensorAverageOfZone(zone.id);
       int maxLevel = 1;
       for (final heater in heaters) {
         maxLevel = max(maxLevel, heater.levelType.index);
@@ -66,7 +46,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
 
       return AppScaffold(
         selectedIndex: 0,
-        title: '', //zone.zone.name,
+        title: zone.name,
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -93,10 +73,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                 Expanded(
                                   child: Center(
                                     child: ZoneControlWidget(
-                                      currentState: widget.zone.currentMode,
+                                      currentState: zone.currentMode,
                                       onStateChanged: (s) {
-                                        dc.onChangeZoneModePressed(
-                                            widget.zone.id, s);
+                                        dc.onChangeZoneModePressed(zone.id, s);
                                       },
                                       maxLevel: maxLevel,
                                     ),
@@ -119,11 +98,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             height: 20,
                                             width: double.infinity,
                                             color: CCUtils.stateColor(
-                                                widget.zone.currentMode),
+                                                zone.currentMode),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(16),
-                                            child: widget.zone.currentMode ==
+                                            child: zone.currentMode ==
                                                     ControlMode.auto
                                                 ? Column(
                                                     mainAxisSize:
@@ -132,11 +111,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                       const Text(
                                                           'Select Plan for AUTO'),
                                                       PlanDropdownWidget(
-                                                        value: widget
-                                                            .zone.selectedPlan,
+                                                        value:
+                                                            zone.selectedPlan,
                                                         onChanged: (p0) {
-                                                          final zd = widget.zone
-                                                              .copyWith(
+                                                          final zd =
+                                                              zone.copyWith(
                                                             selectedPlan: p0,
                                                           );
                                                           dc.updateZone(zd);
@@ -148,7 +127,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                       ),
                                                     ],
                                                   )
-                                                : widget.zone.currentMode !=
+                                                : zone.currentMode !=
                                                         ControlMode.off
                                                     ? Column(
                                                         mainAxisSize:
@@ -163,7 +142,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                                     UiDimens
                                                                         .formRadius,
                                                               ),
-                                                              value: widget.zone
+                                                              value: zone
                                                                   .hasThermostat,
                                                               onChanged: (p0) {
                                                                 // TODO:
@@ -176,10 +155,10 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                                 // setState(() {});
                                                               }),
                                                           Opacity(
-                                                            opacity: widget.zone
-                                                                    .hasThermostat
-                                                                ? 1
-                                                                : 0.3,
+                                                            opacity:
+                                                                zone.hasThermostat
+                                                                    ? 1
+                                                                    : 0.3,
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -190,18 +169,17 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                                       Icons
                                                                           .remove),
                                                                   iconSize: 36,
-                                                                  onPressed: widget
-                                                                          .zone
-                                                                          .hasThermostat
-                                                                      ? () {
-                                                                          // TODO:
-                                                                          // processController.onZoneThermostatDecreased(zoneId: Zone!.id);
-                                                                          // setState(() {});
-                                                                        }
-                                                                      : null,
+                                                                  onPressed:
+                                                                      zone.hasThermostat
+                                                                          ? () {
+                                                                              // TODO:
+                                                                              // processController.onZoneThermostatDecreased(zoneId: Zone!.id);
+                                                                              // setState(() {});
+                                                                            }
+                                                                          : null,
                                                                 ),
                                                                 Text(
-                                                                  ' ${(widget.zone.desiredTemperature ?? 0).toStringAsPrecision(1)} °C ',
+                                                                  ' ${(zone.desiredTemperature ?? 0).toStringAsPrecision(1)} °C ',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           24),
@@ -211,15 +189,14 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                                       Icons
                                                                           .add),
                                                                   iconSize: 36,
-                                                                  onPressed: widget
-                                                                          .zone
-                                                                          .hasThermostat
-                                                                      ? () {
-                                                                          // TODO:
-                                                                          // processController.onZoneThermostatIncreased(zoneId: Zone!.id);
-                                                                          // setState(() {});
-                                                                        }
-                                                                      : null,
+                                                                  onPressed:
+                                                                      zone.hasThermostat
+                                                                          ? () {
+                                                                              // TODO:
+                                                                              // processController.onZoneThermostatIncreased(zoneId: Zone!.id);
+                                                                              // setState(() {});
+                                                                            }
+                                                                          : null,
                                                                 ),
                                                               ],
                                                             ),
@@ -455,31 +432,30 @@ class _ZoneScreenState extends State<ZoneScreen> {
                 ],
               ),
             ),
-            // if (sensors.isNotEmpty)
-            //   Padding(
-            //     padding: const EdgeInsets.all(8.0),
-            //     child: Row(
-            //       children: [
-            //         Expanded(
-            //           child:
-            //               //  ListView.builder(
-            //               //   itemBuilder: (context, index) => Padding(
-            //               //     padding: const EdgeInsets.only(right: 4),
-            //               //     child: Chip(
-            //               //       label: Text(
-            //               //           'Sensor${sensors[index].id}: ${channelController.getSensorValue(sensors[index].id)} °C'),
-            //               //     ),
-            //               //   ),
-            //               //   itemCount: sensors.length,
-            //               // ),
-            //               Text('${sensors.length} sensors'),
-            //         ),
-            //         const Chip(
-            //           label: Text('Avg: 23.4 °C'),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
+            if (sensors.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Chip(
+                            label: Text(
+                                'Sensor${sensors[index].id}: ${sensors[index].value == null ? '-' : sensors[index].value?.toStringAsPrecision(1)} °C'),
+                          ),
+                        ),
+                        itemCount: sensors.length,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                          'Avg: ${sensorAverage == null ? '-' : sensorAverage.toStringAsPrecision(1)} °C'),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       );
