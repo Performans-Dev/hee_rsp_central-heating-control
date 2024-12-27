@@ -288,25 +288,34 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: ACTIONS
-  void onZoneModeCalled({required int zoneId, required ControlMode mode}) {
+  Future<void> onZoneModeCalled({
+    required int zoneId,
+    required ControlMode mode,
+  }) async {
     final zone = zoneList.firstWhere((e) => e.id == zoneId).copyWith(
           desiredMode: mode,
         );
-    updateZone(zone);
+    await updateZone(zone);
   }
 
-  void onHeaterModeCalled({required int heaterId, required ControlMode mode}) {
+  Future<void> onHeaterModeCalled({
+    required int heaterId,
+    required ControlMode mode,
+  }) async {
     final heater = heaterList.firstWhere((e) => e.id == heaterId).copyWith(
           desiredMode: mode,
         );
-    updateHeater(heater);
+    await updateHeater(heater);
   }
 
-  void onZonePlanCalled({required int zoneId, int? planId}) {
+  Future<void> onZonePlanCalled({
+    required int zoneId,
+    int? planId,
+  }) async {
     final zone = zoneList
         .firstWhere((e) => e.id == zoneId)
         .copyWith(selectedPlan: planId);
-    updateZone(zone);
+    await updateZone(zone);
   }
   //#endregion
 }

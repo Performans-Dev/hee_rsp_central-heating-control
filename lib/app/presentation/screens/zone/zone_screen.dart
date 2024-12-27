@@ -72,20 +72,22 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                 // ControlMode list
                                 ZoneDetailControlModeWidget(
                                     selectedMode: zone.desiredMode,
-                                    onChanged: (value) {
-                                      dc.onZoneModeCalled(
+                                    onChanged: (value) async {
+                                      await dc.onZoneModeCalled(
                                         mode: value,
                                         zoneId: zone.id,
                                       );
+                                      setState(() {});
                                     }),
                                 // control mode detail
                                 ZoneDetailSubControlModeWidget(
                                   zone: zone,
-                                  onPlanChanged: (value) {
-                                    dc.onZonePlanCalled(
+                                  onPlanChanged: (value) async {
+                                    await dc.onZonePlanCalled(
                                       zoneId: zone.id,
                                       planId: value,
                                     );
+                                    setState(() {});
                                   },
                                 )
                               ],
@@ -109,11 +111,12 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                 onBack: () {
                                   setState(() => selectedHeater = null);
                                 },
-                                onHeaterModeCalled: (ControlMode mode) {
-                                  dc.onHeaterModeCalled(
+                                onHeaterModeCalled: (ControlMode mode) async {
+                                  await dc.onHeaterModeCalled(
                                     heaterId: selectedHeater!.id,
                                     mode: mode,
                                   );
+                                  setState(() {});
                                 },
                               ),
                       ),
@@ -734,7 +737,8 @@ class ZoneDetailControlModeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ToggleButtons(
       direction: Axis.vertical,
-      constraints: const BoxConstraints(minWidth: 120),
+      constraints: const BoxConstraints(minWidth: 120, minHeight: 56),
+      verticalDirection: VerticalDirection.up,
       onPressed: (value) {
         onChanged(ControlMode.values[value]);
       },
@@ -744,7 +748,7 @@ class ZoneDetailControlModeWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.auto_awesome),
-                  Text(e.name.replaceAll('auto', 'zone').toUpperCase()),
+                  Text(e.name.toUpperCase()),
                 ],
               ))
           .toList(),
