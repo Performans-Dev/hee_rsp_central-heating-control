@@ -60,6 +60,11 @@ class DataController extends GetxController {
   }
 
   Future<bool> updateZone(Zone zone) async {
+    final index = zoneList.indexWhere((element) => element.id == zone.id);
+    if (index != -1) {
+      _zoneList[index] = zone;
+      update();
+    }
     final result = await DbProvider.db.updateZone(zone);
     if (result > 0) {
       await loadZoneList();
@@ -106,6 +111,11 @@ class DataController extends GetxController {
   }
 
   Future<bool> updateHeater(Heater heater) async {
+    final index = heaterList.indexWhere((element) => element.id == heater.id);
+    if (index != -1) {
+      _heaterList[index] = heater;
+      update();
+    }
     final result = await DbProvider.db.updateHeater(heater);
     if (result > 0) {
       await loadHeaterList();
@@ -140,7 +150,7 @@ class DataController extends GetxController {
     final index =
         sensorList.indexWhere((sensor) => sensor.id == updatedSensor.id);
     if (index != -1) {
-      sensorList[index] = updatedSensor;
+      _sensorList[index] = updatedSensor;
       DbProvider.db
           .updateSensor(updatedSensor); // Veritabanına güncelleme işlemi
       update();
@@ -315,6 +325,26 @@ class DataController extends GetxController {
     final zone = zoneList
         .firstWhere((e) => e.id == zoneId)
         .copyWith(selectedPlan: planId);
+    await updateZone(zone);
+  }
+
+  Future<void> onZoneThermostatCalled({
+    required int zoneId,
+    required bool hasThermostat,
+  }) async {
+    final zone = zoneList
+        .firstWhere((e) => e.id == zoneId)
+        .copyWith(hasThermostat: hasThermostat);
+    await updateZone(zone);
+  }
+
+  Future<void> onZoneTemperatureCalled({
+    required int zoneId,
+    required double temperature,
+  }) async {
+    final zone = zoneList
+        .firstWhere((e) => e.id == zoneId)
+        .copyWith(desiredTemperature: temperature);
     await updateZone(zone);
   }
   //#endregion

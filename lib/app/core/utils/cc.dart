@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CCUtils {
   static String displayConsumption(
@@ -64,6 +65,37 @@ class CCUtils {
         return Colors.red;
       default:
         return Colors.grey;
+    }
+  }
+
+  static Widget stateIcon(ControlMode mode, {bool withColor = true}) {
+    switch (mode) {
+      case ControlMode.off:
+        return FaIcon(
+          FontAwesomeIcons.powerOff,
+          color: withColor ? Colors.red : Colors.grey,
+        );
+      case ControlMode.auto:
+        return FaIcon(
+          FontAwesomeIcons.wandSparkles,
+          color: withColor ? Colors.blue : Colors.grey,
+        );
+
+      case ControlMode.on:
+        return FaIcon(
+          FontAwesomeIcons.solidCircle,
+          color: withColor ? Colors.orange : Colors.grey,
+        );
+      case ControlMode.high:
+        return FaIcon(
+          FontAwesomeIcons.solidCircle,
+          color: withColor ? Colors.deepOrange : Colors.grey,
+        );
+      case ControlMode.max:
+        return FaIcon(
+          FontAwesomeIcons.solidCircle,
+          color: withColor ? Colors.red : Colors.grey,
+        );
     }
   }
 }

@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
@@ -12,6 +13,14 @@ import 'package:central_heating_control/app/presentation/components/app_scaffold
 import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+///
+/// temperature-arrow-up
+/// temperature-arrow-down
+/// clock
+/// calendar-days
+/// power-off
+///
 
 class ZoneScreen extends StatefulWidget {
   const ZoneScreen({super.key, required this.zone});
@@ -89,7 +98,21 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     );
                                     setState(() {});
                                   },
-                                )
+                                  onTemperatureChanged: (value) async {
+                                    await dc.onZoneTemperatureCalled(
+                                      zoneId: zone.id,
+                                      temperature: value,
+                                    );
+                                    setState(() {});
+                                  },
+                                  onThermostatChanged: (value) async {
+                                    await dc.onZoneThermostatCalled(
+                                      zoneId: zone.id,
+                                      hasThermostat: value,
+                                    );
+                                    setState(() {});
+                                  },
+                                ),
                               ],
                             ),
                           ],
@@ -696,10 +719,14 @@ class ZoneDetailSubControlModeWidget extends StatelessWidget {
     super.key,
     required this.zone,
     required this.onPlanChanged,
+    required this.onTemperatureChanged,
+    required this.onThermostatChanged,
   });
 
   final Zone zone;
   final Function(int?) onPlanChanged;
+  final Function(double) onTemperatureChanged;
+  final Function(bool) onThermostatChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -709,7 +736,7 @@ class ZoneDetailSubControlModeWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text('weekly plan'),
+                const Text('Select Plan for Automatic Controls'),
                 PlanDropdownWidget(
                   value: zone.selectedPlan,
                   onChanged: onPlanChanged,
@@ -717,8 +744,66 @@ class ZoneDetailSubControlModeWidget extends StatelessWidget {
               ],
             )
           : zone.desiredMode == ControlMode.off
-              ? const Text('off')
-              : const Text('has thermostat, + - buttons'),
+              ? Card(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
+                    child: const Icon(
+                      Icons.energy_savings_leaf,
+                      size: 48,
+                    ),
+                  ),
+                )
+              : Card(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SwitchListTile(
+                          title: const Text('Thermostat'),
+                          value: zone.hasThermostat,
+                          onChanged: (b) {
+                            onThermostatChanged(b);
+                          },
+                        ),
+                        Opacity(
+                          opacity: zone.hasThermostat &&
+                                  zone.desiredTemperature != null
+                              ? 1
+                              : 0.4,
+                          child: Row(
+                            spacing: 8,
+                            children: [
+                              IconButton(
+                                onPressed: zone.hasThermostat &&
+                                        zone.desiredTemperature != null
+                                    ? () {
+                                        onTemperatureChanged(
+                                            zone.desiredTemperature! - 1);
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.remove),
+                              ),
+                              Text('${zone.desiredTemperature} °C'),
+                              IconButton(
+                                onPressed: zone.hasThermostat &&
+                                        zone.desiredTemperature != null
+                                    ? () {
+                                        onTemperatureChanged(
+                                            zone.desiredTemperature! + 1);
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.add),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
     );
   }
 }
@@ -745,9 +830,10 @@ class ZoneDetailControlModeWidget extends StatelessWidget {
       isSelected: ControlMode.values.map((e) => e == selectedMode).toList(),
       children: ControlMode.values
           .map((e) => Row(
+                spacing: 12,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.auto_awesome),
+                  CCUtils.stateIcon(e, withColor: selectedMode == e),
                   Text(e.name.toUpperCase()),
                 ],
               ))
