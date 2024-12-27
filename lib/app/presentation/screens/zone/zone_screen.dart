@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
@@ -67,39 +68,61 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         child: selectedHeater == null
                             ?
                             // MARK: Heaters
-                            Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    child: const Text('Heaters'),
+                            Card(
+                                child: Container(
+                                  width: 200,
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text('Heaters'),
+                                      ...heaters.map((h) => ListTile(
+                                          title: Text(h.name),
+                                          subtitle: Text(h.currentMode.name),
+                                          onTap: () {
+                                            setState(() {
+                                              selectedHeater = h;
+                                            });
+                                          })),
+                                    ],
                                   ),
-                                  ...heaters.map((h) => ListTile(
-                                        title: Text(h.name),
-                                        trailing: Text(h.currentMode.name),
-                                      )),
-                                ],
+                                ),
                               )
                             :
                             // MARK: SELECTED HEATER
-                            Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
+                            Card(
+                                child: Container(
+                                  width: 200,
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(
-                                                () => selectedHeater = null);
-                                          },
-                                          icon: const Icon(Icons.arrow_back)),
-                                      Text(selectedHeater!.name),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                              onPressed: () {
+                                                setState(() =>
+                                                    selectedHeater = null);
+                                              },
+                                              icon:
+                                                  const Icon(Icons.arrow_back)),
+                                          Text(selectedHeater!.name),
+                                          ...ControlMode.values
+                                              .map((e) => ListTile(
+                                                    title: Text(e.name
+                                                        .replaceAll(
+                                                            'auto', 'zone')
+                                                        .toUpperCase()),
+                                                  )),
+                                        ],
+                                      ),
+                                      Container(
+                                        child: Text(
+                                            selectedHeater!.currentMode.name),
+                                      ),
                                     ],
                                   ),
-                                  Container(
-                                    child:
-                                        Text(selectedHeater!.currentMode.name),
-                                  ),
-                                ],
+                                ),
                               ),
                       ),
                     ),
