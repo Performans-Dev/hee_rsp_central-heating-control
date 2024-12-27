@@ -162,7 +162,7 @@ class Keys {
     )
   ''';
   static const String dbInsertSampleZones = '''
-    INSERT INTO zones (name, color, desiredMode, currentMode,, selectedPlan) VALUES
+    INSERT INTO zones (name, color, desiredMode, currentMode, selectedPlan) VALUES
       ('Zone 1', '#FF0000', 0, 0, 0),
       ('Zone 2', '#00FF00', 0, 0, 0),
       ('Zone 3', '#0000FF', 0, 0, 0),
