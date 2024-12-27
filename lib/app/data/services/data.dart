@@ -301,5 +301,12 @@ class DataController extends GetxController {
         );
     updateHeater(heater);
   }
+
+  void onZonePlanCalled({required int zoneId, int? planId}) {
+    final zone = zoneList
+        .firstWhere((e) => e.id == zoneId)
+        .copyWith(selectedPlan: planId);
+    updateZone(zone);
+  }
   //#endregion
 }
