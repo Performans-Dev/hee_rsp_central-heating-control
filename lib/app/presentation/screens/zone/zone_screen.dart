@@ -57,6 +57,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
 
     return GetBuilder<DataController>(builder: (dc) {
       final List<Heater> heaters = dc.getHeatersOfZone(widget.zone.id);
+      // ignore: unused_local_variable
       final List<SensorDevice> sensors = dc.getSensorsOfZone(widget.zone.id);
       int maxLevel = 1;
       for (final heater in heaters) {
