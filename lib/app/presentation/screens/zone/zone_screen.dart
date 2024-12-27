@@ -47,25 +47,37 @@ class _ZoneScreenState extends State<ZoneScreen> {
         title: zone.name,
         body: Container(
           constraints: const BoxConstraints.expand(),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
-              //Sensor Area
-              Container(
-                child: const Text('Sensors'),
-              ),
-              // Zone Controls
               Expanded(
-                flex: 10,
-                child: Container(
-                  child: const Text('Zone Controls'),
+                child: Row(
+                  children: [
+                    // Zone Controls
+                    Expanded(
+                      flex: 10,
+                      child: Container(
+                        child: const Text('Zone Controls'),
+                      ),
+                    ),
+                    // Heaters
+                    Expanded(
+                      flex: 10,
+                      child: Container(
+                        child: const Text('Heaters'),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              // Heaters
-              Expanded(
-                flex: 10,
-                child: Container(
-                  child: const Text('Heaters'),
-                ),
+              const Divider(),
+              Row(
+                children: [
+                  const Text('Sensors: '),
+                  ...sensors.map((e) =>
+                      Text('S${e.id}:  ${e.value?.toStringAsPrecision(1)} °C')),
+                  Text(' ${sensorAverage.toStringAsPrecision(1)} °C'),
+                ],
               ),
             ],
           ),
