@@ -1,16 +1,13 @@
+// ignore_for_file: avoid_unnecessary_containers, unused_local_variable
+
 import 'dart:math';
 
-import 'package:central_heating_control/app/core/constants/dimens.dart';
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
-import 'package:central_heating_control/app/presentation/components/dropdowns/plan.dart';
-import 'package:central_heating_control/app/presentation/widgets/zone_control_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,6 +42,36 @@ class _ZoneScreenState extends State<ZoneScreen> {
         maxLevel = max(maxLevel, heater.levelType.index);
       }
 
+      return AppScaffold(
+        selectedIndex: 0,
+        title: zone.name,
+        body: Container(
+          constraints: const BoxConstraints.expand(),
+          child: Row(
+            children: [
+              //Sensor Area
+              Container(
+                child: const Text('Sensors'),
+              ),
+              // Zone Controls
+              Expanded(
+                flex: 10,
+                child: Container(
+                  child: const Text('Zone Controls'),
+                ),
+              ),
+              // Heaters
+              Expanded(
+                flex: 10,
+                child: Container(
+                  child: const Text('Heaters'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+/* 
       return AppScaffold(
         selectedIndex: 0,
         title: zone.name,
@@ -456,6 +483,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
           ],
         ),
       );
+    */
     });
     /* 
     return GetBuilder<ProcessController>(builder: (pc) {
