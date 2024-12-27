@@ -913,7 +913,7 @@ class ChannelController extends GetxController {
                     e.type == PinType.uartAnalogInput) &&
                 e.pinIndex == id)
             ?.analogValue ??
-        0;
+        0.0;
   }
 }
 

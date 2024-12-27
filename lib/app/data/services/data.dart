@@ -164,7 +164,7 @@ class DataController extends GetxController {
     return result;
   }
 
-  double? getSensorAverageOfZone(int zoneId) {
+  double getSensorAverageOfZone(int zoneId) {
     final List<SensorDeviceWithValues> sensors = sensorListWithValues(zoneId);
     if (sensors.isEmpty) {
       return 0.0;
@@ -288,11 +288,18 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: ACTIONS
-  void onChangeZoneModePressed(int zoneId, ControlMode mode) {
+  void onZoneModeCalled({required int zoneId, required ControlMode mode}) {
     final zone = zoneList.firstWhere((e) => e.id == zoneId).copyWith(
           desiredMode: mode,
         );
     updateZone(zone);
+  }
+
+  void onHeaterModeCalled({required int heaterId, required ControlMode mode}) {
+    final heater = heaterList.firstWhere((e) => e.id == heaterId).copyWith(
+          desiredMode: mode,
+        );
+    updateHeater(heater);
   }
   //#endregion
 }

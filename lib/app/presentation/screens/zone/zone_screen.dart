@@ -25,6 +25,7 @@ class ZoneScreen extends StatefulWidget {
 class _ZoneScreenState extends State<ZoneScreen> {
   final ChannelController channelController = Get.find();
   late Zone zone;
+  Heater? selectedHeater;
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
       final List<Heater> heaters = dc.getHeatersOfZone(zone.id);
       final List<SensorDeviceWithValues> sensors =
           dc.sensorListWithValues(zone.id);
-      final double? sensorAverage = dc.getSensorAverageOfZone(zone.id);
+      final double sensorAverage = dc.getSensorAverageOfZone(zone.id);
       int maxLevel = 1;
       for (final heater in heaters) {
         maxLevel = max(maxLevel, heater.levelType.index);
@@ -74,8 +75,11 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                   child: Center(
                                     child: ZoneControlWidget(
                                       currentState: zone.currentMode,
-                                      onStateChanged: (s) {
-                                        dc.onChangeZoneModePressed(zone.id, s);
+                                      onStateChanged: (value) {
+                                        dc.onZoneModeCalled(
+                                          zoneId: zone.id,
+                                          mode: value,
+                                        );
                                       },
                                       maxLevel: maxLevel,
                                     ),
@@ -225,209 +229,202 @@ class _ZoneScreenState extends State<ZoneScreen> {
                   Expanded(
                     flex: 3,
                     child: Container(
-                        padding: const EdgeInsets.all(8),
-                        child: const Text("/TODO:")
-                        // Column(
-                        //   mainAxisSize: MainAxisSize.max,
-                        //   children: [
-                        //     Container(
-                        //       padding: const EdgeInsets.all(8),
-                        //       alignment: Alignment.centerLeft,
-                        //       child: selectedHeater == null
-                        //           ? const Text('Heaters')
-                        //           : TextButton.icon(
-                        //               onPressed: () {
-                        //                 setState(() {
-                        //                   selectedHeater = null;
-                        //                 });
-                        //               },
-                        //               icon: const Icon(Icons.chevron_left),
-                        //               label: const Text('Back to Heater List'),
-                        //             ),
-                        //     ),
-                        //     Expanded(
-                        //       child: selectedHeater != null
-                        //           ? Card(
-                        //               shape: RoundedRectangleBorder(
-                        //                 borderRadius: UiDimens.formRadius,
-                        //               ),
-                        //               child: Container(
-                        //                 width: double.infinity,
-                        //                 padding: const EdgeInsets.all(20),
-                        //                 child: Column(
-                        //                   mainAxisSize: MainAxisSize.min,
-                        //                   crossAxisAlignment:
-                        //                       CrossAxisAlignment.center,
-                        //                   spacing: 12,
-                        //                   children: [
-                        //                     Text(selectedHeater!.heater.name),
-                        //                     Row(
-                        //                       mainAxisAlignment:
-                        //                           MainAxisAlignment.spaceEvenly,
-                        //                       crossAxisAlignment:
-                        //                           CrossAxisAlignment.start,
-                        //                       children: [
-                        //                         ToggleButtons(
-                        //                           borderRadius:
-                        //                               UiDimens.formRadius,
-                        //                           isSelected: [
-                        //                             selectedHeater!
-                        //                                     .currentState ==
-                        //                                 HeaterState.auto,
-                        //                             selectedHeater!
-                        //                                     .currentState !=
-                        //                                 HeaterState.auto
-                        //                           ],
-                        //                           direction: Axis.vertical,
-                        //                           onPressed: (index) {
-                        //                             processController
-                        //                                 .onHeaterStateCalled(
-                        //                               heaterId: selectedHeater!
-                        //                                   .heater.id,
-                        //                               state: index == 0
-                        //                                   ? HeaterState.auto
-                        //                                   : HeaterState.off,
-                        //                             );
-                        //                             setState(() {});
-                        //                           },
-                        //                           children: const [
-                        //                             Padding(
-                        //                               padding:
-                        //                                   EdgeInsets.all(8.0),
-                        //                               child: Row(
-                        //                                 spacing: 8,
-                        //                                 mainAxisSize:
-                        //                                     MainAxisSize.min,
-                        //                                 children: [
-                        //                                   Icon(
-                        //                                       Icons.auto_awesome),
-                        //                                   Text('Zone'),
-                        //                                 ],
-                        //                               ),
-                        //                             ),
-                        //                             Padding(
-                        //                               padding:
-                        //                                   EdgeInsets.all(8.0),
-                        //                               child: Row(
-                        //                                 spacing: 8,
-                        //                                 children: [
-                        //                                   Icon(Icons.settings),
-                        //                                   Text('Custom'),
-                        //                                 ],
-                        //                               ),
-                        //                             ),
-                        //                           ],
-                        //                         ),
-                        //                         (selectedHeater!.currentState ==
-                        //                                 HeaterState.auto)
-                        //                             ? Container(width: 74)
-                        //                             : ToggleButtons(
-                        //                                 borderRadius:
-                        //                                     UiDimens.formRadius,
-                        //                                 direction: Axis.vertical,
-                        //                                 verticalDirection:
-                        //                                     VerticalDirection.up,
-                        //                                 isSelected: [
-                        //                                   ...HeaterState.values
-                        //                                       .where((e) =>
-                        //                                           e !=
-                        //                                           HeaterState
-                        //                                               .auto)
-                        //                                       .map((e) =>
-                        //                                           heaters
-                        //                                               .firstWhere((h) =>
-                        //                                                   h.heater
-                        //                                                       .id ==
-                        //                                                   selectedHeater
-                        //                                                       ?.heater
-                        //                                                       .id)
-                        //                                               .currentState ==
-                        //                                           e),
-                        //                                 ],
-                        //                                 onPressed: (index) {
-                        //                                   processController
-                        //                                       .onHeaterStateCalled(
-                        //                                     heaterId:
-                        //                                         selectedHeater!
-                        //                                             .heater.id,
-                        //                                     state: HeaterState
-                        //                                         .values
-                        //                                         .where((e) =>
-                        //                                             e !=
-                        //                                             HeaterState
-                        //                                                 .auto)
-                        //                                         .toList()[index],
-                        //                                   );
-                        //                                   setState(() {});
-                        //                                 },
-                        //                                 children: [
-                        //                                   ...HeaterState.values
-                        //                                       .where((e) =>
-                        //                                           e !=
-                        //                                           HeaterState
-                        //                                               .auto)
-                        //                                       .map((e) => e ==
-                        //                                               selectedHeater
-                        //                                                   ?.currentState
-                        //                                           ? Padding(
-                        //                                               padding:
-                        //                                                   const EdgeInsets
-                        //                                                       .all(
-                        //                                                       8.0),
-                        //                                               child: Row(
-                        //                                                 spacing:
-                        //                                                     8,
-                        //                                                 children: [
-                        //                                                   const Icon(
-                        //                                                       Icons.check),
-                        //                                                   Text(CCUtils
-                        //                                                       .stateDisplay(e))
-                        //                                                 ],
-                        //                                               ),
-                        //                                             )
-                        //                                           : Padding(
-                        //                                               padding:
-                        //                                                   const EdgeInsets
-                        //                                                       .all(
-                        //                                                       8.0),
-                        //                                               child: Text(
-                        //                                                   CCUtils.stateDisplay(
-                        //                                                       e)),
-                        //                                             )),
-                        //                                 ],
-                        //                               ),
-                        //                       ],
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             )
-                        //           : ListView.builder(
-                        //               itemBuilder: (context, index) => ListTile(
-                        //                 title: Text(heaters[index].heater.name),
-                        //                 leading: CircleAvatar(
-                        //                   child: Text(
-                        //                       '${heaters[index].currentLevel}'),
-                        //                 ),
-                        //                 subtitle: Text(
-                        //                   heaters[index]
-                        //                       .currentState
-                        //                       .name
-                        //                       .replaceAll('auto', 'zone')
-                        //                       .toUpperCase(),
-                        //                 ),
-                        //                 onTap: () {
-                        //                   setState(() {
-                        //                     selectedHeater = heaters[index];
-                        //                   });
-                        //                 },
-                        //               ),
-                        //               itemCount: heaters.length,
-                        //             ),
-                        //     ),
-                        //   ],
-                        // ),
-                        ),
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            alignment: Alignment.centerLeft,
+                            child: selectedHeater == null
+                                ? const Text('Heaters')
+                                : TextButton.icon(
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedHeater = null;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.chevron_left),
+                                    label: const Text('Back to Heater List'),
+                                  ),
+                          ),
+                          Expanded(
+                            child: selectedHeater != null
+                                ? Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: UiDimens.formRadius,
+                                    ),
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        spacing: 12,
+                                        children: [
+                                          Text(selectedHeater!.name),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ToggleButtons(
+                                                borderRadius:
+                                                    UiDimens.formRadius,
+                                                isSelected: [
+                                                  selectedHeater!.currentMode ==
+                                                      ControlMode.auto,
+                                                  selectedHeater!.currentMode !=
+                                                      ControlMode.auto
+                                                ],
+                                                direction: Axis.vertical,
+                                                onPressed: (index) {
+                                                  dc.onHeaterModeCalled(
+                                                    heaterId:
+                                                        selectedHeater!.id,
+                                                    mode: index == 0
+                                                        ? ControlMode.auto
+                                                        : ControlMode.off,
+                                                  );
+                                                  setState(() {});
+                                                },
+                                                children: const [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Row(
+                                                      spacing: 8,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                            Icons.auto_awesome),
+                                                        Text('Zone'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Row(
+                                                      spacing: 8,
+                                                      children: [
+                                                        Icon(Icons.settings),
+                                                        Text('Custom'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              (selectedHeater!.currentMode ==
+                                                      ControlMode.auto)
+                                                  ? Container(width: 74)
+                                                  : ToggleButtons(
+                                                      borderRadius:
+                                                          UiDimens.formRadius,
+                                                      direction: Axis.vertical,
+                                                      verticalDirection:
+                                                          VerticalDirection.up,
+                                                      isSelected: [
+                                                        ...ControlMode.values
+                                                            .where((e) =>
+                                                                e !=
+                                                                ControlMode
+                                                                    .auto)
+                                                            .map((e) =>
+                                                                heaters
+                                                                    .firstWhere((h) =>
+                                                                        h.id ==
+                                                                        selectedHeater
+                                                                            ?.id)
+                                                                    .currentMode ==
+                                                                e),
+                                                      ],
+                                                      onPressed: (index) {
+                                                        dc.onHeaterModeCalled(
+                                                          heaterId:
+                                                              selectedHeater!
+                                                                  .id,
+                                                          mode: ControlMode
+                                                              .values
+                                                              .where((e) =>
+                                                                  e !=
+                                                                  ControlMode
+                                                                      .auto)
+                                                              .toList()[index],
+                                                        );
+                                                        setState(() {});
+                                                      },
+                                                      children: [
+                                                        ...ControlMode.values
+                                                            .where((e) =>
+                                                                e !=
+                                                                ControlMode
+                                                                    .auto)
+                                                            .map((e) => e ==
+                                                                    selectedHeater
+                                                                        ?.currentMode
+                                                                ? Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                    child: Row(
+                                                                      spacing:
+                                                                          8,
+                                                                      children: [
+                                                                        const Icon(
+                                                                            Icons.check),
+                                                                        Text(CCUtils
+                                                                            .stateDisplay(e))
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                : Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                        CCUtils.stateDisplay(
+                                                                            e)),
+                                                                  )),
+                                                      ],
+                                                    ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemBuilder: (context, index) => ListTile(
+                                      title: Text(heaters[index].name),
+                                      leading: CircleAvatar(
+                                        child: Text(
+                                            '${heaters[index].currentMode}'),
+                                      ),
+                                      subtitle: Text(
+                                        heaters[index]
+                                            .currentMode
+                                            .name
+                                            .replaceAll('auto', 'zone')
+                                            .toUpperCase(),
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          selectedHeater = heaters[index];
+                                        });
+                                      },
+                                    ),
+                                    itemCount: heaters.length,
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -451,7 +448,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                     ),
                     Chip(
                       label: Text(
-                          'Avg: ${sensorAverage == null ? '-' : sensorAverage.toStringAsPrecision(1)} °C'),
+                          'Avg: ${sensorAverage.toStringAsPrecision(1)} °C'),
                     ),
                   ],
                 ),
