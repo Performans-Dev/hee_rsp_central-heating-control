@@ -58,7 +58,43 @@ class _ZoneScreenState extends State<ZoneScreen> {
                     Expanded(
                       flex: 10,
                       child: Container(
-                        child: const Text('Zone Controls'),
+                        width: 200,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            const Text('Zone Controls'),
+                            Row(
+                              children: [
+                                // ControlMode list
+                                ListView.builder(
+                                  itemBuilder: (context, index) => ListTile(
+                                      title: Text(ControlMode.values[index].name
+                                          .toUpperCase()),
+                                      trailing: zone.desiredMode ==
+                                              ControlMode.values[index]
+                                          ? const Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                            )
+                                          : null,
+                                      onTap: () {
+                                        dc.onZoneModeCalled(
+                                            zoneId: zone.id,
+                                            mode: ControlMode.values[index]);
+                                      }),
+                                  itemCount: ControlMode.values.length,
+                                ),
+                                // control mode detail
+                                zone.desiredMode == ControlMode.auto
+                                    ? const Text('weekly plan')
+                                    : zone.desiredMode == ControlMode.off
+                                        ? const Text('off')
+                                        : const Text(
+                                            'has thermostat, + - buttons')
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -107,19 +143,26 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                               icon:
                                                   const Icon(Icons.arrow_back)),
                                           Text(selectedHeater!.name),
-                                          ...ControlMode.values
-                                              .map((e) => ListTile(
-                                                    title: Text(e.name
-                                                        .replaceAll(
-                                                            'auto', 'zone')
-                                                        .toUpperCase()),
-                                                  )),
                                         ],
                                       ),
-                                      Container(
-                                        child: Text(
-                                            selectedHeater!.currentMode.name),
-                                      ),
+                                      ...ControlMode.values.map((e) => ListTile(
+                                            title: Text(e.name
+                                                .replaceAll('auto', 'zone')
+                                                .toUpperCase()),
+                                            trailing:
+                                                selectedHeater!.desiredMode == e
+                                                    ? const Icon(
+                                                        Icons.check,
+                                                        color: Colors.green,
+                                                      )
+                                                    : null,
+                                            onTap: () {
+                                              dc.onHeaterModeCalled(
+                                                heaterId: selectedHeater!.id,
+                                                mode: e,
+                                              );
+                                            },
+                                          ))
                                     ],
                                   ),
                                 ),
