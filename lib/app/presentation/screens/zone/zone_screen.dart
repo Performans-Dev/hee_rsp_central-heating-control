@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
+import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -52,6 +56,13 @@ class _ZoneScreenState extends State<ZoneScreen> {
     // }
 
     return GetBuilder<DataController>(builder: (dc) {
+      final List<Heater> heaters = dc.getHeatersOfZone(widget.zone.id);
+      final List<SensorDevice> sensors = dc.getSensorsOfZone(widget.zone.id);
+      int maxLevel = 1;
+      for (final heater in heaters) {
+        maxLevel = max(maxLevel, heater.levelType.index);
+      }
+
       return AppScaffold(
         selectedIndex: 0,
         title: '', //zone.zone.name,
@@ -83,14 +94,10 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     child: ZoneControlWidget(
                                       currentState: widget.zone.currentMode,
                                       onStateChanged: (s) {
-                                        // TODO:
-                                        // processController.onZoneStateCalled(
-                                        //   zoneId: widget.zone.id,
-                                        //   state: s,
-                                        // );
-                                        // setState(() {});
+                                        dc.onChangeZoneModePressed(
+                                            widget.zone.id, s);
                                       },
-                                      maxLevel: 3, //TODO: maxLevel,
+                                      maxLevel: maxLevel,
                                     ),
                                   ),
                                 ),

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
@@ -255,6 +256,11 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: ACTIONS
-
+  void onChangeZoneModePressed(int zoneId, ControlMode mode) {
+    final zone = zoneList.firstWhere((e) => e.id == zoneId).copyWith(
+          desiredMode: mode,
+        );
+    updateZone(zone);
+  }
   //#endregion
 }
