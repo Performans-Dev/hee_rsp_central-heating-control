@@ -53,31 +53,78 @@ class _ZoneScreenState extends State<ZoneScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    // Zone Controls
+                    // MARK: Zone Controls
                     Expanded(
                       flex: 10,
                       child: Container(
                         child: const Text('Zone Controls'),
                       ),
                     ),
-                    // Heaters
+
                     Expanded(
                       flex: 10,
-                      child: Container(
-                        child: const Text('Heaters'),
+                      child: Center(
+                        child: selectedHeater == null
+                            ?
+                            // MARK: Heaters
+                            Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    child: const Text('Heaters'),
+                                  ),
+                                  ...heaters.map((h) => ListTile(
+                                        title: Text(h.name),
+                                        trailing: Text(h.currentMode.name),
+                                      )),
+                                ],
+                              )
+                            :
+                            // MARK: SELECTED HEATER
+                            Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(
+                                                () => selectedHeater = null);
+                                          },
+                                          icon: const Icon(Icons.arrow_back)),
+                                      Text(selectedHeater!.name),
+                                    ],
+                                  ),
+                                  Container(
+                                    child:
+                                        Text(selectedHeater!.currentMode.name),
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
                   ],
                 ),
               ),
               const Divider(),
-              Row(
-                children: [
-                  const Text('Sensors: '),
-                  ...sensors.map((e) =>
-                      Text('S${e.id}:  ${e.value?.toStringAsPrecision(1)} °C')),
-                  Text(' ${sensorAverage.toStringAsPrecision(1)} °C'),
-                ],
+              // MARK: SENSORS
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  spacing: 12,
+                  children: [
+                    const Text('Temperature: '),
+                    ...sensors.map((e) => Chip(
+                          label: Text(
+                              'S${e.id}:  ${e.value?.toStringAsPrecision(1)} °C'),
+                        )),
+                    const Spacer(),
+                    Chip(
+                      label: Text(
+                          'Avg: ${sensorAverage.toStringAsPrecision(1)} °C'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
