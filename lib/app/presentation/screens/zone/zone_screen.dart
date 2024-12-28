@@ -86,7 +86,6 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                         mode: value,
                                         zoneId: zone.id,
                                       );
-                                      setState(() {});
                                     }),
                                 // control mode detail
                                 ZoneDetailSubControlModeWidget(
@@ -96,7 +95,6 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                       zoneId: zone.id,
                                       planId: value,
                                     );
-                                    setState(() {});
                                   },
                                   onTemperatureChanged: (value) async {
                                     await dc.onZoneTemperatureCalled(
