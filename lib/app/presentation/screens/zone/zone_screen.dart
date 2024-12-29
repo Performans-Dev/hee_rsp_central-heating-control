@@ -66,7 +66,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                   children: [
                     // MARK: Zone Controls
                     Expanded(
-                      flex: 20,
+                      flex: 18,
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
