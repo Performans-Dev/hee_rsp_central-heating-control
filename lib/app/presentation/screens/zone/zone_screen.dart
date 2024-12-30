@@ -105,7 +105,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                                     spacing: 8,
                                                     children: [
                                                       CCUtils.stateIcon(e),
-                                                      Text(e.toString()),
+                                                      Text(e.name
+                                                          .toString()
+                                                          .toUpperCase()),
                                                     ],
                                                   ),
                                                 ))
@@ -114,7 +116,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     ],
                                   ),
                                   Expanded(
-                                    child: Center(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.all(20),
                                       child: zone.desiredMode == ControlMode.off
                                           ? const Opacity(
                                               opacity: 0.6,
@@ -125,15 +129,86 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                               ),
                                             )
                                           : zone.desiredMode == ControlMode.auto
-                                              ? PlanDropdownWidget(
-                                                  onChanged: (value) async {
-                                                    await dc.onZonePlanCalled(
-                                                        zoneId: zone.id,
-                                                        planId: value);
-                                                  },
-                                                  value: zone.selectedPlan,
+                                              ? Column(
+                                                  spacing: 8,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      'Select Plan for Automatic Controls',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium,
+                                                    ),
+                                                    PlanDropdownWidget(
+                                                      onChanged: (value) async {
+                                                        await dc
+                                                            .onZonePlanCalled(
+                                                                zoneId: zone.id,
+                                                                planId: value);
+                                                      },
+                                                      value: zone.selectedPlan,
+                                                    ),
+                                                  ],
                                                 )
-                                              : Container(),
+                                              : Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  spacing: 8,
+                                                  children: [
+                                                    SwitchListTile(
+                                                      value: zone.hasThermostat,
+                                                      title: const Text(
+                                                          'Has Thermostat'),
+                                                      onChanged: (v) async {
+                                                        await dc
+                                                            .onZoneThermostatCalled(
+                                                                zoneId: zone.id,
+                                                                hasThermostat:
+                                                                    v);
+                                                      },
+                                                    ),
+                                                    Opacity(
+                                                      opacity:
+                                                          zone.hasThermostat
+                                                              ? 1
+                                                              : 0.4,
+                                                      child: Row(
+                                                        spacing: 8,
+                                                        children: [
+                                                          IconButton(
+                                                            onPressed:
+                                                                zone.hasThermostat //TODO: add minimum temperature check
+                                                                    ? () {
+                                                                        dc.onZoneTemperatureCalled(
+                                                                            zoneId:
+                                                                                zone.id,
+                                                                            temperature: (zone.desiredTemperature ?? 20) - 1);
+                                                                      }
+                                                                    : null,
+                                                            icon: const Icon(
+                                                                Icons.remove),
+                                                          ),
+                                                          Text(
+                                                              '${zone.desiredTemperature ?? 20} °C'),
+                                                          IconButton(
+                                                            onPressed:
+                                                                zone.hasThermostat //TODO: add maximum temperature check
+                                                                    ? () {
+                                                                        dc.onZoneTemperatureCalled(
+                                                                            zoneId:
+                                                                                zone.id,
+                                                                            temperature: (zone.desiredTemperature ?? 20) + 1);
+                                                                      }
+                                                                    : null,
+                                                            icon: const Icon(
+                                                                Icons.add),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                     ),
                                   ),
                                 ],
