@@ -32,6 +32,7 @@ class ZoneScreen extends StatefulWidget {
 
 class _ZoneScreenState extends State<ZoneScreen> {
   final ChannelController channelController = Get.find();
+
   late Zone zone;
   Heater? selectedHeater;
 
@@ -71,10 +72,36 @@ class _ZoneScreenState extends State<ZoneScreen> {
                           margin: const EdgeInsets.all(20),
                           child: Container(
                             padding: const EdgeInsets.all(16),
-                            child: const Row(
+                            child: Row(
                               children: [
-                                Text('Controls'),
-                                Text('Sub Controls'),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('Zone Control'),
+                                    ToggleButtons(
+                                      direction: Axis.vertical,
+                                      verticalDirection: VerticalDirection.up,
+                                      onPressed: (value) async {
+                                        await dc.onZoneModeCalled(
+                                          mode: ControlMode.values[value],
+                                          zoneId: zone.id,
+                                        );
+                                      },
+                                      isSelected: ControlMode.values
+                                          .map((e) => e == zone.desiredMode)
+                                          .toList(),
+                                      children: ControlMode.values
+                                          .map((e) => Row(
+                                                children: [
+                                                  CCUtils.stateIcon(e),
+                                                  Text(e.toString()),
+                                                ],
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ],
+                                ),
+                                const Text('Sub Controls'),
                               ],
                             ),
                           ),
