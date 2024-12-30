@@ -64,7 +64,40 @@ class _ZoneScreenState extends State<ZoneScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    // MARK: Zone Controls
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: Card(
+                          margin: const EdgeInsets.all(20),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            child: const Row(
+                              children: [
+                                Text('Controls'),
+                                Text('Sub Controls'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: Card(
+                          margin: const EdgeInsets.all(20),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            child: const Row(
+                              children: [
+                                Text('Heaters / Heater'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+/*                     // MARK: Zone Controls
                     Expanded(
                       flex: 18,
                       child: Center(
@@ -142,6 +175,8 @@ class _ZoneScreenState extends State<ZoneScreen> {
                               ),
                       ),
                     ),
+                 
+                  */
                   ],
                 ),
               ),
