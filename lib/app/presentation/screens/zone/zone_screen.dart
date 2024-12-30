@@ -70,10 +70,19 @@ class _ZoneScreenState extends State<ZoneScreen> {
                             child: Row(
                               children: [
                                 Column(
+                                  spacing: 8,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text('Zone Control'),
+                                    Text(
+                                      'Zone Control',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                    ),
                                     ToggleButtons(
+                                      constraints: const BoxConstraints(
+                                        minWidth: 180,
+                                      ),
                                       direction: Axis.vertical,
                                       verticalDirection: VerticalDirection.up,
                                       onPressed: (value) async {
