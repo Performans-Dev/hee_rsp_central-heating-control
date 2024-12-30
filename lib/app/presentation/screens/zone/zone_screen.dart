@@ -37,12 +37,6 @@ class _ZoneScreenState extends State<ZoneScreen> {
   Heater? selectedHeater;
 
   @override
-  void initState() {
-    super.initState();
-    zone = widget.zone;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(builder: (dc) {
       final List<Heater> heaters = dc.getHeatersOfZone(zone.id);
@@ -53,6 +47,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
       for (final heater in heaters) {
         maxLevel = max(maxLevel, heater.levelType.index);
       }
+      zone = dc.zoneList.firstWhere((e) => e.id == widget.zone.id);
 
       return AppScaffold(
         selectedIndex: 0,
