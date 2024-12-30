@@ -59,164 +59,166 @@ class _ZoneScreenState extends State<ZoneScreen> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Center(
-                        child: Card(
-                          margin: const EdgeInsets.all(20),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Column(
-                                  spacing: 8,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Zone Control',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                    ),
-                                    ToggleButtons(
-                                      direction: Axis.vertical,
-                                      verticalDirection: VerticalDirection.up,
-                                      borderRadius: UiDimens.formRadius,
-                                      onPressed: (value) async {
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    spacing: 8,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'Zone Control',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
+                                      ToggleButtons(
+                                        direction: Axis.vertical,
+                                        verticalDirection: VerticalDirection.up,
+                                        borderRadius: UiDimens.formRadius,
+                                        onPressed: (value) async {
+                                          await dc.onZoneModeCalled(
+                                            mode: ControlMode.values[value],
+                                            zoneId: zone.id,
+                                          );
+                                        },
+                                        isSelected: ControlMode.values
+                                            .map((e) => e == zone.desiredMode)
+                                            .toList(),
+                                        children: ControlMode.values
+                                            .map((e) => Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 4),
+                                                  child: Row(
+                                                    spacing: 8,
+                                                    children: [
+                                                      CCUtils.stateIcon(e),
+                                                      Text(e.toString()),
+                                                    ],
+                                                  ),
+                                                ))
+                                            .toList(),
+                                      ),
+                                    ],
+                                  ),
+                                  const Expanded(
+                                    child: Center(child: Text('sub')),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              child: const Row(
+                                children: [
+                                  Text('Heaters / Heater'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      /*                     // MARK: Zone Controls
+                      Expanded(
+                        flex: 18,
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Zone Controls',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              Row(
+                                children: [
+                                  // ControlMode list
+                                  ZoneDetailControlModeWidget(
+                                      selectedMode: zone.desiredMode,
+                                      onChanged: (value) async {
                                         await dc.onZoneModeCalled(
-                                          mode: ControlMode.values[value],
+                                          mode: value,
                                           zoneId: zone.id,
                                         );
-                                      },
-                                      isSelected: ControlMode.values
-                                          .map((e) => e == zone.desiredMode)
-                                          .toList(),
-                                      children: ControlMode.values
-                                          .map((e) => Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 4),
-                                                child: Row(
-                                                  spacing: 8,
-                                                  children: [
-                                                    CCUtils.stateIcon(e),
-                                                    Text(e.toString()),
-                                                  ],
-                                                ),
-                                              ))
-                                          .toList(),
-                                    ),
-                                  ],
-                                ),
-                                const Expanded(
-                                  child: Center(child: Text('sub')),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: Card(
-                          margin: const EdgeInsets.all(20),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            child: const Row(
-                              children: [
-                                Text('Heaters / Heater'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-/*                     // MARK: Zone Controls
-                    Expanded(
-                      flex: 18,
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Zone Controls',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            Row(
-                              children: [
-                                // ControlMode list
-                                ZoneDetailControlModeWidget(
-                                    selectedMode: zone.desiredMode,
-                                    onChanged: (value) async {
-                                      await dc.onZoneModeCalled(
-                                        mode: value,
+                                      }),
+                                  // control mode detail
+                                  ZoneDetailSubControlModeWidget(
+                                    zone: zone,
+                                    onPlanChanged: (value) async {
+                                      await dc.onZonePlanCalled(
                                         zoneId: zone.id,
+                                        planId: value,
                                       );
-                                    }),
-                                // control mode detail
-                                ZoneDetailSubControlModeWidget(
-                                  zone: zone,
-                                  onPlanChanged: (value) async {
-                                    await dc.onZonePlanCalled(
-                                      zoneId: zone.id,
-                                      planId: value,
-                                    );
+                                    },
+                                    onTemperatureChanged: (value) async {
+                                      await dc.onZoneTemperatureCalled(
+                                        zoneId: zone.id,
+                                        temperature: value,
+                                      );
+                                      setState(() {});
+                                    },
+                                    onThermostatChanged: (value) async {
+                                      await dc.onZoneThermostatCalled(
+                                        zoneId: zone.id,
+                                        hasThermostat: value,
+                                      );
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  
+                      Expanded(
+                        flex: 10,
+                        child: Center(
+                          child: selectedHeater == null
+                              ? ZoneDetailHeaterListWidget(
+                                  heaters: heaters,
+                                  onHeaterSelected: (h) =>
+                                      setState(() => selectedHeater = h),
+                                )
+                              : ZoneDetailSelectedHeaterCardWidget(
+                                  selectedHeater: selectedHeater!,
+                                  onBack: () {
+                                    setState(() => selectedHeater = null);
                                   },
-                                  onTemperatureChanged: (value) async {
-                                    await dc.onZoneTemperatureCalled(
-                                      zoneId: zone.id,
-                                      temperature: value,
-                                    );
-                                    setState(() {});
-                                  },
-                                  onThermostatChanged: (value) async {
-                                    await dc.onZoneThermostatCalled(
-                                      zoneId: zone.id,
-                                      hasThermostat: value,
+                                  onHeaterModeCalled: (ControlMode mode) async {
+                                    await dc.onHeaterModeCalled(
+                                      heaterId: selectedHeater!.id,
+                                      mode: mode,
                                     );
                                     setState(() {});
                                   },
                                 ),
-                              ],
-                            ),
-                          ],
                         ),
                       ),
-                    ),
-
-                    Expanded(
-                      flex: 10,
-                      child: Center(
-                        child: selectedHeater == null
-                            ? ZoneDetailHeaterListWidget(
-                                heaters: heaters,
-                                onHeaterSelected: (h) =>
-                                    setState(() => selectedHeater = h),
-                              )
-                            : ZoneDetailSelectedHeaterCardWidget(
-                                selectedHeater: selectedHeater!,
-                                onBack: () {
-                                  setState(() => selectedHeater = null);
-                                },
-                                onHeaterModeCalled: (ControlMode mode) async {
-                                  await dc.onHeaterModeCalled(
-                                    heaterId: selectedHeater!.id,
-                                    mode: mode,
-                                  );
-                                  setState(() {});
-                                },
-                              ),
-                      ),
-                    ),
-                 
-                  */
-                  ],
+                   
+                    */
+                    ],
+                  ),
                 ),
               ),
               const Divider(),
