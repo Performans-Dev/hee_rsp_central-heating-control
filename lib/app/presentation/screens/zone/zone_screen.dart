@@ -80,10 +80,6 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           .titleLarge,
                                     ),
                                     ToggleButtons(
-                                      constraints: const BoxConstraints(
-                                        minWidth: 180,
-                                        minHeight: 50,
-                                      ),
                                       direction: Axis.vertical,
                                       verticalDirection: VerticalDirection.up,
                                       onPressed: (value) async {
@@ -96,12 +92,18 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           .map((e) => e == zone.desiredMode)
                                           .toList(),
                                       children: ControlMode.values
-                                          .map((e) => Row(
-                                                spacing: 8,
-                                                children: [
-                                                  CCUtils.stateIcon(e),
-                                                  Text(e.toString()),
-                                                ],
+                                          .map((e) => Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 4),
+                                                child: Row(
+                                                  spacing: 8,
+                                                  children: [
+                                                    CCUtils.stateIcon(e),
+                                                    Text(e.toString()),
+                                                  ],
+                                                ),
                                               ))
                                           .toList(),
                                     ),
