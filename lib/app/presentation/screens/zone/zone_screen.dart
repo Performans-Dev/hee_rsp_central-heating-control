@@ -82,6 +82,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     ToggleButtons(
                                       constraints: const BoxConstraints(
                                         minWidth: 180,
+                                        minHeight: 50,
                                       ),
                                       direction: Axis.vertical,
                                       verticalDirection: VerticalDirection.up,
