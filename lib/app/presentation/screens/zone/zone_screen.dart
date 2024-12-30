@@ -39,10 +39,10 @@ class _ZoneScreenState extends State<ZoneScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(builder: (dc) {
-      final List<Heater> heaters = dc.getHeatersOfZone(zone.id);
+      final List<Heater> heaters = dc.getHeatersOfZone(widget.zone.id);
       final List<SensorDeviceWithValues> sensors =
-          dc.sensorListWithValues(zone.id);
-      final double sensorAverage = dc.getSensorAverageOfZone(zone.id);
+          dc.sensorListWithValues(widget.zone.id);
+      final double sensorAverage = dc.getSensorAverageOfZone(widget.zone.id);
       int maxLevel = 1;
       for (final heater in heaters) {
         maxLevel = max(maxLevel, heater.levelType.index);
