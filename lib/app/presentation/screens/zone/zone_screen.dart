@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
@@ -82,6 +83,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     ToggleButtons(
                                       direction: Axis.vertical,
                                       verticalDirection: VerticalDirection.up,
+                                      borderRadius: UiDimens.formRadius,
                                       onPressed: (value) async {
                                         await dc.onZoneModeCalled(
                                           mode: ControlMode.values[value],
@@ -109,7 +111,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                     ),
                                   ],
                                 ),
-                                const Text('Sub Controls'),
+                                const Expanded(
+                                  child: Center(child: Text('sub')),
+                                ),
                               ],
                             ),
                           ),
