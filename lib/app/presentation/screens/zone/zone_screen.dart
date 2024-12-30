@@ -113,8 +113,28 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                       ),
                                     ],
                                   ),
-                                  const Expanded(
-                                    child: Center(child: Text('sub')),
+                                  Expanded(
+                                    child: Center(
+                                      child: zone.desiredMode == ControlMode.off
+                                          ? const Opacity(
+                                              opacity: 0.6,
+                                              child: Icon(
+                                                Icons
+                                                    .energy_savings_leaf_outlined,
+                                                size: 64,
+                                              ),
+                                            )
+                                          : zone.desiredMode == ControlMode.auto
+                                              ? PlanDropdownWidget(
+                                                  onChanged: (value) async {
+                                                    await dc.onZonePlanCalled(
+                                                        zoneId: zone.id,
+                                                        planId: value);
+                                                  },
+                                                  value: zone.selectedPlan,
+                                                )
+                                              : Container(),
+                                    ),
                                   ),
                                 ],
                               ),
