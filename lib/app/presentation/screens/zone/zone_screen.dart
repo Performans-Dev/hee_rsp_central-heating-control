@@ -92,6 +92,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           .toList(),
                                       children: ControlMode.values
                                           .map((e) => Row(
+                                                spacing: 8,
                                                 children: [
                                                   CCUtils.stateIcon(e),
                                                   Text(e.toString()),

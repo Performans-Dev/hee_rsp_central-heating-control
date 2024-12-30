@@ -60,14 +60,14 @@ class DataController extends GetxController {
   }
 
   Future<bool> updateZone(Zone zone) async {
-    final index = zoneList.indexWhere((element) => element.id == zone.id);
-    if (index != -1) {
+    final index = _zoneList.indexWhere((element) => element.id == zone.id);
+    if (index > -1) {
       _zoneList[index] = zone;
       update();
     }
     final result = await DbProvider.db.updateZone(zone);
     if (result > 0) {
-      await loadZoneList();
+      // await loadZoneList();
       return true;
     }
     return false;
