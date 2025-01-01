@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
 class SensorDevice {
   int id;
   int device;
@@ -51,7 +50,6 @@ class SensorDevice {
   factory SensorDevice.fromJson(String source) =>
       SensorDevice.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  
   SensorDevice copyWith({
     int? id,
     int? device,
@@ -69,5 +67,38 @@ class SensorDevice {
       name: name ?? this.name,
     );
   }
-  
+}
+
+class SensorDeviceWithValues extends SensorDevice {
+  double? value;
+  SensorDeviceWithValues({
+    required super.id,
+    required super.device,
+    required super.index,
+    super.zone,
+    super.color,
+    super.name,
+    this.value,
+  });
+
+  factory SensorDeviceWithValues.fromMap(Map<String, dynamic> map) {
+    return SensorDeviceWithValues(
+      id: map['id']?.toInt(),
+      device: map['device']?.toInt(),
+      index: map['sensorIndex']?.toInt(),
+      zone: map['zoneId']?.toInt(),
+      color: map['color'],
+      name: map['name'],
+      value: map['value']?.toDouble(),
+    );
+  }
+
+  factory SensorDeviceWithValues.fromJson(String source) =>
+      SensorDeviceWithValues.fromMap(
+          json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'SensorDeviceWithValues(id: $id, device: $device, index: $index, zone: $zone, color: $color, name: $name, value: $value)';
+  }
 }

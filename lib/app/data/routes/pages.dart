@@ -60,7 +60,6 @@ import 'package:central_heating_control/app/presentation/screens/setup/setup_scr
 import 'package:central_heating_control/app/presentation/screens/splash/splash_app_user_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_device_info_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/splash/splash_structure.dart';
-import 'package:central_heating_control/app/presentation/screens/zone/zone_screen.dart';
 import 'package:get/get.dart';
 
 final List<GetPage> getPages = [
@@ -154,10 +153,10 @@ final List<GetPage> getPages = [
     ],
     transition: Transition.fadeIn,
   ),
-  GetPage(
-    name: Routes.zone,
-    page: () => const ZoneScreen(),
-  ),
+  // GetPage(
+  //   name: Routes.zone,
+  //   page: () => const ZoneScreen(),
+  // ),
   GetPage(
     name: Routes.logs,
     page: () => const LogViewScreen(),

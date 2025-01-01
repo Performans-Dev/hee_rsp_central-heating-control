@@ -10,32 +10,32 @@ class ZoneControlWidget extends StatelessWidget {
     required this.onStateChanged,
   });
   final int maxLevel;
-  final HeaterState currentState;
-  final Function(HeaterState state) onStateChanged;
+  final ControlMode currentState;
+  final Function(ControlMode state) onStateChanged;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildRow(context, HeaterState.auto),
-        if (maxLevel >= 3) buildRow(context, HeaterState.level3),
-        if (maxLevel >= 2) buildRow(context, HeaterState.level2),
-        buildRow(context, HeaterState.level1),
-        buildRow(context, HeaterState.off),
+        buildRow(context, ControlMode.auto),
+        if (maxLevel >= 3) buildRow(context, ControlMode.max),
+        if (maxLevel >= 2) buildRow(context, ControlMode.high),
+        buildRow(context, ControlMode.on),
+        buildRow(context, ControlMode.off),
       ],
     );
   }
 
-  Widget buildRow(context, HeaterState state) {
+  Widget buildRow(context, ControlMode state) {
     double height = 48;
     BorderRadius radius = BorderRadius.circular(0);
-    if (state == HeaterState.off) {
+    if (state == ControlMode.off) {
       radius = const BorderRadius.only(
         bottomLeft: Radius.circular(10),
         bottomRight: Radius.circular(10),
       );
-    } else if (state == HeaterState.auto) {
+    } else if (state == ControlMode.auto) {
       radius = const BorderRadius.only(
         topLeft: Radius.circular(10),
         topRight: Radius.circular(10),

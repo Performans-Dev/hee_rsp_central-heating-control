@@ -1,4 +1,4 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 
@@ -23,7 +23,7 @@ class HeaterDevice {
   double? level3ConsumptionAmount;
   double? level3Carbon;
   String? consumptionUnit;
-  int state;
+  int desiredState;
   int? zoneId;
   HeaterDevice({
     required this.id,
@@ -45,7 +45,7 @@ class HeaterDevice {
     this.level3Carbon,
     this.errorChannel,
     this.errorChannelType,
-    required this.state,
+    required this.desiredState,
     this.consumptionUnit,
     this.zoneId,
   });
@@ -72,7 +72,7 @@ class HeaterDevice {
           'level3ConsumptionAmount': level3ConsumptionAmount,
           'level3Carbon': level3Carbon,
           'consumptionUnit': consumptionUnit,
-          'state': state,
+          'desiredState': desiredState,
           'zoneId': zoneId,
         }
       : {
@@ -95,7 +95,7 @@ class HeaterDevice {
           'level3ConsumptionAmount': level3ConsumptionAmount,
           'level3Carbon': level3Carbon,
           'consumptionUnit': consumptionUnit,
-          'state': state,
+          'desiredState': desiredState,
           'zoneId': zoneId,
         };
 
@@ -106,7 +106,7 @@ class HeaterDevice {
         icon: '',
         type: HeaterDeviceType.none,
         connectionType: HeaterDeviceConnectionType.none,
-        state: HeaterState.off.index,
+        desiredState: HeaterState.off.index,
         levelType: HeaterDeviceLevel.none,
       );
 
@@ -136,7 +136,7 @@ class HeaterDevice {
         level3ConsumptionAmount: map['level3ConsumptionAmount'],
         level3Carbon: map['level3Carbon'],
         consumptionUnit: map['consumptionUnit'],
-        state: map['state'],
+        desiredState: map['desiredState'],
         zoneId: map['zoneId'],
       );
 
@@ -145,3 +145,4 @@ class HeaterDevice {
   factory HeaterDevice.fromJson(String source) =>
       HeaterDevice.fromMap(json.decode(source));
 }
+ */

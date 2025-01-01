@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -28,7 +28,7 @@ class SettingsDeviceEditScreen extends StatefulWidget {
 }
 
 class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
-  late HeaterDevice heater;
+  late Heater heater;
   final DataController dataController = Get.find();
   late TextEditingController nameController;
   late TextEditingController l1ConsumptionController;
@@ -91,9 +91,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
               );
               if (result != null) {
                 nameController.text = result;
-                setState(() {
-                  heater.name = result;
-                });
+                setState(() => heater = heater.copyWith(name: result));
               }
             },
           ),
@@ -113,7 +111,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(4),
             child: ColorPickerWidget(
-              onSelected: (v) => setState(() => heater.color = v),
+              onSelected: (v) =>
+                  setState(() => heater = heater.copyWith(color: v)),
               selectedValue: heater.color,
             ),
           ),
@@ -125,7 +124,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: TypeDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.type = value ?? HeaterDeviceType.none;
+                  heater =
+                      heater.copyWith(type: value ?? HeaterDeviceType.none);
                 });
               },
               value: heater.type,
@@ -140,8 +140,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
               showNoneOption: false,
               onChanged: (value) {
                 setState(() {
-                  heater.connectionType =
-                      value ?? HeaterDeviceConnectionType.none;
+                  heater = heater.copyWith(
+                      connectionType: value ?? HeaterDeviceConnectionType.none);
                 });
               },
               value: heater.connectionType,
@@ -155,7 +155,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: ZoneDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.zoneId = value?.id;
+                  heater = heater.copyWith(zoneId: value?.id);
                 });
               },
               value: dc.zoneList.firstWhereOrNull((e) => e.id == heater.zoneId),
@@ -171,7 +171,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
               value: heater.levelType,
               onChanged: (value) {
                 setState(() {
-                  heater.levelType = value!;
+                  heater = heater.copyWith(levelType: value!);
                 });
               },
             ),
@@ -192,7 +192,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: ChannelDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.outputChannel1 = value;
+                  heater = heater.copyWith(outputChannel1: value);
                 });
               },
               value: heater.outputChannel1,
@@ -207,7 +207,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: ChannelDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.outputChannel2 = value;
+                  heater = heater.copyWith(outputChannel2: value);
                 });
               },
               value: heater.outputChannel2,
@@ -222,7 +222,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: ChannelDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.outputChannel3 = value;
+                  heater = heater.copyWith(outputChannel3: value);
                 });
               },
               value: heater.outputChannel3,
@@ -237,7 +237,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: ChannelDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.errorChannel = value;
+                  heater = heater.copyWith(errorChannel: value);
                 });
               },
               value: heater.errorChannel,
@@ -252,7 +252,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
             child: ErrorChannelTypeDropdownWidget(
               onChanged: (value) {
                 setState(() {
-                  heater.errorChannelType = value;
+                  heater = heater.copyWith(errorChannelType: value);
                 });
               },
               value: heater.errorChannelType ?? ErrorChannelType.nO,
@@ -278,7 +278,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 if (result != null) {
                   l1ConsumptionController.text = result;
                   setState(() {
-                    heater.level1ConsumptionAmount = double.tryParse(result);
+                    heater = heater.copyWith(
+                        level1ConsumptionAmount: double.tryParse(result));
                   });
                 }
               },
@@ -304,7 +305,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 if (result != null) {
                   l2ConsumptionController.text = result;
                   setState(() {
-                    heater.level2ConsumptionAmount = double.tryParse(result);
+                    heater = heater.copyWith(
+                        level2ConsumptionAmount: double.tryParse(result));
                   });
                 }
               },
@@ -330,7 +332,8 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 if (result != null) {
                   l3ConsumptionController.text = result;
                   setState(() {
-                    heater.level3ConsumptionAmount = double.tryParse(result);
+                    heater = heater.copyWith(
+                        level3ConsumptionAmount: double.tryParse(result));
                   });
                 }
               },
@@ -356,7 +359,7 @@ class _SettingsDeviceEditScreenState extends State<SettingsDeviceEditScreen> {
                 if (result != null) {
                   unitController.text = result;
                   setState(() {
-                    heater.consumptionUnit = result;
+                    heater = heater.copyWith(consumptionUnit: result);
                   });
                 }
               },

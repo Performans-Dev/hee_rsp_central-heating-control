@@ -1,4 +1,4 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/data.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
@@ -13,7 +13,7 @@ class ZoneDefinition {
   List<SensorDevice> sensors;
   String color;
   List<AppUser> users;
-  HeaterState state;
+  HeaterState desiredState;
   int? setValue;
   int? selectedPlan;
   ZoneDefinition({
@@ -23,7 +23,7 @@ class ZoneDefinition {
     required this.sensors,
     required this.color,
     required this.users,
-    required this.state,
+    required this.desiredState,
     this.setValue,
     this.selectedPlan,
   });
@@ -36,7 +36,7 @@ class ZoneDefinition {
           'sensors': sensors.map((x) => x.toMap()).toList(),
           'color': color,
           'users': users.map((x) => x.toMap()).toList(),
-          'state': state.index,
+          'desiredState': desiredState.index,
           'setValue': setValue,
           'selectedPlan': selectedPlan,
         }
@@ -46,7 +46,7 @@ class ZoneDefinition {
           'sensors': sensors.map((x) => x.toMap()).toList(),
           'color': color,
           'users': users.map((x) => x.toMap()).toList(),
-          'state': state.index,
+          'desiredState': desiredState.index,
           'setValue': setValue,
           'selectedPlan': selectedPlan,
         };
@@ -67,7 +67,7 @@ class ZoneDefinition {
       users: map['users'] == null
           ? []
           : List<AppUser>.from(map['users']?.map((x) => AppUser.fromMap(x))),
-      state: HeaterState.values[map['state']?.toInt() ?? 0],
+      desiredState: HeaterState.values[map['desiredState']?.toInt() ?? 0],
       setValue: map['setValue'],
       selectedPlan: map['selectedPlan']?.toInt(),
     );
@@ -80,7 +80,7 @@ class ZoneDefinition {
         sensors: [],
         color: UiData.colorList.first,
         users: [],
-        state: HeaterState.off,
+        desiredState: HeaterState.off,
         setValue: null,
       );
 
@@ -96,7 +96,7 @@ class ZoneDefinition {
     List<SensorDevice>? sensors,
     String? color,
     List<AppUser>? users,
-    HeaterState? state,
+    HeaterState? desiredState,
     int? setValue,
     int? selectedPlan,
   }) {
@@ -107,10 +107,10 @@ class ZoneDefinition {
       sensors: sensors ?? this.sensors,
       color: color ?? this.color,
       users: users ?? this.users,
-      state: state ?? this.state,
+      desiredState: desiredState ?? this.desiredState,
       setValue: setValue ?? this.setValue,
       selectedPlan: selectedPlan ?? this.selectedPlan,
     );
   }
-
 }
+ */

@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 class ZoneCardModeDisplayWidget extends StatelessWidget {
   const ZoneCardModeDisplayWidget({
     super.key,
-    required this.desiredState,
-    required this.currentState,
+    required this.desiredMode,
+    required this.currentMode,
     this.currentTemperature,
     this.desiredTemperature,
     this.planName,
   });
-  final HeaterState desiredState;
-  final int currentState;
+  final ControlMode desiredMode;
+  final ControlMode currentMode;
   final int? currentTemperature;
   final int? desiredTemperature;
   final String? planName;
@@ -44,9 +44,9 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                    '${CCUtils.stateDisplay(desiredState)}${desiredState == HeaterState.auto ? ' ($planName)' : ''}'),
+                    '${CCUtils.stateDisplay(desiredMode)}${desiredMode == ControlMode.auto ? ' ($planName)' : ''}'),
                 const SizedBox(width: 8),
-                FlameIndicatorWidget(value: currentState),
+                FlameIndicatorWidget(value: currentMode),
               ],
             ),
           ],

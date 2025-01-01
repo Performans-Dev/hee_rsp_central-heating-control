@@ -25,7 +25,7 @@ class Routes {
   static const String settingsConnection = '/connection';
 
   static const String home = '/home';
-  static const String zone = '/zone';
+  // static const String zone = '/zone';
 
   static const String logs = '/logs';
   static const String functions = '/functions';

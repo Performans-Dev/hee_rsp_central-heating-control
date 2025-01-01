@@ -62,7 +62,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 27;
+  static const int databaseVersion = 30;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -121,10 +121,10 @@ class Keys {
       name TEXT,
       color TEXT,
       icon TEXT,
-      type INTEGER NOT NULL DEFAULT 0,
       connectionType INTEGER NOT NULL DEFAULT 0,
-      ipAddress TEXT,
+      type INTEGER NOT NULL DEFAULT 0,
       levelType INTEGER NOT NULL DEFAULT 1,
+      ipAddress TEXT,
       outputChannel1  INTEGER NOT NULL DEFAULT 0,
       outputChannel2  INTEGER NOT NULL DEFAULT 0,
       outputChannel3  INTEGER NOT NULL DEFAULT 0,
@@ -137,8 +137,12 @@ class Keys {
       level3ConsumptionAmount DOUBLE,
       level3Carbon DOUBLE,
       consumptionUnit TEXT,
-      state INTEGER NOT NULL DEFAULT 0,
-      zoneId INTEGER NOT NULL DEFAULT 0
+      zoneId INTEGER NOT NULL DEFAULT 0,
+      desiredMode INTEGER NOT NULL DEFAULT 0,
+      currentMode INTEGER NOT NULL DEFAULT 0,
+      desiredTemperature DOUBLE,
+      currentTemperature DOUBLE,
+      hasThermostat INTEGER NOT NULL DEFAULT 0
     )
   ''';
   static const String dbDropZones = '''
@@ -149,13 +153,16 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       color TEXT,
-      state INTEGER NOT NULL DEFAULT 0,
-      setValue INTEGER,
-      selectedPlan INTEGER
+      selectedPlan INTEGER,
+      desiredMode INTEGER NOT NULL DEFAULT 0,
+      currentMode INTEGER NOT NULL DEFAULT 0,
+      desiredTemperature DOUBLE,
+      currentTemperature DOUBLE,
+      hasThermostat INTEGER NOT NULL DEFAULT 0
     )
   ''';
   static const String dbInsertSampleZones = '''
-    INSERT INTO zones (name, color, state, setValue, selectedPlan) VALUES
+    INSERT INTO zones (name, color, desiredMode, currentMode, selectedPlan) VALUES
       ('Zone 1', '#FF0000', 0, 0, 0),
       ('Zone 2', '#00FF00', 0, 0, 0),
       ('Zone 3', '#0000FF', 0, 0, 0),

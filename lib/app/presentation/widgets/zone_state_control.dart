@@ -18,8 +18,8 @@ class ZoneStateControlWidget extends StatelessWidget {
     this.onMinusPressed,
     this.onPlusPressed,
   });
-  final HeaterState zoneState;
-  final Function(HeaterState) stateCallback;
+  final ControlMode zoneState;
+  final Function(ControlMode) stateCallback;
   final int? planId;
   final Function(int?) planCallback;
   final bool hasThermostat;
@@ -44,15 +44,15 @@ class ZoneStateControlWidget extends StatelessWidget {
                 children: [
                   ToggleButtons(
                     isSelected: [
-                      zoneState == HeaterState.off,
-                      zoneState == HeaterState.auto,
-                      zoneState == HeaterState.level1,
-                      zoneState == HeaterState.level2,
-                      zoneState == HeaterState.level3,
+                      zoneState == ControlMode.off,
+                      zoneState == ControlMode.auto,
+                      zoneState == ControlMode.on,
+                      zoneState == ControlMode.high,
+                      zoneState == ControlMode.max,
                     ],
                     borderRadius: UiDimens.formRadius,
                     onPressed: (value) {
-                      stateCallback(HeaterState.values[value]);
+                      stateCallback(ControlMode.values[value]);
                     },
                     children: const [
                       Text('Off'),
@@ -74,7 +74,7 @@ class ZoneStateControlWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (zoneState == HeaterState.auto)
+                  if (zoneState == ControlMode.auto)
                     FormItemComponent(
                       label: 'Selected Plan on Auto Mode',
                       child: PlanDropdownWidget(
@@ -82,9 +82,9 @@ class ZoneStateControlWidget extends StatelessWidget {
                         value: planId,
                       ),
                     ),
-                  if (zoneState == HeaterState.level1 ||
-                      zoneState == HeaterState.level2 ||
-                      zoneState == HeaterState.level3)
+                  if (zoneState == ControlMode.on ||
+                      zoneState == ControlMode.high ||
+                      zoneState == ControlMode.max)
                     FormItemComponent(
                       label: 'Enable Thermostat',
                       child: Row(

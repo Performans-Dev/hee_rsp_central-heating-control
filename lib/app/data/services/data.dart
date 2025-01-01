@@ -1,10 +1,11 @@
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
-import 'package:central_heating_control/app/data/models/heater_device.dart';
+import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
-import 'package:central_heating_control/app/data/models/zone_definition.dart';
+import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/services/process.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -34,23 +35,22 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: ZONES
-  final List<ZoneDefinition> _zoneList = <ZoneDefinition>[].obs;
-  List<ZoneDefinition> get zoneList => _zoneList;
+  final List<Zone> _zoneList = <Zone>[].obs;
+  List<Zone> get zoneList => _zoneList;
 
-  List<ZoneDefinition> getZoneListForDropdown() =>
-      [ZoneDefinition.initial(), ...zoneList];
+  List<Zone> getZoneListForDropdown() => [Zone.initial(), ...zoneList];
 
   Future<void> loadZoneList() async {
     final data = await DbProvider.db.getZoneList();
     _zoneList.assignAll(data);
     update();
-    final ProcessController pc = Get.find();
-    for (final z in data) {
-      pc.initZone(z);
-    }
+    // final ProcessController pc = Get.find();
+    // for (final z in data) {
+    //   pc.initZone(z);
+    // }
   }
 
-  Future<bool> addZone(ZoneDefinition zone) async {
+  Future<bool> addZone(Zone zone) async {
     final result = await DbProvider.db.addZone(zone);
     if (result > 0) {
       await loadZoneList();
@@ -59,41 +59,49 @@ class DataController extends GetxController {
     return false;
   }
 
-  Future<bool> updateZone(ZoneDefinition zone) async {
+  Future<bool> updateZone(Zone zone) async {
+    final index = _zoneList.indexWhere((element) => element.id == zone.id);
+    if (index > -1) {
+      _zoneList[index] = zone;
+      update();
+    }
     final result = await DbProvider.db.updateZone(zone);
     if (result > 0) {
-      await loadZoneList();
+      // await loadZoneList();
       return true;
     }
     return false;
   }
 
   Future<bool> updateZonePlan({required int zoneId, int? planId}) async {
-    var zone = zoneList.firstWhere((e) => e.id == zoneId);
-    zone.selectedPlan = planId;
+    var zone = zoneList.firstWhere((e) => e.id == zoneId).copyWith(
+          selectedPlan: planId,
+        );
+
     final result = await updateZone(zone);
-
-    ProcessController processController = Get.find();
-    processController.initZone(zone);
-
+    // ProcessController processController = Get.find();
+    // processController.initZone(zone);
     return result;
   }
   //#endregion
 
   //#region MARK: HEATERS
-  final List<HeaterDevice> _heaterList = <HeaterDevice>[].obs;
-  List<HeaterDevice> get heaterList => _heaterList;
+  final List<Heater> _heaterList = <Heater>[].obs;
+  List<Heater> get heaterList => _heaterList;
+  List<Heater> getHeatersOfZone(int zoneId) =>
+      heaterList.where((element) => element.zoneId == zoneId).toList();
+
   Future<void> loadHeaterList() async {
     final data = await DbProvider.db.getHeaters();
     _heaterList.assignAll(data);
     update();
-    final ProcessController pc = Get.find();
-    for (final h in data) {
-      pc.initHeater(h);
-    }
+    // final ProcessController pc = Get.find();
+    // for (final h in data) {
+    //   pc.initHeater(h);
+    // }
   }
 
-  Future<bool> addHeater(HeaterDevice heater) async {
+  Future<bool> addHeater(Heater heater) async {
     final result = await DbProvider.db.addHeater(heater);
     if (result > 0) {
       await loadHeaterList();
@@ -102,7 +110,12 @@ class DataController extends GetxController {
     return false;
   }
 
-  Future<bool> updateHeater(HeaterDevice heater) async {
+  Future<bool> updateHeater(Heater heater) async {
+    final index = heaterList.indexWhere((element) => element.id == heater.id);
+    if (index != -1) {
+      _heaterList[index] = heater;
+      update();
+    }
     final result = await DbProvider.db.updateHeater(heater);
     if (result > 0) {
       await loadHeaterList();
@@ -111,7 +124,7 @@ class DataController extends GetxController {
     return false;
   }
 
-  Future<bool> deleteHeater(HeaterDevice heater) async {
+  Future<bool> deleteHeater(Heater heater) async {
     final result = await DbProvider.db.deleteHeater(heater);
     if (result > 0) {
       await loadHeaterList();
@@ -124,6 +137,9 @@ class DataController extends GetxController {
   //#region MARK: SENSORS
   final List<SensorDevice> _sensorList = <SensorDevice>[].obs;
   List<SensorDevice> get sensorList => _sensorList;
+  List<SensorDevice> getSensorsOfZone(int zoneId) =>
+      sensorList.where((element) => element.zone == zoneId).toList();
+
   Future<void> loadSensorList() async {
     final data = await DbProvider.db.getSensors();
     _sensorList.assignAll(data);
@@ -134,11 +150,42 @@ class DataController extends GetxController {
     final index =
         sensorList.indexWhere((sensor) => sensor.id == updatedSensor.id);
     if (index != -1) {
-      sensorList[index] = updatedSensor;
+      _sensorList[index] = updatedSensor;
       DbProvider.db
           .updateSensor(updatedSensor); // Veritabanına güncelleme işlemi
       update();
     }
+  }
+
+  List<SensorDeviceWithValues> sensorListWithValues(zoneId) {
+    final ChannelController cc = Get.find();
+    List<SensorDeviceWithValues> result = [];
+    for (var sensor in sensorList.where((e) => e.zone == zoneId)) {
+      result.add(SensorDeviceWithValues(
+        id: sensor.id,
+        device: sensor.device,
+        index: sensor.index,
+        zone: sensor.zone,
+        color: sensor.color,
+        name: sensor.name,
+        value: cc.getSensorValue(sensor.id),
+      ));
+    }
+    return result;
+  }
+
+  double getSensorAverageOfZone(int zoneId) {
+    final List<SensorDeviceWithValues> sensors = sensorListWithValues(zoneId);
+    if (sensors.isEmpty) {
+      return 0.0;
+    }
+
+    // Use null safety and a non-nullable initial value
+    double sum = sensors.fold<double>(0.0, (previousValue, sensor) {
+      return previousValue + (sensor.value ?? 0.0); // Use null-aware operator
+    });
+
+    return sum / sensors.length;
   }
   //#endregion
 
@@ -248,5 +295,57 @@ class DataController extends GetxController {
   //   await loadHardwareDevices();
   //   return result;
   // }
+  //#endregion
+
+  //#region MARK: ACTIONS
+  Future<void> onZoneModeCalled({
+    required int zoneId,
+    required ControlMode mode,
+  }) async {
+    final zone = zoneList.firstWhere((e) => e.id == zoneId).copyWith(
+          desiredMode: mode,
+        );
+    await updateZone(zone);
+  }
+
+  Future<void> onHeaterModeCalled({
+    required int heaterId,
+    required ControlMode mode,
+  }) async {
+    final heater = heaterList.firstWhere((e) => e.id == heaterId).copyWith(
+          desiredMode: mode,
+        );
+    await updateHeater(heater);
+  }
+
+  Future<void> onZonePlanCalled({
+    required int zoneId,
+    int? planId,
+  }) async {
+    final zone = zoneList
+        .firstWhere((e) => e.id == zoneId)
+        .copyWith(selectedPlan: planId);
+    await updateZone(zone);
+  }
+
+  Future<void> onZoneThermostatCalled({
+    required int zoneId,
+    required bool hasThermostat,
+  }) async {
+    final zone = zoneList
+        .firstWhere((e) => e.id == zoneId)
+        .copyWith(hasThermostat: hasThermostat);
+    await updateZone(zone);
+  }
+
+  Future<void> onZoneTemperatureCalled({
+    required int zoneId,
+    required double temperature,
+  }) async {
+    final zone = zoneList
+        .firstWhere((e) => e.id == zoneId)
+        .copyWith(desiredTemperature: temperature);
+    await updateZone(zone);
+  }
   //#endregion
 }

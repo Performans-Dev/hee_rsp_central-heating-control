@@ -30,8 +30,8 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
   bool allowEdit = false;
   final selectedBoxes = <String>[];
 
-  List<HeaterState> stateList =
-      HeaterState.values.where((e) => e.index != 1).toList();
+  List<ControlMode> stateList =
+      ControlMode.values.where((e) => e.index != 1).toList();
   late List<bool> selectedStateValues;
   bool selectedHasThermostat = false;
   int selectedSetTemperature = UiSettings.defaultTemperature;
@@ -157,7 +157,8 @@ class _SettingsPlanDetailScreenState extends State<SettingsPlanDetailScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   alignment: Alignment.centerLeft,
-                  color: Theme.of(context).highlightColor.withValues(alpha: 0.3),
+                  color:
+                      Theme.of(context).highlightColor.withValues(alpha: 0.3),
                   child: selectedBoxes.isEmpty
                       ? null
                       : Row(
