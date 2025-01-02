@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_local_variable
+// ignore_for_file: avoid_unnecessary_containers, unused_local_variable, prefer_const_constructors
 
 import 'dart:math';
 
@@ -234,26 +234,30 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             .textTheme
                                             .titleLarge,
                                       ),
-                                      ControlModeWidget(
-                                        selectedMode: zone.currentMode,
-                                        onChanged: (value) async {
-                                          await dc.onZoneModeCalled(
-                                              zoneId: zone.id, mode: value);
-                                        },
-                                        maxLevel: maxLevel,
-                                      ),
+                                      // ControlModeWidget(
+                                      //   selectedMode: zone.currentMode,
+                                      //   onChanged: (value) async {
+                                      //     await dc.onZoneModeCalled(
+                                      //         zoneId: zone.id, mode: value);
+                                      //   },
+                                      //   maxLevel: maxLevel,
+                                      // ),
                                     ],
                                   ),
                                   Expanded(
                                     child: Container(
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.all(20),
-                                      child: zone.desiredMode == ControlMode.off
-                                          ? zoneSubControlOff
-                                          : zone.desiredMode == ControlMode.auto
-                                              ? zoneSubControlPlan
-                                              : zoneSubControlThermostat,
-                                    ),
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.all(20),
+                                        child: zone.desiredMode ==
+                                                ControlMode.off
+                                            ? Text('off') //zoneSubControlOff
+                                            : zone.desiredMode ==
+                                                    ControlMode.auto
+                                                ? Text(
+                                                    'plan') //zoneSubControlPlan
+                                                : Text(
+                                                    'thermo') //zoneSubControlThermostat,
+                                        ),
                                   ),
                                 ],
                               ),
