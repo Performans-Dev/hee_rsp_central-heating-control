@@ -154,7 +154,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
         mainAxisSize: MainAxisSize.max,
         spacing: 8,
         children: [
-          Text('listing ${heaters.length} heaters'),
+          Text('Heaters on ${zone.name}'),
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) => ListTile(
@@ -175,17 +175,22 @@ class _ZoneScreenState extends State<ZoneScreen> {
         mainAxisSize: MainAxisSize.max,
         spacing: 8,
         children: [
-          TextButton.icon(
-            onPressed: () {
-              setState(() {
-                selectedHeater = null;
-              });
-            },
-            icon: const Icon(Icons.arrow_back),
-            label: const Text('back to Heaters'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    selectedHeater = null;
+                  });
+                },
+                icon: const Icon(Icons.arrow_back),
+                label: const Text(''),
+              ),
+              Text('${heater?.name}'),
+            ],
           ),
           const Divider(),
-          Text('${heater?.name}'),
           ControlModeWidget(
             selectedMode: heater?.desiredMode ?? ControlMode.auto,
             onChanged: (value) {},
