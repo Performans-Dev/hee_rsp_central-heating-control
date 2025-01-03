@@ -15,11 +15,14 @@ class ComIndicatorLedWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               children: [
-                const Text('Out', style: TextStyle(fontSize: 10)),
+                const SizedBox(
+                  width: 35,
+                  child: Text('GPIO', style: TextStyle(fontSize: 10)),
+                ),
                 PinIndicator(value: cc.pinSerState),
                 PinIndicator(value: cc.pinSrclkState),
                 PinIndicator(value: cc.pinRclkState),
@@ -28,7 +31,10 @@ class ComIndicatorLedWidget extends StatelessWidget {
             ),
             Row(
               children: [
-                const Text('Serial', style: TextStyle(fontSize: 10)),
+                const SizedBox(
+                  width: 35,
+                  child: Text('Serial', style: TextStyle(fontSize: 10)),
+                ),
                 PinIndicator(value: cc.pinUartModeTxState),
                 PinIndicator(value: cc.pinBuzzerState),
                 PinIndicator(value: cc.fanPinState),
