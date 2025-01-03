@@ -118,7 +118,7 @@ class DataController extends GetxController {
     }
     final result = await DbProvider.db.updateHeater(heater);
     if (result > 0) {
-      await loadHeaterList();
+      // await loadHeaterList();
       return true;
     }
     return false;
