@@ -1,44 +1,63 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ComIndicatorLedWidget extends StatelessWidget {
   const ComIndicatorLedWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Tx: ',
-                style: TextStyle(fontSize: 10),
-              ),
-              TxRxIndicator(),
-              TxRxIndicator(),
-              TxRxIndicator(),
-              TxRxIndicator(),
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                'Rx: ',
-                style: TextStyle(fontSize: 10),
-              ),
-              TxRxIndicator(),
-              TxRxIndicator(),
-              TxRxIndicator(),
-              TxRxIndicator(),
-            ],
-          ),
-        ],
+    return GetBuilder<ChannelController>(builder: (cc) {
+      return Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                const Text('Out', style: TextStyle(fontSize: 10)),
+                PinIndicator(value: cc.pinSerState),
+                PinIndicator(value: cc.pinSrclkState),
+                PinIndicator(value: cc.pinRclkState),
+                PinIndicator(value: cc.pinTxEnableState),
+              ],
+            ),
+            Row(
+              children: [
+                const Text('Serial', style: const TextStyle(fontSize: 10)),
+                PinIndicator(value: cc.pinUartModeTxState),
+                PinIndicator(value: cc.pinBuzzerState),
+                PinIndicator(value: cc.fanPinState),
+                PinIndicator(value: cc.processingSerialLoop),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class PinIndicator extends StatelessWidget {
+  const PinIndicator({
+    super.key,
+    this.value = false,
+  });
+  final bool value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 6,
+      height: 6,
+      margin: const EdgeInsets.all(1),
+      decoration: BoxDecoration(
+        color: value ? Colors.grey : Colors.orange,
+        borderRadius: BorderRadius.circular(3),
       ),
     );
   }
