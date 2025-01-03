@@ -28,7 +28,7 @@ class ComIndicatorLedWidget extends StatelessWidget {
             ),
             Row(
               children: [
-                const Text('Serial', style: const TextStyle(fontSize: 10)),
+                const Text('Serial', style: TextStyle(fontSize: 10)),
                 PinIndicator(value: cc.pinUartModeTxState),
                 PinIndicator(value: cc.pinBuzzerState),
                 PinIndicator(value: cc.fanPinState),
