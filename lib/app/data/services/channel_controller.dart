@@ -858,6 +858,7 @@ class ChannelController extends GetxController {
     writeRCLK(true);
     await wait(1);
     writeRCLK(false);
+    writeOE(false);
   }
 
   void writeOE(bool value) {
@@ -929,7 +930,6 @@ class ChannelController extends GetxController {
       return null;
     }
   }
-  //#endregion
 
   double getSensorValue(int id) {
     return inputChannels
@@ -940,6 +940,7 @@ class ChannelController extends GetxController {
             ?.analogValue ??
         0.0;
   }
+  //#endregion
 }
 
 // MARK: CHANNEL DEFINITION
@@ -1011,6 +1012,7 @@ enum PinType {
   uartAnalogInput,
 }
 
+/// MARK: Sensor Data
 class SensorData {
   int timestamp;
   List<Sensor> sensors;
