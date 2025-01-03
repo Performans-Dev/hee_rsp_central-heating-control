@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -133,8 +134,9 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
       );
 
   Widget get deleteButton => TextButton(
-      onPressed: () {
+      onPressed: () async {
         log('//TODO: confirm -> delete relations, delete record');
+        await DbProvider.db.deleteZone(zone);
       },
       child: const Text(
         'Delete this zone and all of its contents',

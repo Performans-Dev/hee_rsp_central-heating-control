@@ -41,13 +41,13 @@ class HomeScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: SizedBox(
-                    height: 60,
+                    height: 160,
                     child: ListView.builder(
                       itemBuilder: (context, index) => Text(
                         dc.runnerLogList[index],
                         style: const TextStyle(fontSize: 10),
                       ),
-                      itemCount: math.min(dc.runnerLogList.length, 3),
+                      itemCount: math.min(dc.runnerLogList.length, 6),
                       shrinkWrap: true,
                     ),
                   ),
