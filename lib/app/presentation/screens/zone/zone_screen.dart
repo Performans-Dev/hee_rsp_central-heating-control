@@ -193,7 +193,12 @@ class _ZoneScreenState extends State<ZoneScreen> {
           const Divider(),
           ControlModeWidget(
             selectedMode: heater?.desiredMode ?? ControlMode.auto,
-            onChanged: (value) {},
+            onChanged: (value) {
+              dataController.onHeaterModeCalled(
+                heaterId: heater?.id ?? 0,
+                mode: value,
+              );
+            },
             isZone: false,
             data: ControlMode.values,
           ),
