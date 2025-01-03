@@ -94,11 +94,12 @@ class _ZoneScreenState extends State<ZoneScreen> {
 
   Widget get zoneSubControlThermostat => Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 8,
         children: [
           SwitchListTile(
             value: zone.hasThermostat,
-            title: const Text('Has Thermostat'),
+            title: const Text('Thermostat'),
             onChanged: (v) async {
               await dataController.onZoneThermostatCalled(
                   zoneId: zone.id, hasThermostat: v);
