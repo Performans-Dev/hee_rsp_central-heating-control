@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
@@ -253,8 +254,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             ? Text('off') //zoneSubControlOff
                                             : zone.desiredMode ==
                                                     ControlMode.auto
-                                                ? Text(
-                                                    'plan') //zoneSubControlPlan
+                                                ? zoneSubControlPlan
                                                 : Text(
                                                     'thermo') //zoneSubControlThermostat,
                                         ),
@@ -1043,6 +1043,7 @@ class ControlModeWidget extends StatelessWidget {
       direction: Axis.vertical,
       constraints: const BoxConstraints(minWidth: 120, minHeight: 42),
       verticalDirection: VerticalDirection.up,
+      borderRadius: UiDimens.formRadius,
       onPressed: (value) {
         onChanged(data[value]);
       },
