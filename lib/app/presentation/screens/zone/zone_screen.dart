@@ -120,13 +120,14 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         }
                       : null,
                   icon: const Icon(Icons.remove),
+                  iconSize: 38,
                 ),
                 Text(
                   '${zone.desiredTemperature ?? 20} °C',
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                      ?.copyWith(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 IconButton(
                   onPressed: zone
@@ -138,6 +139,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
                         }
                       : null,
                   icon: const Icon(Icons.add),
+                  iconSize: 38,
                 )
               ],
             ),
