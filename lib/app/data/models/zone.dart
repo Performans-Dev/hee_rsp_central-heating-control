@@ -29,6 +29,16 @@ class Zone {
     required this.hasThermostat,
   });
 
+  bool get isCurrentTemperatureLowerThanDesired =>
+      currentTemperature != null && desiredTemperature != null
+          ? currentTemperature! < desiredTemperature!
+          : false;
+
+  bool get isCurrentTemperatureHigherThanDesired =>
+      currentTemperature != null && desiredTemperature != null
+          ? currentTemperature! > desiredTemperature!
+          : false;
+
   Zone copyWith({
     int? id,
     String? name,

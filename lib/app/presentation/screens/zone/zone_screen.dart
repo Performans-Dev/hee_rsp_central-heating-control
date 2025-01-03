@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
@@ -65,130 +66,6 @@ class _ZoneScreenState extends State<ZoneScreen> {
   //   );
   // }
 
-  Widget get zoneSubControlOff => const Opacity(
-        opacity: 0.6,
-        child: Icon(
-          Icons.energy_savings_leaf_outlined,
-          size: 64,
-        ),
-      );
-
-  Widget get zoneSubControlPlan => Column(
-        spacing: 8,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Select Plan for Automatic Controls',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          PlanDropdownWidget(
-            onChanged: (value) async {
-              await dataController.onZonePlanCalled(
-                  zoneId: zone.id, planId: value);
-            },
-            value: zone.selectedPlan,
-          ),
-        ],
-      );
-
-  Widget get zoneSubControlThermostat => Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 8,
-        children: [
-          SwitchListTile(
-            value: zone.hasThermostat,
-            title: const Text('Has Thermostat'),
-            onChanged: (v) async {
-              await dataController.onZoneThermostatCalled(
-                  zoneId: zone.id, hasThermostat: v);
-            },
-          ),
-          Opacity(
-            opacity: zone.hasThermostat ? 1 : 0.4,
-            child: Row(
-              spacing: 8,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: zone
-                          .hasThermostat //TODO: add minimum temperature check
-                      ? () {
-                          dataController.onZoneTemperatureCalled(
-                              zoneId: zone.id,
-                              temperature: (zone.desiredTemperature ?? 20) - 1);
-                        }
-                      : null,
-                  icon: const Icon(Icons.remove),
-                ),
-                Text(
-                  '${zone.desiredTemperature ?? 20} °C',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  onPressed: zone
-                          .hasThermostat //TODO: add maximum temperature check
-                      ? () {
-                          dataController.onZoneTemperatureCalled(
-                              zoneId: zone.id,
-                              temperature: (zone.desiredTemperature ?? 20) + 1);
-                        }
-                      : null,
-                  icon: const Icon(Icons.add),
-                )
-              ],
-            ),
-          ),
-        ],
-      );
-
-  Widget heaterListWidget(List<Heater> heaters) => Column(
-        mainAxisSize: MainAxisSize.max,
-        spacing: 8,
-        children: [
-          Text('listing ${heaters.length} heaters'),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) => ListTile(
-                  title: Text(heaters[index].name),
-                  subtitle: Text(heaters[index].desiredMode.name),
-                  onTap: () {
-                    setState(() {
-                      selectedHeater = heaters[index];
-                    });
-                  }),
-              itemCount: heaters.length,
-            ),
-          ),
-        ],
-      );
-
-  Widget heaterDetailWidget(Heater? heater) => Column(
-        mainAxisSize: MainAxisSize.max,
-        spacing: 8,
-        children: [
-          TextButton.icon(
-            onPressed: () {
-              setState(() {
-                selectedHeater = null;
-              });
-            },
-            icon: const Icon(Icons.arrow_back),
-            label: const Text('back to Heaters'),
-          ),
-          const Divider(),
-          Text('${heater?.name}'),
-          ControlModeWidget(
-            selectedMode: heater?.desiredMode ?? ControlMode.auto,
-            onChanged: (value) {},
-            isZone: false,
-            maxLevel: heater?.levelType.index ?? 1,
-          ),
-        ],
-      );
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(builder: (dc) {
@@ -234,31 +111,44 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             .textTheme
                                             .titleLarge,
                                       ),
-                                      // ControlModeWidget(
-                                      //   selectedMode: zone.currentMode,
-                                      //   onChanged: (value) async {
-                                      //     await dc.onZoneModeCalled(
-                                      //         zoneId: zone.id, mode: value);
-                                      //   },
-                                      //   maxLevel: maxLevel,
-                                      // ),
-                                      Text('controlwidget')
+                                      ControlModeWidget(
+                                        selectedMode: zone.desiredMode,
+                                        onChanged: (value) async {
+                                          await dc.onZoneModeCalled(
+                                              zoneId: zone.id, mode: value);
+                                        },
+                                        data: ControlMode.values,
+                                      ),
                                     ],
                                   ),
                                   Expanded(
                                     child: Container(
-                                        alignment: Alignment.center,
-                                        padding: const EdgeInsets.all(20),
-                                        child: zone.desiredMode ==
-                                                ControlMode.off
-                                            ? Text('off') //zoneSubControlOff
-                                            : zone.desiredMode ==
-                                                    ControlMode.auto
-                                                ? Text(
-                                                    'plan') //zoneSubControlPlan
-                                                : Text(
-                                                    'thermo') //zoneSubControlThermostat,
-                                        ),
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.all(20),
+                                      child: ZoneDetailSubControlModeWidget(
+                                        zone: zone,
+                                        onThermostatChanged: (value) async {
+                                          await dataController
+                                              .onZoneThermostatCalled(
+                                            zoneId: zone.id,
+                                            hasThermostat: value,
+                                          );
+                                        },
+                                        onPlanChanged: (value) async {
+                                          await dataController.onZonePlanCalled(
+                                            zoneId: zone.id,
+                                            planId: value,
+                                          );
+                                        },
+                                        onTemperatureChanged: (value) async {
+                                          await dataController
+                                              .onZoneTemperatureCalled(
+                                            zoneId: zone.id,
+                                            temperature: value,
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -273,8 +163,25 @@ class _ZoneScreenState extends State<ZoneScreen> {
                             child: Container(
                               padding: const EdgeInsets.all(16),
                               child: selectedHeater == null
-                                  ? heaterListWidget(heaters)
-                                  : heaterDetailWidget(selectedHeater),
+                                  ? ZoneDetailHeaterListWidget(
+                                      heaters: heaters,
+                                      onHeaterSelected: (h) =>
+                                          setState(() => selectedHeater = h),
+                                      title: 'Heater(s) on ${zone.name}',
+                                    )
+                                  : ZoneDetailSelectedHeaterCardWidget(
+                                      selectedHeater: selectedHeater!,
+                                      onBack: () {
+                                        setState(() {
+                                          selectedHeater = null;
+                                        });
+                                      },
+                                      onHeaterModeCalled: (ControlMode mode) {
+                                        dataController.onHeaterModeCalled(
+                                            heaterId: selectedHeater!.id,
+                                            mode: mode);
+                                      },
+                                    ),
                             ),
                           ),
                         ),
@@ -949,76 +856,73 @@ class ZoneDetailSubControlModeWidget extends StatelessWidget {
     return Container(
       child: zone.desiredMode == ControlMode.auto
           ? Column(
+              spacing: 8,
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text('Select Plan for Automatic Controls'),
+                Text(
+                  'Select Plan for Automatic Controls',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 PlanDropdownWidget(
-                  value: zone.selectedPlan,
                   onChanged: onPlanChanged,
+                  value: zone.selectedPlan,
                 ),
               ],
             )
           : zone.desiredMode == ControlMode.off
-              ? Card(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    child: const Icon(
-                      Icons.energy_savings_leaf,
-                      size: 48,
-                    ),
+              ? const Opacity(
+                  opacity: 0.6,
+                  child: Icon(
+                    Icons.energy_savings_leaf_outlined,
+                    size: 64,
                   ),
                 )
-              : Card(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SwitchListTile(
-                          title: const Text('Thermostat'),
-                          value: zone.hasThermostat,
-                          onChanged: (b) {
-                            onThermostatChanged(b);
-                          },
-                        ),
-                        Opacity(
-                          opacity: zone.hasThermostat &&
-                                  zone.desiredTemperature != null
-                              ? 1
-                              : 0.4,
-                          child: Row(
-                            spacing: 8,
-                            children: [
-                              IconButton(
-                                onPressed: zone.hasThermostat &&
-                                        zone.desiredTemperature != null
-                                    ? () {
-                                        onTemperatureChanged(
-                                            zone.desiredTemperature! - 1);
-                                      }
-                                    : null,
-                                icon: const Icon(Icons.remove),
-                              ),
-                              Text('${zone.desiredTemperature} °C'),
-                              IconButton(
-                                onPressed: zone.hasThermostat &&
-                                        zone.desiredTemperature != null
-                                    ? () {
-                                        onTemperatureChanged(
-                                            zone.desiredTemperature! + 1);
-                                      }
-                                    : null,
-                                icon: const Icon(Icons.add),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    SwitchListTile(
+                      value: zone.hasThermostat,
+                      title: const Text('Thermostat'),
+                      onChanged: (v) async => await onThermostatChanged(v),
                     ),
-                  ),
+                    Opacity(
+                      opacity: zone.hasThermostat ? 1 : 0.4,
+                      child: Row(
+                        spacing: 8,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: zone
+                                    .hasThermostat //TODO: add minimum temperature check
+                                ? () => onTemperatureChanged(
+                                    (zone.desiredTemperature ?? 20) - 0.5)
+                                : null,
+                            icon: const Icon(Icons.remove),
+                            iconSize: 38,
+                          ),
+                          Text(
+                            '${zone.desiredTemperature ?? 20} °C',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                    fontWeight: FontWeight.bold, fontSize: 24),
+                          ),
+                          IconButton(
+                            onPressed: zone
+                                    .hasThermostat //TODO: add maximum temperature check
+                                ? () => onTemperatureChanged(
+                                    (zone.desiredTemperature ?? 20) + 0.5)
+                                : null,
+                            icon: const Icon(Icons.add),
+                            iconSize: 38,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
     );
   }
@@ -1029,29 +933,22 @@ class ControlModeWidget extends StatelessWidget {
     super.key,
     required this.selectedMode,
     required this.onChanged,
-    this.maxLevel = 3,
+    required this.data,
     this.isZone = true,
   });
 
   final ControlMode selectedMode;
   final Function(ControlMode p1) onChanged;
-  final int maxLevel;
+  final List<ControlMode> data;
   final bool isZone;
 
   @override
   Widget build(BuildContext context) {
-    var data = ControlMode.values;
-    if (maxLevel == 2) {
-      data.remove(ControlMode.max);
-    }
-    if (maxLevel == 1) {
-      data.remove(ControlMode.max);
-      data.remove(ControlMode.high);
-    }
     return ToggleButtons(
       direction: Axis.vertical,
-      constraints: const BoxConstraints(minWidth: 120, minHeight: 56),
+      constraints: const BoxConstraints(minWidth: 120, minHeight: 42),
       verticalDirection: VerticalDirection.up,
+      borderRadius: UiDimens.formRadius,
       onPressed: (value) {
         onChanged(data[value]);
       },
@@ -1063,7 +960,7 @@ class ControlModeWidget extends StatelessWidget {
                 children: [
                   CCUtils.stateIcon(e, withColor: selectedMode == e),
                   Text(e.name
-                      .replaceAll('auto', isZone ? 'Zone' : 'Auto')
+                      .replaceAll('auto', !isZone ? 'Zone' : 'Auto')
                       .toUpperCase()),
                 ],
               ))
@@ -1111,31 +1008,29 @@ class ZoneDetailHeaterListWidget extends StatelessWidget {
     super.key,
     required this.heaters,
     required this.onHeaterSelected,
+    this.title = 'Heaters',
   });
+  final String title;
   final List<Heater> heaters;
   final Function(Heater) onHeaterSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Heaters',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            ...heaters.map((h) => ListTile(
-                  title: Text(h.name),
-                  subtitle: Text(h.currentMode.name),
-                  onTap: () => onHeaterSelected(h),
-                )),
-          ],
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      spacing: 8,
+      children: [
+        Text(title),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) => ListTile(
+                title: Text(heaters[index].name),
+                subtitle: Text(heaters[index].desiredMode.name),
+                onTap: () => onHeaterSelected(heaters[index])),
+            itemCount: heaters.length,
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -1153,40 +1048,29 @@ class ZoneDetailSelectedHeaterCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      spacing: 8,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                IconButton(
-                    onPressed: onBack, icon: const Icon(Icons.arrow_back)),
-                Text(
-                  selectedHeater.name,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
+            TextButton.icon(
+              onPressed: onBack,
+              icon: const Icon(Icons.arrow_back),
+              label: const Text(''),
             ),
-            ...ControlMode.values.map((e) => ListTile(
-                  title: Text(e.name.replaceAll('auto', 'zone').toUpperCase()),
-                  trailing: selectedHeater.desiredMode == e
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      : null,
-                  onTap: () {
-                    onHeaterModeCalled(
-                      e,
-                    );
-                  },
-                ))
+            Text(selectedHeater.name),
           ],
         ),
-      ),
+        const Divider(),
+        ControlModeWidget(
+          selectedMode: selectedHeater.desiredMode,
+          onChanged: onHeaterModeCalled,
+          isZone: false,
+          data: ControlMode.values,
+        ),
+      ],
     );
   }
 }
