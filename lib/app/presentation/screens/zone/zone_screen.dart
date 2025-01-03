@@ -111,14 +111,15 @@ class _ZoneScreenState extends State<ZoneScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: zone
-                          .hasThermostat //TODO: add minimum temperature check
-                      ? () {
-                          dataController.onZoneTemperatureCalled(
-                              zoneId: zone.id,
-                              temperature: (zone.desiredTemperature ?? 20) - 1);
-                        }
-                      : null,
+                  onPressed:
+                      zone.hasThermostat //TODO: add minimum temperature check
+                          ? () {
+                              dataController.onZoneTemperatureCalled(
+                                  zoneId: zone.id,
+                                  temperature:
+                                      (zone.desiredTemperature ?? 20) - 0.5);
+                            }
+                          : null,
                   icon: const Icon(Icons.remove),
                   iconSize: 38,
                 ),
@@ -130,14 +131,15 @@ class _ZoneScreenState extends State<ZoneScreen> {
                       ?.copyWith(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 IconButton(
-                  onPressed: zone
-                          .hasThermostat //TODO: add maximum temperature check
-                      ? () {
-                          dataController.onZoneTemperatureCalled(
-                              zoneId: zone.id,
-                              temperature: (zone.desiredTemperature ?? 20) + 1);
-                        }
-                      : null,
+                  onPressed:
+                      zone.hasThermostat //TODO: add maximum temperature check
+                          ? () {
+                              dataController.onZoneTemperatureCalled(
+                                  zoneId: zone.id,
+                                  temperature:
+                                      (zone.desiredTemperature ?? 20) + 0.5);
+                            }
+                          : null,
                   icon: const Icon(Icons.add),
                   iconSize: 38,
                 )
