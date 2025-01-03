@@ -131,6 +131,22 @@ class ChannelController extends GetxController {
   late GPIO in8;
   late GPIO txEnablePin;
 
+  final RxBool _pinSerState = false.obs;
+  final RxBool _pinSrclkState = false.obs;
+  final RxBool _pinRclkState = false.obs;
+  final RxBool _pinBuzzerState = false.obs;
+  final RxBool _pinTxEnableState = false.obs;
+  final RxBool _fanPinState = false.obs;
+  final RxBool _pinUartModeTxState = false.obs;
+
+  bool get pinSerState => _pinSerState.value;
+  bool get pinSrclkState => _pinSrclkState.value;
+  bool get pinRclkState => _pinRclkState.value;
+  bool get pinBuzzerState => _pinBuzzerState.value;
+  bool get pinTxEnableState => _pinTxEnableState.value;
+  bool get fanPinState => _fanPinState.value;
+  bool get pinUartModeTxState => _pinUartModeTxState.value;
+
   void initGpioPins() {
     try {
       uartModeTx = GPIO(4, GPIOdirection.gpioDirOut);
@@ -756,6 +772,15 @@ class ChannelController extends GetxController {
             _inputChannels.firstWhere((e) => e.id == c.id).status = in8.read();
             break;
         }
+
+        _pinSerState.value = outPinSER.read();
+        _pinSrclkState.value = outPinSRCLK.read();
+        _pinRclkState.value = outPinRCLK.read();
+        _pinTxEnableState.value = txEnablePin.read();
+        _pinBuzzerState.value = buzzer.read();
+        _fanPinState.value = fanPin.read();
+        _pinUartModeTxState.value = uartModeTx.read();
+
         update();
       }
     } on Exception catch (e) {
