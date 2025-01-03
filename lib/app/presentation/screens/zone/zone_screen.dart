@@ -234,14 +234,15 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             .textTheme
                                             .titleLarge,
                                       ),
-                                      ControlModeWidget(
-                                        selectedMode: zone.currentMode,
-                                        onChanged: (value) async {
-                                          await dc.onZoneModeCalled(
-                                              zoneId: zone.id, mode: value);
-                                        },
-                                        maxLevel: maxLevel,
-                                      ),
+                                      // ControlModeWidget(
+                                      //   selectedMode: zone.currentMode,
+                                      //   onChanged: (value) async {
+                                      //     await dc.onZoneModeCalled(
+                                      //         zoneId: zone.id, mode: value);
+                                      //   },
+                                      //   maxLevel: maxLevel,
+                                      // ),
+                                      Text('controlwidget')
                                     ],
                                   ),
                                   Expanded(
