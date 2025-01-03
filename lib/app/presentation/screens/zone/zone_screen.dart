@@ -1041,7 +1041,7 @@ class ControlModeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ToggleButtons(
       direction: Axis.vertical,
-      constraints: const BoxConstraints(minWidth: 120, minHeight: 56),
+      constraints: const BoxConstraints(minWidth: 120, minHeight: 42),
       verticalDirection: VerticalDirection.up,
       onPressed: (value) {
         onChanged(data[value]);
