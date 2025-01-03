@@ -184,7 +184,7 @@ class _ZoneScreenState extends State<ZoneScreen> {
             selectedMode: heater?.desiredMode ?? ControlMode.auto,
             onChanged: (value) {},
             isZone: false,
-            maxLevel: heater?.levelType.index ?? 1,
+            data: ControlMode.values,
           ),
         ],
       );
@@ -234,15 +234,14 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                             .textTheme
                                             .titleLarge,
                                       ),
-                                      // ControlModeWidget(
-                                      //   selectedMode: zone.currentMode,
-                                      //   onChanged: (value) async {
-                                      //     await dc.onZoneModeCalled(
-                                      //         zoneId: zone.id, mode: value);
-                                      //   },
-                                      //   maxLevel: maxLevel,
-                                      // ),
-                                      Text('controlwidget')
+                                      ControlModeWidget(
+                                        selectedMode: zone.currentMode,
+                                        onChanged: (value) async {
+                                          await dc.onZoneModeCalled(
+                                              zoneId: zone.id, mode: value);
+                                        },
+                                        data: ControlMode.values,
+                                      ),
                                     ],
                                   ),
                                   Expanded(
@@ -1029,25 +1028,17 @@ class ControlModeWidget extends StatelessWidget {
     super.key,
     required this.selectedMode,
     required this.onChanged,
-    this.maxLevel = 3,
+    required this.data,
     this.isZone = true,
   });
 
   final ControlMode selectedMode;
   final Function(ControlMode p1) onChanged;
-  final int maxLevel;
+  final List<ControlMode> data;
   final bool isZone;
 
   @override
   Widget build(BuildContext context) {
-    var data = ControlMode.values;
-    if (maxLevel == 2) {
-      data.remove(ControlMode.max);
-    }
-    if (maxLevel == 1) {
-      data.remove(ControlMode.max);
-      data.remove(ControlMode.high);
-    }
     return ToggleButtons(
       direction: Axis.vertical,
       constraints: const BoxConstraints(minWidth: 120, minHeight: 56),
