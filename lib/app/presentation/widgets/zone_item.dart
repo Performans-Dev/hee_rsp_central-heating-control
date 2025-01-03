@@ -51,10 +51,9 @@ class ZoneItemWidget extends StatelessWidget {
                     ZoneCardModeDisplayWidget(
                       desiredMode: zone.desiredMode,
                       currentMode: zone.currentMode,
-                      currentTemperature: zone.currentTemperature?.toInt(),
-                      desiredTemperature: zone.hasThermostat
-                          ? zone.desiredTemperature?.toInt()
-                          : null,
+                      currentTemperature: zone.currentTemperature,
+                      desiredTemperature:
+                          zone.hasThermostat ? zone.desiredTemperature : null,
                       planName: dc.planList
                           .firstWhereOrNull((e) => e.id == zone.selectedPlan)
                           ?.name,

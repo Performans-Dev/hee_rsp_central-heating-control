@@ -1,4 +1,5 @@
-import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'dart:math' as math;
+
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -39,11 +40,16 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: TextButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.settingsPreferencesAdvanced);
-                    },
-                    child: Text('${app.deviceInfo?.serialNumber}'),
+                  child: SizedBox(
+                    height: 60,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) => Text(
+                        dc.runnerLogList[index],
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                      itemCount: math.min(dc.runnerLogList.length, 3),
+                      shrinkWrap: true,
+                    ),
                   ),
                 )
                 // PiScrollView(

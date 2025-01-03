@@ -14,8 +14,8 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
   });
   final ControlMode desiredMode;
   final ControlMode currentMode;
-  final int? currentTemperature;
-  final int? desiredTemperature;
+  final double? currentTemperature;
+  final double? desiredTemperature;
   final String? planName;
 
   @override
@@ -30,13 +30,13 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
           children: [
             if (desiredTemperature != null)
               Text(
-                'Set: ${CCUtils.temperature(desiredTemperature!, presicion: 0)}',
+                'Set: ${desiredTemperature?.toStringAsPrecision(1)} °C',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             const SizedBox(height: 12),
             if (currentTemperature != null)
               Text(
-                CCUtils.temperature(currentTemperature!),
+                'Current: ${currentTemperature?.toStringAsPrecision(1)} °C',
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             const SizedBox(height: 12),

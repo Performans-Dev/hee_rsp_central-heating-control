@@ -358,6 +358,8 @@ class DataController extends GetxController {
 
   Future<void> runnerLoop() async {
     if (isLooping) {
+      _runnerLogList.insert(0, 'Loop is already running.');
+      update();
       return;
     }
     _isLooping.value = true;
@@ -367,10 +369,14 @@ class DataController extends GetxController {
 
     for (final zone in zoneList) {
       ControlMode? zoneStateToApply;
+      _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
+      update();
       if (zone.selectedPlan == null) {
         // no plan
         if (zone.hasThermostat && getSensorsOfZone(zone.id).isNotEmpty) {
           // check thermostat
+          _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
+          update();
           if (zone.isCurrentTemperatureHigherThanDesired) {
             // let it cool
             zoneStateToApply = ControlMode.off;
@@ -383,6 +389,8 @@ class DataController extends GetxController {
           }
         } else {
           // check control mode
+          _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
+          update();
           if (zone.currentMode == zone.desiredMode) {
             // do nothing
             zoneStateToApply = zone.currentMode;
@@ -393,6 +401,8 @@ class DataController extends GetxController {
         }
       } else {
         // apply plan
+        _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
+        update();
         final plan =
             await DbProvider.db.getPlanDetails(planId: zone.selectedPlan!);
         final plansOfCurrentTime = plan
@@ -430,9 +440,15 @@ class DataController extends GetxController {
           }
         }
       }
+      _runnerLogList.insert(
+          0, '${zone.name} state must be ${zoneStateToApply.name}');
+      update();
 
       for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
         ControlMode? heaterStateToApply;
+        _runnerLogList.insert(
+            0, 'picking heater ${heater.name} for zone ${zone.name}');
+        update();
         if (heater.desiredMode == ControlMode.auto) {
           // apply zone state
           heaterStateToApply = zoneStateToApply;
@@ -476,6 +492,9 @@ class DataController extends GetxController {
             if (channel3 != null) {
               channelController.sendOutput(channel3, false);
             }
+
+            _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
+            update();
             break;
           case ControlMode.high:
             if (channel1 != null) {
@@ -487,6 +506,8 @@ class DataController extends GetxController {
             if (channel3 != null) {
               channelController.sendOutput(channel3, false);
             }
+            _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
+            update();
             break;
           case ControlMode.max:
             if (channel1 != null) {
@@ -498,6 +519,8 @@ class DataController extends GetxController {
             if (channel3 != null) {
               channelController.sendOutput(channel3, true);
             }
+            _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
+            update();
             break;
           default:
             if (channel1 != null) {
@@ -509,6 +532,8 @@ class DataController extends GetxController {
             if (channel3 != null) {
               channelController.sendOutput(channel3, false);
             }
+            _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
+            update();
             break;
         }
       }
@@ -520,5 +545,10 @@ class DataController extends GetxController {
       runnerLoop();
     });
   }
+  //#endregion
+
+  //#region MARK: Runner Log
+  final RxList<String> _runnerLogList = <String>[].obs;
+  List<String> get runnerLogList => _runnerLogList;
   //#endregion
 }
