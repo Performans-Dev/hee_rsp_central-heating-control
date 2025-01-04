@@ -371,7 +371,9 @@ class DataController extends GetxController {
       ControlMode? zoneStateToApply;
       _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
       update();
-      if (zone.selectedPlan == null) {
+      if (zone.selectedPlan == null ||
+          zone.selectedPlan == 0 ||
+          zone.desiredMode != ControlMode.auto) {
         // no plan
         if (zone.hasThermostat && getSensorsOfZone(zone.id).isNotEmpty) {
           // check thermostat
