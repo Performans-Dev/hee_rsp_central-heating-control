@@ -841,7 +841,6 @@ class ChannelController extends GetxController {
   }
 
   Future<void> sendOutput(int index, bool value) async {
-    writeOE(true);
     await wait(1);
     for (int i = 1; i <= 8; i++) {
       writeSER(i == index
@@ -858,7 +857,8 @@ class ChannelController extends GetxController {
     writeRCLK(true);
     await wait(1);
     writeRCLK(false);
-    writeOE(false);
+    await wait(1);
+    writeOE(true);
   }
 
   void writeOE(bool value) {

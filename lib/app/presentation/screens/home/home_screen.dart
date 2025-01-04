@@ -40,7 +40,8 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: SizedBox(
+                  child: Container(
+                    color: Colors.blue.withValues(alpha: 0.2),
                     height: 160,
                     child: ListView.builder(
                       itemBuilder: (context, index) => Text(
