@@ -14,7 +14,12 @@ show_message() {
 
 # Install required packages
 apt-get update
-apt-get install -y zenity lxterminal jq pcmanfm libsqlite3-0 libsqlite3-dev i2c-tools zip unzip
+apt-get install -y zenity lxterminal jq pcmanfm libsqlite3-0 libsqlite3-dev i2c-tools zip unzip locales
+
+# Configure locales
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 # Create the desktop entry
 cat > /usr/share/applications/heethings-installer.desktop << 'EOF'
@@ -41,6 +46,10 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Set system-wide locale
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 BASE_DIR="/home/pi/Heethings"
 PICTURES_DIR="/home/pi/Pictures"
 IMAGES_ZIP="https://releases.api2.run/heethings/cc/images.zip"
@@ -48,10 +57,15 @@ SENSOR_ZIP="https://releases.api2.run/heethings/cc/sensor.zip"
 SCRIPTS_ZIP="https://releases.api2.run/heethings/cc/scripts.zip"
 API_URL="https://chc-api.globeapp.dev/api/v1/settings/app/version"
 
+# Function to show progress
+show_progress() {
+    echo "=== $1 ==="
+}
+
 # Function to backup existing installation
 backup_existing() {
     if [ -d "$BASE_DIR" ]; then
-        echo "Backing up existing installation..."
+        show_progress "Backing up existing installation"
         BACKUP_NAME="Heethings_backup_$(date +%Y%m%d_%H%M%S).zip"
         cd /home/pi
         zip -r "$BACKUP_NAME" Heethings/
@@ -61,47 +75,104 @@ backup_existing() {
 
 # Function to clean up old backups
 cleanup_old_backups() {
-    echo "Cleaning up old backups..."
-    # Keep only the 3 most recent backups
+    show_progress "Cleaning up old backups"
     cd /home/pi
     ls -t Heethings_backup_*.zip 2>/dev/null | tail -n +4 | xargs -r rm -f
 }
 
-echo "Running Heethings installer..."
+# Function to clean up existing service and files
+cleanup_existing() {
+    show_progress "Cleaning up existing installation"
+    
+    # Stop and disable service if it exists
+    if systemctl is-active --quiet heethings-sensor.service; then
+        show_progress "Stopping sensor service"
+        systemctl stop heethings-sensor.service
+        systemctl disable heethings-sensor.service
+    fi
+    
+    # Remove service file
+    if [ -f "/etc/systemd/system/heethings-sensor.service" ]; then
+        rm -f /etc/systemd/system/heethings-sensor.service
+        systemctl daemon-reload
+    fi
+    
+    # Clean up virtual environment with proper permissions
+    if [ -d "$BASE_DIR/CC/sensor/sensor_env" ]; then
+        show_progress "Removing old virtual environment"
+        chmod -R 777 "$BASE_DIR/CC/sensor/sensor_env"
+        rm -rf "$BASE_DIR/CC/sensor/sensor_env"
+    fi
+}
+
+show_progress "Running Heethings installer"
 
 # Install required packages
-echo "Installing required packages..."
+show_progress "Installing required packages"
 apt-get update
-apt-get install -y libsqlite3-0 libsqlite3-dev i2c-tools jq zip unzip
+apt-get install -y libsqlite3-0 libsqlite3-dev i2c-tools jq zip unzip python3-pip python3-flask python3-spidev
 
-# 1. Enable interfaces (only if not already enabled)
-echo "Setting up interfaces..."
-raspi-config nonint get_spi || raspi-config nonint do_spi 0
-raspi-config nonint get_i2c || raspi-config nonint do_i2c 0
-raspi-config nonint get_serial || raspi-config nonint do_serial 1
+# Enable interfaces
+show_progress "Setting up interfaces"
+# Check if raspi-config exists and is executable
+if [ -x "$(command -v raspi-config)" ]; then
+    # Try raspi-config first, but don't fail if it doesn't work
+    raspi-config nonint get_spi || true
+    raspi-config nonint do_spi 0 || true
+    raspi-config nonint get_i2c || true
+    raspi-config nonint do_i2c 0 || true
+fi
 
-# 2. Set up RTC (only if not already set)
-echo "Setting up RTC..."
+# Always do manual configuration to ensure interfaces are enabled
+show_progress "Configuring interfaces manually"
+
+# Enable SPI
+if ! grep -q "^dtparam=spi=on" /boot/firmware/config.txt; then
+    echo "dtparam=spi=on" >> /boot/firmware/config.txt
+fi
+
+# Enable I2C
+if ! grep -q "^dtparam=i2c_arm=on" /boot/firmware/config.txt; then
+    echo "dtparam=i2c_arm=on" >> /boot/firmware/config.txt
+fi
+
+# Enable SPI overlay
+if ! grep -q "^dtoverlay=spi0-1cs" /boot/firmware/config.txt; then
+    echo "dtoverlay=spi0-1cs" >> /boot/firmware/config.txt
+fi
+
+# Load modules
+modprobe spi-bcm2835 || true
+modprobe i2c-dev || true
+
+# Set up RTC
+show_progress "Setting up RTC"
 if ! grep -q "dtoverlay=i2c-rtc,ds3231" /boot/firmware/config.txt; then
     echo "dtoverlay=i2c-rtc,ds3231" >> /boot/firmware/config.txt
 fi
 
-# Backup existing installation
+# Backup, cleanup, and remove existing installation
+cleanup_existing
 backup_existing
+cleanup_old_backups
 
-# Remove existing installation to ensure clean state
+# Remove existing installation
 rm -rf "$BASE_DIR"
 
-# 3. Create directories
-echo "Creating directories..."
+# Create directories
+show_progress "Creating directories"
 mkdir -p "$BASE_DIR/CC/application"
 mkdir -p "$BASE_DIR/CC/elevator/app"
 mkdir -p "$BASE_DIR/CC/diagnose/app"
-mkdir -p "$BASE_DIR/CC/sensor"
+mkdir -p "$BASE_DIR/CC/sensor/script"
 mkdir -p "$PICTURES_DIR"
 
-# 4. Download Flutter apps
-echo "Downloading Flutter applications..."
+# Set proper permissions
+chown -R pi:pi "$BASE_DIR"
+chmod -R 755 "$BASE_DIR"
+
+# Download Flutter apps
+show_progress "Downloading Flutter applications"
 response=$(curl -s "$API_URL")
 app_url=$(echo "$response" | jq -r .data.app.url)
 elevator_url=$(echo "$response" | jq -r .data.elevator.url)
@@ -111,31 +182,106 @@ wget -q --show-progress "$app_url" -O "$BASE_DIR/CC/application/app.zip"
 wget -q --show-progress "$elevator_url" -O "$BASE_DIR/CC/elevator/app/elevator.zip"
 wget -q --show-progress "$diagnose_url" -O "$BASE_DIR/CC/diagnose/app/diagnose.zip"
 
-# 5. Download support files
-echo "Downloading support files..."
-wget -q --show-progress "$IMAGES_ZIP" -O "/tmp/images.zip"
-wget -q --show-progress "$SENSOR_ZIP" -O "/tmp/sensor.zip"
-wget -q --show-progress "$SCRIPTS_ZIP" -O "/tmp/scripts.zip"
+# Download sensor files
+show_progress "Downloading sensor files"
+if ! wget -q --show-progress "$SENSOR_ZIP" -O "$BASE_DIR/CC/sensor.zip"; then
+    echo "ERROR: Failed to download sensor.zip"
+    exit 1
+fi
 
-# 6. Extract Flutter apps
-echo "Extracting Flutter applications..."
+# Extract sensor files
+show_progress "Extracting sensor files"
+if [ -f "$BASE_DIR/CC/sensor.zip" ]; then
+    rm -rf "$BASE_DIR/CC/sensor"
+    if ! unzip -o "$BASE_DIR/CC/sensor.zip" -d "$BASE_DIR/CC"; then
+        echo "ERROR: Failed to extract sensor.zip"
+        exit 1
+    fi
+    
+    # Set up virtual environment
+    show_progress "Setting up Python virtual environment"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    cd "$BASE_DIR/CC/sensor" || exit 1
+    rm -rf sensor_env
+    python3 -m venv sensor_env || exit 1
+    chown -R pi:pi sensor_env
+    source sensor_env/bin/activate || exit 1
+    pip install flask spidev RPi.GPIO || exit 1
+    
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to set up virtual environment"
+        exit 1
+    fi
+    
+    # Create service file
+    show_progress "Creating sensor service"
+    cat > /etc/systemd/system/heethings-sensor.service << SENSOREOF
+[Unit]
+Description=Heethings Sensor Service
+After=network.target
+
+[Service]
+ExecStart=/home/pi/Heethings/CC/sensor/sensor_env/bin/python /home/pi/Heethings/CC/sensor/script/read-sensor-data.py
+WorkingDirectory=/home/pi/Heethings/CC/sensor/script
+User=pi
+Group=pi
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+SENSOREOF
+    
+    # Enable and start service
+    systemctl daemon-reload
+    systemctl enable heethings-sensor.service
+    systemctl start heethings-sensor.service
+    
+    # Wait for service to start
+    show_progress "Starting sensor service"
+    for i in {1..30}; do
+        if systemctl is-active --quiet heethings-sensor.service; then
+            echo "Sensor service is running"
+            break
+        fi
+        echo "Waiting for service to start... ($i/30)"
+        sleep 1
+    done
+    
+    # Verify API
+    for i in {1..5}; do
+        if curl -s http://localhost:5000/sensors > /dev/null; then
+            echo "Sensor API is responding"
+            break
+        fi
+        echo "Waiting for API... ($i/5)"
+        sleep 2
+    done
+fi
+
+# Extract Flutter apps
+show_progress "Extracting Flutter applications"
 unzip -o "$BASE_DIR/CC/application/app.zip" -d "$BASE_DIR/CC/application"
 unzip -o "$BASE_DIR/CC/elevator/app/elevator.zip" -d "$BASE_DIR/CC/elevator/app"
 unzip -o "$BASE_DIR/CC/diagnose/app/diagnose.zip" -d "$BASE_DIR/CC/diagnose/app"
 
-# 7. Extract support files
-echo "Extracting support files..."
+# Download and extract support files
+show_progress "Downloading support files"
+wget -q --show-progress "$IMAGES_ZIP" -O "/tmp/images.zip"
+wget -q --show-progress "$SCRIPTS_ZIP" -O "/tmp/scripts.zip"
+
+show_progress "Extracting support files"
 unzip -o "/tmp/images.zip" -d "$BASE_DIR"
-unzip -o "/tmp/sensor.zip" -d "$BASE_DIR/CC"
 unzip -o "/tmp/scripts.zip" -d "$BASE_DIR"
 
-# 8. Set up wallpaper and splash
-echo "Setting up wallpaper and splash..."
+# Set up wallpaper and splash
+show_progress "Setting up wallpaper"
 cp "$BASE_DIR/splash.png" /usr/share/plymouth/themes/pix/splash.png
 
 # Set wallpaper using LXDE config
 mkdir -p /home/pi/.config/pcmanfm/LXDE-pi
-cat > /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf << 'INNEREOF'
+cat > /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf << 'WALLEOF'
 [*]
 wallpaper_mode=crop
 wallpaper_common=1
@@ -149,71 +295,25 @@ sort=mtime;ascending;
 show_documents=0
 show_trash=0
 show_mounts=0
-INNEREOF
+WALLEOF
 
 chown -R pi:pi /home/pi/.config/pcmanfm
 
-# 9. Download screensaver images
-echo "Downloading screensaver images..."
-download_image() {
-    local num=$1
-    local formatted_num=$(printf "%02d" $num)
-    local url="https://releases.api2.run/heethings/cc/images/wp$formatted_num.jpg"
-    local output="$PICTURES_DIR/wp$formatted_num.jpg"
-    
-    echo "Downloading $url to $output"
-    
-    # Try up to 3 times to download
-    for attempt in {1..3}; do
-        # Use curl with error reporting
-        if curl -L -f -s "$url" -o "$output"; then
-            # Check if file exists and has size greater than 0
-            if [ -s "$output" ]; then
-                echo "Successfully downloaded wp$formatted_num.jpg ($(stat -f%z "$output") bytes)"
-                return 0
-            else
-                echo "Downloaded file is empty, retrying..."
-                rm -f "$output"
-            fi
-        else
-            echo "Failed to download wp$formatted_num.jpg (attempt $attempt, curl exit code: $?)"
-        fi
-        sleep 1
-    done
-    return 1
-}
-
-# Clear existing images first
+# Download screensaver images
+show_progress "Setting up screensaver"
 rm -f "$PICTURES_DIR"/wp*.jpg
-
-# Download all images
-failed_downloads=0
 for i in {1..19}; do
-    if ! download_image $i; then
-        failed_downloads=$((failed_downloads + 1))
-        echo "Failed to download image $i after all attempts"
-    fi
+    num=$(printf "%02d" $i)
+    url="https://releases.api2.run/heethings/cc/images/wp$num.jpg"
+    wget -q --show-progress "$url" -O "$PICTURES_DIR/wp$num.jpg"
 done
-
-if [ $failed_downloads -gt 0 ]; then
-    echo "Warning: $failed_downloads images failed to download"
-else
-    echo "All wallpaper images downloaded successfully"
-fi
-
-# Set proper permissions
 chown -R pi:pi "$PICTURES_DIR"
 chmod 644 "$PICTURES_DIR"/wp*.jpg
 
-# 10. Run sensor installation
-echo "Installing sensor..."
-chmod +x "$BASE_DIR/install-sensor-script.sh"
-"$BASE_DIR/install-sensor-script.sh"
-
-# 11. Create autostart for main app
-echo "Setting up autostart..."
+# Create autostart for main app
+show_progress "Setting up autostart"
 mkdir -p /home/pi/.config/autostart
-cat > /home/pi/.config/autostart/heethings.desktop << 'INNEREOF'
+cat > /home/pi/.config/autostart/heethings.desktop << 'AUTOEOF'
 [Desktop Entry]
 Type=Application
 Name=Heethings
@@ -221,68 +321,35 @@ Exec=/home/pi/Heethings/CC/application/central_heating_control
 Icon=/home/pi/Heethings/app_icon.png
 Terminal=false
 X-GNOME-Autostart-enabled=true
-INNEREOF
+AUTOEOF
 
 chmod +x /home/pi/.config/autostart/heethings.desktop
 chown pi:pi /home/pi/.config/autostart/heethings.desktop
 
 # Also create system-wide autostart (as backup)
-cat > /etc/xdg/autostart/heethings.desktop << 'INNEREOF'
-[Desktop Entry]
-Type=Application
-Name=Heethings
-Exec=/home/pi/Heethings/CC/application/central_heating_control
-Icon=/home/pi/Heethings/app_icon.png
-Terminal=false
-X-GNOME-Autostart-enabled=true
-INNEREOF
+cp /home/pi/.config/autostart/heethings.desktop /etc/xdg/autostart/
 
-chmod +x /etc/xdg/autostart/heethings.desktop
+show_progress "Installation complete!"
 
-# 12. Create application menu shortcut
-cat > /usr/share/applications/heethings.desktop << 'INNEREOF'
-[Desktop Entry]
-Type=Application
-Name=Heethings
-Exec=/home/pi/Heethings/CC/application/central_heating_control
-Icon=/home/pi/Heethings/app_icon.png
-Terminal=false
-Categories=Utility;
-INNEREOF
-
-chmod +x /usr/share/applications/heethings.desktop
-
-# 13. Set permissions
-chown -R pi:pi "$BASE_DIR"
-chown -R pi:pi "$PICTURES_DIR"
-chmod +x "$BASE_DIR/CC/application/central_heating_control"
-
-# Clean up
-rm -f /tmp/*.zip
-
-# Clean up old backups
-cleanup_old_backups
-
-# Clean up old preference files
-echo "Cleaning up old preference files..."
-rm -f "/home/pi/Documents/CC_prefs.bak"
-rm -f "/home/pi/Documents/CC_prefs.gs"
-rm -f "/home/pi/Documents/GetStorage.bak"
-rm -f "/home/pi/Documents/GetStorage.gs"
-
-echo "Installation complete! System will reboot to apply changes."
-echo "Press Enter to reboot..."
-read
-
-reboot
+# Ask user if they want to reboot now
+if [ -n "$DISPLAY" ] && command -v zenity >/dev/null 2>&1; then
+    if zenity --question \
+        --title="Installation Complete" \
+        --text="Installation completed successfully!\n\nThe system needs to reboot for all changes to take effect.\nWould you like to reboot now?" \
+        --ok-label="Reboot Now" \
+        --cancel-label="Later" \
+        --width=400; then
+        reboot
+    else
+        show_message "Please remember to reboot your system later for all changes to take effect."
+    fi
+else
+    echo "=== Installation complete! ==="
+    echo "Please reboot your system for all changes to take effect."
+fi
 EOF
 
-# Make install script executable and set ownership
+# Make install script executable
 chmod +x /home/pi/install.sh
-chown pi:pi /home/pi/install.sh
 
-# Update desktop database
-update-desktop-database
-
-# Show completion message
-show_message "Installation shortcut has been created in the applications menu.\nClick it anytime to install Heethings."
+show_message "Installation shortcut created successfully. You can now find 'Install Heethings' in your applications menu."

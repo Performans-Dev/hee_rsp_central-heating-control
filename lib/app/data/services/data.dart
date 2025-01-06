@@ -371,172 +371,177 @@ class DataController extends GetxController {
       ControlMode? zoneStateToApply;
       _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
       update();
-      if (zone.selectedPlan == null ||
-          zone.selectedPlan == 0 ||
-          zone.desiredMode != ControlMode.auto) {
-        // no plan
-        if (zone.hasThermostat && getSensorsOfZone(zone.id).isNotEmpty) {
-          // check thermostat
-          _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
-          update();
-          if (zone.isCurrentTemperatureHigherThanDesired) {
-            // let it cool
-            zoneStateToApply = ControlMode.off;
-          } else if (zone.isCurrentTemperatureLowerThanDesired) {
-            // heat up
-            zoneStateToApply = ControlMode.max;
-          } else {
-            // wait for temperature change
-            zoneStateToApply = zone.currentMode;
-          }
-        } else {
-          // check control mode
-          _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
-          update();
-          if (zone.currentMode == zone.desiredMode) {
-            // do nothing
-            zoneStateToApply = zone.currentMode;
-          } else {
-            // apply mode
-            zoneStateToApply = zone.desiredMode;
-          }
-        }
-      } else {
-        // apply plan
-        _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
+      if (heaterList.where((e) => e.zoneId == zone.id).isEmpty) {
+        _runnerLogList.insert(0, 'No heater for ${zone.name}');
         update();
-        final plan =
-            await DbProvider.db.getPlanDetails(planId: zone.selectedPlan!);
-        final plansOfCurrentTime = plan
-            .where((e) =>
-                e.hour == DateTime.now().hour &&
-                e.day == DateTime.now().weekday)
-            .toList();
-        if (plan.isEmpty) {
-          // let it cool
-          zoneStateToApply = ControlMode.off;
-        } else {
-          final planDetail = plansOfCurrentTime.first;
-          if (planDetail.hasThermostat == 1) {
-            final desiredPlanDegree = planDetail.degree;
-            if ((zone.currentTemperature ?? 20) >
-                desiredPlanDegree.toDouble()) {
+      } else {
+        if (zone.selectedPlan == null ||
+            zone.selectedPlan == 0 ||
+            zone.desiredMode != ControlMode.auto) {
+          // no plan
+          if (zone.hasThermostat && getSensorsOfZone(zone.id).isNotEmpty) {
+            // check thermostat
+            _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
+            update();
+            if (zone.isCurrentTemperatureHigherThanDesired) {
               // let it cool
               zoneStateToApply = ControlMode.off;
-            } else if ((zone.currentTemperature ?? 20) <
-                desiredPlanDegree.toDouble()) {
+            } else if (zone.isCurrentTemperatureLowerThanDesired) {
               // heat up
-              zoneStateToApply = ControlMode.values[planDetail.level];
+              zoneStateToApply = ControlMode.max;
             } else {
               // wait for temperature change
               zoneStateToApply = zone.currentMode;
             }
           } else {
-            if (zone.currentMode != ControlMode.values[planDetail.level]) {
-              // apply mode
-              zoneStateToApply = ControlMode.values[planDetail.level];
-            } else {
+            // check control mode
+            _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
+            update();
+            if (zone.currentMode == zone.desiredMode) {
               // do nothing
               zoneStateToApply = zone.currentMode;
+            } else {
+              // apply mode
+              zoneStateToApply = zone.desiredMode;
+            }
+          }
+        } else {
+          // apply plan
+          _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
+          update();
+          final plan =
+              await DbProvider.db.getPlanDetails(planId: zone.selectedPlan!);
+          final plansOfCurrentTime = plan
+              .where((e) =>
+                  e.hour == DateTime.now().hour &&
+                  e.day == DateTime.now().weekday)
+              .toList();
+          if (plan.isEmpty) {
+            // let it cool
+            zoneStateToApply = ControlMode.off;
+          } else {
+            final planDetail = plansOfCurrentTime.first;
+            if (planDetail.hasThermostat == 1) {
+              final desiredPlanDegree = planDetail.degree;
+              if ((zone.currentTemperature ?? 20) >
+                  desiredPlanDegree.toDouble()) {
+                // let it cool
+                zoneStateToApply = ControlMode.off;
+              } else if ((zone.currentTemperature ?? 20) <
+                  desiredPlanDegree.toDouble()) {
+                // heat up
+                zoneStateToApply = ControlMode.values[planDetail.level];
+              } else {
+                // wait for temperature change
+                zoneStateToApply = zone.currentMode;
+              }
+            } else {
+              if (zone.currentMode != ControlMode.values[planDetail.level]) {
+                // apply mode
+                zoneStateToApply = ControlMode.values[planDetail.level];
+              } else {
+                // do nothing
+                zoneStateToApply = zone.currentMode;
+              }
             }
           }
         }
-      }
-      _runnerLogList.insert(
-          0, '${zone.name} state must be ${zoneStateToApply.name}');
-      update();
-
-      for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
-        ControlMode? heaterStateToApply;
         _runnerLogList.insert(
-            0, 'picking heater ${heater.name} for zone ${zone.name}');
+            0, '${zone.name} state must be ${zoneStateToApply.name}');
         update();
-        if (heater.desiredMode == ControlMode.auto) {
-          // apply zone state
-          heaterStateToApply = zoneStateToApply;
-        } else if (heater.desiredMode == ControlMode.off) {
-          // shutdown heater
-          heaterStateToApply = ControlMode.off;
-        } else {
-          // apply heater state
-          heaterStateToApply = heater.desiredMode;
-        }
 
-        int? channel1;
-        int? channel2;
-        int? channel3;
-        switch (heater.levelType) {
-          case HeaterDeviceLevel.none:
-            //ignore
-            break;
-          case HeaterDeviceLevel.onOff:
-            channel1 = heater.outputChannel1!;
-            break;
-          case HeaterDeviceLevel.twoLevels:
-            channel1 = heater.outputChannel1!;
-            channel2 = heater.outputChannel2!;
-            break;
-          case HeaterDeviceLevel.threeLevels:
-            channel1 = heater.outputChannel1!;
-            channel2 = heater.outputChannel2!;
-            channel3 = heater.outputChannel3!;
-            break;
-        }
+        for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
+          ControlMode? heaterStateToApply;
+          _runnerLogList.insert(
+              0, 'picking heater ${heater.name} for zone ${zone.name}');
+          update();
+          if (heater.desiredMode == ControlMode.auto) {
+            // apply zone state
+            heaterStateToApply = zoneStateToApply;
+          } else if (heater.desiredMode == ControlMode.off) {
+            // shutdown heater
+            heaterStateToApply = ControlMode.off;
+          } else {
+            // apply heater state
+            heaterStateToApply = heater.desiredMode;
+          }
 
-        switch (heaterStateToApply) {
-          case ControlMode.on:
-            if (channel1 != null) {
-              channelController.sendOutput(channel1, true);
-            }
-            if (channel2 != null) {
-              channelController.sendOutput(channel2, false);
-            }
-            if (channel3 != null) {
-              channelController.sendOutput(channel3, false);
-            }
+          int? channel1;
+          int? channel2;
+          int? channel3;
+          switch (heater.levelType) {
+            case HeaterDeviceLevel.none:
+              //ignore
+              break;
+            case HeaterDeviceLevel.onOff:
+              channel1 = heater.outputChannel1!;
+              break;
+            case HeaterDeviceLevel.twoLevels:
+              channel1 = heater.outputChannel1!;
+              channel2 = heater.outputChannel2!;
+              break;
+            case HeaterDeviceLevel.threeLevels:
+              channel1 = heater.outputChannel1!;
+              channel2 = heater.outputChannel2!;
+              channel3 = heater.outputChannel3!;
+              break;
+          }
 
-            _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
-            update();
-            break;
-          case ControlMode.high:
-            if (channel1 != null) {
-              channelController.sendOutput(channel1, true);
-            }
-            if (channel2 != null) {
-              channelController.sendOutput(channel2, true);
-            }
-            if (channel3 != null) {
-              channelController.sendOutput(channel3, false);
-            }
-            _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
-            update();
-            break;
-          case ControlMode.max:
-            if (channel1 != null) {
-              channelController.sendOutput(channel1, true);
-            }
-            if (channel2 != null) {
-              channelController.sendOutput(channel2, true);
-            }
-            if (channel3 != null) {
-              channelController.sendOutput(channel3, true);
-            }
-            _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
-            update();
-            break;
-          default:
-            if (channel1 != null) {
-              channelController.sendOutput(channel1, false);
-            }
-            if (channel2 != null) {
-              channelController.sendOutput(channel2, false);
-            }
-            if (channel3 != null) {
-              channelController.sendOutput(channel3, false);
-            }
-            _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
-            update();
-            break;
+          switch (heaterStateToApply) {
+            case ControlMode.on:
+              if (channel1 != null) {
+                channelController.sendOutput(channel1, true);
+              }
+              if (channel2 != null) {
+                channelController.sendOutput(channel2, false);
+              }
+              if (channel3 != null) {
+                channelController.sendOutput(channel3, false);
+              }
+
+              _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
+              update();
+              break;
+            case ControlMode.high:
+              if (channel1 != null) {
+                channelController.sendOutput(channel1, true);
+              }
+              if (channel2 != null) {
+                channelController.sendOutput(channel2, true);
+              }
+              if (channel3 != null) {
+                channelController.sendOutput(channel3, false);
+              }
+              _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
+              update();
+              break;
+            case ControlMode.max:
+              if (channel1 != null) {
+                channelController.sendOutput(channel1, true);
+              }
+              if (channel2 != null) {
+                channelController.sendOutput(channel2, true);
+              }
+              if (channel3 != null) {
+                channelController.sendOutput(channel3, true);
+              }
+              _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
+              update();
+              break;
+            default:
+              if (channel1 != null) {
+                channelController.sendOutput(channel1, false);
+              }
+              if (channel2 != null) {
+                channelController.sendOutput(channel2, false);
+              }
+              if (channel3 != null) {
+                channelController.sendOutput(channel3, false);
+              }
+              _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
+              update();
+              break;
+          }
         }
       }
     }
