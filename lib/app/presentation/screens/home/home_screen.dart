@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                         dc.runnerLogList[index],
                         style: const TextStyle(fontSize: 10),
                       ),
-                      itemCount: math.min(dc.runnerLogList.length, 6),
+                      itemCount: math.min(dc.runnerLogList.length, 36),
                       shrinkWrap: true,
                     ),
                   ),
