@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Cursor Toggle
+Comment=Toggle cursor visibility
+Exec=pkexec /home/pi/toggle-cursor.sh
+Icon=input-mouse
+Terminal=false
+Categories=Settings;
+StartupNotify=true

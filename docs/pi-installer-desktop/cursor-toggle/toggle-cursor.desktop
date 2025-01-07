@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Toggle Cursor
+Comment=Toggle between visible and invisible cursor
+Exec=lxterminal -e "sudo bash /home/pi/toggle-cursor.sh"
+Icon=input-mouse
+Terminal=false
+Categories=Settings;

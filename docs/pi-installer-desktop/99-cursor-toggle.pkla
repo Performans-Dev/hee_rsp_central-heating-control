@@ -1,0 +1,6 @@
+[Cursor Toggle]
+Identity=unix-group:pi
+Action=org.freedesktop.policykit.exec
+ResultAny=yes
+ResultInactive=yes
+ResultActive=yes
