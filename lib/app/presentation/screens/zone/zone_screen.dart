@@ -176,10 +176,12 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           selectedHeater = null;
                                         });
                                       },
-                                      onHeaterModeCalled: (ControlMode mode) {
-                                        dataController.onHeaterModeCalled(
-                                            heaterId: selectedHeater!.id,
-                                            mode: mode);
+                                      onHeaterModeCalled:
+                                          (ControlMode mode) async {
+                                        await dataController.onHeaterModeCalled(
+                                          heaterId: selectedHeater!.id,
+                                          mode: mode,
+                                        );
                                       },
                                     ),
                             ),
