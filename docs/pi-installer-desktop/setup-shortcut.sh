@@ -1,6 +1,29 @@
 #!/bin/bash
 
-# Function to show message (uses zenity if available, falls back to echo)
+# =============================================================================
+# Heethings Installation Setup Script
+# =============================================================================
+# This script creates a desktop shortcut and installation script for the
+# Heethings application on Raspberry Pi running Debian/Raspbian.
+#
+# The script performs the following main tasks:
+# 1. Creates a desktop shortcut for the installer
+# 2. Generates the main installation script
+# 3. Sets up proper permissions and configurations
+#
+# Requirements:
+# - Raspberry Pi running Debian/Raspbian
+# - Root privileges (sudo)
+# - Working desktop environment (LXDE)
+# =============================================================================
+
+# Prevent script from running if not as root
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root (sudo)"
+    exit 1
+fi
+
+# Function to show message using zenity if available, falls back to echo
 show_message() {
     if [ -n "$DISPLAY" ] && command -v zenity >/dev/null 2>&1; then
         zenity --info \
@@ -12,33 +35,42 @@ show_message() {
     fi
 }
 
-# Install required packages
-apt-get update
-apt-get install -y zenity lxterminal jq pcmanfm libsqlite3-0 libsqlite3-dev i2c-tools zip unzip locales
-
-# Configure locales
-echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-locale-gen
-update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
-
-# Create the desktop entry
+# Create desktop shortcut for the installer
+# This creates an application menu entry that will be visible in the start menu
+mkdir -p /usr/share/applications
 cat > /usr/share/applications/heethings-installer.desktop << 'EOF'
 [Desktop Entry]
 Type=Application
 Name=Install Heethings
-Comment=Install or update Heethings applications
-Exec=lxterminal -e "sudo /home/pi/install.sh"
-Icon=system-software-install
-Terminal=false
+Comment=Install Heethings Central Heating Control
+Icon=/usr/share/pixmaps/debian-logo.png
+Exec=sudo /home/pi/install.sh
+Terminal=true
 Categories=System;
 EOF
 
-# Make desktop entry executable
+# Set proper permissions for the desktop shortcut
 chmod +x /usr/share/applications/heethings-installer.desktop
 
 # Create the actual install script
-cat > /home/pi/install.sh << 'EOF'
+cat > /home/pi/install.sh << 'INSTALLEOF'
 #!/bin/bash
+
+# =============================================================================
+# Heethings Main Installation Script
+# =============================================================================
+# This script performs the complete installation of Heethings application
+# including all dependencies, configurations, and system settings.
+#
+# The installation process includes:
+# - Setting up system locale
+# - Installing required packages
+# - Configuring system interfaces (I2C, SPI)
+# - Setting up RTC (Real-Time Clock)
+# - Installing Flutter applications
+# - Configuring desktop environment
+# - Setting up autostart
+# =============================================================================
 
 # Prevent script from running if not as root
 if [ "$EUID" -ne 0 ]; then
@@ -50,12 +82,29 @@ fi
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+# Base directory for Heethings installation
 BASE_DIR="/home/pi/Heethings"
+
+# Pictures directory for Heethings
 PICTURES_DIR="/home/pi/Pictures"
+
+# URLs for downloading required files
 IMAGES_ZIP="https://releases.api2.run/heethings/cc/images.zip"
 SENSOR_ZIP="https://releases.api2.run/heethings/cc/sensor.zip"
 SCRIPTS_ZIP="https://releases.api2.run/heethings/cc/scripts.zip"
 API_URL="https://chc-api.globeapp.dev/api/v1/settings/app/version"
+
+# Function to show message using zenity if available, falls back to echo
+show_message() {
+    if [ -n "$DISPLAY" ] && command -v zenity >/dev/null 2>&1; then
+        zenity --info \
+            --title="Heethings Installer" \
+            --text="$1" \
+            --width=400
+    else
+        echo -e "[INFO] $1"
+    fi
+}
 
 # Function to show progress
 show_progress() {
@@ -189,99 +238,41 @@ if ! wget -q --show-progress "$SENSOR_ZIP" -O "$BASE_DIR/CC/sensor.zip"; then
     exit 1
 fi
 
-# Extract sensor files
-show_progress "Extracting sensor files"
-if [ -f "$BASE_DIR/CC/sensor.zip" ]; then
-    rm -rf "$BASE_DIR/CC/sensor"
-    if ! unzip -o "$BASE_DIR/CC/sensor.zip" -d "$BASE_DIR/CC"; then
-        echo "ERROR: Failed to extract sensor.zip"
-        exit 1
-    fi
-    
-    # Set up virtual environment
-    show_progress "Setting up Python virtual environment"
-    export LC_ALL=C.UTF-8
-    export LANG=C.UTF-8
-    cd "$BASE_DIR/CC/sensor" || exit 1
-    rm -rf sensor_env
-    python3 -m venv sensor_env || exit 1
-    chown -R pi:pi sensor_env
-    source sensor_env/bin/activate || exit 1
-    pip install flask spidev RPi.GPIO || exit 1
-    
-    if [ $? -ne 0 ]; then
-        echo "ERROR: Failed to set up virtual environment"
-        exit 1
-    fi
-    
-    # Create service file
-    show_progress "Creating sensor service"
-    cat > /etc/systemd/system/heethings-sensor.service << SENSOREOF
-[Unit]
-Description=Heethings Sensor Service
-After=network.target
-
-[Service]
-ExecStart=/home/pi/Heethings/CC/sensor/sensor_env/bin/python /home/pi/Heethings/CC/sensor/script/read-sensor-data.py
-WorkingDirectory=/home/pi/Heethings/CC/sensor/script
-User=pi
-Group=pi
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-SENSOREOF
-    
-    # Enable and start service
-    systemctl daemon-reload
-    systemctl enable heethings-sensor.service
-    systemctl start heethings-sensor.service
-    
-    # Wait for service to start
-    show_progress "Starting sensor service"
-    for i in {1..30}; do
-        if systemctl is-active --quiet heethings-sensor.service; then
-            echo "Sensor service is running"
-            break
-        fi
-        echo "Waiting for service to start... ($i/30)"
-        sleep 1
-    done
-    
-    # Verify API
-    for i in {1..5}; do
-        if curl -s http://localhost:5000/sensors > /dev/null; then
-            echo "Sensor API is responding"
-            break
-        fi
-        echo "Waiting for API... ($i/5)"
-        sleep 2
-    done
+# Download images
+show_progress "Downloading images"
+if ! wget -q --show-progress "$IMAGES_ZIP" -O "/tmp/images.zip"; then
+    echo "ERROR: Failed to download images.zip"
+    exit 1
 fi
 
-# Extract Flutter apps
-show_progress "Extracting Flutter applications"
+# Download scripts
+show_progress "Downloading scripts"
+if ! wget -q --show-progress "$SCRIPTS_ZIP" -O "/tmp/scripts.zip"; then
+    echo "ERROR: Failed to download scripts.zip"
+    exit 1
+fi
+
+# Extract files
+show_progress "Extracting files"
+unzip -o "$BASE_DIR/CC/sensor.zip" -d "$BASE_DIR/CC"
 unzip -o "$BASE_DIR/CC/application/app.zip" -d "$BASE_DIR/CC/application"
 unzip -o "$BASE_DIR/CC/elevator/app/elevator.zip" -d "$BASE_DIR/CC/elevator/app"
 unzip -o "$BASE_DIR/CC/diagnose/app/diagnose.zip" -d "$BASE_DIR/CC/diagnose/app"
-
-# Download and extract support files
-show_progress "Downloading support files"
-wget -q --show-progress "$IMAGES_ZIP" -O "/tmp/images.zip"
-wget -q --show-progress "$SCRIPTS_ZIP" -O "/tmp/scripts.zip"
-
-show_progress "Extracting support files"
 unzip -o "/tmp/images.zip" -d "$BASE_DIR"
 unzip -o "/tmp/scripts.zip" -d "$BASE_DIR"
 
 # Set up wallpaper and splash
 show_progress "Setting up wallpaper"
 cp "$BASE_DIR/splash.png" /usr/share/plymouth/themes/pix/splash.png
+cp "$BASE_DIR/splash.png" /home/pi/Heethings/splash.png
 
-# Set wallpaper using LXDE config
+# Ensure LXDE desktop environment is properly configured
 mkdir -p /home/pi/.config/pcmanfm/LXDE-pi
-cat > /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf << 'WALLEOF'
+mkdir -p /home/pi/.config/openbox
+mkdir -p /home/pi/.config/lxsession/LXDE-pi
+
+# Configure pcmanfm desktop settings
+cat > /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf << 'EOF'
 [*]
 wallpaper_mode=crop
 wallpaper_common=1
@@ -293,11 +284,27 @@ desktop_font=PibotoLt 12
 show_wm_menu=0
 sort=mtime;ascending;
 show_documents=0
-show_trash=0
+show_trash=1
 show_mounts=0
-WALLEOF
+EOF
 
-chown -R pi:pi /home/pi/.config/pcmanfm
+# Configure LXDE autostart to ensure desktop manager is running
+cat > /home/pi/.config/lxsession/LXDE-pi/autostart << 'EOF'
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+EOF
+
+# Set proper permissions
+chown -R pi:pi /home/pi/.config
+chmod -R 755 /home/pi/.config
+
+# Restart pcmanfm to apply changes
+if [ -n "$DISPLAY" ]; then
+    killall pcmanfm 2>/dev/null || true
+    sleep 2
+    sudo -u pi pcmanfm --desktop --profile LXDE-pi &
+fi
 
 # Download screensaver images
 show_progress "Setting up screensaver"
@@ -347,9 +354,8 @@ else
     echo "=== Installation complete! ==="
     echo "Please reboot your system for all changes to take effect."
 fi
-EOF
+INSTALLEOF
 
 # Make install script executable
 chmod +x /home/pi/install.sh
-
 show_message "Installation shortcut created successfully. You can now find 'Install Heethings' in your applications menu."
