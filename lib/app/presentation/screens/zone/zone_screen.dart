@@ -182,6 +182,9 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           heaterId: selectedHeater!.id,
                                           mode: mode,
                                         );
+                                        setState(() {
+                                          selectedHeater = null;
+                                        });
                                       },
                                     ),
                             ),
