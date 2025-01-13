@@ -71,7 +71,7 @@ class ChannelController extends GetxController {
     super.onClose();
   }
 
-  void closeAllRelays() async {
+  Future<void> closeAllRelays() async {
     for (final pin in outputChannels) {
       await sendOutput(pin.pinIndex, false);
     }

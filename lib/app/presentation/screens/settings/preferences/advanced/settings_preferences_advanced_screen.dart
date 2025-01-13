@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/models/shell_command.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/file.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -144,6 +145,8 @@ class _SettingsPreferencesAdvancedScreenState
                 onTap: () async {
                   final app = Get.find<AppController>();
                   if (app.deviceInfo == null) return;
+                  final ChannelController channelController = Get.find();
+                  await channelController.closeAllRelays();
 
                   Future.delayed(const Duration(seconds: 1), () {
                     Process.killPid(pid);
@@ -220,14 +223,17 @@ class _SettingsPreferencesAdvancedScreenState
                           // Handle error silently
                         }
 
-                        Future.delayed(const Duration(seconds: 1), () {
+                        final ChannelController channelController = Get.find();
+                        await channelController.closeAllRelays();
+
+                        Future.delayed(const Duration(seconds: 2), () {
                           Process.killPid(pid);
                         });
 
                         try {
                           await Process.run(
                             'sudo',
-                            ['/home/pi/Heethings/run-cc-diagnose.sh'],
+                            ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
                           );
                         } catch (e) {
                           // Handle error silently
