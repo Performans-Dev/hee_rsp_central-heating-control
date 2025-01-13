@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
