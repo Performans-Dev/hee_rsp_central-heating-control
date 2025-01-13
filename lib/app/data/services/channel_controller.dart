@@ -10,6 +10,7 @@ import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:dart_periphery/dart_periphery.dart';
@@ -841,6 +842,11 @@ class ChannelController extends GetxController {
   }
 
   Future<void> sendOutput(int index, bool value) async {
+    final DataController dc = Get.find();
+    dc.addRunnerLog('sendOutput($index, $value)');
+    writeOE(false);
+    await wait(1);
+    writeOE(false);
     await wait(1);
     for (int i = 1; i <= 8; i++) {
       writeSER(i == index

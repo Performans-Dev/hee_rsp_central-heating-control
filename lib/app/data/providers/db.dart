@@ -661,14 +661,26 @@ class DbProvider {
     try {
       final int zoneUsersToDelete = await db.delete(Keys.tableZoneUsers,
           where: Keys.queryZoneId, whereArgs: [zone.id]);
-      final int zoneHeatersToDelete = await db.delete(Keys.tableZoneHeaters,
-          where: Keys.queryZoneId, whereArgs: [zone.id]);
+
+      final int heaterResult = await db.delete(
+        Keys.tableHeaters,
+        where: Keys.queryZoneId,
+        whereArgs: [zone.id],
+      );
+
       final int result = await db.delete(
         Keys.tableZones,
         where: Keys.queryId,
         whereArgs: [zone.id],
       );
-      log('Deleting zone #${zone.id}, with $zoneUsersToDelete users, $zoneHeatersToDelete heaters with result $result');
+      LogService.addLog(
+        LogDefinition(
+          message:
+              'Deleting zone #${zone.id}, with $zoneUsersToDelete users, $heaterResult heaters with result $result',
+          level: LogLevel.critical,
+          type: LogType.database,
+        ),
+      );
       return result;
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(

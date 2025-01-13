@@ -135,8 +135,9 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
 
   Widget get deleteButton => TextButton(
       onPressed: () async {
-        log('//TODO: confirm -> delete relations, delete record');
         await DbProvider.db.deleteZone(zone);
+        await dataController.loadZoneList();
+        await dataController.loadHeaterList();
       },
       child: const Text(
         'Delete this zone and all of its contents',

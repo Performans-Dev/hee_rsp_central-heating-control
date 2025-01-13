@@ -369,11 +369,11 @@ class DataController extends GetxController {
 
     for (final zone in zoneList) {
       ControlMode? zoneStateToApply;
-      _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
-      update();
+      // _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
+      // update();
       if (heaterList.where((e) => e.zoneId == zone.id).isEmpty) {
-        _runnerLogList.insert(0, 'No heater for ${zone.name}');
-        update();
+        // _runnerLogList.insert(0, 'No heater for ${zone.name}');
+        // update();
       } else {
         if (zone.selectedPlan == null ||
             zone.selectedPlan == 0 ||
@@ -381,8 +381,8 @@ class DataController extends GetxController {
           // no plan
           if (zone.hasThermostat && getSensorsOfZone(zone.id).isNotEmpty) {
             // check thermostat
-            _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
-            update();
+            // _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
+            // update();
             if (zone.isCurrentTemperatureHigherThanDesired) {
               // let it cool
               zoneStateToApply = ControlMode.off;
@@ -395,8 +395,8 @@ class DataController extends GetxController {
             }
           } else {
             // check control mode
-            _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
-            update();
+            // _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
+            // update();
             if (zone.currentMode == zone.desiredMode) {
               // do nothing
               zoneStateToApply = zone.currentMode;
@@ -407,8 +407,8 @@ class DataController extends GetxController {
           }
         } else {
           // apply plan
-          _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
-          update();
+          // _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
+          // update();
           final plan =
               await DbProvider.db.getPlanDetails(planId: zone.selectedPlan!);
           final plansOfCurrentTime = plan
@@ -446,15 +446,13 @@ class DataController extends GetxController {
             }
           }
         }
-        _runnerLogList.insert(
-            0, '${zone.name} state must be ${zoneStateToApply.name}');
-        update();
+        // _runnerLogList.insert(
+        //     0, '${zone.name} state must be ${zoneStateToApply.name}');
+        // update();
 
         for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
           ControlMode? heaterStateToApply;
-          _runnerLogList.insert(
-              0, 'picking heater ${heater.name} for zone ${zone.name}');
-          update();
+
           if (heater.desiredMode == ControlMode.auto) {
             // apply zone state
             heaterStateToApply = zoneStateToApply;
@@ -465,6 +463,10 @@ class DataController extends GetxController {
             // apply heater state
             heaterStateToApply = heater.desiredMode;
           }
+
+          _runnerLogList.insert(0,
+              'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
+          update();
 
           int? channel1;
           int? channel2;
@@ -557,5 +559,10 @@ class DataController extends GetxController {
   //#region MARK: Runner Log
   final RxList<String> _runnerLogList = <String>[].obs;
   List<String> get runnerLogList => _runnerLogList;
+
+  void addRunnerLog(String log) {
+    _runnerLogList.insert(0, log);
+    update();
+  }
   //#endregion
 }

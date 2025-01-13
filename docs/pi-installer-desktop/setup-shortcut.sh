@@ -36,7 +36,6 @@ show_message() {
 }
 
 # Create desktop shortcut for the installer
-# This creates an application menu entry that will be visible in the start menu
 mkdir -p /usr/share/applications
 cat > /usr/share/applications/heethings-installer.desktop << 'EOF'
 [Desktop Entry]
@@ -49,7 +48,6 @@ Terminal=true
 Categories=System;
 EOF
 
-# Set proper permissions for the desktop shortcut
 chmod +x /usr/share/applications/heethings-installer.desktop
 
 # Create the actual install script
@@ -68,7 +66,6 @@ cat > /home/pi/install.sh << 'INSTALLEOF'
 # - Configuring system interfaces (I2C, SPI)
 # - Setting up RTC (Real-Time Clock)
 # - Installing Flutter applications
-# - Configuring desktop environment
 # - Setting up autostart
 # =============================================================================
 
@@ -82,19 +79,14 @@ fi
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-# Base directory for Heethings installation
 BASE_DIR="/home/pi/Heethings"
-
-# Pictures directory for Heethings
 PICTURES_DIR="/home/pi/Pictures"
-
-# URLs for downloading required files
 IMAGES_ZIP="https://releases.api2.run/heethings/cc/images.zip"
 SENSOR_ZIP="https://releases.api2.run/heethings/cc/sensor.zip"
 SCRIPTS_ZIP="https://releases.api2.run/heethings/cc/scripts.zip"
 API_URL="https://chc-api.globeapp.dev/api/v1/settings/app/version"
 
-# Function to show message using zenity if available, falls back to echo
+# Function to show message
 show_message() {
     if [ -n "$DISPLAY" ] && command -v zenity >/dev/null 2>&1; then
         zenity --info \
@@ -238,15 +230,13 @@ if ! wget -q --show-progress "$SENSOR_ZIP" -O "$BASE_DIR/CC/sensor.zip"; then
     exit 1
 fi
 
-# Download images
-show_progress "Downloading images"
+# Download support files
+show_progress "Downloading support files"
 if ! wget -q --show-progress "$IMAGES_ZIP" -O "/tmp/images.zip"; then
     echo "ERROR: Failed to download images.zip"
     exit 1
 fi
 
-# Download scripts
-show_progress "Downloading scripts"
 if ! wget -q --show-progress "$SCRIPTS_ZIP" -O "/tmp/scripts.zip"; then
     echo "ERROR: Failed to download scripts.zip"
     exit 1
@@ -260,51 +250,6 @@ unzip -o "$BASE_DIR/CC/elevator/app/elevator.zip" -d "$BASE_DIR/CC/elevator/app"
 unzip -o "$BASE_DIR/CC/diagnose/app/diagnose.zip" -d "$BASE_DIR/CC/diagnose/app"
 unzip -o "/tmp/images.zip" -d "$BASE_DIR"
 unzip -o "/tmp/scripts.zip" -d "$BASE_DIR"
-
-# Set up wallpaper and splash
-show_progress "Setting up wallpaper"
-cp "$BASE_DIR/splash.png" /usr/share/plymouth/themes/pix/splash.png
-cp "$BASE_DIR/splash.png" /home/pi/Heethings/splash.png
-
-# Ensure LXDE desktop environment is properly configured
-mkdir -p /home/pi/.config/pcmanfm/LXDE-pi
-mkdir -p /home/pi/.config/openbox
-mkdir -p /home/pi/.config/lxsession/LXDE-pi
-
-# Configure pcmanfm desktop settings
-cat > /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf << 'EOF'
-[*]
-wallpaper_mode=crop
-wallpaper_common=1
-wallpaper=/home/pi/Heethings/splash.png
-desktop_bg=#000000
-desktop_fg=#ffffff
-desktop_shadow=#000000
-desktop_font=PibotoLt 12
-show_wm_menu=0
-sort=mtime;ascending;
-show_documents=0
-show_trash=1
-show_mounts=0
-EOF
-
-# Configure LXDE autostart to ensure desktop manager is running
-cat > /home/pi/.config/lxsession/LXDE-pi/autostart << 'EOF'
-@lxpanel --profile LXDE-pi
-@pcmanfm --desktop --profile LXDE-pi
-@xscreensaver -no-splash
-EOF
-
-# Set proper permissions
-chown -R pi:pi /home/pi/.config
-chmod -R 755 /home/pi/.config
-
-# Restart pcmanfm to apply changes
-if [ -n "$DISPLAY" ]; then
-    killall pcmanfm 2>/dev/null || true
-    sleep 2
-    sudo -u pi pcmanfm --desktop --profile LXDE-pi &
-fi
 
 # Download screensaver images
 show_progress "Setting up screensaver"
