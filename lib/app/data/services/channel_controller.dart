@@ -857,8 +857,8 @@ class ChannelController extends GetxController {
     updateChannelState(index, value);
     // writeOE(false);
     await wait(1);
-    writeOE(false);
-    await wait(1);
+    // writeOE(false);
+    // await wait(1);
     // for (int i = 1; i <= 8; i++) {
     //   writeSER(i == index
     //       ? value
@@ -870,8 +870,9 @@ class ChannelController extends GetxController {
     //   writeSRCLK(false);
     //   await wait(1);
     // }
-
+    String dummy = '';
     for (final c in outputChannels.where((e) => e.deviceId == 0x00).toList()) {
+      dummy += ' ${c.status} ';
       writeSER(c.status);
       writeSRCLK(true);
       await wait(1);
@@ -882,8 +883,9 @@ class ChannelController extends GetxController {
     writeRCLK(true);
     await wait(1);
     writeRCLK(false);
-    // await wait(1);
-    // writeOE(true);
+    await wait(1);
+    writeOE(true);
+    dc.addRunnerLog(dummy);
   }
 
   void writeOE(bool value) {
