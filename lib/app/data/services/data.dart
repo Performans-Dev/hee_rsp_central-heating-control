@@ -513,8 +513,8 @@ class DataController extends GetxController {
                 await channelController.sendOutput(channel3, false);
               }
 
-              _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
+              // update();
               break;
             case ControlMode.high:
               if (channel1 != null) {
@@ -526,8 +526,8 @@ class DataController extends GetxController {
               if (channel3 != null) {
                 await channelController.sendOutput(channel3, false);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
+              // update();
               break;
             case ControlMode.max:
               if (channel1 != null) {
@@ -539,8 +539,8 @@ class DataController extends GetxController {
               if (channel3 != null) {
                 await channelController.sendOutput(channel3, true);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
+              // update();
               break;
             default:
               if (channel1 != null) {
@@ -552,8 +552,8 @@ class DataController extends GetxController {
               if (channel3 != null) {
                 await channelController.sendOutput(channel3, false);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
+              // update();
               break;
           }
         }
@@ -561,6 +561,8 @@ class DataController extends GetxController {
     }
 
     _isLooping.value = false;
+    update();
+    _runnerLogList.insert(0, '-------------');
     update();
     Future.delayed(const Duration(milliseconds: 12000), () {
       runnerLoop();
