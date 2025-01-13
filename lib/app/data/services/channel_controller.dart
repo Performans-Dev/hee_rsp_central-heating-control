@@ -86,7 +86,9 @@ class ChannelController extends GetxController {
     if (isPi) {
       initGpioPins();
     }
+
     await wait(100);
+    writeOE(true);
     runGpioInputPolling();
 
     readObSensorData();
@@ -851,16 +853,26 @@ class ChannelController extends GetxController {
   Future<void> sendOutput(int index, bool value) async {
     final DataController dc = Get.find();
     dc.addRunnerLog('sendOutput($index, $value)');
+
+    updateChannelState(index, value);
     // writeOE(false);
     await wait(1);
     writeOE(false);
     await wait(1);
-    for (int i = 1; i <= 8; i++) {
-      writeSER(i == index
-          ? value
-          : outputChannels
-              .firstWhere((e) => e.deviceId == 0x00 && e.pinIndex == i)
-              .status);
+    // for (int i = 1; i <= 8; i++) {
+    //   writeSER(i == index
+    //       ? value
+    //       : outputChannels
+    //           .firstWhere((e) => e.deviceId == 0x00 && e.pinIndex == i)
+    //           .status);
+    //   writeSRCLK(true);
+    //   await wait(1);
+    //   writeSRCLK(false);
+    //   await wait(1);
+    // }
+
+    for (final c in outputChannels.where((e) => e.deviceId == 0x00).toList()) {
+      writeSER(c.status);
       writeSRCLK(true);
       await wait(1);
       writeSRCLK(false);
@@ -870,8 +882,8 @@ class ChannelController extends GetxController {
     writeRCLK(true);
     await wait(1);
     writeRCLK(false);
-    await wait(1);
-    writeOE(true);
+    // await wait(1);
+    // writeOE(true);
   }
 
   void writeOE(bool value) {

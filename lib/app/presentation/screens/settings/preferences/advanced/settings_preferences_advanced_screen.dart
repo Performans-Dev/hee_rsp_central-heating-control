@@ -226,18 +226,13 @@ class _SettingsPreferencesAdvancedScreenState
                         final ChannelController channelController = Get.find();
                         await channelController.closeAllRelays();
 
-                        Future.delayed(const Duration(seconds: 2), () {
+                        await Process.run('sudo', [
+                          '/home/pi/Heethings/CC/diagnose/app/chc_diagnose'
+                        ]);
+
+                        Future.delayed(const Duration(seconds: 1), () {
                           Process.killPid(pid);
                         });
-
-                        try {
-                          await Process.run(
-                            'sudo',
-                            ['/home/pi/Heethings/CC/diagnose/app/chc_diagnose'],
-                          );
-                        } catch (e) {
-                          // Handle error silently
-                        }
                       },
                     ),
                   ),
