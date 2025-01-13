@@ -462,9 +462,9 @@ class DataController extends GetxController {
             heaterStateToApply = heater.desiredMode;
           }
 
-          _runnerLogList.insert(0,
-              'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
-          update();
+          // _runnerLogList.insert(0,
+          //     'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
+          // update();
 
           int? channel1;
           int? channel2;
@@ -504,13 +504,13 @@ class DataController extends GetxController {
           switch (heaterStateToApply) {
             case ControlMode.on:
               if (channel1 != null) {
-                channelController.sendOutput(channel1, true);
+                await channelController.sendOutput(channel1, true);
               }
               if (channel2 != null) {
-                channelController.sendOutput(channel2, false);
+                await channelController.sendOutput(channel2, false);
               }
               if (channel3 != null) {
-                channelController.sendOutput(channel3, false);
+                await channelController.sendOutput(channel3, false);
               }
 
               _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
@@ -518,39 +518,39 @@ class DataController extends GetxController {
               break;
             case ControlMode.high:
               if (channel1 != null) {
-                channelController.sendOutput(channel1, true);
+                await channelController.sendOutput(channel1, true);
               }
               if (channel2 != null) {
-                channelController.sendOutput(channel2, true);
+                await channelController.sendOutput(channel2, true);
               }
               if (channel3 != null) {
-                channelController.sendOutput(channel3, false);
+                await channelController.sendOutput(channel3, false);
               }
               _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
               update();
               break;
             case ControlMode.max:
               if (channel1 != null) {
-                channelController.sendOutput(channel1, true);
+                await channelController.sendOutput(channel1, true);
               }
               if (channel2 != null) {
-                channelController.sendOutput(channel2, true);
+                await channelController.sendOutput(channel2, true);
               }
               if (channel3 != null) {
-                channelController.sendOutput(channel3, true);
+                await channelController.sendOutput(channel3, true);
               }
               _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
               update();
               break;
             default:
               if (channel1 != null) {
-                channelController.sendOutput(channel1, false);
+                await channelController.sendOutput(channel1, false);
               }
               if (channel2 != null) {
-                channelController.sendOutput(channel2, false);
+                await channelController.sendOutput(channel2, false);
               }
               if (channel3 != null) {
-                channelController.sendOutput(channel3, false);
+                await channelController.sendOutput(channel3, false);
               }
               _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
               update();

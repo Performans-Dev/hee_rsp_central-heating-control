@@ -62,12 +62,19 @@ class ChannelController extends GetxController {
 
   @override
   void onClose() {
+    closeAllRelays();
     disposeSerialPins();
     disposeGpioPins();
     serialQueryStreamController.close();
     logMessageController.close();
     messageSubscription?.cancel();
     super.onClose();
+  }
+
+  void closeAllRelays() async {
+    for (final pin in outputChannels) {
+      await sendOutput(pin.pinIndex, false);
+    }
   }
 
   Future<void> runInitTasks() async {
