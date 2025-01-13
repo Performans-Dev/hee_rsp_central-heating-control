@@ -851,7 +851,7 @@ class ChannelController extends GetxController {
   Future<void> sendOutput(int index, bool value) async {
     final DataController dc = Get.find();
     dc.addRunnerLog('sendOutput($index, $value)');
-    writeOE(false);
+    // writeOE(false);
     await wait(1);
     writeOE(false);
     await wait(1);
