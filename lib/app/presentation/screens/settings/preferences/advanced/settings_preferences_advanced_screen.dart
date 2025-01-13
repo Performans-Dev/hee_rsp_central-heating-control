@@ -145,8 +145,10 @@ class _SettingsPreferencesAdvancedScreenState
                 onTap: () async {
                   final app = Get.find<AppController>();
                   if (app.deviceInfo == null) return;
-                  final ChannelController channelController = Get.find();
-                  await channelController.closeAllRelays();
+                  try {
+                    final ChannelController channelController = Get.find();
+                    await channelController.closeAllRelays();
+                  } on Exception catch (_) {}
 
                   Future.delayed(const Duration(seconds: 1), () {
                     Process.killPid(pid);

@@ -873,16 +873,31 @@ class ChannelController extends GetxController {
     String dummy = '';
     for (final c in outputChannels.where((e) => e.deviceId == 0x00).toList()) {
       dummy += ' ${c.status} ';
-      writeSER(c.status);
-      writeSRCLK(true);
+      final o = writeSER(c.status);
+      if (o != null) {
+        dc.addRunnerLog(o);
+      }
+      final sr = writeSRCLK(true);
+      if (sr != null) {
+        dc.addRunnerLog(sr);
+      }
       await wait(1);
-      writeSRCLK(false);
+      final sr2 = writeSRCLK(false);
+      if (sr2 != null) {
+        dc.addRunnerLog(sr2);
+      }
       await wait(1);
     }
     await wait(1);
-    writeRCLK(true);
+    final rc = writeRCLK(true);
+    if (rc != null) {
+      dc.addRunnerLog(rc);
+    }
     await wait(1);
-    writeRCLK(false);
+    final rs2 = writeRCLK(false);
+    if (rs2 != null) {
+      dc.addRunnerLog(rs2);
+    }
     await wait(1);
     writeOE(true);
     dc.addRunnerLog(dummy);
@@ -896,27 +911,30 @@ class ChannelController extends GetxController {
     }
   }
 
-  void writeSRCLK(bool value) {
+  String? writeSRCLK(bool value) {
     try {
       outPinSRCLK.write(value);
+      return null;
     } on Exception catch (e) {
-      print('writeSRCLK: $e');
+      return 'writeSRCLK: $e';
     }
   }
 
-  void writeRCLK(bool value) {
+  String? writeRCLK(bool value) {
     try {
       outPinRCLK.write(value);
+      return null;
     } on Exception catch (e) {
-      print('writeRCLK: $e');
+      return 'writeRCLK: $e';
     }
   }
 
-  void writeSER(bool value) {
+  String? writeSER(bool value) {
     try {
       outPinSER.write(value);
+      return null;
     } on Exception catch (e) {
-      print('writeSER: $e');
+      return 'writeSER: $e';
     }
   }
   //#endregion
