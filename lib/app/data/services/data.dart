@@ -365,8 +365,6 @@ class DataController extends GetxController {
     _isLooping.value = true;
     update();
 
-    final ChannelController channelController = Get.find();
-
     for (final zone in zoneList) {
       ControlMode? zoneStateToApply;
       // _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
@@ -471,21 +469,35 @@ class DataController extends GetxController {
           int? channel1;
           int? channel2;
           int? channel3;
+          final ChannelController channelController = Get.find();
           switch (heater.levelType) {
             case HeaterDeviceLevel.none:
               //ignore
               break;
             case HeaterDeviceLevel.onOff:
-              channel1 = heater.outputChannel1!;
+              channel1 = channelController.outputChannels
+                  .firstWhereOrNull((e) => e.id == heater.outputChannel1)
+                  ?.pinIndex;
+
               break;
             case HeaterDeviceLevel.twoLevels:
-              channel1 = heater.outputChannel1!;
-              channel2 = heater.outputChannel2!;
+              channel1 = channelController.outputChannels
+                  .firstWhereOrNull((e) => e.id == heater.outputChannel1)
+                  ?.pinIndex;
+              channel2 = channelController.outputChannels
+                  .firstWhereOrNull((e) => e.id == heater.outputChannel2)
+                  ?.pinIndex;
               break;
             case HeaterDeviceLevel.threeLevels:
-              channel1 = heater.outputChannel1!;
-              channel2 = heater.outputChannel2!;
-              channel3 = heater.outputChannel3!;
+              channel1 = channelController.outputChannels
+                  .firstWhereOrNull((e) => e.id == heater.outputChannel1)
+                  ?.pinIndex;
+              channel2 = channelController.outputChannels
+                  .firstWhereOrNull((e) => e.id == heater.outputChannel2)
+                  ?.pinIndex;
+              channel3 = channelController.outputChannels
+                  .firstWhereOrNull((e) => e.id == heater.outputChannel3)
+                  ?.pinIndex;
               break;
           }
 
