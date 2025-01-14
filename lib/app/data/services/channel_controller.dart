@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/byte.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
@@ -88,10 +90,6 @@ class ChannelController extends GetxController {
     }
 
     await wait(100);
-    writeOE(true);
-    runGpioInputPolling();
-
-    readObSensorData();
 
     // Initialize Serial pins
     await initSerialPins();
@@ -101,7 +99,13 @@ class ChannelController extends GetxController {
 
     await wait(100);
     serialQueryStreamController = StreamController<SerialQuery>.broadcast();
-
+    
+    await wait(100);
+    writeOE(true);
+    runGpioInputPolling();
+    await wait(100);
+    readObSensorData();
+    await wait(100);
     runSerialLoop();
   }
   //#endregion
@@ -744,8 +748,10 @@ class ChannelController extends GetxController {
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
               .analogValue = sensor4.toDouble();
           update();
+          Buzz.success();
         } on Exception catch (e) {
           print(e);
+          Buzz.error();
         }
       }
     }
@@ -753,7 +759,9 @@ class ChannelController extends GetxController {
   //#endregion
 
   //#region MARK: GPIO INPUT POLLING
-  void runGpioInputPolling() {
+  void runGpioInputPolling() async {
+    await sendOutputPackage();
+
     try {
       for (var c in inputChannels.where((e) => e.deviceId == 0x00).toList()) {
         switch (c.pinIndex) {
@@ -782,15 +790,6 @@ class ChannelController extends GetxController {
             _inputChannels.firstWhere((e) => e.id == c.id).status = in8.read();
             break;
         }
-
-        _pinSerState.value = outPinSER.read();
-        _pinSrclkState.value = outPinSRCLK.read();
-        _pinRclkState.value = outPinRCLK.read();
-        _pinTxEnableState.value = txEnablePin.read();
-        _pinBuzzerState.value = buzzer.read();
-        _fanPinState.value = fanPin.read();
-        _pinUartModeTxState.value = uartModeTx.read();
-
         update();
       }
     } on Exception catch (e) {
@@ -877,8 +876,6 @@ class ChannelController extends GetxController {
     dc.addRunnerLog('sendOutput($index, $value)');
 
     updateChannelState(index, value);
-    
-    //
   }
 
   void writeOE(bool value) {
@@ -913,6 +910,73 @@ class ChannelController extends GetxController {
       return null;
     } on Exception catch (e) {
       return 'writeSER: $e';
+    }
+  }
+  //#endregion
+
+  //#region MARK: Buzzer
+  Future<void> buzz(BuzzerType t) async {
+    try {
+      switch (t) {
+        case BuzzerType.mini:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 10));
+          buzzer.write(false);
+          break;
+        case BuzzerType.feedback:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 20));
+          buzzer.write(false);
+          break;
+        case BuzzerType.success:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 50));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          break;
+        case BuzzerType.error:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 500));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 500));
+          buzzer.write(false);
+          break;
+        case BuzzerType.alarm:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 1000));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 1000));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 1000));
+          buzzer.write(false);
+          break;
+        case BuzzerType.lock:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 50));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 50));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          break;
+        default:
+          break;
+      }
+    } on Exception catch (e) {
+      print(e);
     }
   }
   //#endregion
