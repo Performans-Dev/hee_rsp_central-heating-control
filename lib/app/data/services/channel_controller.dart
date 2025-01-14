@@ -871,7 +871,7 @@ class ChannelController extends GetxController {
     //   await wait(1);
     // }
     String dummy = '';
-    for (final c in outputChannels.where((e) => e.deviceId == 0x00).toList()) {
+    for (final c in outputChannels.where((e) => e.deviceId == 0x00 && e.type==PinType.onboardPinOutput).toList()) {
       dummy += ' ${c.status} ';
       final o = writeSER(c.status);
       if (o != null) {
