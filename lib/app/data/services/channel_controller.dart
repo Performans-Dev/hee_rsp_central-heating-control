@@ -73,7 +73,7 @@ class ChannelController extends GetxController {
 
   Future<void> closeAllRelays() async {
     for (final pin in outputChannels) {
-      await sendOutput(pin.pinIndex, false);
+      await setOutput(pin.pinIndex, false);
     }
   }
 
@@ -838,69 +838,47 @@ class ChannelController extends GetxController {
 
   Future<void> turnOnRelay(int id) async {
     ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
-    await sendOutput(c.pinIndex, true);
+    await setOutput(c.pinIndex, true);
     _outputChannels.firstWhere((e) => e.id == id).status = true;
     update();
   }
 
   Future<void> turnOffRelay(int id) async {
     ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
-    await sendOutput(c.pinIndex, false);
+    await setOutput(c.pinIndex, false);
     _outputChannels.firstWhere((e) => e.id == id).status = false;
     update();
   }
 
-  Future<void> sendOutput(int index, bool value) async {
+  Future<void> sendOutputPackage() async {
+    await wait(1);
+    for (final c in outputChannels
+        .where((e) => e.deviceId == 0x00 && e.type == PinType.onboardPinOutput)
+        .toList()) {
+      writeSER(c.status);
+      await wait(1);
+      writeSRCLK(true);
+      await wait(1);
+      writeSRCLK(false);
+      await wait(1);
+    }
+    await wait(1);
+    writeRCLK(true);
+
+    await wait(1);
+    writeRCLK(false);
+
+    await wait(1);
+    writeOE(true);
+  }
+
+  Future<void> setOutput(int index, bool value) async {
     final DataController dc = Get.find();
     dc.addRunnerLog('sendOutput($index, $value)');
 
     updateChannelState(index, value);
-    // writeOE(false);
-    await wait(1);
-    // writeOE(false);
-    // await wait(1);
-    // for (int i = 1; i <= 8; i++) {
-    //   writeSER(i == index
-    //       ? value
-    //       : outputChannels
-    //           .firstWhere((e) => e.deviceId == 0x00 && e.pinIndex == i)
-    //           .status);
-    //   writeSRCLK(true);
-    //   await wait(1);
-    //   writeSRCLK(false);
-    //   await wait(1);
-    // }
-    String dummy = '';
-    for (final c in outputChannels.where((e) => e.deviceId == 0x00 && e.type==PinType.onboardPinOutput).toList()) {
-      dummy += ' ${c.status} ';
-      final o = writeSER(c.status);
-      if (o != null) {
-        dc.addRunnerLog(o);
-      }
-      final sr = writeSRCLK(true);
-      if (sr != null) {
-        dc.addRunnerLog(sr);
-      }
-      await wait(1);
-      final sr2 = writeSRCLK(false);
-      if (sr2 != null) {
-        dc.addRunnerLog(sr2);
-      }
-      await wait(1);
-    }
-    await wait(1);
-    final rc = writeRCLK(true);
-    if (rc != null) {
-      dc.addRunnerLog(rc);
-    }
-    await wait(1);
-    final rs2 = writeRCLK(false);
-    if (rs2 != null) {
-      dc.addRunnerLog(rs2);
-    }
-    await wait(1);
-    writeOE(true);
-    dc.addRunnerLog(dummy);
+    
+    //
   }
 
   void writeOE(bool value) {

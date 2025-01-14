@@ -504,13 +504,13 @@ class DataController extends GetxController {
           switch (heaterStateToApply) {
             case ControlMode.on:
               if (channel1 != null) {
-                await channelController.sendOutput(channel1, true);
+                await channelController.setOutput(channel1, true);
               }
               if (channel2 != null) {
-                await channelController.sendOutput(channel2, false);
+                await channelController.setOutput(channel2, false);
               }
               if (channel3 != null) {
-                await channelController.sendOutput(channel3, false);
+                await channelController.setOutput(channel3, false);
               }
 
               // _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
@@ -518,39 +518,39 @@ class DataController extends GetxController {
               break;
             case ControlMode.high:
               if (channel1 != null) {
-                await channelController.sendOutput(channel1, true);
+                await channelController.setOutput(channel1, true);
               }
               if (channel2 != null) {
-                await channelController.sendOutput(channel2, true);
+                await channelController.setOutput(channel2, true);
               }
               if (channel3 != null) {
-                await channelController.sendOutput(channel3, false);
+                await channelController.setOutput(channel3, false);
               }
               // _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
               // update();
               break;
             case ControlMode.max:
               if (channel1 != null) {
-                await channelController.sendOutput(channel1, true);
+                await channelController.setOutput(channel1, true);
               }
               if (channel2 != null) {
-                await channelController.sendOutput(channel2, true);
+                await channelController.setOutput(channel2, true);
               }
               if (channel3 != null) {
-                await channelController.sendOutput(channel3, true);
+                await channelController.setOutput(channel3, true);
               }
               // _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
               // update();
               break;
             default:
               if (channel1 != null) {
-                await channelController.sendOutput(channel1, false);
+                await channelController.setOutput(channel1, false);
               }
               if (channel2 != null) {
-                await channelController.sendOutput(channel2, false);
+                await channelController.setOutput(channel2, false);
               }
               if (channel3 != null) {
-                await channelController.sendOutput(channel3, false);
+                await channelController.setOutput(channel3, false);
               }
               // _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
               // update();
