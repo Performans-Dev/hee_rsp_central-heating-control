@@ -410,6 +410,9 @@ class ChannelController extends GetxController {
       }
     }
     _inputChannels.sort((a, b) => a.name.compareTo(b.name));
+
+    print(
+        '------- channels initialized input: ${inputChannels.length} output: ${outputChannels.length}');
     update();
   }
 
