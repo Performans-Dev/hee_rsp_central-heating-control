@@ -1,52 +1,91 @@
-# central_heating_control
+# Heethings Central Heating Control (CHC)
 
-A new Flutter project.
+Central Heating Control system for Raspberry Pi, featuring automated control, diagnostics, and updates.
 
+## Recent Updates
 
+### Installation Improvements (January 2025)
+- Renamed command shortcuts with `heethings-` prefix for uniqueness:
+  - `heethings-cc`: Main control application
+  - `heethings-cc-elevator`: Update manager
+  - `heethings-cc-diagnose`: Diagnostic tool
+- Enhanced autostart configuration for reliable startup
+- Improved backup management system:
+  - Automatic backup before installation
+  - Keeps last 3 backups
+  - Organized backup storage in `/home/pi/heethings_backups/`
+- Added comprehensive logging throughout installation process
+- Improved error handling and user feedback
+
+## Installation
+
+### Prerequisites
+- Raspberry Pi (tested on Pi 4)
+- Raspbian OS
+- Internet connection for updates
+- Display for initial setup
+
+### Quick Install (Terminal)
+```bash
+# 1. Clone the repository
+git clone https://github.com/yourusername/heethings.git
+
+# 2. Run installation script
+cd heethings/docs/pi-setup/postimage
+sudo ./install_heethings.sh
 ```
-cd /home/pi/Heethings/cc-source/hee_rsp_central-heating-control
+
+### Command Reference
+```bash
+# Main Control Application
+sudo heethings-cc
+
+# Update Manager
+sudo heethings-cc-elevator
+
+# Diagnostic Tool
+sudo heethings-cc-diagnose
 ```
 
-```
-git checkout .
-git clean -fd
-gh repo sync
-```
+## Upcoming Features
 
-```
-sudo rm -rf .dart_tool
-flutter clean && flutter pub get
-flutter build linux --release
-```
+### GUI Installer (Planned)
+A user-friendly graphical installer is planned with the following features:
 
-```
-cp -r /home/pi/Heethings/cc-source/hee_rsp_central-heating-control/build/linux/arm64/release/bundle/* /home/pi/Heethings/cc-app
-```
+#### Phase 1: Basic GUI
+- [ ] Welcome screen with installation options
+- [ ] Progress indicators for installation steps
+- [ ] Basic error handling and user feedback
+- [ ] Simple backup management interface
 
-```
-sudo /home/pi/Heethings/cc-app/central_heating_control
-```
+#### Phase 2: Advanced Features
+- [ ] Component selection for custom installations
+- [ ] Network configuration interface
+- [ ] Advanced backup management
+  - [ ] Backup browsing and selection
+  - [ ] Backup verification
+  - [ ] Selective restore options
+- [ ] System health checks
 
+#### Phase 3: Enhanced User Experience
+- [ ] Installation wizards for different use cases
+- [ ] Real-time system monitoring during installation
+- [ ] Automatic problem detection and resolution
+- [ ] User preference configuration
+- [ ] Multi-language support
 
+### Technical Roadmap
+1. Create Flutter-based installer GUI
+2. Modularize existing shell scripts for GUI integration
+3. Implement background service for installation tasks
+4. Add error recovery and rollback capabilities
+5. Create comprehensive logging and debugging system
 
-### Feature List
-- Provisioning (x)
-- Setup (v)
-- Account (x)
-- User Management (x)
-- Zone Management (v)
-- Heater Management (v)
-- Sensor Management (v)
-- Function Management (x)
-- Logs (v)
-- Settings (v)
-- Mode Management (x)
-- Preferences (v)
-- Hardware Configuration (x)
-- OTA Update (v)
-- GPIO Polling (v)
-- UART Polling (x)
-- Channel Control (v)
+## Contributing
+Contributions are welcome! Please read our contributing guidelines and submit pull requests to our repository.
 
+## License
+[Your License Here]
 
-
+## Support
+For support, please open an issue in the GitHub repository or contact our support team.
