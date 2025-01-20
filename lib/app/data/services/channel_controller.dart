@@ -872,7 +872,7 @@ class ChannelController extends GetxController {
     dc.addRunnerLog('out: $text');
 
     return;
-    await wait(1);
+    /*  await wait(1);
     for (final c in outputChannels
         .where((e) => e.deviceId == 0x00 && e.type == PinType.onboardPinOutput)
         .toList()) {
@@ -890,7 +890,7 @@ class ChannelController extends GetxController {
     writeRCLK(false);
 
     await wait(1);
-    writeOE(true);
+    writeOE(true); */
   }
 
   Future<void> setOutput(int index, bool value) async {
