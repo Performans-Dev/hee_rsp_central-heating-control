@@ -367,8 +367,8 @@ class DataController extends GetxController {
 
     for (final zone in zoneList) {
       ControlMode? zoneStateToApply;
-      // _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
-      // update();
+      _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
+      update();
       if (heaterList.where((e) => e.zoneId == zone.id).isEmpty) {
         // _runnerLogList.insert(0, 'No heater for ${zone.name}');
         // update();
@@ -444,9 +444,9 @@ class DataController extends GetxController {
             }
           }
         }
-        // _runnerLogList.insert(
-        //     0, '${zone.name} state must be ${zoneStateToApply.name}');
-        // update();
+        _runnerLogList.insert(
+            0, '${zone.name} state must be ${zoneStateToApply.name}');
+        update();
 
         for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
           ControlMode? heaterStateToApply;
@@ -462,9 +462,9 @@ class DataController extends GetxController {
             heaterStateToApply = heater.desiredMode;
           }
 
-          // _runnerLogList.insert(0,
-          //     'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
-          // update();
+          _runnerLogList.insert(0,
+              'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
+          update();
 
           int? channel1;
           int? channel2;

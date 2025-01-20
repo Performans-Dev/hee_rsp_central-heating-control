@@ -884,7 +884,7 @@ class ChannelController extends GetxController {
     final DataController dc = Get.find();
     dc.addRunnerLog('sendOutput($index, $value)');
 
-    updateChannelState(index, value);
+    //updateChannelState(index, value);
   }
 
   void writeOE(bool value) {
