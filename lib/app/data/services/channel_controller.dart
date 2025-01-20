@@ -99,7 +99,7 @@ class ChannelController extends GetxController {
 
     await wait(100);
     serialQueryStreamController = StreamController<SerialQuery>.broadcast();
-    
+
     await wait(100);
     writeOE(true);
     runGpioInputPolling();
@@ -174,6 +174,7 @@ class ChannelController extends GetxController {
       buzzer = GPIO(0, GPIOdirection.gpioDirOut);
       in1 = GPIO(5, GPIOdirection.gpioDirIn);
       in2 = GPIO(6, GPIOdirection.gpioDirIn);
+      in3 = GPIO(12, GPIOdirection.gpioDirIn);
       in4 = GPIO(13, GPIOdirection.gpioDirIn);
       in5 = GPIO(19, GPIOdirection.gpioDirIn);
       in6 = GPIO(16, GPIOdirection.gpioDirIn);
