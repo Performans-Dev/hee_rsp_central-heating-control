@@ -62,7 +62,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 30;
+  static const int databaseVersion = 31;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -164,9 +164,7 @@ class Keys {
   static const String dbInsertSampleZones = '''
     INSERT INTO zones (name, color, desiredMode, currentMode, selectedPlan) VALUES
       ('Zone 1', '#FF0000', 0, 0, 0),
-      ('Zone 2', '#00FF00', 0, 0, 0),
-      ('Zone 3', '#0000FF', 0, 0, 0),
-      ('Zone 4', '#FFFF00', 0, 0, 1)
+      ('Zone 2', '#00FF00', 0, 0, 0)
   ''';
 
   static const String dbDropZoneUsers = '''
