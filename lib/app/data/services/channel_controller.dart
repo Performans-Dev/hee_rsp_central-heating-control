@@ -859,6 +859,19 @@ class ChannelController extends GetxController {
   }
 
   Future<void> sendOutputPackage() async {
+    String text = '';
+    for (final c in outputChannels
+        .where((e) =>
+            e.deviceId == 0x00 &&
+            e.type == PinType.onboardPinOutput &&
+            e.userSelectable == true)
+        .toList()) {
+      text += c.status ? '1' : '0';
+    }
+    final DataController dc = Get.find();
+    dc.addRunnerLog('out: $text');
+
+    return;
     await wait(1);
     for (final c in outputChannels
         .where((e) => e.deviceId == 0x00 && e.type == PinType.onboardPinOutput)
