@@ -416,8 +416,13 @@ class ChannelController extends GetxController {
   updateChannelValue(int id, double value) {}
 
   updateChannelState(int id, bool value) {
-    _outputChannels.firstWhere((e) => e.id == id).status = value;
-    update();
+    try {
+      _outputChannels.firstWhere((e) => e.id == id).status = value;
+      update();
+    } on Exception catch (e) {
+      print('unable to find output channel id: $id');
+      print(e);
+    }
   }
 
   bool getOutputChannelState({required int hwId, required int pinIndex}) {
