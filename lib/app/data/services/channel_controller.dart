@@ -75,8 +75,9 @@ class ChannelController extends GetxController {
 
   Future<void> closeAllRelays() async {
     for (final pin in outputChannels) {
-      await setOutput(pin.pinIndex, false);
+      setOutput(pin.pinIndex, false);
     }
+    await sendOutputPackage();
   }
 
   Future<void> runInitTasks() async {
@@ -420,11 +421,14 @@ class ChannelController extends GetxController {
 
   updateChannelState(int id, bool value) {
     try {
-      _outputChannels.firstWhere((e) => e.id == id).status = value;
+      _outputChannels.firstWhereOrNull((e) => e.id == id)?.status = value;
       update();
     } on Exception catch (e) {
       print('unable to find output channel id: $id');
       print(e);
+
+      final DataController dc = Get.find();
+      dc.addRunnerLog('unable to find output channel id: $id');
     }
   }
 
@@ -844,16 +848,16 @@ class ChannelController extends GetxController {
     }
   }
 
-  Future<void> turnOnRelay(int id) async {
+  void turnOnRelay(int id) {
     ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
-    await setOutput(c.pinIndex, true);
+    setOutput(c.pinIndex, true);
     _outputChannels.firstWhere((e) => e.id == id).status = true;
     update();
   }
 
-  Future<void> turnOffRelay(int id) async {
+  void turnOffRelay(int id) {
     ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
-    await setOutput(c.pinIndex, false);
+    setOutput(c.pinIndex, false);
     _outputChannels.firstWhere((e) => e.id == id).status = false;
     update();
   }
@@ -883,11 +887,11 @@ class ChannelController extends GetxController {
     writeOE(true);
   }
 
-  Future<void> setOutput(int index, bool value) async {
+  void setOutput(int id, bool value) {
     final DataController dc = Get.find();
-    dc.addRunnerLog('sendOutput($index, $value)');
+    dc.addRunnerLog('sendOutput($id, $value)');
 
-    updateChannelState(index, value);
+    updateChannelState(id, value);
   }
 
   void writeOE(bool value) {

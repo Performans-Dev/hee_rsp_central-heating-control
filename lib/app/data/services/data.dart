@@ -462,138 +462,62 @@ class DataController extends GetxController {
             heaterStateToApply = heater.desiredMode;
           }
 
-          _runnerLogList.insert(0,
-              'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
-          update();
+          // _runnerLogList.insert(0,
+          //     'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
+          // update();
 
-          // int? channel1;
-          // int? channel2;
-          // int? channel3;
           final ChannelController channelController = Get.find();
-          // switch (heater.levelType) {
-          //   case HeaterDeviceLevel.none:
-          //     //ignore
-          //     break;
-          //   case HeaterDeviceLevel.onOff:
-          //     // channel1 = channelController.outputChannels
-          //     //     .firstWhereOrNull((e) => e.id == heater.outputChannel1)
-          //     //     ?.pinIndex;
-
-          //     break;
-          //   case HeaterDeviceLevel.twoLevels:
-          //     channel1 = channelController.outputChannels
-          //         .firstWhereOrNull((e) => e.id == heater.outputChannel1)
-          //         ?.pinIndex;
-          //     channel2 = channelController.outputChannels
-          //         .firstWhereOrNull((e) => e.id == heater.outputChannel2)
-          //         ?.pinIndex;
-          //     break;
-          //   case HeaterDeviceLevel.threeLevels:
-          //     channel1 = channelController.outputChannels
-          //         .firstWhereOrNull((e) => e.id == heater.outputChannel1)
-          //         ?.pinIndex;
-          //     channel2 = channelController.outputChannels
-          //         .firstWhereOrNull((e) => e.id == heater.outputChannel2)
-          //         ?.pinIndex;
-          //     channel3 = channelController.outputChannels
-          //         .firstWhereOrNull((e) => e.id == heater.outputChannel3)
-          //         ?.pinIndex;
-          //     break;
-          // }
 
           switch (heaterStateToApply) {
             case ControlMode.on:
-              // if (channel1 != null) {
-              //   await channelController.setOutput(channel1, true);
-              // }
-              // if (channel2 != null) {
-              //   await channelController.setOutput(channel2, false);
-              // }
-              // if (channel3 != null) {
-              //   await channelController.setOutput(channel3, false);
-              // }
-
-              if (heater.outputChannel1 != null) {
-                await channelController.setOutput(heater.outputChannel1!, true);
+              if (heater.outputChannel1 != null || heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, true);
               }
-              if (heater.outputChannel2 != null) {
-                await channelController.setOutput(
-                    heater.outputChannel2!, false);
+              if (heater.outputChannel2 != null || heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, false);
               }
-              if (heater.outputChannel3 != null) {
-                await channelController.setOutput(
-                    heater.outputChannel3!, false);
+              if (heater.outputChannel3 != null || heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, false);
               }
 
               _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
               update();
               break;
             case ControlMode.high:
-              // if (channel1 != null) {
-              //   await channelController.setOutput(channel1, true);
-              // }
-              // if (channel2 != null) {
-              //   await channelController.setOutput(channel2, true);
-              // }
-              // if (channel3 != null) {
-              //   await channelController.setOutput(channel3, false);
-              // }
-              if (heater.outputChannel1 != null) {
-                await channelController.setOutput(heater.outputChannel1!, true);
+              if (heater.outputChannel1 != null || heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, true);
               }
-              if (heater.outputChannel2 != null) {
-                await channelController.setOutput(heater.outputChannel2!, true);
+              if (heater.outputChannel2 != null || heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, true);
               }
-              if (heater.outputChannel3 != null) {
-                await channelController.setOutput(
-                    heater.outputChannel3!, false);
+              if (heater.outputChannel3 != null || heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, false);
               }
               _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
               update();
               break;
             case ControlMode.max:
-              // if (channel1 != null) {
-              //   await channelController.setOutput(channel1, true);
-              // }
-              // if (channel2 != null) {
-              //   await channelController.setOutput(channel2, true);
-              // }
-              // if (channel3 != null) {
-              //   await channelController.setOutput(channel3, true);
-              // }
-              if (heater.outputChannel1 != null) {
-                await channelController.setOutput(heater.outputChannel1!, true);
+              if (heater.outputChannel1 != null || heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, true);
               }
-              if (heater.outputChannel2 != null) {
-                await channelController.setOutput(heater.outputChannel2!, true);
+              if (heater.outputChannel2 != null || heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, true);
               }
-              if (heater.outputChannel3 != null) {
-                await channelController.setOutput(heater.outputChannel3!, true);
+              if (heater.outputChannel3 != null || heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, true);
               }
               _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
               update();
               break;
             default:
-              // if (channel1 != null) {
-              //   await channelController.setOutput(channel1, false);
-              // }
-              // if (channel2 != null) {
-              //   await channelController.setOutput(channel2, false);
-              // }
-              // if (channel3 != null) {
-              //   await channelController.setOutput(channel3, false);
-              // }
-              if (heater.outputChannel1 != null) {
-                await channelController.setOutput(
-                    heater.outputChannel1!, false);
+              if (heater.outputChannel1 != null || heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, false);
               }
-              if (heater.outputChannel2 != null) {
-                await channelController.setOutput(
-                    heater.outputChannel2!, false);
+              if (heater.outputChannel2 != null || heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, false);
               }
-              if (heater.outputChannel3 != null) {
-                await channelController.setOutput(
-                    heater.outputChannel3!, false);
+              if (heater.outputChannel3 != null || heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, false);
               }
               _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
               update();
