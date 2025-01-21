@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_item.dart';
@@ -14,88 +15,126 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       builder: (app) {
-        return GetBuilder<DataController>(builder: (dc) {
-          int length = dc.zoneList.length;
-          double height = 120;
-          int crossAxisCount = 3;
-          if (length < 7) {
-            height = 180;
-          }
-          if (length < 5) {
-            crossAxisCount = 2;
-          }
+        return GetBuilder<ChannelController>(builder: (cc) {
+          return GetBuilder<DataController>(builder: (dc) {
+            int length = dc.zoneList.length;
+            double height = 120;
+            int crossAxisCount = 3;
+            if (length < 7) {
+              height = 180;
+            }
+            if (length < 5) {
+              crossAxisCount = 2;
+            }
 
-          return AppScaffold(
-            body: Stack(
-              children: [
-                GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    mainAxisExtent: height,
-                  ),
-                  itemBuilder: (context, index) =>
-                      ZoneItemWidget(zone: dc.zoneList[index]),
-                  itemCount: length,
-                  shrinkWrap: true,
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    color: Colors.blue.withValues(alpha: 0.2),
-                    height: 160,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) => Text(
-                        dc.runnerLogList[index],
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                      itemCount: math.min(dc.runnerLogList.length, 36),
-                      shrinkWrap: true,
+            return AppScaffold(
+              body: Stack(
+                children: [
+                  GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      mainAxisExtent: height,
                     ),
+                    itemBuilder: (context, index) =>
+                        ZoneItemWidget(zone: dc.zoneList[index]),
+                    itemCount: length,
+                    shrinkWrap: true,
                   ),
-                )
-                // PiScrollView(
-                //   child: Center(
-                //     child: Padding(
-                //       padding: const EdgeInsets.symmetric(vertical: 8),
-                //       child:
-                //           // Column(
-                //           //   mainAxisSize: MainAxisSize.min,
-                //           //   children: [
-                //           //     Text('Zones'),
-                //           //     for (final item in dc.zoneList)
-                //           //       Text('${item.name} ${item.id}'),
-                //           //     Divider(),
-                //           //     Text('Heaters'),
-                //           //     for (final item in dc.heaterList)
-                //           //       Text('${item.name} ${item.id}'),
-                //           //     Divider(),
-                //           //     Text('Sensors'),
-                //           //     for (final item in dc.sensorList)
-                //           //       Text('${item.name} ${item.id}'),
-                //           //     Divider(),
-                //           //     Text('Ports'),
-                //           //     for (final item in dc.comportList)
-                //           //       Text('${item.id} ${item.title}'),
-                //           //     Divider(),
-                //           //   ],
-                //           // ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      height: 160,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              itemBuilder: (context, index) => Text(
+                                dc.runnerLogList[index],
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                              itemCount: math.min(dc.runnerLogList.length, 36),
+                              shrinkWrap: true,
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      cc.sendOutputPackage();
+                                    },
+                                    child: const Text('Send Output')),
+                                Expanded(
+                                  child: Wrap(
+                                    children: cc.outputChannels
+                                        .where((e) =>
+                                            e.deviceId == 0x00 &&
+                                            e.type == PinType.onboardPinOutput)
+                                        .map((e) => InkWell(
+                                              onTap: () {
+                                                cc.setOutput(e.id, !e.status);
+                                              },
+                                              child: Chip(
+                                                label: Text(
+                                                    '${e.pinIndex} ${e.status}'),
+                                              ),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  // PiScrollView(
+                  //   child: Center(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(vertical: 8),
+                  //       child:
+                  //           // Column(
+                  //           //   mainAxisSize: MainAxisSize.min,
+                  //           //   children: [
+                  //           //     Text('Zones'),
+                  //           //     for (final item in dc.zoneList)
+                  //           //       Text('${item.name} ${item.id}'),
+                  //           //     Divider(),
+                  //           //     Text('Heaters'),
+                  //           //     for (final item in dc.heaterList)
+                  //           //       Text('${item.name} ${item.id}'),
+                  //           //     Divider(),
+                  //           //     Text('Sensors'),
+                  //           //     for (final item in dc.sensorList)
+                  //           //       Text('${item.name} ${item.id}'),
+                  //           //     Divider(),
+                  //           //     Text('Ports'),
+                  //           //     for (final item in dc.comportList)
+                  //           //       Text('${item.id} ${item.title}'),
+                  //           //     Divider(),
+                  //           //   ],
+                  //           // ),
 
-                //           ///////////////////
+                  //           ///////////////////
 
-                //       //     Wrap(
-                //       //   spacing: 12,
-                //       //   runSpacing: 12,
-                //       //   crossAxisAlignment: WrapCrossAlignment.center,
-                //       //   alignment: WrapAlignment.center,
-                //       //   children:
-                //       //       dc.zoneList.map((e) => ZoneItem(zone: e)).toList(),
-                //       // ),
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          );
+                  //       //     Wrap(
+                  //       //   spacing: 12,
+                  //       //   runSpacing: 12,
+                  //       //   crossAxisAlignment: WrapCrossAlignment.center,
+                  //       //   alignment: WrapAlignment.center,
+                  //       //   children:
+                  //       //       dc.zoneList.map((e) => ZoneItem(zone: e)).toList(),
+                  //       // ),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
+            );
+          });
         });
       },
     );

@@ -55,7 +55,7 @@ class PinIndicator extends StatelessWidget {
       height: 6,
       margin: const EdgeInsets.all(1),
       decoration: BoxDecoration(
-        color: value ? Colors.grey : Colors.orange,
+        color: value ? Colors.orange : Colors.grey,
         borderRadius: BorderRadius.circular(3),
       ),
     );

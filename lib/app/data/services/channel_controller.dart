@@ -78,6 +78,8 @@ class ChannelController extends GetxController {
       setOutput(pin.pinIndex, false);
     }
     await sendOutputPackage();
+
+    writeOE(false);
   }
 
   Future<void> runInitTasks() async {
@@ -90,7 +92,9 @@ class ChannelController extends GetxController {
       initGpioPins();
     }
 
-    await wait(100);
+    await wait(10);
+    writeOE(true);
+    await wait(10);
 
     // Initialize Serial pins
     await initSerialPins();
@@ -101,8 +105,6 @@ class ChannelController extends GetxController {
     await wait(100);
     serialQueryStreamController = StreamController<SerialQuery>.broadcast();
 
-    await wait(100);
-    writeOE(true);
     runGpioInputPolling();
     await wait(100);
     readObSensorData();
@@ -773,12 +775,12 @@ class ChannelController extends GetxController {
 
   //#region MARK: GPIO INPUT POLLING
   void runGpioInputPolling() async {
-    try {
-      await sendOutputPackage();
-    } on Exception catch (e) {
-      final DataController dc = Get.find();
-      dc.addRunnerLog('sendOutputPackage: $e');
-    }
+    // try {
+    //   await sendOutputPackage();
+    // } on Exception catch (e) {
+    //   final DataController dc = Get.find();
+    //   dc.addRunnerLog('sendOutputPackage: $e');
+    // }
 
     try {
       for (var c in inputChannels.where((e) => e.deviceId == 0x00).toList()) {
