@@ -444,9 +444,9 @@ class DataController extends GetxController {
             }
           }
         }
-        _runnerLogList.insert(
-            0, '${zone.name} state must be ${zoneStateToApply.name}');
-        update();
+        // _runnerLogList.insert(
+        //     0, '${zone.name} state must be ${zoneStateToApply.name}');
+        // update();
 
         for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
           ControlMode? heaterStateToApply;
@@ -480,8 +480,8 @@ class DataController extends GetxController {
                 channelController.setOutput(heater.outputChannel3!, false);
               }
 
-              _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
+              // update();
               break;
             case ControlMode.high:
               if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
@@ -493,8 +493,8 @@ class DataController extends GetxController {
               if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
                 channelController.setOutput(heater.outputChannel3!, false);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
+              // update();
               break;
             case ControlMode.max:
               if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
@@ -506,8 +506,8 @@ class DataController extends GetxController {
               if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
                 channelController.setOutput(heater.outputChannel3!, true);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
+              // update();
               break;
             default:
               if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
@@ -519,8 +519,8 @@ class DataController extends GetxController {
               if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
                 channelController.setOutput(heater.outputChannel3!, false);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
+              // update();
               break;
           }
         }
@@ -542,6 +542,9 @@ class DataController extends GetxController {
   List<String> get runnerLogList => _runnerLogList;
 
   void addRunnerLog(String log) {
+    if (runnerLogList.length > 100) {
+      _runnerLogList.removeLast();
+    }
     _runnerLogList.insert(0, log);
     update();
   }

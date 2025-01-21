@@ -773,7 +773,12 @@ class ChannelController extends GetxController {
 
   //#region MARK: GPIO INPUT POLLING
   void runGpioInputPolling() async {
-    await sendOutputPackage();
+    try {
+      await sendOutputPackage();
+    } on Exception catch (e) {
+      final DataController dc = Get.find();
+      dc.addRunnerLog('sendOutputPackage: $e');
+    }
 
     try {
       for (var c in inputChannels.where((e) => e.deviceId == 0x00).toList()) {
@@ -864,6 +869,7 @@ class ChannelController extends GetxController {
 
   Future<void> sendOutputPackage() async {
     await wait(1);
+    String temp = '';
     for (final c in outputChannels
         .where((e) =>
             e.deviceId == 0x00 &&
@@ -876,6 +882,7 @@ class ChannelController extends GetxController {
       await wait(1);
       writeSRCLK(false);
       await wait(1);
+      temp += c.status ? '1' : '0';
     }
     await wait(1);
     writeRCLK(true);
@@ -885,6 +892,8 @@ class ChannelController extends GetxController {
 
     await wait(1);
     writeOE(true);
+    final DataController dc = Get.find();
+    dc.addRunnerLog('sendOutputPackage: $temp');
   }
 
   void setOutput(int id, bool value) {
