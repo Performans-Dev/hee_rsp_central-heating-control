@@ -48,6 +48,7 @@ class HomeScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
+                            flex: 2,
                             child: ListView.builder(
                               itemBuilder: (context, index) => Text(
                                 dc.runnerLogList[index],
@@ -58,6 +59,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           Expanded(
+                            flex: 1,
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -83,6 +85,33 @@ class HomeScreen extends StatelessWidget {
                                             ))
                                         .toList(),
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Wrap(
+                              children: [
+                                Chip(
+                                  label: const Text('1'),
+                                  backgroundColor:
+                                      dc.btn1 ? Colors.green : null,
+                                ),
+                                Chip(
+                                  label: const Text('2'),
+                                  backgroundColor:
+                                      dc.btn2 ? Colors.green : null,
+                                ),
+                                Chip(
+                                  label: const Text('3'),
+                                  backgroundColor:
+                                      dc.btn3 ? Colors.green : null,
+                                ),
+                                Chip(
+                                  label: const Text('4'),
+                                  backgroundColor:
+                                      dc.btn4 ? Colors.green : null,
                                 ),
                               ],
                             ),

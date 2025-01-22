@@ -45,6 +45,10 @@ class ChannelController extends GetxController {
   late StreamController<SerialQuery> serialQueryStreamController;
   late StreamController<String> logMessageController;
   int _lastSensorDataFetch = 0;
+  final StreamController<ChannelDefinition> _buttonStreamController =
+      StreamController<ChannelDefinition>.broadcast();
+  Stream<ChannelDefinition> get buttonStream => _buttonStreamController.stream;
+  final Map<int, bool> _lastEmittedState = {};
   //#endregion
 
   //#region MARK: Lifecycle
@@ -70,6 +74,7 @@ class ChannelController extends GetxController {
     serialQueryStreamController.close();
     logMessageController.close();
     messageSubscription?.cancel();
+    _buttonStreamController.close();
     super.onClose();
   }
 
@@ -395,6 +400,7 @@ class ChannelController extends GetxController {
           type: PinType.buttonPinInput,
           userSelectable: false,
         ));
+        _lastEmittedState[id] = false;
       }
       for (int i = 1; i <= analogCount; i++) {
         id++;
@@ -831,6 +837,7 @@ class ChannelController extends GetxController {
         switch (c.pinIndex) {
           case 1:
             _inputChannels.firstWhere((e) => e.id == c.id).status = btn1.read();
+
             break;
           case 2:
             _inputChannels.firstWhere((e) => e.id == c.id).status = btn2.read();
@@ -840,10 +847,19 @@ class ChannelController extends GetxController {
             break;
           case 4:
             _inputChannels.firstWhere((e) => e.id == c.id).status = btn4.read();
+
             break;
         }
       }
       update();
+      for (var b in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
+          .toList()) {
+        if (_lastEmittedState[b.id] != b.status) {
+          _buttonStreamController.add(b);
+          _lastEmittedState[b.id] = b.status;
+        }
+      }
     } on Exception catch (e) {
       print(e);
     }

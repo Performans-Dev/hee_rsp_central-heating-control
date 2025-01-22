@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {
+  late StreamSubscription btnStreamSubscription;
+
   //#region MARK: SUPER
   @override
   void onReady() {
@@ -19,7 +23,7 @@ class DataController extends GetxController {
 
   @override
   void onClose() {
-    // TODO: implement onClose
+    btnStreamSubscription.cancel();
     super.onClose();
   }
 
@@ -31,10 +35,22 @@ class DataController extends GetxController {
     await loadPlanList();
     await loadPlanDetails();
     await loadHardwareDevices();
+    registerBtnListener();
     Future.delayed(const Duration(seconds: 5), () {
       runnerLoop();
     });
   }
+  //#endregion
+
+  //#region MARK: Btns
+  final RxBool _btn1 = false.obs;
+  bool get btn1 => _btn1.value;
+  final RxBool _btn2 = false.obs;
+  bool get btn2 => _btn2.value;
+  final RxBool _btn3 = false.obs;
+  bool get btn3 => _btn3.value;
+  final RxBool _btn4 = false.obs;
+  bool get btn4 => _btn4.value;
   //#endregion
 
   //#region MARK: ZONES
@@ -349,6 +365,31 @@ class DataController extends GetxController {
         .firstWhere((e) => e.id == zoneId)
         .copyWith(desiredTemperature: temperature);
     await updateZone(zone);
+  }
+  //#endregion
+
+  //#region MARK: BtnListener
+  registerBtnListener() {
+    final ChannelController cc = Get.find();
+    btnStreamSubscription = cc.buttonStream.listen(onData);
+  }
+
+  void onData(ChannelDefinition data) {
+    switch (data.pinIndex) {
+      case 1:
+        _btn1.value = data.status;
+        break;
+      case 2:
+        _btn2.value = data.status;
+        break;
+      case 3:
+        _btn3.value = data.status;
+        break;
+      case 4:
+        _btn4.value = data.status;
+        break;
+    }
+    update();
   }
   //#endregion
 
