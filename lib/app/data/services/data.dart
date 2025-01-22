@@ -167,6 +167,9 @@ class DataController extends GetxController {
       } else if (heater.outputChannel3 == channelId) {
         h = heater;
         outputIndex = 3;
+      } else if (heater.errorChannel == channelId) {
+        h = heater;
+        outputIndex = 1;
       }
     }
 
