@@ -23,7 +23,7 @@ class SchematicsScreen extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) => ListTile(
               title: Text(
-                  '${data[index].deviceId == 0x00 ? 'Onboard' : 'Ext - ${data[index].deviceId}'} ${data[index].pinIndex}'),
+                  '${data[index].deviceId == 0x00 ? 'Onboard' : 'Ext - ${data[index].deviceId}'}: ${data[index].type.name} ${data[index].pinIndex}'),
               subtitle: data[index].userSelectable
                   ? const Text('heater zone info')
                   : null,
