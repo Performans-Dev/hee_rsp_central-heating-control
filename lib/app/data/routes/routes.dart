@@ -29,6 +29,7 @@ class Routes {
 
   static const String logs = '/logs';
   static const String functions = '/functions';
+  static const String schematics = '/schematics';
   static const String settings = '/settings';
   static const String settingsManagement = '/settings-management';
   static const String settingsZoneList = '/settings-zone-list';

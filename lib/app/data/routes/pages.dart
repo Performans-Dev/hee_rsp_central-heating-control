@@ -15,6 +15,7 @@ import 'package:central_heating_control/app/presentation/screens/pin_reset/entry
 import 'package:central_heating_control/app/presentation/screens/pin_reset/info.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/result.dart';
 import 'package:central_heating_control/app/presentation/screens/pin_reset/signin.dart';
+import 'package:central_heating_control/app/presentation/screens/schematics/schematics_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/functions/settings_function_list_screen.dart';
@@ -165,6 +166,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.functions,
     page: () => const FunctionListScreen(),
+  ),
+  GetPage(
+    name: Routes.schematics,
+    page: () => const SchematicsScreen(),
   ),
   GetPage(
     name: Routes.settings,
