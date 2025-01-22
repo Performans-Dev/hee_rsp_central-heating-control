@@ -12,7 +12,7 @@ import 'package:window_manager/window_manager.dart';
 bool isPi = !kDebugMode;
 
 bool enabledLocalUsers = false;
-bool enabledFunctions = false;
+bool enabledFunctions = true;
 bool enabledWeeklyPlan = true;
 bool enabledAccount = false;
 bool enabledHardwareExtensions = true;

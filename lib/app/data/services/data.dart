@@ -379,30 +379,22 @@ class DataController extends GetxController {
     switch (data.pinIndex) {
       case 1:
         _btn1.value = !data.status;
-        if (!data.status) {
-          Buzz.mini();
-        }
+
         break;
       case 2:
         _btn2.value = !data.status;
-        if (!data.status) {
-          Buzz.lock();
-        }
         break;
       case 3:
         _btn3.value = !data.status;
-        if (!data.status) {
-          Buzz.success();
-        }
         break;
       case 4:
         _btn4.value = !data.status;
-        if (!data.status) {
-          Buzz.error();
-        }
         break;
     }
     update();
+    if (!data.status) {
+      Buzz.mini();
+    }
   }
   //#endregion
 
