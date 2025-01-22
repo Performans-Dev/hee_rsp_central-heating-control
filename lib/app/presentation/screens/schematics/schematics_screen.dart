@@ -11,19 +11,10 @@ class SchematicsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ChannelController>(builder: (cc) {
       return GetBuilder<DataController>(builder: (dc) {
-        List<String> data = [];
-        data.add('Inputs');
-        data.addAll(cc.inputChannels.map((e) => '${e.name} - '
-            'D:${e.deviceId} '
-            'P:${e.pinIndex} '
-            'Heater: ${dc.heaterList.firstWhereOrNull((h) => h.errorChannel == e.id)?.name} '
-            'Zone: ${dc.zoneList.firstWhereOrNull((z) => z.id == (dc.heaterList.firstWhereOrNull((h) => h.errorChannel == e.id)?.zoneId))?.name}'));
-        data.add('Outputs');
-        data.addAll(cc.outputChannels.map((e) => '${e.name} - '
-            'D:${e.deviceId} '
-            'P:${e.pinIndex} '
-            'Heater: ${dc.heaterList.firstWhereOrNull((h) => h.outputChannel1 == e.id)?.name} '
-            'Zone: ${dc.zoneList.firstWhereOrNull((z) => z.id == (dc.heaterList.firstWhereOrNull((h) => h.outputChannel1 == e.id)?.zoneId))?.name}'));
+        List<ChannelDefinition> data = [];
+        data.addAll(cc.inputChannels);
+
+        data.addAll(cc.outputChannels);
 
         return AppScaffold(
           selectedIndex: 2,
@@ -31,7 +22,11 @@ class SchematicsScreen extends StatelessWidget {
           body: ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) => ListTile(
-              title: Text(data[index]),
+              title: Text(data[index].deviceId == 0x00
+                  ? 'Onboard'
+                  : 'Ext ${data[index].deviceId} - ${data[index].pinIndex}'),
+              subtitle:
+                  data[index].userSelectable ? const Text('heater zone info') : null,
             ),
             itemCount: data.length,
           ),
