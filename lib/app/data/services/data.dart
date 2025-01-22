@@ -180,7 +180,7 @@ class DataController extends GetxController {
 
     return h == null
         ? 'Not Connected'
-        : 'Heater: ${h.name} - Channel: $outputIndex\nZone: ${zone != null ? zone.name : '-'}';
+        : '${h.name} - Channel: $outputIndex\n${zone != null ? zone.name : '-'}';
   }
   //#endregion
 
