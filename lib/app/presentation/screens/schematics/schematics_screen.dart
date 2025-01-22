@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/data/services/channel_controller.dar
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class SchematicsScreen extends StatelessWidget {
@@ -13,9 +14,17 @@ class SchematicsScreen extends StatelessWidget {
       return GetBuilder<DataController>(builder: (dc) {
         List<String> data = [];
         data.add('Inputs');
-        data.addAll(cc.inputChannels.map((e) => e.name));
+        data.addAll(cc.inputChannels.map((e) => '${e.name} - '
+            'D:${e.deviceId} '
+            'P:${e.pinIndex} '
+            'Heater: ${dc.heaterList.firstWhereOrNull((h) => h.errorChannel == e.id)?.name} '
+            'Zone: ${dc.zoneList.firstWhereOrNull((z) => z.id == (dc.heaterList.firstWhereOrNull((h) => h.errorChannel == e.id)?.zoneId))?.name}'));
         data.add('Outputs');
-        data.addAll(cc.outputChannels.map((e) => e.name));
+        data.addAll(cc.outputChannels.map((e) => '${e.name} - '
+            'D:${e.deviceId} '
+            'P:${e.pinIndex} '
+            'Heater: ${dc.heaterList.firstWhereOrNull((h) => h.outputChannel1 == e.id)?.name} '
+            'Zone: ${dc.zoneList.firstWhereOrNull((z) => z.id == (dc.heaterList.firstWhereOrNull((h) => h.outputChannel1 == e.id)?.zoneId))?.name}'));
 
         return AppScaffold(
           selectedIndex: 2,
