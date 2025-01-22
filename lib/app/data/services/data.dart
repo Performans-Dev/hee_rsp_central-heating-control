@@ -154,11 +154,21 @@ class DataController extends GetxController {
   }
 
   String? getHeaterZoneInfo(int channelId) {
-    Heater? h =
-        heaterList.firstWhereOrNull((e) => e.outputChannel1 == channelId);
-    h ??= heaterList.firstWhereOrNull((e) => e.outputChannel2 == channelId);
-    h ??= heaterList.firstWhereOrNull((e) => e.outputChannel3 == channelId);
-    h ??= heaterList.firstWhereOrNull((e) => e.errorChannel == channelId);
+    Heater? h;
+    int? outputIndex;
+
+    for (var heater in heaterList) {
+      if (heater.outputChannel1 == channelId) {
+        h = heater;
+        outputIndex = 1;
+      } else if (heater.outputChannel2 == channelId) {
+        h = heater;
+        outputIndex = 2;
+      } else if (heater.outputChannel3 == channelId) {
+        h = heater;
+        outputIndex = 3;
+      }
+    }
 
     Zone? zone;
     if (h != null) {
@@ -167,7 +177,7 @@ class DataController extends GetxController {
 
     return h == null
         ? 'Not Connected'
-        : 'Heater: ${h.name} - Zone: ${zone != null ? zone.name : '-'}';
+        : 'Heater: ${h.name} - Channel: $outputIndex\nZone: ${zone != null ? zone.name : '-'}';
   }
   //#endregion
 
