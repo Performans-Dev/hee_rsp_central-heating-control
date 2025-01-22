@@ -123,7 +123,8 @@ class AppScaffold extends StatelessWidget {
                       break;
                     case 1:
                       // Get.toNamed(Routes.daySummaryScreen);
-                      Get.toNamed(Routes.settingsPreferencesAdvanced);
+                      // Get.toNamed(Routes.settingsPreferencesAdvanced);
+                      Get.toNamed(Routes.functions);
                       break;
                     case 2:
                       //TODO:
