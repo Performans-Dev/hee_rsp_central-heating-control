@@ -835,7 +835,7 @@ class ChannelController extends GetxController {
       for (var b in inputChannels
           .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
           .toList()) {
-        if (b.status) {
+        if (!b.status) {
           Buzz.mini();
         }
       }
