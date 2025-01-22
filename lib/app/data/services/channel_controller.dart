@@ -783,7 +783,9 @@ class ChannelController extends GetxController {
     // }
 
     try {
-      for (var c in inputChannels.where((e) => e.deviceId == 0x00).toList()) {
+      for (var c in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.onboardPinInput)
+          .toList()) {
         switch (c.pinIndex) {
           case 1:
             _inputChannels.firstWhere((e) => e.id == c.id).status = in1.read();
@@ -810,7 +812,32 @@ class ChannelController extends GetxController {
             _inputChannels.firstWhere((e) => e.id == c.id).status = in8.read();
             break;
         }
-        update();
+      }
+      for (var c in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
+          .toList()) {
+        switch (c.pinIndex) {
+          case 1:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn1.read();
+            break;
+          case 2:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn2.read();
+            break;
+          case 3:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn3.read();
+            break;
+          case 4:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn4.read();
+            break;
+        }
+      }
+      update();
+      for (var b in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
+          .toList()) {
+        if (b.status) {
+          Buzz.mini();
+        }
       }
     } on Exception catch (e) {
       print(e);
