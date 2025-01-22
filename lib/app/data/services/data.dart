@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
@@ -377,16 +378,20 @@ class DataController extends GetxController {
   void onData(ChannelDefinition data) {
     switch (data.pinIndex) {
       case 1:
-        _btn1.value = data.status;
+        _btn1.value = !data.status;
+        Buzz.mini();
         break;
       case 2:
-        _btn2.value = data.status;
+        _btn2.value = !data.status;
+        Buzz.lock();
         break;
       case 3:
-        _btn3.value = data.status;
+        _btn3.value = !data.status;
+        Buzz.success();
         break;
       case 4:
-        _btn4.value = data.status;
+        _btn4.value = !data.status;
+        Buzz.error();
         break;
     }
     update();
