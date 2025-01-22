@@ -26,7 +26,7 @@ class SchematicsScreen extends StatelessWidget {
               title: Text(
                   '${data[index].deviceId == 0x00 ? '' : 'Ext - ${data[index].deviceId}'}: ${data[index].type.name.camelCaseToHumanReadable()} ${data[index].pinIndex}'),
               trailing: data[index].userSelectable
-                  ? Text(dc.getHeaterZoneInfo(data[index].id))
+                  ? Text('${dc.getHeaterZoneInfo(data[index].id)}')
                   : null,
             ),
             itemCount: data.length,
