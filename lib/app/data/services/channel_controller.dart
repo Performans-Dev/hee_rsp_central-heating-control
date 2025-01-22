@@ -417,6 +417,18 @@ class ChannelController extends GetxController {
     print(
         '------- channels initialized input: ${inputChannels.length} output: ${outputChannels.length}');
     update();
+
+    for (final b in inputChannels
+        .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)) {
+      ever(_inputChannels, (_) {
+        if (!b.status) {
+          // button is pressed
+          onBtnPressed(b.pinIndex);
+        } else {
+          // button is released
+        }
+      });
+    }
   }
 
   updateChannelValue(int id, double value) {}
@@ -832,13 +844,6 @@ class ChannelController extends GetxController {
         }
       }
       update();
-      for (var b in inputChannels
-          .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
-          .toList()) {
-        if (!b.status) {
-          Buzz.mini();
-        }
-      }
     } on Exception catch (e) {
       print(e);
     }
@@ -1031,6 +1036,25 @@ class ChannelController extends GetxController {
       }
     } on Exception catch (e) {
       print(e);
+    }
+  }
+  //#endregion
+
+  //#region MARK: OnBtnPress
+  void onBtnPressed(int index) {
+    switch (index) {
+      case 1:
+        Buzz.mini();
+        break;
+      case 2:
+        Buzz.success();
+        break;
+      case 3:
+        Buzz.error();
+        break;
+      case 4:
+        Buzz.alarm();
+        break;
     }
   }
   //#endregion
