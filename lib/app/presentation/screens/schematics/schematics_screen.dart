@@ -25,8 +25,8 @@ class SchematicsScreen extends StatelessWidget {
             itemBuilder: (context, index) => ListTile(
               title: Text(
                   '${data[index].deviceId == 0x00 ? '' : 'Ext - ${data[index].deviceId}'}: ${data[index].type.name.camelCaseToHumanReadable()} ${data[index].pinIndex}'),
-              subtitle: data[index].userSelectable
-                  ? const Text('heater zone info')
+              trailing: data[index].userSelectable
+                  ? Text(dc.getHeaterZoneInfo(data[index].id))
                   : null,
             ),
             itemCount: data.length,

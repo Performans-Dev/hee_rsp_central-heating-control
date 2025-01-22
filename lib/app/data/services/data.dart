@@ -152,6 +152,23 @@ class DataController extends GetxController {
     }
     return false;
   }
+
+  String? getHeaterZoneInfo(int channelId) {
+    Heater? h =
+        heaterList.firstWhereOrNull((e) => e.outputChannel1 == channelId);
+    h ??= heaterList.firstWhereOrNull((e) => e.outputChannel2 == channelId);
+    h ??= heaterList.firstWhereOrNull((e) => e.outputChannel3 == channelId);
+    h ??= heaterList.firstWhereOrNull((e) => e.errorChannel == channelId);
+
+    Zone? zone;
+    if (h != null) {
+      zone = zoneList.firstWhereOrNull((e) => e.id == h!.zoneId);
+    }
+
+    return h == null
+        ? 'Not Connected'
+        : 'Heater: ${h.name} - Zone: ${zone != null ? zone.name : '-'}';
+  }
   //#endregion
 
   //#region MARK: SENSORS
