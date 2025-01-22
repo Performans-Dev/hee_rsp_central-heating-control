@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/extensions/string_extensions.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
@@ -12,9 +13,9 @@ class SchematicsScreen extends StatelessWidget {
     return GetBuilder<ChannelController>(builder: (cc) {
       return GetBuilder<DataController>(builder: (dc) {
         List<ChannelDefinition> data = [];
-        data.addAll(cc.inputChannels);
+        data.addAll(cc.inputChannels.where((e) => e.userSelectable));
 
-        data.addAll(cc.outputChannels);
+        data.addAll(cc.outputChannels.where((e) => e.userSelectable));
 
         return AppScaffold(
           selectedIndex: 2,
@@ -23,7 +24,7 @@ class SchematicsScreen extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) => ListTile(
               title: Text(
-                  '${data[index].deviceId == 0x00 ? 'Onboard' : 'Ext - ${data[index].deviceId}'}: ${data[index].type.name} ${data[index].pinIndex}'),
+                  '${data[index].deviceId == 0x00 ? '' : 'Ext - ${data[index].deviceId}'}: ${data[index].type.name.camelCaseToHumanReadable()} ${data[index].pinIndex}'),
               subtitle: data[index].userSelectable
                   ? const Text('heater zone info')
                   : null,
