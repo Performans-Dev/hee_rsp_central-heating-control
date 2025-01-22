@@ -12,32 +12,21 @@ class SchematicsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ChannelController>(builder: (cc) {
       return GetBuilder<DataController>(builder: (dc) {
+        List<String> data = [];
+        data.add('Inputs');
+        data.addAll(cc.inputChannels.map((e) => e.name));
+        data.add('Outputs');
+        data.addAll(cc.outputChannels.map((e) => e.name));
+
         return AppScaffold(
           selectedIndex: 2,
           title: 'Schematics',
-          body: PiScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Output Channels'),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(cc.outputChannels[index].name),
-                  ),
-                  itemCount: cc.outputChannels.length,
-                ),
-                const Divider(),
-                const Text('Input Channels'),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(cc.inputChannels[index].name),
-                  ),
-                  itemCount: cc.inputChannels.length,
-                ),
-              ],
+          body: ListView.builder(
+            shrinkWrap: true,
+            itemBuilder: (context, index) => ListTile(
+              title: Text(data[index]),
             ),
+            itemCount: data.length,
           ),
         );
       });
