@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
@@ -62,16 +64,21 @@ class FunctionDefinition {
   }
 
   factory FunctionDefinition.fromMap(Map<String, dynamic> map) {
-    return FunctionDefinition(
-      id: map['id']?.toInt() ?? 0,
-      name: map['name'] ?? '',
-      zoneId: map['zoneId']?.toInt(),
-      heaterId: map['heaterId']?.toInt(),
-      controlMode:
-          map['controlMode'] != null ? ControlMode.values[map['mode']] : null,
-      fromHour: map['fromHour']?.toInt(),
-      toHour: map['toHour']?.toInt(),
-    );
+    try {
+      return FunctionDefinition(
+        id: map['id']?.toInt() ?? 0,
+        name: map['name'] ?? '',
+        zoneId: map['zoneId']?.toInt(),
+        heaterId: map['heaterId']?.toInt(),
+        controlMode:
+            map['controlMode'] != null ? ControlMode.values[map['mode']] : null,
+        fromHour: map['fromHour']?.toInt(),
+        toHour: map['toHour']?.toInt(),
+      );
+    } on Exception catch (e) {
+      print(e);
+      return FunctionDefinition(id: 0, name: 'error');
+    }
   }
 
   String toJson() => json.encode(toMap());
