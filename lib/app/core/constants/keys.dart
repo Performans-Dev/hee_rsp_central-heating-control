@@ -343,7 +343,7 @@ class Keys {
       heaterId INTEGER,
       controlMode INTEGER,
       fromHour INTEGER,
-      toHour INTEGER,
+      toHour INTEGER
     )
   ''';
 
