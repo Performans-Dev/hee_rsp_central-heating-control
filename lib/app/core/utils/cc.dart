@@ -1,6 +1,8 @@
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class CCUtils {
   static String displayConsumption(
@@ -103,7 +105,12 @@ class CCUtils {
     if (raw == null) {
       return null;
     }
-
-    return raw / 10;
+    final DataController dc = Get.find();
+    final data = dc.temperatureValues.where((e) => e.rawValue <= raw).toList();
+    if (data.isEmpty) {
+      return raw.toDouble();
+    }
+    data.sort((a, b) => a.rawValue.compareTo(b.rawValue));
+    return data.last.temperature;
   }
 }

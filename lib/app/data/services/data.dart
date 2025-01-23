@@ -233,12 +233,17 @@ class DataController extends GetxController {
       return 0.0;
     }
 
-    // Use null safety and a non-nullable initial value
-    double sum = sensors.fold<double>(0.0, (previousValue, sensor) {
-      return previousValue + (sensor.value ?? 0.0); // Use null-aware operator
-    });
+    double sum = 0;
+    int count = 0;
 
-    return sum / sensors.length;
+    for (final s in sensorListWithValues(zoneId)) {
+      if (s.value != null) {
+        sum += s.value!;
+        count++;
+      }
+    }
+
+    return count > 0 ? sum / count : 0;
   }
   //#endregion
 

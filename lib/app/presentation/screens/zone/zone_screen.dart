@@ -1002,7 +1002,8 @@ class ZoneDetailSensorsWidget extends StatelessWidget {
               )),
           const Spacer(),
           Chip(
-            label: Text('Avg: ${sensorAverage.toStringAsPrecision(1)} °C'),
+            label: Text(
+                'Avg: ${CCUtils.sensorRawToTemperature(sensorAverage.toInt())?.toStringAsFixed(1)} °C'),
           ),
         ],
       ),
