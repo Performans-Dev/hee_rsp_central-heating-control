@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/models/function.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
@@ -314,6 +315,16 @@ class DataController extends GetxController {
     final result = await DbProvider.db.updatePlanDefinition(plan: plan);
     loadPlanList();
     return result != null;
+  }
+  //#endregion
+
+  //#region MARK: FUNCTIONS
+  final RxList<FunctionDefinition> _functionList = <FunctionDefinition>[].obs;
+  List<FunctionDefinition> get functionList => _functionList;
+  Future<void> loadFunctionList() async {
+    final data = await DbProvider.db.getFunctions();
+    _functionList.assignAll(data);
+    update();
   }
   //#endregion
 

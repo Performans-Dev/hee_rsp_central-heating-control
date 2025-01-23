@@ -43,6 +43,14 @@ class NavController {
     );
   }
 
+  static void toSettingsFunctionList() async {
+    Buzz.feedback();
+    Future.delayed(
+      Duration.zero,
+      () => Get.toNamed(Routes.settingsFunctionList),
+    );
+  }
+
   static void toSettingsZoneList() async {
     Buzz.feedback();
     Future.delayed(

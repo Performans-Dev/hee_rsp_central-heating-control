@@ -46,7 +46,9 @@ class SettingsScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                onTap: () {},
+                onTap: () {
+                  NavController.toSettingsFunctionList();
+                },
                 enabled: enabledFunctions,
               ),
               const SizedBox(height: 8),

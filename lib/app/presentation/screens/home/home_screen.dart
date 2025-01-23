@@ -60,28 +60,6 @@ class HomeScreen extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: () {
-                                      cc.sendOutputPackage();
-                                    },
-                                    child: const Text('Send Output')),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemBuilder: (context, index) => ListTile(
-                                      title: Text(
-                                          '${dc.temperatureValues[index].toMap()}'),
-                                    ),
-                                    itemCount: dc.temperatureValues.length,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
                             child: Wrap(
                               children: [
                                 Chip(

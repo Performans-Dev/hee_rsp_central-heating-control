@@ -77,6 +77,7 @@ class Keys {
   static const String tablePlanDetails = 'planDetails';
   static const String tableHardwares = 'hardwares';
   static const String tableTemperatureValues = 'temperatureValues';
+  static const String tableFunctions = 'tblFunctions';
 
   static const String queryId = 'id=?';
   static const String queryName = 'name=?';
@@ -327,5 +328,21 @@ class Keys {
     INSERT INTO sensors 
     (device, sensorIndex,zoneId,color,name) VALUES 
     (0, {INDEX},NULL,NULL,NULL)
+  ''';
+
+  static const String dbDropFunctionsTable = '''
+    DROP TABLE IF EXISTS $tableFunctions
+  ''';
+
+  static const String dbCreateFunctionsTable = '''
+    CREATE TABLE IF NOT EXISTS $tableFunctions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      zoneId INTEGER,
+      heaterId INTEGER,
+      controlMode INTEGER,
+      fromHour INTEGER,
+      toHour INTEGER,
+    )
   ''';
 }

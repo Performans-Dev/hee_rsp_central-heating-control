@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/models/function.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
@@ -142,6 +143,9 @@ class DbProvider {
 
     await db.execute(Keys.dbDropUsers);
     await db.execute(Keys.dbCreateUsers);
+
+    await db.execute(Keys.dbDropFunctionsTable);
+    await db.execute(Keys.dbCreateFunctionsTable);
   }
 
   // MARK: RESET DB
@@ -1268,6 +1272,72 @@ class DbProvider {
         level: LogLevel.error,
         type: LogType.database,
       ));
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region MARK: Functions
+  Future<List<FunctionDefinition>> getFunctions() async {
+    final functions = <FunctionDefinition>[];
+    final db = await database;
+    if (db == null) return functions;
+    try {
+      final data = await db.query(Keys.tableFunctions);
+      for (final map in data) {
+        functions.add(FunctionDefinition.fromMap(map));
+      }
+      return functions;
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return functions;
+    }
+  }
+
+  Future<int> addFunction(FunctionDefinition f) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.insert(
+        Keys.tableFunctions,
+        f.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return -1;
+    }
+  }
+
+  Future<int> deleteFunction(FunctionDefinition f) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.delete(
+        Keys.tableFunctions,
+        where: Keys.queryId,
+        whereArgs: [f.id],
+      );
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
       return -1;
     }
   }
