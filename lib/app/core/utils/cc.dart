@@ -98,4 +98,12 @@ class CCUtils {
         );
     }
   }
+
+  static double? sensorRawToTemperature(int? raw) {
+    if (raw == null) {
+      return null;
+    }
+
+    return raw / 10;
+  }
 }

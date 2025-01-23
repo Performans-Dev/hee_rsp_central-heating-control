@@ -997,7 +997,8 @@ class ZoneDetailSensorsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           ...sensors.map((e) => Chip(
-                label: Text('S${e.id}:  ${e.value?.toStringAsFixed(1)} °C'),
+                label: Text(
+                    'S${e.id}:  ${CCUtils.sensorRawToTemperature(e.value?.toInt())?.toStringAsFixed(1)} °C'),
               )),
           const Spacer(),
           Chip(

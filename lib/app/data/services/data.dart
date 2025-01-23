@@ -6,7 +6,9 @@ import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/temperature_value.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
+import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/foundation.dart';
@@ -36,6 +38,7 @@ class DataController extends GetxController {
     await loadPlanList();
     await loadPlanDetails();
     await loadHardwareDevices();
+    await loadTemperatureValues();
     registerBtnListener();
     Future.delayed(const Duration(seconds: 5), () {
       runnerLoop();
@@ -345,6 +348,24 @@ class DataController extends GetxController {
   //   await loadHardwareDevices();
   //   return result;
   // }
+  //#endregion
+
+  //#region MARK: TemperatureVAlues
+  final RxList<TemperatureValue> _temperatureValues = <TemperatureValue>[].obs;
+  List<TemperatureValue> get temperatureValues => _temperatureValues;
+  Future<void> loadTemperatureValues() async {
+    final data = await DbProvider.db.getAllTemperatureValues();
+    if (data.isEmpty) {
+      final data = await AppProvider.downloadTemperatureValues();
+      if (data.success) {
+        loadTemperatureValues();
+        return;
+      }
+    }
+
+    _temperatureValues.assignAll(data);
+    update();
+  }
   //#endregion
 
   //#region MARK: ACTIONS

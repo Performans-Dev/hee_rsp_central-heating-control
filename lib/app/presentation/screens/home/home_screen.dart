@@ -69,21 +69,12 @@ class HomeScreen extends StatelessWidget {
                                     },
                                     child: const Text('Send Output')),
                                 Expanded(
-                                  child: Wrap(
-                                    children: cc.outputChannels
-                                        .where((e) =>
-                                            e.deviceId == 0x00 &&
-                                            e.type == PinType.onboardPinOutput)
-                                        .map((e) => InkWell(
-                                              onTap: () {
-                                                cc.setOutput(e.id, !e.status);
-                                              },
-                                              child: Chip(
-                                                label: Text(
-                                                    '${e.pinIndex} ${e.status}'),
-                                              ),
-                                            ))
-                                        .toList(),
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) => ListTile(
+                                      title: Text(
+                                          '${dc.temperatureValues[index].toMap()}'),
+                                    ),
+                                    itemCount: dc.temperatureValues.length,
                                   ),
                                 ),
                               ],
