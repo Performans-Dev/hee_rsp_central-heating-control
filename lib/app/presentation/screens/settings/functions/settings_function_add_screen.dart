@@ -1,9 +1,13 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/data/models/function.dart';
+import 'package:central_heating_control/app/data/providers/db.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/dropdowns/zone.dart';
 import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SettingsFunctionAddScreen extends StatefulWidget {
   const SettingsFunctionAddScreen({super.key});
@@ -14,6 +18,7 @@ class SettingsFunctionAddScreen extends StatefulWidget {
 }
 
 class _SettingsFunctionAddScreenState extends State<SettingsFunctionAddScreen> {
+  final DataController dataController = Get.find();
   int? fromHour;
   int? toHour;
   int? zoneId;
@@ -119,13 +124,34 @@ class _SettingsFunctionAddScreenState extends State<SettingsFunctionAddScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                    onPressed: () {},
-                    label: const Text('Cancel'),
-                    icon: const Icon(Icons.cancel)),
+                  onPressed: () {
+                    Get.back();
+                  },
+                  label: const Text('Cancel'),
+                  icon: const Icon(Icons.cancel),
+                ),
                 TextButton.icon(
-                    onPressed: () {},
-                    label: const Text('Save'),
-                    icon: const Icon(Icons.save)),
+                  onPressed: () async {
+                    final FunctionDefinition fd = FunctionDefinition(
+                      id: 0,
+                      name: name,
+                      controlMode: controlMode,
+                      zoneId: zoneId,
+                      fromHour: fromHour,
+                      toHour: toHour,
+                      heaterId: heaterId,
+                    );
+                    final result = await DbProvider.db.addFunction(fd);
+                    if (result > 0) {
+                      await dataController.loadFunctionList();
+                      Get.back();
+                    } else {
+                      //TODO: print error
+                    }
+                  },
+                  label: const Text('Save'),
+                  icon: const Icon(Icons.save),
+                ),
               ],
             ),
           )
