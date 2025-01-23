@@ -997,7 +997,7 @@ class ZoneDetailSensorsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           ...sensors.map((e) => Chip(
-                label: Text('S${e.id}:  ${e.value?.toStringAsPrecision(1)} °C'),
+                label: Text('S${e.id}:  ${e.value?.toStringAsFixed(1)} °C'),
               )),
           const Spacer(),
           Chip(
@@ -1029,14 +1029,18 @@ class ZoneDetailHeaterListWidget extends StatelessWidget {
         Text(title),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-                tileColor: CommonUtils.hexToColor(context, heaters[index].color)
-                    .withValues(alpha: 0.3),
-                shape:
-                    RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
-                title: Text(heaters[index].name),
-                subtitle: Text(heaters[index].desiredMode.name),
-                onTap: () => onHeaterSelected(heaters[index])),
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                  tileColor:
+                      CommonUtils.hexToColor(context, heaters[index].color)
+                          .withValues(alpha: 0.3),
+                  shape:
+                      RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
+                  title: Text(heaters[index].name),
+                  subtitle: Text(heaters[index].desiredMode.name),
+                  onTap: () => onHeaterSelected(heaters[index])),
+            ),
             itemCount: heaters.length,
           ),
         ),
