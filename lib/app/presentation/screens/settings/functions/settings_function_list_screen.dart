@@ -23,6 +23,7 @@ class SettingsFunctionListScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Function List'),
                     TextButton.icon(

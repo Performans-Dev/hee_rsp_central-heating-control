@@ -1,8 +1,33 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
+import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
+import 'package:central_heating_control/app/presentation/components/dropdowns/zone.dart';
+import 'package:central_heating_control/app/presentation/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 
-class SettingsFunctionAddScreen extends StatelessWidget {
+class SettingsFunctionAddScreen extends StatefulWidget {
   const SettingsFunctionAddScreen({super.key});
+
+  @override
+  State<SettingsFunctionAddScreen> createState() =>
+      _SettingsFunctionAddScreenState();
+}
+
+class _SettingsFunctionAddScreenState extends State<SettingsFunctionAddScreen> {
+  int? fromHour;
+  int? toHour;
+  int? zoneId;
+  int? heaterId;
+  ControlMode? controlMode;
+  String name = '';
+  late TextEditingController nameController;
+  bool hasHours = false;
+
+  @override
+  initState() {
+    super.initState();
+    nameController = TextEditingController(text: name);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +44,37 @@ class SettingsFunctionAddScreen extends StatelessWidget {
                 Expanded(
                   child: Container(
                     constraints: const BoxConstraints.expand(),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('Name'),
-                        Text('From'),
-                        Text('To'),
+                        TextInputWidget(
+                          labelText: 'Function Name',
+                          controller: nameController,
+                          keyboardType: TextInputType.name,
+                        ),
+                        CheckboxListTile(
+                          value: hasHours,
+                          onChanged: (v) {
+                            setState(() => hasHours = v ?? false);
+                          },
+                          title: const Text('Has Start-Stop Hours'),
+                        ),
+                        if (hasHours)
+                          RangeSlider(
+                            values: RangeValues((fromHour ?? 8).toDouble(),
+                                (toHour ?? 17).toDouble()),
+                            onChanged: (RangeValues values) {
+                              setState(() {
+                                fromHour = values.start.toInt();
+                                toHour = values.end.toInt();
+                              });
+                            },
+                            min: 0,
+                            max: 24,
+                            divisions: 24,
+                            labels: RangeLabels(fromHour?.toString() ?? '8',
+                                toHour?.toString() ?? '17'),
+                          ),
                       ],
                     ),
                   ),
@@ -32,12 +82,30 @@ class SettingsFunctionAddScreen extends StatelessWidget {
                 Expanded(
                   child: Container(
                     constraints: const BoxConstraints.expand(),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('Zone'),
-                        Text('Heater'),
-                        Text('Mode'),
+                        ZoneDropdownWidget(
+                          onChanged: (z) {
+                            setState(() => zoneId = z?.id);
+                          },
+                        ),
+                        // HeaterDropdownWidget(onChanged: (h) {
+                        //   setState(() {
+                        //     heaterId = h?.id;
+                        //   });
+                        // }),
+                        ToggleButtons(
+                          isSelected: ControlMode.values
+                              .map((e) => controlMode == e)
+                              .toList(),
+                          onPressed: (index) => setState(
+                              () => controlMode = ControlMode.values[index]),
+                          borderRadius: UiDimens.formRadius,
+                          children: ControlMode.values
+                              .map((e) => Text(e.name))
+                              .toList(),
+                        ),
                       ],
                     ),
                   ),
