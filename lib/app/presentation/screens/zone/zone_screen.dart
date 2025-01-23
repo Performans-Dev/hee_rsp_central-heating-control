@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
@@ -1029,6 +1030,10 @@ class ZoneDetailHeaterListWidget extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (context, index) => ListTile(
+                tileColor: CommonUtils.hexToColor(context, heaters[index].color)
+                    .withValues(alpha: 0.3),
+                shape:
+                    RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
                 title: Text(heaters[index].name),
                 subtitle: Text(heaters[index].desiredMode.name),
                 onTap: () => onHeaterSelected(heaters[index])),
