@@ -62,7 +62,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 31;
+  static const int databaseVersion = 32;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -78,6 +78,7 @@ class Keys {
   static const String tableHardwares = 'hardwares';
   static const String tableTemperatureValues = 'temperatureValues';
   static const String tableFunctions = 'tblFunctions';
+  static const String tableButtonFunctions = 'buttonFunctions';
 
   static const String queryId = 'id=?';
   static const String queryName = 'name=?';
@@ -344,5 +345,23 @@ class Keys {
       fromHour INTEGER,
       toHour INTEGER,
     )
+  ''';
+
+  static const String dbDropButtonFunctionsTable = '''
+    DROP TABLE IF EXISTS $tableButtonFunctions
+  ''';
+
+  static const String dbCreateButtonFunctionsTable = '''
+    CREATE TABLE IF NOT EXISTS $tableButtonFunctions (
+      buttonIndex INTEGER,
+      functionId INTEGER
+    )
+  ''';
+  static const String dbInsertButtonFunctions = '''
+    INSERT INTO $tableButtonFunctions (buttonIndex, functionId) VALUES
+      (1, -2),
+      (2, -1),
+      (3, 0),
+      (4, 0)
   ''';
 }

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/models/function.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -16,54 +17,53 @@ class FunctionListScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Center(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.sunny,
-                    color: dc.btn1 ? Colors.green : null,
+            for (int i = 1; i <= dc.buttonFunctionList.length; i++)
+              Expanded(
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.sunny,
+                      color: dc.btn1 ? Colors.green : null,
+                    ),
+                    title: Text('F$i'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DropdownMenu<FunctionDefinition?>(
+                          enableFilter: false,
+                          enableSearch: false,
+                          onSelected: (value) async {
+                            await dc.updateButtonFunction(i, value?.id);
+                          },
+                          initialSelection: dc.functionList.firstWhereOrNull(
+                              (e) => e.id == (dc.functionList[i].id)),
+                          dropdownMenuEntries: dc.functionList
+                              .map(
+                                (e) => DropdownMenuEntry<FunctionDefinition?>(
+                                    value: e, label: e.name),
+                              )
+                              .toList(),
+                        ),
+                        IconButton(
+                          onPressed: dc.functionList.firstWhereOrNull(
+                                      (e) => e.id == (dc.functionList[i].id)) ==
+                                  null
+                              ? null
+                              : () {
+                                  dc.updateButtonFunction(i, null);
+                                },
+                          icon: const Icon(Icons.clear),
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(dc.functionList
+                            .firstWhereOrNull(
+                                (e) => e.id == (dc.functionList[i].id))
+                            ?.name ??
+                        'N/A'),
                   ),
-                  title: const Text('F1'),
-                  trailing: const Text('dropdown here'),
                 ),
               ),
-            ),
-            Expanded(
-              child: Center(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.sunny,
-                    color: dc.btn2 ? Colors.green : null,
-                  ),
-                  title: const Text('F2'),
-                  trailing: const Text('dropdown here'),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.sunny,
-                    color: dc.btn3 ? Colors.green : null,
-                  ),
-                  title: const Text('F3'),
-                  trailing: const Text('dropdown here'),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.sunny,
-                    color: dc.btn4 ? Colors.green : null,
-                  ),
-                  title: const Text('F4'),
-                  trailing: const Text('dropdown here'),
-                ),
-              ),
-            ),
           ],
         ),
       );

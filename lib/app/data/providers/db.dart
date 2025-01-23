@@ -146,6 +146,10 @@ class DbProvider {
 
     await db.execute(Keys.dbDropFunctionsTable);
     await db.execute(Keys.dbCreateFunctionsTable);
+
+    await db.execute(Keys.dbDropButtonFunctionsTable);
+    await db.execute(Keys.dbCreateButtonFunctionsTable);
+    await db.execute(Keys.dbInsertButtonFunctions);
   }
 
   // MARK: RESET DB
@@ -1329,6 +1333,46 @@ class DbProvider {
         Keys.tableFunctions,
         where: Keys.queryId,
         whereArgs: [f.id],
+      );
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return -1;
+    }
+  }
+
+  Future<List<int?>> getButtonFunctions() async {
+    final db = await database;
+    if (db == null) return [];
+    try {
+      final data = await db.query(Keys.tableButtonFunctions);
+      return data.map((e) => e['functionId'] as int?).toList();
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return [];
+    }
+  }
+
+  Future<int> updateButtonFunction(int btnIndex, int? functionId) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.update(
+        Keys.tableButtonFunctions,
+        {'functionId': functionId},
+        where: 'buttonIndex=?',
+        whereArgs: [btnIndex],
       );
     } on Exception catch (err) {
       LogService.addLog(

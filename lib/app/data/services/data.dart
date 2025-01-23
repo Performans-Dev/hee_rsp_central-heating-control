@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/models/function.dart';
+import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
@@ -319,12 +320,41 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: FUNCTIONS
+  final RxList<int?> _buttonFunctionList = <int?>[].obs;
+  List<int?> get buttonFunctionList => _buttonFunctionList;
   final RxList<FunctionDefinition> _functionList = <FunctionDefinition>[].obs;
   List<FunctionDefinition> get functionList => _functionList;
   Future<void> loadFunctionList() async {
     final data = await DbProvider.db.getFunctions();
-    _functionList.assignAll(data);
+    final staticFunctions = [
+      FunctionDefinition(
+        id: -1,
+        name: 'Lock Screen',
+      ),
+      FunctionDefinition(
+        id: -2,
+        name: 'Emergency Shutdown',
+      ),
+    ];
+    _functionList.assignAll([...staticFunctions, ...data]);
     update();
+    loadButtonFunctionList();
+  }
+
+  Future<void> loadButtonFunctionList() async {
+    final data = await DbProvider.db.getButtonFunctions();
+    _buttonFunctionList.assignAll(data);
+    update();
+  }
+
+  Future<GenericResponse> updateButtonFunction(
+      int buttonIndex, int? functionId) async {
+    final result =
+        await DbProvider.db.updateButtonFunction(buttonIndex, functionId);
+    await loadFunctionList();
+    return result > 0
+        ? GenericResponse(success: true)
+        : GenericResponse(success: false, statusCode: result);
   }
   //#endregion
 
