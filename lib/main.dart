@@ -1,3 +1,7 @@
+// ignore_for_file: avoid_print
+
+import 'dart:io';
+
 import 'package:central_heating_control/app/app.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/data/services/bindings.dart';
@@ -41,6 +45,24 @@ Future<void> main() async {
   );
 
   // await box.erase();
+
+  // Read the PID of the previous app
+  final pidFile = File('/tmp/app_pid');
+  if (pidFile.existsSync()) {
+    final oldAppPid = int.tryParse(await pidFile.readAsString());
+    if (oldAppPid != null && oldAppPid != pid) {
+      // Avoid killing itself
+      try {
+        print('Terminating previous app with PID: $oldAppPid');
+        Process.killPid(oldAppPid, ProcessSignal.sigterm);
+      } catch (e) {
+        print('Error terminating previous app: $e');
+      }
+    }
+  }
+
+  // Write the current app's PID to the file
+  await pidFile.writeAsString('$pid');
 
   // await for flutter widgets bindings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

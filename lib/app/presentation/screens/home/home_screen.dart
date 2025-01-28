@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
@@ -40,55 +38,55 @@ class HomeScreen extends StatelessWidget {
                     itemCount: length,
                     shrinkWrap: true,
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      color: Colors.blue.withValues(alpha: 0.2),
-                      height: 160,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: ListView.builder(
-                              itemBuilder: (context, index) => Text(
-                                dc.runnerLogList[index],
-                                style: const TextStyle(fontSize: 10),
-                              ),
-                              itemCount: math.min(dc.runnerLogList.length, 36),
-                              shrinkWrap: true,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Wrap(
-                              children: [
-                                Chip(
-                                  label: const Text('1'),
-                                  backgroundColor:
-                                      dc.btn1 ? Colors.green : null,
-                                ),
-                                Chip(
-                                  label: const Text('2'),
-                                  backgroundColor:
-                                      dc.btn2 ? Colors.green : null,
-                                ),
-                                Chip(
-                                  label: const Text('3'),
-                                  backgroundColor:
-                                      dc.btn3 ? Colors.green : null,
-                                ),
-                                Chip(
-                                  label: const Text('4'),
-                                  backgroundColor:
-                                      dc.btn4 ? Colors.green : null,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: Container(
+                  //     color: Colors.blue.withValues(alpha: 0.2),
+                  //     height: 160,
+                  //     child: Row(
+                  //       children: [
+                  //         Expanded(
+                  //           flex: 2,
+                  //           child: ListView.builder(
+                  //             itemBuilder: (context, index) => Text(
+                  //               dc.runnerLogList[index],
+                  //               style: const TextStyle(fontSize: 10),
+                  //             ),
+                  //             itemCount: math.min(dc.runnerLogList.length, 36),
+                  //             shrinkWrap: true,
+                  //           ),
+                  //         ),
+                  //         Expanded(
+                  //           flex: 1,
+                  //           child: Wrap(
+                  //             children: [
+                  //               Chip(
+                  //                 label: const Text('1'),
+                  //                 backgroundColor:
+                  //                     dc.btn1 ? Colors.green : null,
+                  //               ),
+                  //               Chip(
+                  //                 label: const Text('2'),
+                  //                 backgroundColor:
+                  //                     dc.btn2 ? Colors.green : null,
+                  //               ),
+                  //               Chip(
+                  //                 label: const Text('3'),
+                  //                 backgroundColor:
+                  //                     dc.btn3 ? Colors.green : null,
+                  //               ),
+                  //               Chip(
+                  //                 label: const Text('4'),
+                  //                 backgroundColor:
+                  //                     dc.btn4 ? Colors.green : null,
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // )
                   // PiScrollView(
                   //   child: Center(
                   //     child: Padding(

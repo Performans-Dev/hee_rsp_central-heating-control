@@ -3,11 +3,7 @@
 import 'dart:io';
 
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
-import 'package:central_heating_control/app/data/models/hardware.dart';
-import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/file.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
@@ -45,20 +41,21 @@ class _SettingsPreferencesAdvancedScreenState
                   borderRadius: BorderRadius.circular(16),
                 ),
                 onTap: () async {
-                  final app = Get.find<AppController>();
-                  if (app.deviceInfo == null) return;
-                  try {
-                    final ChannelController channelController = Get.find();
-                    await channelController.closeAllRelays();
-                  } on Exception catch (e) {
-                    print('-------- closeAllRelays exception: $e');
-                    print(e);
-                  }
+                  await switchApp('heethings-cc-elevator');
+                  // final app = Get.find<AppController>();
+                  // if (app.deviceInfo == null) return;
+                  // try {
+                  //   final ChannelController channelController = Get.find();
+                  //   await channelController.closeAllRelays();
+                  // } on Exception catch (e) {
+                  //   print('-------- closeAllRelays exception: $e');
+                  //   print(e);
+                  // }
 
-                  Future.delayed(const Duration(seconds: 1), () {
-                    Process.killPid(pid);
-                  });
-                  await Process.run('sudo', ['heethings-cc-elevator']);
+                  // Future.delayed(const Duration(seconds: 1), () {
+                  //   Process.killPid(pid);
+                  // });
+                  // Process.run('sudo', ['heethings-cc-elevator']);
                 },
               ),
             ],
@@ -86,36 +83,37 @@ class _SettingsPreferencesAdvancedScreenState
                   borderRadius: BorderRadius.circular(16),
                 ),
                 onTap: () async {
-                  List<Hardware> extList = <Hardware>[];
-                  try {
-                    extList = await DbProvider.db.getHardwareDevices();
-                  } on Exception catch (e) {
-                    print('getting hardware devices exception: $e');
-                    print(e);
-                  }
+                  await switchApp('heethings-cc-diagnose');
+                  // List<Hardware> extList = <Hardware>[];
+                  // try {
+                  //   extList = await DbProvider.db.getHardwareDevices();
+                  // } on Exception catch (e) {
+                  //   print('getting hardware devices exception: $e');
+                  //   print(e);
+                  // }
 
-                  try {
-                    final directory =
-                        Directory('/home/pi/Heethings/CC/databases');
-                    if (!await directory.exists()) {
-                      await directory.create(recursive: true);
-                    }
+                  // try {
+                  //   final directory =
+                  //       Directory('/home/pi/Heethings/CC/databases');
+                  //   if (!await directory.exists()) {
+                  //     await directory.create(recursive: true);
+                  //   }
 
-                    final file = File('${directory.path}/external-devices.txt');
-                    final content = extList.map((e) => e.id).join(',');
-                    await file.writeAsString(content);
-                  } catch (e) {
-                    // Handle error silently
-                  }
+                  //   final file = File('${directory.path}/external-devices.txt');
+                  //   final content = extList.map((e) => e.id).join(',');
+                  //   await file.writeAsString(content);
+                  // } catch (e) {
+                  //   // Handle error silently
+                  // }
 
-                  final ChannelController channelController = Get.find();
-                  await channelController.closeAllRelays();
+                  // final ChannelController channelController = Get.find();
+                  // await channelController.closeAllRelays();
 
-                  await Process.run('sudo', ['heethings-cc-diagnose']);
+                  // Process.run('sudo', ['heethings-cc-diagnose']);
 
-                  Future.delayed(const Duration(seconds: 1), () {
-                    Process.killPid(pid);
-                  });
+                  // Future.delayed(const Duration(seconds: 1), () {
+                  //   Process.killPid(pid);
+                  // });
                 },
               ),
             ],
@@ -257,5 +255,25 @@ class _SettingsPreferencesAdvancedScreenState
         positiveCallback: () {},
       );
     }
+  }
+
+  Future<void> switchApp(String otherAppCommand) async {
+    final pidFile = File('/tmp/app_pid');
+
+    // Write the current PID to the file for the other app to read
+    await pidFile.writeAsString('$pid');
+
+    // Launch the other app
+    try {
+      print('Launching other app: $otherAppCommand');
+      await Process.run('sudo', otherAppCommand.split(' '));
+    } catch (e) {
+      print('Error launching other app: $e');
+      return; // If launching fails, don't exit
+    }
+
+    // Exit the current app after launching the other
+    print('Exiting current app with PID: $pid');
+    exit(0);
   }
 }
