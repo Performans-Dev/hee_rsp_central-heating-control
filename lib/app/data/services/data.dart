@@ -1,15 +1,24 @@
+import 'dart:async';
+
 import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/data/models/function.dart';
+import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/plan.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
+import 'package:central_heating_control/app/data/models/temperature_value.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
+import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {
+  late StreamSubscription btnStreamSubscription;
+
   //#region MARK: SUPER
   @override
   void onReady() {
@@ -19,7 +28,7 @@ class DataController extends GetxController {
 
   @override
   void onClose() {
-    // TODO: implement onClose
+    btnStreamSubscription.cancel();
     super.onClose();
   }
 
@@ -31,10 +40,23 @@ class DataController extends GetxController {
     await loadPlanList();
     await loadPlanDetails();
     await loadHardwareDevices();
+    await loadTemperatureValues();
+    registerBtnListener();
     Future.delayed(const Duration(seconds: 5), () {
       runnerLoop();
     });
   }
+  //#endregion
+
+  //#region MARK: Btns
+  final RxBool _btn1 = false.obs;
+  bool get btn1 => _btn1.value;
+  final RxBool _btn2 = false.obs;
+  bool get btn2 => _btn2.value;
+  final RxBool _btn3 = false.obs;
+  bool get btn3 => _btn3.value;
+  final RxBool _btn4 = false.obs;
+  bool get btn4 => _btn4.value;
   //#endregion
 
   //#region MARK: ZONES
@@ -135,6 +157,36 @@ class DataController extends GetxController {
     }
     return false;
   }
+
+  String? getHeaterZoneInfo(int channelId) {
+    Heater? h;
+    int? outputIndex;
+
+    for (var heater in heaterList) {
+      if (heater.outputChannel1 == channelId) {
+        h = heater;
+        outputIndex = 1;
+      } else if (heater.outputChannel2 == channelId) {
+        h = heater;
+        outputIndex = 2;
+      } else if (heater.outputChannel3 == channelId) {
+        h = heater;
+        outputIndex = 3;
+      } else if (heater.errorChannel == channelId) {
+        h = heater;
+        outputIndex = 1;
+      }
+    }
+
+    Zone? zone;
+    if (h != null) {
+      zone = zoneList.firstWhereOrNull((e) => e.id == h!.zoneId);
+    }
+
+    return h == null
+        ? 'Not Connected'
+        : '${h.name} - Channel: $outputIndex\n${zone != null ? zone.name : '-'}';
+  }
   //#endregion
 
   //#region MARK: SENSORS
@@ -183,12 +235,17 @@ class DataController extends GetxController {
       return 0.0;
     }
 
-    // Use null safety and a non-nullable initial value
-    double sum = sensors.fold<double>(0.0, (previousValue, sensor) {
-      return previousValue + (sensor.value ?? 0.0); // Use null-aware operator
-    });
+    double sum = 0;
+    int count = 0;
 
-    return sum / sensors.length;
+    for (final s in sensorListWithValues(zoneId)) {
+      if (s.value != null) {
+        sum += s.value!;
+        count++;
+      }
+    }
+
+    return count > 0 ? sum / count : 0;
   }
   //#endregion
 
@@ -262,6 +319,45 @@ class DataController extends GetxController {
   }
   //#endregion
 
+  //#region MARK: FUNCTIONS
+  final RxList<int?> _buttonFunctionList = <int?>[].obs;
+  List<int?> get buttonFunctionList => _buttonFunctionList;
+  final RxList<FunctionDefinition> _functionList = <FunctionDefinition>[].obs;
+  List<FunctionDefinition> get functionList => _functionList;
+  Future<void> loadFunctionList() async {
+    final data = await DbProvider.db.getFunctions();
+    final staticFunctions = [
+      FunctionDefinition(
+        id: -1,
+        name: 'Lock Screen',
+      ),
+      FunctionDefinition(
+        id: -2,
+        name: 'Emergency Shutdown',
+      ),
+    ];
+    _functionList.assignAll([...staticFunctions, ...data]);
+    update();
+    loadButtonFunctionList();
+  }
+
+  Future<void> loadButtonFunctionList() async {
+    final data = await DbProvider.db.getButtonFunctions();
+    _buttonFunctionList.assignAll(data);
+    update();
+  }
+
+  Future<GenericResponse> updateButtonFunction(
+      int buttonIndex, int? functionId) async {
+    final result =
+        await DbProvider.db.updateButtonFunction(buttonIndex, functionId);
+    await loadFunctionList();
+    return result > 0
+        ? GenericResponse(success: true)
+        : GenericResponse(success: false, statusCode: result);
+  }
+  //#endregion
+
   //#region MARK: HARDWARE
 
   final RxList<Hardware> _hardwareDeviceList = <Hardware>[].obs;
@@ -298,6 +394,24 @@ class DataController extends GetxController {
   //   await loadHardwareDevices();
   //   return result;
   // }
+  //#endregion
+
+  //#region MARK: TemperatureVAlues
+  final RxList<TemperatureValue> _temperatureValues = <TemperatureValue>[].obs;
+  List<TemperatureValue> get temperatureValues => _temperatureValues;
+  Future<void> loadTemperatureValues() async {
+    final data = await DbProvider.db.getAllTemperatureValues();
+    if (data.isEmpty) {
+      final data = await AppProvider.downloadTemperatureValues();
+      if (data.success) {
+        loadTemperatureValues();
+        return;
+      }
+    }
+
+    _temperatureValues.assignAll(data);
+    update();
+  }
   //#endregion
 
   //#region MARK: ACTIONS
@@ -352,6 +466,35 @@ class DataController extends GetxController {
   }
   //#endregion
 
+  //#region MARK: BtnListener
+  registerBtnListener() {
+    final ChannelController cc = Get.find();
+    btnStreamSubscription = cc.buttonStream.listen(onData);
+  }
+
+  void onData(ChannelDefinition data) {
+    switch (data.pinIndex) {
+      case 1:
+        _btn1.value = !data.status;
+
+        break;
+      case 2:
+        _btn2.value = !data.status;
+        break;
+      case 3:
+        _btn3.value = !data.status;
+        break;
+      case 4:
+        _btn4.value = !data.status;
+        break;
+    }
+    update();
+    if (!data.status) {
+      Buzz.mini();
+    }
+  }
+  //#endregion
+
   //#region MARK: LOOP
   final RxBool _isLooping = false.obs;
   bool get isLooping => _isLooping.value;
@@ -365,15 +508,13 @@ class DataController extends GetxController {
     _isLooping.value = true;
     update();
 
-    final ChannelController channelController = Get.find();
-
     for (final zone in zoneList) {
       ControlMode? zoneStateToApply;
       _runnerLogList.insert(0, 'Picking Zone: ${zone.name}');
       update();
       if (heaterList.where((e) => e.zoneId == zone.id).isEmpty) {
-        _runnerLogList.insert(0, 'No heater for ${zone.name}');
-        update();
+        // _runnerLogList.insert(0, 'No heater for ${zone.name}');
+        // update();
       } else {
         if (zone.selectedPlan == null ||
             zone.selectedPlan == 0 ||
@@ -381,8 +522,8 @@ class DataController extends GetxController {
           // no plan
           if (zone.hasThermostat && getSensorsOfZone(zone.id).isNotEmpty) {
             // check thermostat
-            _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
-            update();
+            // _runnerLogList.insert(0, 'Checking thermo for ${zone.name}');
+            // update();
             if (zone.isCurrentTemperatureHigherThanDesired) {
               // let it cool
               zoneStateToApply = ControlMode.off;
@@ -395,8 +536,8 @@ class DataController extends GetxController {
             }
           } else {
             // check control mode
-            _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
-            update();
+            // _runnerLogList.insert(0, 'Checking control mode for ${zone.name}');
+            // update();
             if (zone.currentMode == zone.desiredMode) {
               // do nothing
               zoneStateToApply = zone.currentMode;
@@ -407,8 +548,8 @@ class DataController extends GetxController {
           }
         } else {
           // apply plan
-          _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
-          update();
+          // _runnerLogList.insert(0, 'Applying plan for ${zone.name}');
+          // update();
           final plan =
               await DbProvider.db.getPlanDetails(planId: zone.selectedPlan!);
           final plansOfCurrentTime = plan
@@ -446,15 +587,13 @@ class DataController extends GetxController {
             }
           }
         }
-        _runnerLogList.insert(
-            0, '${zone.name} state must be ${zoneStateToApply.name}');
-        update();
+        // _runnerLogList.insert(
+        //     0, '${zone.name} state must be ${zoneStateToApply.name}');
+        // update();
 
         for (final heater in heaterList.where((e) => e.zoneId == zone.id)) {
           ControlMode? heaterStateToApply;
-          _runnerLogList.insert(
-              0, 'picking heater ${heater.name} for zone ${zone.name}');
-          update();
+
           if (heater.desiredMode == ControlMode.auto) {
             // apply zone state
             heaterStateToApply = zoneStateToApply;
@@ -466,80 +605,65 @@ class DataController extends GetxController {
             heaterStateToApply = heater.desiredMode;
           }
 
-          int? channel1;
-          int? channel2;
-          int? channel3;
-          switch (heater.levelType) {
-            case HeaterDeviceLevel.none:
-              //ignore
-              break;
-            case HeaterDeviceLevel.onOff:
-              channel1 = heater.outputChannel1!;
-              break;
-            case HeaterDeviceLevel.twoLevels:
-              channel1 = heater.outputChannel1!;
-              channel2 = heater.outputChannel2!;
-              break;
-            case HeaterDeviceLevel.threeLevels:
-              channel1 = heater.outputChannel1!;
-              channel2 = heater.outputChannel2!;
-              channel3 = heater.outputChannel3!;
-              break;
-          }
+          // _runnerLogList.insert(0,
+          //     'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
+          // update();
+
+          final ChannelController channelController = Get.find();
 
           switch (heaterStateToApply) {
             case ControlMode.on:
-              if (channel1 != null) {
-                channelController.sendOutput(channel1, true);
+              if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, true);
               }
-              if (channel2 != null) {
-                channelController.sendOutput(channel2, false);
+              if (heater.outputChannel2 != null && heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, false);
               }
-              if (channel3 != null) {
-                channelController.sendOutput(channel3, false);
+              if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, false);
               }
 
-              _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 0 0');
+              // update();
               break;
             case ControlMode.high:
-              if (channel1 != null) {
-                channelController.sendOutput(channel1, true);
+              if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, true);
               }
-              if (channel2 != null) {
-                channelController.sendOutput(channel2, true);
+              if (heater.outputChannel2 != null && heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, true);
               }
-              if (channel3 != null) {
-                channelController.sendOutput(channel3, false);
+              if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, false);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 1 0');
+              // update();
               break;
             case ControlMode.max:
-              if (channel1 != null) {
-                channelController.sendOutput(channel1, true);
+              if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, true);
               }
-              if (channel2 != null) {
-                channelController.sendOutput(channel2, true);
+              if (heater.outputChannel2 != null && heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, true);
               }
-              if (channel3 != null) {
-                channelController.sendOutput(channel3, true);
+              if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, true);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 1 1 1');
+              // update();
               break;
             default:
-              if (channel1 != null) {
-                channelController.sendOutput(channel1, false);
+              if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
+                channelController.setOutput(heater.outputChannel1!, false);
               }
-              if (channel2 != null) {
-                channelController.sendOutput(channel2, false);
+              if (heater.outputChannel2 != null && heater.outputChannel2 != 0) {
+                channelController.setOutput(heater.outputChannel2!, false);
               }
-              if (channel3 != null) {
-                channelController.sendOutput(channel3, false);
+              if (heater.outputChannel3 != null && heater.outputChannel3 != 0) {
+                channelController.setOutput(heater.outputChannel3!, false);
               }
-              _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
-              update();
+              // _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
+              // update();
               break;
           }
         }
@@ -547,6 +671,8 @@ class DataController extends GetxController {
     }
 
     _isLooping.value = false;
+    update();
+    _runnerLogList.insert(0, '-------------');
     update();
     Future.delayed(const Duration(milliseconds: 12000), () {
       runnerLoop();
@@ -557,5 +683,13 @@ class DataController extends GetxController {
   //#region MARK: Runner Log
   final RxList<String> _runnerLogList = <String>[].obs;
   List<String> get runnerLogList => _runnerLogList;
+
+  void addRunnerLog(String log) {
+    if (runnerLogList.length > 100) {
+      _runnerLogList.removeLast();
+    }
+    _runnerLogList.insert(0, log);
+    update();
+  }
   //#endregion
 }

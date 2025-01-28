@@ -42,10 +42,15 @@ class AppScaffold extends StatelessWidget {
                     label: const Text('Functions'),
                     disabled: !enabledFunctions,
                   ),
+                  // const NavigationRailDestination(
+                  //   icon: Icon(Icons.auto_mode),
+                  //   label: Text('Mode'),
+                  // ),
                   const NavigationRailDestination(
-                    icon: Icon(Icons.auto_mode),
-                    label: Text('Mode'),
+                    icon: Icon(Icons.shape_line_outlined),
+                    label: Text('Scheme'),
                   ),
+
                   const NavigationRailDestination(
                     icon: Icon(Icons.settings),
                     label: Text('Settings'),
@@ -123,11 +128,11 @@ class AppScaffold extends StatelessWidget {
                       break;
                     case 1:
                       // Get.toNamed(Routes.daySummaryScreen);
-                      Get.toNamed(Routes.settingsPreferencesAdvanced);
+                      // Get.toNamed(Routes.settingsPreferencesAdvanced);
+                      Get.toNamed(Routes.functions);
                       break;
                     case 2:
-                      //TODO:
-                      // app.nextThemeMode();
+                      Get.toNamed(Routes.schematics);
                       break;
                     case 3:
                       NavController.toSettings();

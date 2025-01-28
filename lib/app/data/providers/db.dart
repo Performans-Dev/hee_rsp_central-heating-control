@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/models/function.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
@@ -135,13 +136,20 @@ class DbProvider {
     await db.execute(Keys.dbDropHardwareTable);
     await db.execute(Keys.dbCreateHardwareTable);
     await db.execute(Keys.dbInsertMainBoardHardwareExtension);
-    await db.execute(Keys.dbInsertSampleHardwareExtension);
+    // await db.execute(Keys.dbInsertSampleHardwareExtension);
 
     await db.execute(Keys.dbDropTemperatureValues);
     await db.execute(Keys.dbCreateTemperatureValues);
 
     await db.execute(Keys.dbDropUsers);
     await db.execute(Keys.dbCreateUsers);
+
+    await db.execute(Keys.dbDropFunctionsTable);
+    await db.execute(Keys.dbCreateFunctionsTable);
+
+    await db.execute(Keys.dbDropButtonFunctionsTable);
+    await db.execute(Keys.dbCreateButtonFunctionsTable);
+    await db.execute(Keys.dbInsertButtonFunctions);
   }
 
   // MARK: RESET DB
@@ -661,14 +669,26 @@ class DbProvider {
     try {
       final int zoneUsersToDelete = await db.delete(Keys.tableZoneUsers,
           where: Keys.queryZoneId, whereArgs: [zone.id]);
-      final int zoneHeatersToDelete = await db.delete(Keys.tableZoneHeaters,
-          where: Keys.queryZoneId, whereArgs: [zone.id]);
+
+      final int heaterResult = await db.delete(
+        Keys.tableHeaters,
+        where: Keys.queryZoneId,
+        whereArgs: [zone.id],
+      );
+
       final int result = await db.delete(
         Keys.tableZones,
         where: Keys.queryId,
         whereArgs: [zone.id],
       );
-      log('Deleting zone #${zone.id}, with $zoneUsersToDelete users, $zoneHeatersToDelete heaters with result $result');
+      LogService.addLog(
+        LogDefinition(
+          message:
+              'Deleting zone #${zone.id}, with $zoneUsersToDelete users, $heaterResult heaters with result $result',
+          level: LogLevel.critical,
+          type: LogType.database,
+        ),
+      );
       return result;
     } on Exception catch (err) {
       LogService.addLog(LogDefinition(
@@ -1256,6 +1276,112 @@ class DbProvider {
         level: LogLevel.error,
         type: LogType.database,
       ));
+      return -1;
+    }
+  }
+  //#endregion
+
+  //#region MARK: Functions
+  Future<List<FunctionDefinition>> getFunctions() async {
+    final functions = <FunctionDefinition>[];
+    final db = await database;
+    if (db == null) return functions;
+    try {
+      final data = await db.query(Keys.tableFunctions);
+      for (final map in data) {
+        functions.add(FunctionDefinition.fromMap(map));
+      }
+      return functions;
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return functions;
+    }
+  }
+
+  Future<int> addFunction(FunctionDefinition f) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.insert(
+        Keys.tableFunctions,
+        f.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return -1;
+    }
+  }
+
+  Future<int> deleteFunction(FunctionDefinition f) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.delete(
+        Keys.tableFunctions,
+        where: Keys.queryId,
+        whereArgs: [f.id],
+      );
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return -1;
+    }
+  }
+
+  Future<List<int?>> getButtonFunctions() async {
+    final db = await database;
+    if (db == null) return [];
+    try {
+      final data = await db.query(Keys.tableButtonFunctions);
+      return data.map((e) => e['functionId'] as int?).toList();
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
+      return [];
+    }
+  }
+
+  Future<int> updateButtonFunction(int btnIndex, int? functionId) async {
+    final db = await database;
+    if (db == null) return -1;
+    try {
+      return await db.update(
+        Keys.tableButtonFunctions,
+        {'functionId': functionId},
+        where: 'buttonIndex=?',
+        whereArgs: [btnIndex],
+      );
+    } on Exception catch (err) {
+      LogService.addLog(
+        LogDefinition(
+          message: err.toString(),
+          level: LogLevel.error,
+          type: LogType.database,
+        ),
+      );
       return -1;
     }
   }

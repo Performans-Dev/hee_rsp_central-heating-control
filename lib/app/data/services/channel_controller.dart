@@ -4,12 +4,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/core/utils/byte.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
 import 'package:central_heating_control/app/data/models/log.dart';
 import 'package:central_heating_control/app/data/models/serial.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
 import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/message_handler.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:dart_periphery/dart_periphery.dart';
@@ -42,6 +45,10 @@ class ChannelController extends GetxController {
   late StreamController<SerialQuery> serialQueryStreamController;
   late StreamController<String> logMessageController;
   int _lastSensorDataFetch = 0;
+  final StreamController<ChannelDefinition> _buttonStreamController =
+      StreamController<ChannelDefinition>.broadcast();
+  Stream<ChannelDefinition> get buttonStream => _buttonStreamController.stream;
+  final Map<int, bool> _lastEmittedState = {};
   //#endregion
 
   //#region MARK: Lifecycle
@@ -61,12 +68,23 @@ class ChannelController extends GetxController {
 
   @override
   void onClose() {
+    closeAllRelays();
     disposeSerialPins();
     disposeGpioPins();
     serialQueryStreamController.close();
     logMessageController.close();
     messageSubscription?.cancel();
+    _buttonStreamController.close();
     super.onClose();
+  }
+
+  Future<void> closeAllRelays() async {
+    for (final pin in outputChannels) {
+      setOutput(pin.pinIndex, false);
+    }
+    await sendOutputPackage();
+
+    writeOE(false);
   }
 
   Future<void> runInitTasks() async {
@@ -78,10 +96,10 @@ class ChannelController extends GetxController {
     if (isPi) {
       initGpioPins();
     }
-    await wait(100);
-    runGpioInputPolling();
 
-    readObSensorData();
+    await wait(10);
+    writeOE(true);
+    await wait(10);
 
     // Initialize Serial pins
     await initSerialPins();
@@ -92,6 +110,10 @@ class ChannelController extends GetxController {
     await wait(100);
     serialQueryStreamController = StreamController<SerialQuery>.broadcast();
 
+    runGpioInputPolling();
+    await wait(100);
+    readObSensorData();
+    await wait(100);
     runSerialLoop();
   }
   //#endregion
@@ -160,6 +182,7 @@ class ChannelController extends GetxController {
       buzzer = GPIO(0, GPIOdirection.gpioDirOut);
       in1 = GPIO(5, GPIOdirection.gpioDirIn);
       in2 = GPIO(6, GPIOdirection.gpioDirIn);
+      in3 = GPIO(12, GPIOdirection.gpioDirIn);
       in4 = GPIO(13, GPIOdirection.gpioDirIn);
       in5 = GPIO(19, GPIOdirection.gpioDirIn);
       in6 = GPIO(16, GPIOdirection.gpioDirIn);
@@ -377,6 +400,7 @@ class ChannelController extends GetxController {
           type: PinType.buttonPinInput,
           userSelectable: false,
         ));
+        _lastEmittedState[id] = false;
       }
       for (int i = 1; i <= analogCount; i++) {
         id++;
@@ -395,14 +419,37 @@ class ChannelController extends GetxController {
       }
     }
     _inputChannels.sort((a, b) => a.name.compareTo(b.name));
+
+    print(
+        '------- channels initialized input: ${inputChannels.length} output: ${outputChannels.length}');
     update();
+
+    for (final b in inputChannels
+        .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)) {
+      ever(_inputChannels, (_) {
+        if (!b.status) {
+          // button is pressed
+          onBtnPressed(b.pinIndex);
+        } else {
+          // button is released
+        }
+      });
+    }
   }
 
   updateChannelValue(int id, double value) {}
 
   updateChannelState(int id, bool value) {
-    _outputChannels.firstWhere((e) => e.id == id).status = value;
-    update();
+    try {
+      _outputChannels.firstWhereOrNull((e) => e.id == id)?.status = value;
+      update();
+    } on Exception catch (e) {
+      print('unable to find output channel id: $id');
+      print(e);
+
+      final DataController dc = Get.find();
+      dc.addRunnerLog('unable to find output channel id: $id');
+    }
   }
 
   bool getOutputChannelState({required int hwId, required int pinIndex}) {
@@ -734,8 +781,10 @@ class ChannelController extends GetxController {
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
               .analogValue = sensor4.toDouble();
           update();
+          Buzz.success();
         } on Exception catch (e) {
           print(e);
+          Buzz.error();
         }
       }
     }
@@ -743,9 +792,18 @@ class ChannelController extends GetxController {
   //#endregion
 
   //#region MARK: GPIO INPUT POLLING
-  void runGpioInputPolling() {
+  void runGpioInputPolling() async {
+    // try {
+    //   await sendOutputPackage();
+    // } on Exception catch (e) {
+    //   final DataController dc = Get.find();
+    //   dc.addRunnerLog('sendOutputPackage: $e');
+    // }
+
     try {
-      for (var c in inputChannels.where((e) => e.deviceId == 0x00).toList()) {
+      for (var c in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.onboardPinInput)
+          .toList()) {
         switch (c.pinIndex) {
           case 1:
             _inputChannels.firstWhere((e) => e.id == c.id).status = in1.read();
@@ -772,16 +830,35 @@ class ChannelController extends GetxController {
             _inputChannels.firstWhere((e) => e.id == c.id).status = in8.read();
             break;
         }
+      }
+      for (var c in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
+          .toList()) {
+        switch (c.pinIndex) {
+          case 1:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn1.read();
 
-        _pinSerState.value = outPinSER.read();
-        _pinSrclkState.value = outPinSRCLK.read();
-        _pinRclkState.value = outPinRCLK.read();
-        _pinTxEnableState.value = txEnablePin.read();
-        _pinBuzzerState.value = buzzer.read();
-        _fanPinState.value = fanPin.read();
-        _pinUartModeTxState.value = uartModeTx.read();
+            break;
+          case 2:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn2.read();
+            break;
+          case 3:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn3.read();
+            break;
+          case 4:
+            _inputChannels.firstWhere((e) => e.id == c.id).status = btn4.read();
 
-        update();
+            break;
+        }
+      }
+      update();
+      for (var b in inputChannels
+          .where((e) => e.deviceId == 0x00 && e.type == PinType.buttonPinInput)
+          .toList()) {
+        if (_lastEmittedState[b.id] != b.status) {
+          _buttonStreamController.add(b);
+          _lastEmittedState[b.id] = b.status;
+        }
       }
     } on Exception catch (e) {
       print(e);
@@ -826,39 +903,54 @@ class ChannelController extends GetxController {
     }
   }
 
-  Future<void> turnOnRelay(int id) async {
+  void turnOnRelay(int id) {
     ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
-    await sendOutput(c.pinIndex, true);
+    setOutput(c.pinIndex, true);
     _outputChannels.firstWhere((e) => e.id == id).status = true;
     update();
   }
 
-  Future<void> turnOffRelay(int id) async {
+  void turnOffRelay(int id) {
     ChannelDefinition c = outputChannels.firstWhere((e) => e.id == id);
-    await sendOutput(c.pinIndex, false);
+    setOutput(c.pinIndex, false);
     _outputChannels.firstWhere((e) => e.id == id).status = false;
     update();
   }
 
-  Future<void> sendOutput(int index, bool value) async {
+  Future<void> sendOutputPackage() async {
     await wait(1);
-    for (int i = 1; i <= 8; i++) {
-      writeSER(i == index
-          ? value
-          : outputChannels
-              .firstWhere((e) => e.deviceId == 0x00 && e.pinIndex == i)
-              .status);
+    String temp = '';
+    for (final c in outputChannels
+        .where((e) =>
+            e.deviceId == 0x00 &&
+            e.type == PinType.onboardPinOutput &&
+            e.userSelectable == true)
+        .toList()) {
+      writeSER(c.status);
+      await wait(1);
       writeSRCLK(true);
       await wait(1);
       writeSRCLK(false);
       await wait(1);
+      temp += c.status ? '1' : '0';
     }
     await wait(1);
     writeRCLK(true);
+
     await wait(1);
     writeRCLK(false);
+
     await wait(1);
     writeOE(true);
+    final DataController dc = Get.find();
+    dc.addRunnerLog('sendOutputPackage: $temp');
+  }
+
+  void setOutput(int id, bool value) {
+    final DataController dc = Get.find();
+    dc.addRunnerLog('sendOutput($id, $value)');
+
+    updateChannelState(id, value);
   }
 
   void writeOE(bool value) {
@@ -869,27 +961,116 @@ class ChannelController extends GetxController {
     }
   }
 
-  void writeSRCLK(bool value) {
+  String? writeSRCLK(bool value) {
     try {
       outPinSRCLK.write(value);
+      return null;
     } on Exception catch (e) {
-      print('writeSRCLK: $e');
+      return 'writeSRCLK: $e';
     }
   }
 
-  void writeRCLK(bool value) {
+  String? writeRCLK(bool value) {
     try {
       outPinRCLK.write(value);
+      return null;
     } on Exception catch (e) {
-      print('writeRCLK: $e');
+      return 'writeRCLK: $e';
     }
   }
 
-  void writeSER(bool value) {
+  String? writeSER(bool value) {
     try {
       outPinSER.write(value);
+      return null;
     } on Exception catch (e) {
-      print('writeSER: $e');
+      return 'writeSER: $e';
+    }
+  }
+  //#endregion
+
+  //#region MARK: Buzzer
+  Future<void> buzz(BuzzerType t) async {
+    try {
+      switch (t) {
+        case BuzzerType.mini:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 10));
+          buzzer.write(false);
+          break;
+        case BuzzerType.feedback:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 20));
+          buzzer.write(false);
+          break;
+        case BuzzerType.success:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 50));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          break;
+        case BuzzerType.error:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 500));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 500));
+          buzzer.write(false);
+          break;
+        case BuzzerType.alarm:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 1000));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 1000));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 1000));
+          buzzer.write(false);
+          break;
+        case BuzzerType.lock:
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 50));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          await Future.delayed(const Duration(milliseconds: 50));
+          buzzer.write(true);
+          await Future.delayed(const Duration(milliseconds: 100));
+          buzzer.write(false);
+          break;
+        default:
+          break;
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+  //#endregion
+
+  //#region MARK: OnBtnPress
+  void onBtnPressed(int index) {
+    switch (index) {
+      case 1:
+        Buzz.mini();
+        break;
+      case 2:
+        Buzz.success();
+        break;
+      case 3:
+        Buzz.error();
+        break;
+      case 4:
+        Buzz.alarm();
+        break;
     }
   }
   //#endregion

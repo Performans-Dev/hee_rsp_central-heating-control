@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
+import 'package:central_heating_control/app/core/utils/common.dart';
 import 'package:central_heating_control/app/data/models/heater.dart';
 import 'package:central_heating_control/app/data/models/sensor_device.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
@@ -176,10 +177,15 @@ class _ZoneScreenState extends State<ZoneScreen> {
                                           selectedHeater = null;
                                         });
                                       },
-                                      onHeaterModeCalled: (ControlMode mode) {
-                                        dataController.onHeaterModeCalled(
-                                            heaterId: selectedHeater!.id,
-                                            mode: mode);
+                                      onHeaterModeCalled:
+                                          (ControlMode mode) async {
+                                        await dataController.onHeaterModeCalled(
+                                          heaterId: selectedHeater!.id,
+                                          mode: mode,
+                                        );
+                                        setState(() {
+                                          selectedHeater = null;
+                                        });
                                       },
                                     ),
                             ),
@@ -991,11 +997,13 @@ class ZoneDetailSensorsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           ...sensors.map((e) => Chip(
-                label: Text('S${e.id}:  ${e.value?.toStringAsPrecision(1)} °C'),
+                label: Text(
+                    'S${e.id}:  ${CCUtils.sensorRawToTemperature(e.value?.toInt())?.toStringAsFixed(1)} °C'),
               )),
           const Spacer(),
           Chip(
-            label: Text('Avg: ${sensorAverage.toStringAsPrecision(1)} °C'),
+            label: Text(
+                'Avg: ${CCUtils.sensorRawToTemperature(sensorAverage.toInt())?.toStringAsFixed(1)} °C'),
           ),
         ],
       ),
@@ -1023,10 +1031,18 @@ class ZoneDetailHeaterListWidget extends StatelessWidget {
         Text(title),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-                title: Text(heaters[index].name),
-                subtitle: Text(heaters[index].desiredMode.name),
-                onTap: () => onHeaterSelected(heaters[index])),
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                  tileColor:
+                      CommonUtils.hexToColor(context, heaters[index].color)
+                          .withValues(alpha: 0.3),
+                  shape:
+                      RoundedRectangleBorder(borderRadius: UiDimens.formRadius),
+                  title: Text(heaters[index].name),
+                  subtitle: Text(heaters[index].desiredMode.name),
+                  onTap: () => onHeaterSelected(heaters[index])),
+            ),
             itemCount: heaters.length,
           ),
         ),

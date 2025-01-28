@@ -10,41 +10,34 @@ class ComIndicatorLedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChannelController>(builder: (cc) {
-      return Expanded(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                const SizedBox(
-                  width: 35,
-                  child: Text('GPIO', style: TextStyle(fontSize: 10)),
-                ),
-                PinIndicator(value: cc.pinSerState),
-                PinIndicator(value: cc.pinSrclkState),
-                PinIndicator(value: cc.pinRclkState),
-                PinIndicator(value: cc.pinTxEnableState),
-              ],
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 35,
-                  child: Text('Serial', style: TextStyle(fontSize: 10)),
-                ),
-                PinIndicator(value: cc.pinUartModeTxState),
-                PinIndicator(value: cc.pinBuzzerState),
-                PinIndicator(value: cc.fanPinState),
-                PinIndicator(value: cc.processingSerialLoop),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+    return GetBuilder<ChannelController>(
+      builder: (cc) {
+        return Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: cc.outputChannels
+                    .where((e) =>
+                        e.type == PinType.onboardPinOutput &&
+                        e.deviceId == 0x00)
+                    .map((e) => PinIndicator(value: e.status))
+                    .toList(),
+              ),
+              Row(
+                children: cc.inputChannels
+                    .where((e) =>
+                        e.type == PinType.onboardPinInput && e.deviceId == 0x00)
+                    .map((e) => PinIndicator(value: e.status))
+                    .toList(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -62,7 +55,7 @@ class PinIndicator extends StatelessWidget {
       height: 6,
       margin: const EdgeInsets.all(1),
       decoration: BoxDecoration(
-        color: value ? Colors.grey : Colors.orange,
+        color: value ? Colors.orange : Colors.grey,
         borderRadius: BorderRadius.circular(3),
       ),
     );

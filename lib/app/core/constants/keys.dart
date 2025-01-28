@@ -62,7 +62,7 @@ class Keys {
   static const String http = 'http';
 
   //#region MARK: DATABASE
-  static const int databaseVersion = 30;
+  static const int databaseVersion = 32;
   static const int logDatabaseVersion = 18;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -77,6 +77,8 @@ class Keys {
   static const String tablePlanDetails = 'planDetails';
   static const String tableHardwares = 'hardwares';
   static const String tableTemperatureValues = 'temperatureValues';
+  static const String tableFunctions = 'tblFunctions';
+  static const String tableButtonFunctions = 'buttonFunctions';
 
   static const String queryId = 'id=?';
   static const String queryName = 'name=?';
@@ -164,9 +166,7 @@ class Keys {
   static const String dbInsertSampleZones = '''
     INSERT INTO zones (name, color, desiredMode, currentMode, selectedPlan) VALUES
       ('Zone 1', '#FF0000', 0, 0, 0),
-      ('Zone 2', '#00FF00', 0, 0, 0),
-      ('Zone 3', '#0000FF', 0, 0, 0),
-      ('Zone 4', '#FFFF00', 0, 0, 1)
+      ('Zone 2', '#00FF00', 0, 0, 0)
   ''';
 
   static const String dbDropZoneUsers = '''
@@ -329,5 +329,39 @@ class Keys {
     INSERT INTO sensors 
     (device, sensorIndex,zoneId,color,name) VALUES 
     (0, {INDEX},NULL,NULL,NULL)
+  ''';
+
+  static const String dbDropFunctionsTable = '''
+    DROP TABLE IF EXISTS $tableFunctions
+  ''';
+
+  static const String dbCreateFunctionsTable = '''
+    CREATE TABLE IF NOT EXISTS $tableFunctions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      zoneId INTEGER,
+      heaterId INTEGER,
+      controlMode INTEGER,
+      fromHour INTEGER,
+      toHour INTEGER
+    )
+  ''';
+
+  static const String dbDropButtonFunctionsTable = '''
+    DROP TABLE IF EXISTS $tableButtonFunctions
+  ''';
+
+  static const String dbCreateButtonFunctionsTable = '''
+    CREATE TABLE IF NOT EXISTS $tableButtonFunctions (
+      buttonIndex INTEGER,
+      functionId INTEGER
+    )
+  ''';
+  static const String dbInsertButtonFunctions = '''
+    INSERT INTO $tableButtonFunctions (buttonIndex, functionId) VALUES
+      (1, -2),
+      (2, -1),
+      (3, 0),
+      (4, 0)
   ''';
 }

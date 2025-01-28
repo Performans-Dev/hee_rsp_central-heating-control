@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/dialogs.dart';
@@ -135,8 +133,20 @@ class _SettingsZoneEditScreenState extends State<SettingsZoneEditScreen> {
 
   Widget get deleteButton => TextButton(
       onPressed: () async {
-        log('//TODO: confirm -> delete relations, delete record');
-        await DbProvider.db.deleteZone(zone);
+        DialogUtils.confirmDialog(
+          context: Get.context!,
+          title: 'Delete Zone?',
+          description:
+              'Are you sure you want to delete this zone and the heaters inside it?',
+          positiveText: 'Delete',
+          negativeText: 'Cancel',
+          positiveCallback: () async {
+            await DbProvider.db.deleteZone(zone);
+            await dataController.loadZoneList();
+            await dataController.loadHeaterList();
+            Get.back();
+          },
+        );
       },
       child: const Text(
         'Delete this zone and all of its contents',
