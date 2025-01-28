@@ -58,6 +58,7 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
       final imageFiles = directory.listSync().where((file) =>
           file.path.endsWith('.jpg') ||
           file.path.endsWith('.jpeg') ||
+          file.path.endsWith('.gif') ||
           file.path.endsWith('.png'));
       images = imageFiles.map((file) => File(file.path)).toList();
       startSlideShow();
