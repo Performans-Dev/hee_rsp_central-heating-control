@@ -98,8 +98,8 @@ class ChannelController extends GetxController {
     }
 
     await wait(10);
-    writeOE(true);
-    await wait(10);
+    // writeOE(true);
+    // await wait(10);
 
     // Initialize Serial pins
     await initSerialPins();
