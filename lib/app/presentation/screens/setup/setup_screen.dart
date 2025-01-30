@@ -20,6 +20,7 @@ class _SetupScreenState extends State<SetupScreen> {
     super.initState();
     print("SETUP SCREEN INIT");
     navigateToNextSequence();
+    Get.changeThemeMode(ThemeMode.light);
   }
 
   void navigateToNextSequence() {
