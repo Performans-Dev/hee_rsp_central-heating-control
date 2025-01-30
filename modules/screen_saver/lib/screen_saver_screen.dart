@@ -118,13 +118,15 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: timeAlignment,
-                child: Opacity(
-                  opacity: 0.83,
-                  child: widget.definition.date,
+            IgnorePointer(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: timeAlignment,
+                  child: Opacity(
+                    opacity: 0.83,
+                    child: widget.definition.date,
+                  ),
                 ),
               ),
             ),
