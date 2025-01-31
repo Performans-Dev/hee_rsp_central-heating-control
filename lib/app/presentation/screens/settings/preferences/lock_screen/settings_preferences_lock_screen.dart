@@ -89,10 +89,27 @@ class _SettingsPreferencesLockScreenState
                         value: e,
                         selected: e == screenSaverType,
                         groupValue: screenSaverType,
-                        onChanged: (v) {
+                        onChanged: (v) async {
                           setState(() {
                             screenSaverType = e;
                           });
+                          if (screenSaverType == ScreenSaverType.fun) {
+                            final dir = Directory('/home/pi/Pictures/fun');
+                            if (!dir.existsSync()) {
+                              dir.createSync();
+                            }
+                            final funImages = dir.listSync();
+                            if (funImages.isEmpty) {
+                              for (int i = 0; i <= 8; i++) {
+                                await Process.run(
+                                    'wget',
+                                    [
+                                      'https://releases.api2.run/heethings/cc/images/ilm0$i.gif',
+                                    ],
+                                    workingDirectory: '/home/pi/Pictures/fun');
+                              }
+                            }
+                          }
                         },
                         title: Text(e.name.camelCaseToHumanReadable()),
                         shape: RoundedRectangleBorder(
