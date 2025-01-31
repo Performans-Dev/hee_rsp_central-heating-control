@@ -289,7 +289,7 @@ class ControlModeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ToggleButtons(
       direction: Axis.vertical,
-      constraints: const BoxConstraints(minWidth: 120, minHeight: 42),
+      constraints: const BoxConstraints(minWidth: 126, minHeight: 42),
       verticalDirection: VerticalDirection.up,
       borderRadius: UiDimens.formRadius,
       onPressed: (value) {
@@ -297,15 +297,20 @@ class ControlModeWidget extends StatelessWidget {
       },
       isSelected: data.map((e) => e == selectedMode).toList(),
       children: data
-          .map((e) => Row(
-                spacing: 12,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CCUtils.stateIcon(e, withColor: selectedMode == e),
-                  Text(e.name
-                      .replaceAll('auto', !isZone ? 'Zone' : 'Auto')
-                      .toUpperCase()),
-                ],
+          .map((e) => SizedBox(
+                width: 126,
+                height: 42,
+                child: Row(
+                  spacing: 12,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CCUtils.stateIcon(e, withColor: selectedMode == e),
+                    Text(e.name
+                        .replaceAll('auto', !isZone ? 'Zone' : 'Auto')
+                        .toUpperCase()),
+                  ],
+                ),
               ))
           .toList(),
     );

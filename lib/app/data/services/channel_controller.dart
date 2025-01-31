@@ -793,12 +793,12 @@ class ChannelController extends GetxController {
 
   //#region MARK: GPIO INPUT POLLING
   void runGpioInputPolling() async {
-    // try {
-    //   await sendOutputPackage();
-    // } on Exception catch (e) {
-    //   final DataController dc = Get.find();
-    //   dc.addRunnerLog('sendOutputPackage: $e');
-    // }
+    try {
+      await sendOutputPackage();
+    } on Exception catch (e) {
+      final DataController dc = Get.find();
+      dc.addRunnerLog('sendOutputPackage: $e');
+    }
 
     try {
       for (var c in inputChannels
