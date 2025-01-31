@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/data/models/app_user.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:get/get.dart';
 
 class Zone {
   final int id;
@@ -14,7 +14,6 @@ class Zone {
   final ControlMode desiredMode;
   final ControlMode currentMode;
   final double? desiredTemperature;
-  final double? currentTemperature;
   final bool hasThermostat;
   Zone({
     required this.id,
@@ -25,9 +24,22 @@ class Zone {
     required this.desiredMode,
     required this.currentMode,
     this.desiredTemperature,
-    this.currentTemperature,
     required this.hasThermostat,
   });
+
+  double? get currentTemperature {
+    double? result = 0;
+    int count = 0;
+    final DataController dc = Get.find();
+    for (final s in dc.sensorListWithValues(id)) {
+      if (s.value != null) {
+        count++;
+        result = (result ?? 0) + s.value!;
+      }
+    }
+
+    return count > 0 ? (result ?? 0) / count : 0;
+  }
 
   bool get isCurrentTemperatureLowerThanDesired =>
       currentTemperature != null && desiredTemperature != null
@@ -48,7 +60,6 @@ class Zone {
     ControlMode? desiredMode,
     ControlMode? currentMode,
     double? desiredTemperature,
-    double? currentTemperature,
     bool? hasThermostat,
   }) {
     return Zone(
@@ -60,7 +71,6 @@ class Zone {
       desiredMode: desiredMode ?? this.desiredMode,
       currentMode: currentMode ?? this.currentMode,
       desiredTemperature: desiredTemperature ?? this.desiredTemperature,
-      currentTemperature: currentTemperature ?? this.currentTemperature,
       hasThermostat: hasThermostat ?? this.hasThermostat,
     );
   }
@@ -76,7 +86,6 @@ class Zone {
             'desiredMode': desiredMode.index,
             'currentMode': currentMode.index,
             'desiredTemperature': desiredTemperature,
-            'currentTemperature': currentTemperature,
             'hasThermostat': hasThermostat == true ? 1 : 0,
           }
         : {
@@ -87,7 +96,6 @@ class Zone {
             'desiredMode': desiredMode.index,
             'currentMode': currentMode.index,
             'desiredTemperature': desiredTemperature,
-            'currentTemperature': currentTemperature,
             'hasThermostat': hasThermostat == true ? 1 : 0,
           };
   }
@@ -102,7 +110,6 @@ class Zone {
       'desiredMode': desiredMode.index,
       'currentMode': currentMode.index,
       'desiredTemperature': desiredTemperature,
-      'currentTemperature': currentTemperature,
       'hasThermostat': hasThermostat,
     };
   }
@@ -117,7 +124,6 @@ class Zone {
       desiredMode: ControlMode.values[map['desiredMode']],
       currentMode: ControlMode.values[map['currentMode']],
       desiredTemperature: map['desiredTemperature']?.toDouble(),
-      currentTemperature: map['currentTemperature']?.toDouble(),
       hasThermostat: map['hasThermostat'] == 1 ? true : false,
     );
   }
@@ -132,7 +138,6 @@ class Zone {
       desiredMode: ControlMode.values[map['desiredMode']],
       currentMode: ControlMode.values[map['currentMode']],
       desiredTemperature: map['desiredTemperature']?.toDouble(),
-      currentTemperature: map['currentTemperature']?.toDouble(),
       hasThermostat: map['hasThermostat'] == 1 ? true : false,
     );
   }
@@ -146,47 +151,10 @@ class Zone {
         desiredMode: ControlMode.off,
         currentMode: ControlMode.off,
         desiredTemperature: null,
-        currentTemperature: null,
         hasThermostat: false,
       );
 
   String toJson() => json.encode(toMap());
 
   factory Zone.fromJson(String source) => Zone.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'Zone(id: $id, name: $name, color: $color, users: $users, selectedPlan: $selectedPlan, desiredMode: $desiredMode, currentMode: $currentMode, desiredTemperature: $desiredTemperature, currentTemperature: $currentTemperature, hasThermostat: $hasThermostat)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Zone &&
-        other.id == id &&
-        other.name == name &&
-        other.color == color &&
-        listEquals(other.users, users) &&
-        other.selectedPlan == selectedPlan &&
-        other.desiredMode == desiredMode &&
-        other.currentMode == currentMode &&
-        other.desiredTemperature == desiredTemperature &&
-        other.currentTemperature == currentTemperature &&
-        other.hasThermostat == hasThermostat;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        color.hashCode ^
-        users.hashCode ^
-        selectedPlan.hashCode ^
-        desiredMode.hashCode ^
-        currentMode.hashCode ^
-        desiredTemperature.hashCode ^
-        currentTemperature.hashCode ^
-        hasThermostat.hashCode;
-  }
 }
