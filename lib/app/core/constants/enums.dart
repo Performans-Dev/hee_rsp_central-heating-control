@@ -109,7 +109,6 @@ enum ControlMode {
   auto,
 }
 
-
 enum ErrorChannelType {
   nC,
   nO,
@@ -159,9 +158,9 @@ enum WebViewScreenState {
 }
 
 enum ScreenSaverType {
-  blank,
   staticPicture,
   slidePictures,
+  fun,
 }
 
 enum SerialCommand {

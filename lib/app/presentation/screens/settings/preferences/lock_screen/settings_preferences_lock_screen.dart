@@ -168,6 +168,8 @@ class _SettingsPreferencesLockScreenState
               onPressed: () async {
                 await Box.setInt(
                     key: Keys.idleTimerInSeconds, value: selectedIdleTimeout);
+                await Box.setInt(
+                    key: Keys.screenSaverType, value: screenSaverType.index);
                 // final AppController app = Get.find();
                 /* TODO:
                  app.setIdleTime(selectedIdleTimeout);

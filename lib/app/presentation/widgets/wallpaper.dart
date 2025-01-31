@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:central_heating_control/app/core/constants/enums.dart';
+import 'package:central_heating_control/app/core/constants/keys.dart';
+import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,9 +52,13 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
   }
 
   Future<void> _loadImages() async {
-    final directory = isPi
+    final screenSaverType = ScreenSaverType
+        .values[Box.getInt(key: Keys.screenSaverType, defaultVal: 2)];
+    final directory = screenSaverType == ScreenSaverType.slidePictures
         ? Directory('/home/pi/Pictures')
-        : Directory('/home/ozge/Desktop/pi_wallpaper');
+        : screenSaverType == ScreenSaverType.fun
+            ? Directory('/home/pi/Pictures/fun')
+            : Directory('/home/pi/Pictures/static');
 
     if (directory.existsSync()) {
       final imageFiles = directory.listSync().where((file) =>
