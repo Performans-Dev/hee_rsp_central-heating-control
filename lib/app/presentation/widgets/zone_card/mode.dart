@@ -36,7 +36,7 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
             const SizedBox(height: 12),
             if (currentTemperature != null)
               Text(
-                'Current: ${currentTemperature?.toStringAsFixed(1)} °C',
+                '${currentTemperature?.toStringAsFixed(1)} °C',
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             const SizedBox(height: 12),
