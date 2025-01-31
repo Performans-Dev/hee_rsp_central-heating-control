@@ -6,6 +6,7 @@ import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:central_heating_control/app/data/services/nav.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/components/pi_scroll.dart';
+import 'package:central_heating_control/app/presentation/widgets/action_button.dart';
 import 'package:central_heating_control/app/presentation/widgets/label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,11 +46,12 @@ class SettingsZoneListScreen extends StatelessWidget {
                             context, dc.zoneList[index].color)
                         .withValues(alpha: 0.3),
                     title: Text(dc.zoneList[index].name),
-                    subtitle: Text(dc.zoneList[index].users
-                        .map((e) => e.username)
-                        .toList()
-                        .join(', ')
-                        .toString()),
+                    // subtitle: Text(dc.zoneList[index].users
+                    //     .map((e) => e.username)
+                    //     .toList()
+                    //     .join(', ')
+                    //     .toString()),
+
                     onTap: () {
                       Buzz.feedback();
                       Get.toNamed(
@@ -74,12 +76,12 @@ class SettingsZoneListScreen extends StatelessWidget {
   Widget get addZoneButton => Container(
         padding: const EdgeInsets.all(16),
         alignment: Alignment.bottomRight,
-        child: ElevatedButton.icon(
+        child: ActionButton(
           onPressed: () {
             NavController.toSettingsZoneAdd();
           },
-          label: const Text("Add New Zone"),
-          icon: const Icon(Icons.add),
+          labelText: "Add New Zone",
+          suffixIcon: const Icon(Icons.add),
         ),
       );
 }

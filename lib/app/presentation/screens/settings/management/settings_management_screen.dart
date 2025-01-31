@@ -19,8 +19,9 @@ class SettingsManagementScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12,
           children: [
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             ListTile(
               title: const Text('Zone'),
               subtitle: Text('List and manage zones'.tr),
@@ -33,7 +34,6 @@ class SettingsManagementScreen extends StatelessWidget {
                 NavController.toSettingsZoneList();
               },
             ),
-            const SizedBox(height: 8),
             ListTile(
               title: const Text('Heaters'),
               subtitle: Text('List and manage heaters'.tr),
@@ -46,7 +46,6 @@ class SettingsManagementScreen extends StatelessWidget {
                 NavController.toSettingsDeviceList();
               },
             ),
-            const SizedBox(height: 8),
             ListTile(
               title: const Text('Sensor'),
               subtitle: Text('List and manage sensors'.tr),
@@ -59,27 +58,29 @@ class SettingsManagementScreen extends StatelessWidget {
                 NavController.toSettingsSensorList();
               },
             ),
-            const SizedBox(height: 8),
-            GetBuilder<ChannelController>(builder: (cc) {
-              return ListTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                tileColor: Theme.of(context).highlightColor,
-                title: const Text('Alarm'),
-                subtitle: Text('Configure alarm input'.tr),
-                trailing: SizedBox(
-                  width: 100,
-                  child: ChannelDropdownWidget(
-                    group: GpioGroup.inPin,
-                    value: null, //TODO: read from db via data controller
-                    onChanged: (value) {
-                      //TODO: save to db via data controller
-                    },
+            GetBuilder<ChannelController>(
+              builder: (cc) {
+                return ListTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ),
-              );
-            }),
+                  tileColor: Theme.of(context).highlightColor,
+                  title: const Text('Alarm'),
+                  subtitle: Text('Configure alarm input'.tr),
+                  trailing: SizedBox(
+                    width: 100,
+                    child: ChannelDropdownWidget(
+                      group: GpioGroup.inPin,
+                      value: null, //TODO: read from db via data controller
+                      onChanged: (value) {
+                        //TODO: save to db via data controller
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
           ],
         ),
       ),

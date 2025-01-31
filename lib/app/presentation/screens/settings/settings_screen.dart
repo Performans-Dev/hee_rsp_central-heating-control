@@ -19,8 +19,9 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12,
             children: [
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               ListTile(
                 leading: const Icon(Icons.dashboard_rounded),
                 title: const Text('Zone, Heaters, Sensor Management'),
@@ -36,7 +37,6 @@ class SettingsScreen extends StatelessWidget {
                   NavController.toSettingsManagement();
                 },
               ),
-              const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.functions),
                 title: const Text('Functions'),
@@ -51,7 +51,6 @@ class SettingsScreen extends StatelessWidget {
                 },
                 enabled: enabledFunctions,
               ),
-              const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.add_task),
                 title: const Text('Weekly Plan Settings'),
@@ -66,7 +65,6 @@ class SettingsScreen extends StatelessWidget {
                 enabled: enabledWeeklyPlan,
               ),
               if (enabledLocalUsers) ...[
-                const SizedBox(height: 8),
                 ListTile(
                   leading: const Icon(Icons.group),
                   title: const Text('User Management'),
@@ -79,7 +77,6 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => NavController.toSettingsUserList(),
                 ),
               ],
-              const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.settings_applications),
                 title: const Text('Preferences'),
@@ -92,7 +89,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 onTap: () => NavController.toSettingsPreferences(),
               ),
-              const SizedBox(height: 8),
               ListTile(
                 leading: const Icon(Icons.list_alt_sharp),
                 title: const Text('Logs'),
@@ -104,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 onTap: () => NavController.toLogs(),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
             ],
           ),
         ),
