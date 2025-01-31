@@ -297,11 +297,11 @@ class ControlModeWidget extends StatelessWidget {
       },
       isSelected: data.map((e) => e == selectedMode).toList(),
       children: data
-          .map((e) => SizedBox(
+          .map((e) => Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
                 width: 126,
                 height: 42,
                 child: Row(
-                  spacing: 12,
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
