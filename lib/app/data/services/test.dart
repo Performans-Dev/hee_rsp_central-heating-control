@@ -23,7 +23,7 @@ class TestController extends GetxController {
   late GPIO in8;
   late GPIO txEnablePin;
 
-  int _lastSensorDataFetch = 0;
+  // int _lastSensorDataFetch = 0;
 
   @override
   void onInit() {
