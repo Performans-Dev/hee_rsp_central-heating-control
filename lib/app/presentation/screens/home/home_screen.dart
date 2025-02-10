@@ -43,28 +43,20 @@ class HomeScreen extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 12,
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 20,
-                          color: dc.btn1 ? Colors.green : Colors.orange,
-                        ),
-                        Container(
-                          width: 20,
-                          height: 20,
-                          color: dc.btn2 ? Colors.green : Colors.orange,
-                        ),
-                        Container(
-                          width: 20,
-                          height: 20,
-                          color: dc.btn3 ? Colors.green : Colors.orange,
-                        ),
-                        Container(
-                          width: 20,
-                          height: 20,
-                          color: dc.btn4 ? Colors.green : Colors.orange,
-                        ),
-                      ],
+                      children: cc.outputChannels
+                          .where((e) =>
+                              e.deviceId == 0x00 &&
+                              e.type == PinType.onboardPinOutput)
+                          .map((e) => IconButton(
+                                onPressed: () {
+                                  final val = !e.status;
+                                  cc.updateChannelState(e.id, val);
+                                  cc.sendOutput2(e.pinIndex, val);
+                                },
+                                icon:
+                                    Icon(e.status ? Icons.check : Icons.close),
+                              ))
+                          .toList(),
                     ),
                   ),
                   // Align(

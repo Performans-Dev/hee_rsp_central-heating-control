@@ -473,23 +473,18 @@ class DataController extends GetxController {
   }
 
   void onData(ChannelDefinition data) {
-    final ChannelController cc = Get.find();
     switch (data.pinIndex) {
       case 1:
         _btn1.value = !data.status;
-        cc.sendOutput2(1, true);
         break;
       case 2:
         _btn2.value = !data.status;
-        cc.sendOutput2(1, false);
         break;
       case 3:
         _btn3.value = !data.status;
-        cc.sendOutput2(2, true);
         break;
       case 4:
         _btn4.value = !data.status;
-        cc.sendOutput2(2, false);
         break;
     }
     update();
