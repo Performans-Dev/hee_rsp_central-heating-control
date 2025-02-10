@@ -38,6 +38,35 @@ class HomeScreen extends StatelessWidget {
                     itemCount: length,
                     shrinkWrap: true,
                   ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 12,
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          color: dc.btn1 ? Colors.green : Colors.orange,
+                        ),
+                        Container(
+                          width: 20,
+                          height: 20,
+                          color: dc.btn2 ? Colors.green : Colors.orange,
+                        ),
+                        Container(
+                          width: 20,
+                          height: 20,
+                          color: dc.btn3 ? Colors.green : Colors.orange,
+                        ),
+                        Container(
+                          width: 20,
+                          height: 20,
+                          color: dc.btn4 ? Colors.green : Colors.orange,
+                        ),
+                      ],
+                    ),
+                  ),
                   // Align(
                   //   alignment: Alignment.bottomCenter,
                   //   child: Container(
