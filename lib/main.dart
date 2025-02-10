@@ -41,7 +41,7 @@ Future<void> main() async {
 
   // Simulate a system-level mouse click to hide the cursor
   if (Platform.isLinux) {
-    Process.run('xdotool', ['mousemove', '1', '1', 'click', '1']);
+    Process.run('sudo', ['xdotool', 'mousemove', '1', '1', 'click', '1']);
   }
 
   box.write(
