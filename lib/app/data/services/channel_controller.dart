@@ -189,6 +189,7 @@ class ChannelController extends GetxController {
       in7 = GPIO(26, GPIOdirection.gpioDirIn);
       in8 = GPIO(20, GPIOdirection.gpioDirIn);
       txEnablePin = GPIO(21, GPIOdirection.gpioDirOut);
+      txEnablePin.write(true);
       print("GPIO pins initialized");
     } on Exception catch (e) {
       LogService.addLog(LogDefinition(
@@ -837,7 +838,6 @@ class ChannelController extends GetxController {
         switch (c.pinIndex) {
           case 1:
             _inputChannels.firstWhere((e) => e.id == c.id).status = btn1.read();
-
             break;
           case 2:
             _inputChannels.firstWhere((e) => e.id == c.id).status = btn2.read();
@@ -847,7 +847,6 @@ class ChannelController extends GetxController {
             break;
           case 4:
             _inputChannels.firstWhere((e) => e.id == c.id).status = btn4.read();
-
             break;
         }
       }
@@ -951,6 +950,34 @@ class ChannelController extends GetxController {
     dc.addRunnerLog('sendOutput($id, $value)');
 
     updateChannelState(id, value);
+  }
+
+  Future<void> sendOutput2(int index, bool value) async {
+    for (int i = 1; i <= 8; i++) {
+      writeSER(i == index
+          ? value
+          : getPinState(
+              device: 0x00,
+              number: (0x00 + i),
+              type: PinType.onboardPinOutput,
+            ));
+      writeSRCLK(true);
+      await wait(1);
+      writeSRCLK(false);
+      await wait(1);
+    }
+    await wait(1);
+    writeRCLK(true);
+    await wait(1);
+    writeRCLK(false);
+  }
+
+  bool getPinState(
+      {required int device, required int number, required PinType type}) {
+    return outputChannels
+        .firstWhere((e) =>
+            e.deviceId == device && e.pinIndex == number && e.type == type)
+        .status;
   }
 
   void writeOE(bool value) {

@@ -29,8 +29,9 @@ class _SettingsPreferencesAdvancedScreenState
       title: "Advanced",
       body: PiScrollView(
         child: Column(
-          spacing: 8,
+          spacing: 12,
           children: [
+            const SizedBox(height: 12),
             if (enabledUpdates) ...[
               ListTile(
                 leading: const Icon(Icons.update),
@@ -184,6 +185,7 @@ class _SettingsPreferencesAdvancedScreenState
                   ),
                 ],
               ),
+              const SizedBox(height: 28),
             ],
           ],
         ),

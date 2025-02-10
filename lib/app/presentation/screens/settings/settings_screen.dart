@@ -100,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 onTap: () => NavController.toLogs(),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 28),
             ],
           ),
         ),

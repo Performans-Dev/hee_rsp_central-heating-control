@@ -18,9 +18,10 @@ class SettingsPreferencesScreen extends StatelessWidget {
         selectedIndex: 3,
         body: PiScrollView(
           child: Column(
-            spacing: 8,
+            spacing: 12,
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 12),
               ListTile(
                 title: const Text('Theme'),
                 subtitle: Text(

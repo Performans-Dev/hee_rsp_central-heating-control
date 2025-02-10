@@ -82,34 +82,7 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
               ),
             ),
             InkWell(
-              onTap: () {
-                Future.delayed(Duration.zero, () {
-                  if (context.mounted) {
-                    ScreenSaverTimer sst = ScreenSaverTimer();
-                    if (sst.allowNoUser) {
-                      Navigator.of(context).pushReplacementNamed('/home');
-                    } else {
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) =>
-                                  SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, 1),
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: child,
-                          ),
-                          barrierColor: Colors.black.withValues(alpha: 0.3),
-                          barrierDismissible: true,
-                          opaque: false,
-                          pageBuilder: (_, __, ___) => widget.definition.target,
-                        ),
-                      );
-                    }
-                  }
-                });
-              },
+              onTap: () => onTap(context),
               child: SizedBox(
                 width: double.infinity,
                 height: double.infinity,
@@ -118,7 +91,8 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
                 ),
               ),
             ),
-            IgnorePointer(
+            InkWell(
+              onTap: () => onTap(context),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Align(
@@ -134,6 +108,36 @@ class _ScreenSaverScreenState extends State<ScreenSaverScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> onTap(BuildContext context) async {
+    Future.delayed(Duration.zero, () {
+      if (!context.mounted) {
+        return;
+      }
+      ScreenSaverTimer sst = ScreenSaverTimer();
+      if (sst.allowNoUser) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 1),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+            barrierColor: Colors.black.withValues(alpha: 0.3),
+            barrierDismissible: true,
+            opaque: false,
+            pageBuilder: (_, __, ___) => widget.definition.target,
+          ),
+        );
+      }
+    });
   }
 
   AlignmentGeometry getRandomAlignment() {
