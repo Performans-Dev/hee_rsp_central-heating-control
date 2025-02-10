@@ -33,7 +33,7 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
     extends State<SettingsPreferencesAdvancedHardwareConfigAddNewScreen> {
   HardwareInstallScreenState screenState = HardwareInstallScreenState.idle;
   final DataController dataController = Get.find();
-  final ChannelController channelController = Get.find();
+  // final ChannelController channelController = Get.find();
   late int nextHardwareId;
   late StreamSubscription<SerialQuery> subscription;
   late StreamSubscription<String> logSubscription;
@@ -44,18 +44,18 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   void initState() {
     super.initState();
     timer = Timer(Duration.zero, () {});
-    subscription = channelController.serialQueryStreamController.stream
-        .listen(onSerialQueryDataReceived);
-    logSubscription =
-        channelController.logMessageController.stream.listen((data) {
-      setState(() {
-        messages.insert(0, data);
-        if (messages.length > 1000) {
-          messages.removeRange(999, messages.length);
-        }
-      });
-    });
-    loadExistingHardwareExtensions();
+    // subscription = channelController.serialQueryStreamController.stream
+    //     .listen(onSerialQueryDataReceived);
+    // logSubscription =
+    //     channelController.logMessageController.stream.listen((data) {
+    //   setState(() {
+    //     messages.insert(0, data);
+    //     if (messages.length > 1000) {
+    //       messages.removeRange(999, messages.length);
+    //     }
+    //   });
+    // });
+    // loadExistingHardwareExtensions();
   }
 
   @override
@@ -67,7 +67,8 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataController>(
+    return const Placeholder();
+    /* return GetBuilder<DataController>(
       builder: (dc) {
         const acquiringNextIdWidget = Center(
           child: CircularProgressIndicator(),
@@ -253,10 +254,10 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
           ),
         );
       },
-    );
+    ); */
   }
 
-  Future<void> loadExistingHardwareExtensions() async {
+  /* Future<void> loadExistingHardwareExtensions() async {
     setState(() => screenState = HardwareInstallScreenState.acquiringNextId);
     await dataController.loadHardwareDevices();
     setState(() => nextHardwareId = 0);
@@ -312,5 +313,5 @@ class _SettingsPreferencesAdvancedHardwareConfigAddNewScreenState
   Future<void> tryAgainClicked() async {
     //close 'add' screen, user should try again
     Get.back();
-  }
+  } */
 }

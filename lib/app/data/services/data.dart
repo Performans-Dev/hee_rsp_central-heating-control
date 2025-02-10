@@ -1,7 +1,8 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/utils/buzz.dart';
 import 'package:central_heating_control/app/data/models/function.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
@@ -12,7 +13,6 @@ import 'package:central_heating_control/app/data/models/temperature_value.dart';
 import 'package:central_heating_control/app/data/models/zone.dart';
 import 'package:central_heating_control/app/data/providers/app_provider.dart';
 import 'package:central_heating_control/app/data/providers/db.dart';
-import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -41,7 +41,7 @@ class DataController extends GetxController {
     await loadPlanDetails();
     await loadHardwareDevices();
     await loadTemperatureValues();
-    registerBtnListener();
+    // registerBtnListener();
     Future.delayed(const Duration(seconds: 5), () {
       // runnerLoop();
     });
@@ -213,7 +213,7 @@ class DataController extends GetxController {
   }
 
   List<SensorDeviceWithValues> sensorListWithValues(zoneId) {
-    final ChannelController cc = Get.find();
+    // final ChannelController cc = Get.find();
     List<SensorDeviceWithValues> result = [];
     for (var sensor in sensorList.where((e) => e.zone == zoneId)) {
       result.add(SensorDeviceWithValues(
@@ -223,7 +223,7 @@ class DataController extends GetxController {
         zone: sensor.zone,
         color: sensor.color,
         name: sensor.name,
-        value: cc.getSensorValue(sensor.id),
+        value: 0// cc.getSensorValue(sensor.id),
       ));
     }
     return result;
@@ -467,31 +467,31 @@ class DataController extends GetxController {
   //#endregion
 
   //#region MARK: BtnListener
-  registerBtnListener() {
-    final ChannelController cc = Get.find();
-    btnStreamSubscription = cc.buttonStream.listen(onData);
-  }
+  // registerBtnListener() {
+  //   final ChannelController cc = Get.find();
+  //   btnStreamSubscription = cc.buttonStream.listen(onData);
+  // }
 
-  void onData(ChannelDefinition data) {
-    switch (data.pinIndex) {
-      case 1:
-        _btn1.value = !data.status;
-        break;
-      case 2:
-        _btn2.value = !data.status;
-        break;
-      case 3:
-        _btn3.value = !data.status;
-        break;
-      case 4:
-        _btn4.value = !data.status;
-        break;
-    }
-    update();
-    if (!data.status) {
-      Buzz.mini();
-    }
-  }
+  // void onData(ChannelDefinition data) {
+  //   switch (data.pinIndex) {
+  //     case 1:
+  //       _btn1.value = !data.status;
+  //       break;
+  //     case 2:
+  //       _btn2.value = !data.status;
+  //       break;
+  //     case 3:
+  //       _btn3.value = !data.status;
+  //       break;
+  //     case 4:
+  //       _btn4.value = !data.status;
+  //       break;
+  //   }
+  //   update();
+  //   if (!data.status) {
+  //     Buzz.mini();
+  //   }
+  // }
   //#endregion
 
   //#region MARK: LOOP
@@ -608,9 +608,9 @@ class DataController extends GetxController {
           //     'picking heater ${heater.name} for zone ${zone.name} should be ${heaterStateToApply.name}');
           // update();
 
-          final ChannelController channelController = Get.find();
+          // final ChannelController channelController = Get.find();
 
-          switch (heaterStateToApply) {
+          /* switch (heaterStateToApply) {
             case ControlMode.on:
               if (heater.outputChannel1 != null && heater.outputChannel1 != 0) {
                 channelController.setOutput(heater.outputChannel1!, true);
@@ -664,7 +664,7 @@ class DataController extends GetxController {
               // _runnerLogList.insert(0, '${heater.name} sending 0 0 0');
               // update();
               break;
-          }
+          } */
         }
       }
     }

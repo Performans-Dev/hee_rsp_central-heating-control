@@ -127,7 +127,7 @@ class _PiInfoScreenState extends State<PiInfoScreen> {
                               ),
                               titleLevel: 2,
                             ),
-                            Expanded(
+                           /*  Expanded(
                               child:
                                   GetBuilder<ChannelController>(builder: (cc) {
                                 final data = cc.hardwareList
@@ -159,7 +159,7 @@ class _PiInfoScreenState extends State<PiInfoScreen> {
                                   itemCount: data.length,
                                 );
                               }),
-                            )
+                            ) */
                           ],
                         ),
                       ),

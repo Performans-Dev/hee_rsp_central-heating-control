@@ -12,7 +12,8 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataController>(builder: (dc) {
+    return const Placeholder();
+    /* return GetBuilder<DataController>(builder: (dc) {
       return GetBuilder<ChannelController>(builder: (cc) {
         return AppScaffold(
           selectedIndex: 3,
@@ -449,6 +450,6 @@ class SettingsPreferencesAdvancedHardwareConfigScreen extends StatelessWidget {
           ),
         );
       });
-    });
+    }); */
   }
 }

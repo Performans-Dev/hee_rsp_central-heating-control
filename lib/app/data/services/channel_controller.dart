@@ -1,4 +1,21 @@
-// ignore_for_file: avoid_print
+//#region MARK: Constants
+import 'dart:convert';
+
+int kMainBoardButtonPinCount = 4;
+String inputChannelName = 'CHI {n}';
+String outputChannelName = 'CHO {n}';
+String inputAnalogChannelName = 'NTC {n}';
+String buttonChannelName = 'BTN {n}';
+
+int kMainBoardId = 0x00;
+int startByte = 0x3A;
+List<int> stopBytes = [0x0D, 0x0A];
+String serialKey = '/dev/ttyS0';
+int kSerialAcknowledgementDelay = 700;
+int kSerialLoopDelay = 100;
+
+//#endregion
+/* // ignore_for_file: avoid_print
 
 import 'dart:async';
 import 'dart:convert';
@@ -1150,7 +1167,7 @@ class ChannelController extends GetxController {
   }
   //#endregion
 }
-
+ */
 // MARK: CHANNEL DEFINITION
 class ChannelDefinition {
   int id; // starts with 1

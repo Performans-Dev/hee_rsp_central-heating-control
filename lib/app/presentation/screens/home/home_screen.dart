@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:central_heating_control/app/data/services/test.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_item.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       builder: (app) {
-        return GetBuilder<ChannelController>(builder: (cc) {
+        return GetBuilder<TestController>(builder: (cc) {
           return GetBuilder<DataController>(builder: (dc) {
             int length = dc.zoneList.length;
             double height = 120;
@@ -38,25 +39,12 @@ class HomeScreen extends StatelessWidget {
                     itemCount: length,
                     shrinkWrap: true,
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 12,
-                      children: cc.outputChannels
-                          .where((e) =>
-                              e.deviceId == 0x00 &&
-                              e.type == PinType.onboardPinOutput)
-                          .map((e) => IconButton(
-                                onPressed: () {
-                                  final val = !e.status;
-                                  cc.updateChannelState(e.id, val);
-                                  cc.sendOutput2(e.pinIndex, val);
-                                },
-                                icon:
-                                    Icon(e.status ? Icons.check : Icons.close),
-                              ))
-                          .toList(),
+                      children: []
                     ),
                   ),
                   // Align(

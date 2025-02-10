@@ -34,7 +34,7 @@ class ZoneScreen extends StatefulWidget {
 
 class _ZoneScreenState extends State<ZoneScreen> {
   final DataController dataController = Get.find();
-  final ChannelController channelController = Get.find();
+  // final ChannelController channelController = Get.find();
 
   late Zone zone;
   Heater? selectedHeater;

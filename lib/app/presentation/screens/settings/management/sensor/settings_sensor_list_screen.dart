@@ -19,7 +19,8 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
   final DataController dc = Get.find();
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return const Placeholder();
+    /* return AppScaffold(
       selectedIndex: 3,
       title: "Sensors",
       body: GetBuilder<ChannelController>(
@@ -51,7 +52,7 @@ class _SettingsSensorListScreenState extends State<SettingsSensorListScreen> {
                 );
         },
       ),
-    );
+    ); */
   }
 
   Widget sensorCard(

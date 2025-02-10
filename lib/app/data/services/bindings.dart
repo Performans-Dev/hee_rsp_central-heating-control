@@ -4,6 +4,7 @@ import 'package:central_heating_control/app/data/services/process.dart';
 import 'package:central_heating_control/app/data/services/screen_saver.dart';
 import 'package:central_heating_control/app/data/services/setup.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
+import 'package:central_heating_control/app/data/services/test.dart';
 import 'package:get/get.dart';
 
 class AppBindings extends Bindings {
@@ -18,7 +19,7 @@ class AppBindings extends Bindings {
       () async => ScreenSaverController(),
       permanent: true,
     );
-    
+
     await Get.putAsync(
       () async => SetupController(),
       permanent: true,
@@ -31,8 +32,13 @@ class AppBindings extends Bindings {
     );
 
     /// GPIO and Serial Pins and its states
+    // await Get.putAsync(
+    //   () async => ChannelController(),
+    //   permanent: true,
+    // );
+
     await Get.putAsync(
-      () async => ChannelController(),
+      () async => TestController(),
       permanent: true,
     );
 

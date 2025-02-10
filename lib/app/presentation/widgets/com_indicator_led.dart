@@ -10,7 +10,9 @@ class ComIndicatorLedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChannelController>(
+    return Container();
+
+    /* return GetBuilder<ChannelController>(
       builder: (cc) {
         return Expanded(
           child: Column(
@@ -37,7 +39,7 @@ class ComIndicatorLedWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ); */
   }
 }
 

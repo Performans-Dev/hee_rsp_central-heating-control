@@ -8,7 +8,8 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChannelController>(
+    return const Placeholder();
+    /* return GetBuilder<ChannelController>(
       builder: (sc) {
         return GetBuilder<ChannelController>(
           builder: (sc) {
@@ -47,7 +48,7 @@ class SettingsPreferencesAdvancedDiagnosticsScreen extends StatelessWidget {
           },
         );
       },
-    );
+    ); */
   }
 }
 

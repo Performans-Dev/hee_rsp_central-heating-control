@@ -58,7 +58,7 @@ class SettingsManagementScreen extends StatelessWidget {
                 NavController.toSettingsSensorList();
               },
             ),
-            GetBuilder<ChannelController>(
+            /* GetBuilder<ChannelController>(
               builder: (cc) {
                 return ListTile(
                   shape: RoundedRectangleBorder(
@@ -79,7 +79,7 @@ class SettingsManagementScreen extends StatelessWidget {
                   ),
                 );
               },
-            ),
+            ), */
             const SizedBox(height: 12),
           ],
         ),

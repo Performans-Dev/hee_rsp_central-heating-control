@@ -10,7 +10,8 @@ class SchematicsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChannelController>(builder: (cc) {
+    return const Placeholder();
+    /* return GetBuilder<ChannelController>(builder: (cc) {
       return GetBuilder<DataController>(builder: (dc) {
         List<ChannelDefinition> data = [];
         data.addAll(cc.inputChannels.where((e) => e.userSelectable));
@@ -33,6 +34,6 @@ class SchematicsScreen extends StatelessWidget {
           ),
         );
       });
-    });
+    }); */
   }
 }
