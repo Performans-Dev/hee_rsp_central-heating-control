@@ -39,6 +39,11 @@ Future<void> main() async {
   final box = GetStorage();
   //
 
+  // Simulate a system-level mouse click to hide the cursor
+  if (Platform.isLinux) {
+    Process.run('xdotool', ['mousemove', '1', '1', 'click', '1']);
+  }
+
   box.write(
     Keys.documentsDirectoryPath,
     isPi ? Keys.piPath : documentsDirectory.path,
