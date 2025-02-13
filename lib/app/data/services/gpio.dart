@@ -448,8 +448,6 @@ class GpioController extends GetxController {
     writeRCLK(false);
     await wait(1);
     print('Reset GPIO outputs completed');
-
-    writeOE(false);
   }
   //#endregion
 
@@ -496,9 +494,14 @@ class GpioController extends GetxController {
   }
 
   Future<void> sendOutput2() async {
-    for (final item in pinStates
+    var data = pinStates
         .where((e) => e.device == 0x00 && e.type == PinType.onboardPinOutput)
-        .toList()) {
+        .toList()
+        .toSet()
+        .toList();
+    data.sort((a, b) => a.number - b.number);
+
+    for (final item in data) {
       writeSER(item.status);
       await wait(1);
       writeSRCLK(true);
@@ -510,7 +513,7 @@ class GpioController extends GetxController {
     await wait(1);
     writeRCLK(false);
     await wait(1);
-    writeOE(true);
+    // writeOE(true);
   }
 
   Future<void> sendOutput(int index, bool value) async {
