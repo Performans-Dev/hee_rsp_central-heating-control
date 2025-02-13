@@ -394,7 +394,7 @@ class GpioController extends GetxController {
         device: 0x00,
         number: i,
         status: false,
-        type: PinType.onboardPinOutput,
+        type: PinType.onboardPinInput,
       ));
     }
     for (final i in [0x01, 0x02, 0x03, 0x04]) {
