@@ -21,7 +21,7 @@ class GpioController extends GetxController {
     populatePinStatuses();
     await wait(100);
 
-    resetOutputs();
+    await resetOutputs();
     await wait(100);
 
     //enable output
