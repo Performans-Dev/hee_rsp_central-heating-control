@@ -42,22 +42,45 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Row(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 12,
-                      children: gc.pinStates
-                          .where((e) =>
-                              e.device == 0x00 &&
-                              e.type == PinType.onboardPinOutput)
-                          .map((e) => FloatingActionButton(
-                                heroTag: 'out-${e.number}',
-                                onPressed: () {
-                                  gc.onOutTap(e.number);
-                                },
-                                backgroundColor: e.status ? Colors.green : null,
-                                child: Text('${e.number}'),
-                              ))
-                          .toList(),
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 12,
+                          children: gc.pinStates
+                              .where((e) =>
+                                  e.device == 0x00 &&
+                                  e.type == PinType.onboardPinInput)
+                              .map((e) => FloatingActionButton(
+                                    heroTag: 'in-${e.number}',
+                                    onPressed: () {},
+                                    backgroundColor:
+                                        e.status ? Colors.green : null,
+                                    child: Text('${e.number}'),
+                                  ))
+                              .toList(),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 12,
+                          children: gc.pinStates
+                              .where((e) =>
+                                  e.device == 0x00 &&
+                                  e.type == PinType.onboardPinOutput)
+                              .map((e) => FloatingActionButton(
+                                    heroTag: 'out-${e.number}',
+                                    onPressed: () {
+                                      gc.onOutTap(e.number);
+                                    },
+                                    backgroundColor:
+                                        e.status ? Colors.green : null,
+                                    child: Text('${e.number}'),
+                                  ))
+                              .toList(),
+                        ),
+                      ],
                     ),
                   ),
                   // Align(

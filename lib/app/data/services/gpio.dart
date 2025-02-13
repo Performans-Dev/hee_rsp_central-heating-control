@@ -473,11 +473,44 @@ class GpioController extends GetxController {
 
   //#region MARK: onOutTap
   void onOutTap(int outPinNumber) {
-    var ps = getPinStates(
-            device: 0x00, type: PinType.onboardPinOutput, number: outPinNumber)
-        .first;
-    updatePinState(ps);
-    sendOutput(outPinNumber, ps.status);
+    // var ps = getPinStates(
+    //         device: 0x00, type: PinType.onboardPinOutput, number: outPinNumber)
+    //     .first;
+    // ps.status = !ps.status;
+
+    bool newValue = !(_pinStates
+        .firstWhere((e) =>
+            e.number == outPinNumber &&
+            e.device == 0x00 &&
+            e.type == PinType.onboardPinOutput)
+        .status);
+
+    _pinStates
+        .firstWhere((e) =>
+            e.number == outPinNumber &&
+            e.device == 0x00 &&
+            e.type == PinType.onboardPinOutput)
+        .status = newValue;
+    update();
+    sendOutput2();
+  }
+
+  Future<void> sendOutput2() async {
+    for (final item in pinStates
+        .where((e) => e.device == 0x00 && e.type == PinType.onboardPinOutput)
+        .toList()) {
+      writeSER(item.status);
+      await wait(1);
+      writeSRCLK(true);
+      await wait(1);
+      writeSRCLK(false);
+      await wait(1);
+    }
+    writeRCLK(true);
+    await wait(1);
+    writeRCLK(false);
+    await wait(1);
+    writeOE(true);
   }
 
   Future<void> sendOutput(int index, bool value) async {
