@@ -509,14 +509,14 @@ class GpioController extends GetxController {
     for (final item in data) {
       writeSER(item.status);
       dataString += item.status ? '1' : '0';
-      await wait(1);
+      await wait(10);
       writeSRCLK(true);
-      await wait(1);
+      await wait(10);
       writeSRCLK(false);
-      await wait(1);
+      await wait(10);
     }
     writeRCLK(true);
-    await wait(1);
+    await wait(10);
     writeRCLK(false);
     await wait(1);
 

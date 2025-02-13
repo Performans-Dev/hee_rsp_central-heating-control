@@ -58,7 +58,7 @@ class AppController extends GetxController {
   //#region Structure Flags
   Future<void> startStructureCheck() async {
     await readDevice();
-    await FileServices.checkFoldersExists();
+    // await FileServices.checkFoldersExists();
     await FileServices.checkProvisionStatusCompleted();
   }
 

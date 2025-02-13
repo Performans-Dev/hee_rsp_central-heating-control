@@ -10,32 +10,32 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class FileServices {
-  static Future<bool> createMissingFolders() async {
-    // mock
-    await Future.delayed(const Duration(milliseconds: 500));
-    //TODO: replace with real code
+  // static Future<bool> createMissingFolders() async {
+  //   // mock
+  //   await Future.delayed(const Duration(milliseconds: 500));
+  //   //TODO: replace with real code
 
-    final AppController appController = Get.find();
-    appController.setDidCheckFoldersExists(true);
+  //   final AppController appController = Get.find();
+  //   appController.setDidCheckFoldersExists(true);
 
-    return true;
-  }
+  //   return true;
+  // }
 
   //#region MARK: Folders
-  static Future<void> checkFoldersExists() async {
-    AppController app = Get.find();
-    try {
-      final result =
-          await Process.run('sudo', ['/home/pi/Heethings/folder-check.sh']);
-      print(
-          'FOLDER CHECK RESULT: ${result.exitCode} ${result.stdout} ${result.stderr}');
-      app.setDoesFoldersExists(result.exitCode == 0);
-    } on Exception catch (e) {
-      print("FOLDER CHECK RESULT: $e");
-    } finally {
-      app.setDidCheckFoldersExists(true);
-    }
-  }
+  // static Future<void> checkFoldersExists() async {
+  //   AppController app = Get.find();
+  //   try {
+  //     final result =
+  //         await Process.run('sudo', ['/home/pi/Heethings/folder-check.sh']);
+  //     print(
+  //         'FOLDER CHECK RESULT: ${result.exitCode} ${result.stdout} ${result.stderr}');
+  //     app.setDoesFoldersExists(result.exitCode == 0);
+  //   } on Exception catch (e) {
+  //     print("FOLDER CHECK RESULT: $e");
+  //   } finally {
+  //     app.setDidCheckFoldersExists(true);
+  //   }
+  // }
 
   static Future<void> checkProvisionStatusCompleted() async {
     AppController app = Get.find();
