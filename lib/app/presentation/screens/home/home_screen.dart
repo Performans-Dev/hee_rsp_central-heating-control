@@ -1,6 +1,7 @@
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:central_heating_control/app/data/services/gpio.dart';
 import 'package:central_heating_control/app/data/services/test.dart';
 import 'package:central_heating_control/app/presentation/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/zone_item.dart';
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       builder: (app) {
-        return GetBuilder<TestController>(builder: (cc) {
+        return GetBuilder<GpioController>(builder: (gc) {
           return GetBuilder<DataController>(builder: (dc) {
             int length = dc.zoneList.length;
             double height = 120;
@@ -39,12 +40,25 @@ class HomeScreen extends StatelessWidget {
                     itemCount: length,
                     shrinkWrap: true,
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 12,
-                      children: []
+                      children: gc.pinStates
+                          .where((e) =>
+                              e.device == 0x00 &&
+                              e.type == PinType.onboardPinOutput)
+                          .map((e) => IconButton(
+                                onPressed: () {
+                                  gc.onOutTap(e.number);
+                                },
+                                icon: Icon(
+                                  Icons.check,
+                                  color: e.status ? Colors.green : null,
+                                ),
+                              ))
+                          .toList(),
                     ),
                   ),
                   // Align(

@@ -1,466 +1,517 @@
-/* import 'dart:async';
-import 'dart:typed_data';
+// ignore_for_file: avoid_print
 
-import 'package:central_heating_control/app/core/constants/data.dart';
-import 'package:central_heating_control/app/core/constants/enums.dart';
-import 'package:central_heating_control/app/core/utils/buzz.dart';
-import 'package:central_heating_control/app/core/utils/common.dart';
-import 'package:central_heating_control/app/data/models/log.dart';
-import 'package:central_heating_control/app/data/providers/log.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:dart_periphery/dart_periphery.dart';
-import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
-import 'package:rpi_spi/rpi_spi.dart';
 
 class GpioController extends GetxController {
-  Timer? timer;
-  int startByte = 0x3A;
-  List<int> stopBytes = [0x0D, 0x0A];
-
-  // String serialKey = '/dev/ttyUSB0';
-  String serialKey = '/dev/ttyS0';
-  // String serialKey = '/dev/serial0';
-
   @override
   void onInit() {
-    if (GetPlatform.isLinux) {
-      startTimer();
-    }
     super.onInit();
+    init();
   }
 
-  @override
-  void onReady() {
-    if (GetPlatform.isLinux) {
-      initOutPins();
-      initInPins();
-      initBtnPins();
-      initBuzzer();
-      initSerial();
-      initSpi();
-    }
-    super.onReady();
+  Future<void> init() async {
+    populateDeviceIds();
+
+    initGpioPins();
+    await wait(100);
+
+    populatePinStatuses();
+    await wait(100);
+    resetOutputs();
+    await wait(100);
+    runGpioInputPolling();
   }
 
-  @override
-  void onClose() {
-    timer?.cancel();
-    for (final item in outGpios) {
-      item.dispose();
-    }
-    spi?.dispose();
-    serialPort?.dispose();
+  //#region MARK: States
 
-    super.onClose();
-  }
+  final RxBool _buzzerState = false.obs;
+  bool get buzzerState => _buzzerState.value;
 
-  final RxBool _timerFlag = false.obs;
-  bool get timerFlag => _timerFlag.value;
+  //
 
-  // final Rx<GPIO> _gpio = GPIO.advanced(5, config).obs;
-  // GPIO get gpio => _gpio.value;
+  final RxBool _pinUartModeTxState = false.obs;
+  bool get pinUartModeTxState => _pinUartModeTxState.value;
 
-  //MARK: GPIO in-out
-  final RxList<GPIO> _outGpios = <GPIO>[].obs;
-  List<GPIO> get outGpios => _outGpios;
+  //
 
-  final RxList<bool> _outStates = <bool>[].obs;
-  List<bool> get outStates => _outStates;
+  final RxBool _spiMisoState = false.obs;
+  bool get spiMisoState => _spiMisoState.value;
 
-  final RxList<GPIO> _inGpios = <GPIO>[].obs;
-  List<GPIO> get inGpios => _inGpios;
+  //
 
-  final RxList<bool> _inStates = <bool>[].obs;
-  List<bool> get inStates => _inStates;
+  final RxBool _outOEState = false.obs;
+  bool get outOEState => _outOEState.value;
 
-  final RxList<GPIO> _btnGpios = <GPIO>[].obs;
-  List<GPIO> get btnGpios => _btnGpios;
+  final RxBool _outSRCLKState = false.obs;
+  bool get outSRCLKState => _outSRCLKState.value;
 
-  final RxList<bool> _btnStates = <bool>[].obs;
-  List<bool> get btnStates => _btnStates;
+  final RxBool _outRCLKState = false.obs;
+  bool get outRCLKState => _outRCLKState.value;
 
-  final Rxn<GPIO> _buzzerPin = Rxn();
-  GPIO? get buzzerPin => _buzzerPin.value;
+  final RxBool _outSERState = false.obs;
+  bool get outSERState => _outSERState.value;
 
-  void initOutPins() {
-    _outGpios.assignAll(
-        UiData.outPins.map((e) => GPIO(e, GPIOdirection.gpioDirOut)));
-    _outStates.assignAll(UiData.outPins.map((e) => false).toList());
-    update();
-  }
+  final RxList<PinState> _pinStates = <PinState>[].obs;
+  List<PinState> get pinStates => _pinStates;
 
-  void initInPins() {
-    _inGpios
-        .assignAll(UiData.inPins.map((e) => GPIO(e, GPIOdirection.gpioDirIn)));
-    _inStates.assignAll(UiData.inPins.map((e) => false).toList());
-    update();
-  }
+  List<PinState> getPinStates({
+    int? device,
+    int? number,
+    PinType? type,
+  }) =>
+      pinStates
+          .where((e) =>
+              (device == null ? true : e.device == device) &&
+              (number == null ? true : e.number == number) &&
+              (type == null ? true : e.type == type))
+          .toList();
 
-  void initBtnPins() {
-    _btnGpios
-        .assignAll(UiData.btnPins.map((e) => GPIO(e, GPIOdirection.gpioDirIn)));
-    _btnStates.assignAll(UiData.btnPins.map((e) => false).toList());
-    update();
-  }
-
-  void initBuzzer() {
-    _buzzerPin.value = GPIO(
-        UiData.ports
-            .firstWhere((element) => element.group == GpioGroup.buzzer)
-            .pinNumber
-            .index,
-        GPIOdirection.gpioDirOut);
-    update();
-  }
-
-  void onOutTap(int index) {
-    _outStates[index] = !outStates[index];
-    outGpios[index].write(_outStates[index]);
-    update();
-  }
-
-  void readInputs() {
-    for (int i = 0; i < inStates.length; i++) {
-      final result = inGpios[i].read();
-      _inStates[i] = result;
-    }
-    for (int i = 0; i < btnStates.length; i++) {
-      final result = btnGpios[i].read();
-      _btnStates[i] = result;
-    }
-    _timerFlag.value = !timerFlag;
-    update();
-  }
-
-  void startTimer() {
-    timer = Timer.periodic(
-      const Duration(milliseconds: 100),
-      (timer) => readInputs(),
-    );
-  }
-
-  //MARK: BUZZER
-  Future<void> buzz(BuzzerType t) async {
-    if (buzzerPin == null) {
-      return;
-    }
-    try {
-      switch (t) {
-        case BuzzerType.mini:
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 10));
-          buzzerPin?.write(false);
-          break;
-        case BuzzerType.feedback:
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 20));
-          buzzerPin?.write(false);
-          break;
-        case BuzzerType.success:
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(false);
-          await Future.delayed(const Duration(milliseconds: 50));
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(false);
-          break;
-        case BuzzerType.error:
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 500));
-          buzzerPin?.write(false);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 500));
-          buzzerPin?.write(false);
-          break;
-        case BuzzerType.alarm:
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 1000));
-          buzzerPin?.write(false);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 1000));
-          buzzerPin?.write(false);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 1000));
-          buzzerPin?.write(false);
-          break;
-        case BuzzerType.lock:
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(false);
-          await Future.delayed(const Duration(milliseconds: 50));
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(false);
-          await Future.delayed(const Duration(milliseconds: 50));
-          buzzerPin?.write(true);
-          await Future.delayed(const Duration(milliseconds: 100));
-          buzzerPin?.write(false);
-          break;
-        default:
-          break;
-      }
-    } on Exception catch (e) {
-      print(e);
-    }
-  }
-
-  //MARK: RELAY
-  final Rx<bool> _oeState = false.obs;
-  bool get oeState => _oeState.value;
-  final Rx<bool> _srclkState = false.obs;
-  bool get srclkState => _srclkState.value;
-  final Rx<bool> _rclkState = false.obs;
-  bool get rclkState => _rclkState.value;
-  final Rx<bool> _serState = false.obs;
-  bool get serState => _serState.value;
-
-  final Rx<String> _log = ''.obs;
-  String get log => _log.value;
-
-  Future<void> openRelays(bool value) async {
-    _log.value = 'function start';
-    update();
-    var oe = outGpios[3];
-    var srclk = outGpios[1];
-    var rclk = outGpios[2];
-    var ser = outGpios[0];
-    _log.value += '\ndefined';
-    update();
-
-    oe.write(true);
-    _oeState.value = true;
-    _log.value += '\noe: $oeState ';
-    update();
-    ser.write(value);
-    _serState.value = value;
-    _log.value += '\nser: $serState ';
-    update();
-    for (int i = 0; i < 8; i++) {
-      srclk.write(true);
-      _srclkState.value = true;
-      _log.value += '\nsrclk: $srclkState ';
+  void updatePinState(PinState ps) {
+    int index = pinStates.indexWhere((p) =>
+        p.device == ps.device && p.number == ps.number && p.type == ps.type);
+    if (index != -1) {
+      _pinStates[index].status = ps.status;
+      _pinStates[index].value = ps.value;
       update();
-      await Future.delayed(const Duration(milliseconds: 1));
-      srclk.write(false);
-      _srclkState.value = false;
-      _log.value += '\nsrclk: $srclkState ';
-      update();
-      await Future.delayed(const Duration(milliseconds: 1));
-    }
-
-    rclk.write(true);
-    _rclkState.value = true;
-    _log.value += '\nrclk: $rclkState ';
-    update();
-    await Future.delayed(const Duration(milliseconds: 1));
-    rclk.write(false);
-    _rclkState.value = false;
-    _log.value += '\nrclk: $rclkState ';
-    update();
-    await Future.delayed(const Duration(milliseconds: 1));
-
-    oe.write(false);
-    _oeState.value = false;
-    _log.value += '\noe: $oeState ';
-    update();
-
-    _log.value += '\nfunction end';
-    update();
-
-    buzz(BuzzerType.feedback);
-  }
-
-  //MARK: SERIAL UART
-  final Rxn<SerialPort> _serialPort = Rxn();
-  SerialPort? get serialPort => _serialPort.value;
-
-  final RxList<List<int>> _receivedSerialData = <List<int>>[].obs;
-  List<List<int>> get receivedSerialData => _receivedSerialData;
-
-  void initSerial() {
-    try {
-      LogService.addLog(LogDefinition(
-        message: 'starting serial port initialization',
-        type: LogType.sendSerialEvent,
-      ));
-      final portName = SerialPort.availablePorts.first;
-      _serialPort.value = SerialPort(portName);
-      update();
-      LogService.addLog(LogDefinition(
-        message: 'init serial port: $portName',
-        type: LogType.sendSerialEvent,
-      ));
-      final openResult = serialPort!.openReadWrite();
-
-      LogService.addLog(LogDefinition(
-        message: 'serial port open $openResult: $portName',
-        type: LogType.sendSerialEvent,
-      ));
-      serialPort!.config.baudRate = 9600;
-      serialPort!.config.bits = 8;
-      serialPort!.config.parity = SerialPortParity.none;
-      serialPort!.config.stopBits = 1;
-      serialPort!.config.xonXoff = 0;
-      serialPort!.config.rts = 1;
-      serialPort!.config.cts = 0;
-      serialPort!.config.dsr = 0;
-      serialPort!.config.dtr = 1;
-      // handler.onMessage.listen((Uint8List message) {
-      //   List<int> data = CommonUtils.intListToUint8List(message);
-      //   _receivedSerialData.add(data);
-      //   update();
-      //   int crcInt =
-      //       CommonUtils.serialUartCrc16(CommonUtils.intListToUint8List([
-      //     data[1],
-      //     data[2],
-      //     data[3],
-      //     data[4],
-      //   ]));
-      //   List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
-      //   if (crcBytes[0] == data[5] && crcBytes[1] == data[6]) {
-      //     onSerialMessageReceived(CommonUtils.uint8ListToIntList(message));
-      //   }
-      // });
-
-      LogService.addLog(LogDefinition(
-        message: 'registered listener: $portName',
-        type: LogType.sendSerialEvent,
-      ));
-    } on Exception catch (e) {
-      LogService.addLog(
-          LogDefinition(message: e.toString(), type: LogType.error));
-      Buzz.alarm();
     }
   }
 
-  Future<void> txOpen() async {
-    try {
-      var serialPin = outGpios.firstWhere((e) => e.line == 4);
-      serialPin.write(true);
-      LogService.addLog(
-          LogDefinition(message: 'tx open', type: LogType.sendSerialEvent));
-      await Future.delayed(const Duration(milliseconds: 10));
-    } on Exception catch (e) {
-      LogService.addLog(
-          LogDefinition(message: e.toString(), type: LogType.error));
+  bool getPinState(
+      {required int device, required int number, required PinType type}) {
+    return pinStates
+        .firstWhere(
+            (e) => e.device == device && e.number == number && e.type == type)
+        .status;
+  }
+
+  double? getPinValue(
+      {required int device, required int number, required PinType type}) {
+    return pinStates
+        .firstWhere(
+            (e) => e.device == device && e.number == number && e.type == type)
+        .value;
+  }
+
+  GPIO? getInputPinByNumber(int a) {
+    switch (a) {
+      case 0x01:
+        return in1;
+      case 0x02:
+        return in2;
+      case 0x03:
+        return in3;
+      case 0x04:
+        return in4;
+      case 0x05:
+        return in5;
+      case 0x06:
+        return in6;
+      case 0x07:
+        return in7;
+      case 0x08:
+        return in8;
     }
+    return null;
   }
 
-  Future<void> txClose() async {
-    try {
-      var serialPin = outGpios.firstWhere((e) => e.line == 4);
-      serialPin.write(false);
-      LogService.addLog(
-          LogDefinition(message: 'tx close', type: LogType.sendSerialEvent));
-      await Future.delayed(const Duration(milliseconds: 10));
-    } on Exception catch (e) {
-      LogService.addLog(
-          LogDefinition(message: e.toString(), type: LogType.error));
+  GPIO? getButtonPinByNumber(int a) {
+    switch (a) {
+      case 0x01:
+        return btn1;
+      case 0x02:
+        return btn2;
+      case 0x03:
+        return btn3;
+      case 0x04:
+        return btn4;
     }
+    return null;
   }
-
-  // void onSerialMessageReceived(List<int> message) {
-  //   SerialMessage m = SerialMessage(
-  //     deviceId: message[1],
-  //     command: message[2],
-  //     data1: message[3],
-  //     data2: message[4],
-  //   );
-  //   int crcInt = CommonUtils.serialUartCrc16(
-  //       CommonUtils.intListToUint8List(m.toBytes()));
-  //   List<int> crcBytes = CommonUtils.getCrcBytes(crcInt);
-  //   if (crcBytes[0] == message[5] && crcBytes[1] == message[6]) {
-  //     serialMessageStreamController.add(m);
-  //   }
-  // }
-
-  List<int> buildSerialMessage({
-    required int id,
-    required SerialCommand command,
-    int data1 = 0x00,
-    int data2 = 0x00,
-  }) {
-    final cycByteData =
-        CommonUtils.intListToUint8List([id, command.value, data1, data2]);
-    final crcInt = CommonUtils.serialUartCrc16(cycByteData);
-    final crcBytes = CommonUtils.getCrcBytes(crcInt);
-    return [
-      startByte,
-      id,
-      command.value,
-      data1,
-      data2,
-      ...crcBytes,
-      ...stopBytes,
-    ];
-  }
-
-  void sendSerialMessage(List<int> message) async {
-    Uint8List data = Uint8List.fromList(message);
-    LogService.addLog(LogDefinition(
-        message: 'sending serial: $message', type: LogType.sendSerialEvent));
-    await txOpen();
-    final result = serialPort!.write(data);
-    await Future.delayed(const Duration(milliseconds: 10));
-    LogService.addLog(LogDefinition(
-        message: 'serial write: $result', type: LogType.sendSerialEvent));
-    await txClose();
-    LogService.addLog(LogDefinition(
-      message: 'SerialSent: $message',
-      type: LogType.sendSerialEvent,
-    ));
-    Buzz.success();
-  }
-
-  //MARK: SPI
-  final Rx<String> _spiLog = 'idle'.obs;
-  String get spiLog => _spiLog.value;
-
-  final Rxn<RpiSpi> _spi = Rxn();
-  RpiSpi? get spi => _spi.value;
-
-  void initSpi() {
-    _spi.value = RpiSpi();
-    _spiLog.value = 'SPI ready';
-    update();
-  }
-
-  Future<void> readSpiSensor() async {
-    /*  if (spi == null) return;
-    buzz(BuzzerType.feedback);
-    // final Mcp3008 mcp3008 = Mcp3008(spi!, 0, 24);
-    String response = '';
-    StringBuffer out;
-    response += 'Read analog values from MCP3008 channels 0 - 7:';
-
-    response += '      | Channel';
-    out = StringBuffer('      ');
-    for (var channel = 0; channel < 8; ++channel) {
-      out.write('| ${channel.toString().padLeft(4)} ');
-    }
-    response += out.toString();
-    response += '-' * 63;
-
-    for (var count = 1; count <= 10; ++count) {
-      await Future.delayed(const Duration(seconds: 1));
-      out = StringBuffer(' ${count.toString().padLeft(4)} ');
-      for (var channel = 0; channel < 8; ++channel) {
-        var value = mcp3008.read(channel);
-        out.write('| ${value.toString().padLeft(4)} ');
-      }
-      response += out.toString();
-      await Future.delayed(Duration(milliseconds: 10));
-    }
-    _spiLog.value = response;
-    update();
-    buzz(BuzzerType.success); */
-  }
-
-  //#region MARK: HARDWARE
   //#endregion
+
+  //#region MARK: Devices
+  final RxList<int> _deviceIds = <int>[].obs;
+  List<int> get deviceIds => _deviceIds;
+
+  void populateDeviceIds() {
+    final DataController dc = Get.find();
+    _deviceIds.clear();
+    _deviceIds.assignAll(dc.hardwareDeviceList.map((e) => e.deviceId));
+    _deviceIds.toSet().toList().sort();
+    update();
+  }
+  //#endregion
+
+  //#region MARK: GPIO
+  late GPIO uartModeTx;
+  late GPIO btn1;
+  late GPIO btn2;
+  late GPIO btn3;
+  late GPIO btn4;
+  late GPIO outPinSER;
+  late GPIO outPinSRCLK;
+  // late GPIO outPinMOSI;
+  // late GPIO inPinMISO;
+  late GPIO outPinRCLK;
+  // late GPIO outPinSCLK;
+  late GPIO buzzer;
+  // late GPIO outPinCS;
+  late GPIO fanPin;
+  late GPIO in1;
+  late GPIO in2;
+  late GPIO in3;
+  late GPIO in4;
+  late GPIO in5;
+  late GPIO in6;
+  late GPIO in7;
+  late GPIO in8;
+  late GPIO txEnablePin;
+
+  void initGpioPins() {
+    // (1) 3V3 power
+    // (2) 5V power
+    // (3) GPIO 2 - TOUCHSCREEN
+    // (4) 5V power
+    // (5) GPIO 3 - TOUCHSCREEN
+    // (6) Ground
+    // (7) GPIO 4 - UART TxEnable
+    try {
+      uartModeTx = GPIO(4, GPIOdirection.gpioDirOut);
+    } on Exception catch (e) {
+      print('init GPIO 4: $e');
+    }
+    // (8) GPIO 14 - UART TX
+    // (9) Ground
+    // (10) GPIO 15 - UART RX
+    // (11) GPIO 17 - BTN 1
+    try {
+      btn1 = GPIO(17, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 17: $e');
+    }
+    // (12) GPIO 18 - BTN 2
+    try {
+      btn2 = GPIO(18, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 18: $e');
+    }
+
+    // (13) GPIO 27 - BTN 3
+    try {
+      btn3 = GPIO(27, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 27: $e');
+    }
+    // (14) Ground
+    // (15) GPIO 22 - BTN 4
+    try {
+      btn4 = GPIO(22, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 22: $e');
+    }
+    // (16) GPIO 23 - SER out
+    try {
+      outPinSER = GPIO(23, GPIOdirection.gpioDirOut);
+    } on Exception catch (e) {
+      print('init GPIO 23: $e');
+    }
+    // (17) 3V3 power
+    // (18) GPIO 24 - SRCLK out
+    try {
+      outPinSRCLK = GPIO(24, GPIOdirection.gpioDirOut);
+    } on Exception catch (e) {
+      print('init GPIO 24: $e');
+    }
+    // (19) GPIO 10 - MOSI spi
+    // try {
+    //   outPinMOSI = GPIO(10, GPIOdirection.gpioDirOut);
+    // } on Exception catch (e) {
+    //   addLog('init GPIO 10: $e');
+    // }
+    // (20) Ground
+    // (21) GPIO 9 - MISO spi
+    // try {
+    //   inPinMISO = GPIO(9, GPIOdirection.gpioDirIn);
+    // } on Exception catch (e) {
+    //   addLog('init GPIO 9: $e');
+    // }
+    // (22) GPIO 25 - RCLK out
+    try {
+      outPinRCLK = GPIO(25, GPIOdirection.gpioDirOut);
+    } on Exception catch (e) {
+      print('init GPIO 25: $e');
+    }
+    // (23) GPIO 11 - SCLK spi
+    // try {
+    //   outPinSCLK = GPIO(11, GPIOdirection.gpioDirOut);
+    // } on Exception catch (e) {
+    //   addLog('init GPIO 11: $e');
+    // }
+    // (24) GPIO 8 - CS spi
+    // try {
+    //   outPinCS = GPIO(8, GPIOdirection.gpioDirOut);
+    // } on Exception catch (e) {
+    //   addLog('init GPIO 8: $e');
+    // }
+    // (25) Ground
+    // (26) GPIO 7 - FAN
+    // try {
+    //   GPIOconfig config = GPIOconfig.defaultValues();
+    //   config.direction = GPIOdirection.gpioDirOut;
+    //   fanPin = GPIO.advanced(7, config);
+    // } on Exception catch (e) {
+    //   addLog('init GPIO 7: $e');
+    // }
+    // (27) GPIO 0 - BUZZER
+    try {
+      buzzer = GPIO(0, GPIOdirection.gpioDirOut);
+    } on Exception catch (e) {
+      print('init GPIO 0: $e');
+    }
+    // (28) GPIO 1 ??
+    // (29) GPIO 5 - DI-1
+    try {
+      in1 = GPIO(5, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 5: $e');
+    }
+    // (30) Ground
+    // (31) GPIO 6 - DI-2
+    try {
+      in2 = GPIO(6, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 6: $e');
+    }
+    // (32) GPIO 12 - DI-3
+    try {
+      in3 = GPIO(12, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 12: $e');
+    }
+    // (33) GPIO 13 - DI-4
+    try {
+      in4 = GPIO(13, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 13: $e');
+    }
+    // (34) Ground
+    // (35) GPIO 19 - DI-5
+    try {
+      in5 = GPIO(19, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 19: $e');
+    }
+    // (36) GPIO 16 - DI-6
+    try {
+      in6 = GPIO(16, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 16: $e');
+    }
+    // (37) GPIO 26 - DI-7
+    try {
+      in7 = GPIO(26, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 26: $e');
+    }
+    // (38) GPIO 20 - DI-8
+    try {
+      in8 = GPIO(20, GPIOdirection.gpioDirIn);
+    } on Exception catch (e) {
+      print('init GPIO 20: $e');
+    }
+    // (39) Ground
+    // (40) GPIO 21 - OE out
+    try {
+      txEnablePin = GPIO(21, GPIOdirection.gpioDirOut);
+      writeOE(true);
+    } on Exception catch (e) {
+      print('init GPIO 21: $e');
+    }
+  }
+
+  void writeOE(bool value) {
+    try {
+      txEnablePin.write(value);
+      _outOEState.value = value;
+      update();
+    } on Exception catch (e) {
+      print('writeOE: $e');
+    }
+  }
+
+  void writeSRCLK(bool value) {
+    try {
+      outPinSRCLK.write(value);
+      _outSRCLKState.value = value;
+      update();
+    } on Exception catch (e) {
+      print('writeSRCLK: $e');
+    }
+  }
+
+  void writeRCLK(bool value) {
+    try {
+      outPinRCLK.write(value);
+      _outRCLKState.value = value;
+      update();
+    } on Exception catch (e) {
+      print('writeRCLK: $e');
+    }
+  }
+
+  void writeSER(bool value) {
+    try {
+      outPinSER.write(value);
+      _outSERState.value = value;
+      update();
+    } on Exception catch (e) {
+      print('writeSER: $e');
+    }
+  }
+  //#endregion
+
+  //#region MARK: PinStatuses
+  Future<void> populatePinStatuses() async {
+    _pinStates.clear();
+    for (final i in [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]) {
+      _pinStates.add(PinState(
+        device: 0x00,
+        number: i,
+        status: false,
+        type: PinType.onboardPinOutput,
+        pin: getInputPinByNumber(i),
+      ));
+      _pinStates.add(PinState(
+        device: 0x00,
+        number: i,
+        status: false,
+        type: PinType.onboardPinOutput,
+      ));
+    }
+    for (final i in [0x01, 0x02, 0x03, 0x04]) {
+      _pinStates.add(PinState(
+        device: 0x00,
+        number: i,
+        type: PinType.onboardAnalogInput,
+      ));
+      _pinStates.add(PinState(
+        device: 0x00,
+        number: i,
+        type: PinType.buttonPinInput,
+        pin: getButtonPinByNumber(i),
+      ));
+    }
+    // for (final de in deviceIds) {
+    //   for (final i in [0x01, 0x02, 0x03, 0x04, 0x05, 0x06]) {
+    //     _pinStates.add(PinState(
+    //       device: de,
+    //       number: i,
+    //       type: PinType.digitalInput,
+    //     ));
+    //     _pinStates.add(PinState(
+    //       device: de,
+    //       number: i,
+    //       type: PinType.digitalOutput,
+    //     ));
+    //   }
+    //   _pinStates.add(PinState(
+    //     device: de,
+    //     number: 0x01,
+    //     type: PinType.analogInput,
+    //   ));
+    // }
+    update();
+    await wait(100);
+  }
+
+  Future<void> resetOutputs() async {
+    await wait(1);
+    for (int i = 1; i <= 8; i++) {
+      writeSER(false);
+      await wait(1);
+      writeSRCLK(true);
+      await wait(1);
+      writeSRCLK(false);
+      await wait(1);
+    }
+    writeRCLK(true);
+    await wait(1);
+    writeRCLK(false);
+    await wait(1);
+    print('Reset GPIO outputs completed');
+
+    writeOE(false);
+  }
+  //#endregion
+
+  //#region MARK: Input Polling
+  void runGpioInputPolling() {
+    try {
+      for (PinState item in pinStates.where((e) => e.pin != null)) {
+        item.status = !item.pin!.read();
+        updatePinState(item);
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      runGpioInputPolling();
+    });
+  }
+
+  //#endregion
+
+  //#region MARK: onOutTap
+  void onOutTap(int outPinNumber) {
+    var ps = getPinStates(
+            device: 0x00, type: PinType.onboardPinOutput, number: outPinNumber)
+        .first;
+    updatePinState(ps);
+    sendOutput(outPinNumber, ps.status);
+  }
+
+  Future<void> sendOutput(int index, bool value) async {
+    for (int i = 1; i <= 8; i++) {
+      writeSER(i == index
+          ? value
+          : getPinState(
+              device: 0x00, number: (0x00 + i), type: PinType.onboardPinOutput));
+      await wait(1);
+      writeSRCLK(true);
+      await wait(1);
+      writeSRCLK(false);
+      await wait(1);
+    }
+    writeRCLK(true);
+    await wait(1);
+    writeRCLK(false);
+    await wait(1);
+  }
+  //#endregion
+
+  Future<void> wait(int ms) async =>
+      await Future.delayed(Duration(milliseconds: ms));
 }
- */
+
+class PinState {
+  int device;
+  int number;
+  PinType type;
+  bool status;
+  double value;
+  String? description;
+  GPIO? pin;
+  PinState({
+    required this.device,
+    required this.number,
+    required this.type,
+    this.status = false,
+    this.value = 0.0,
+    this.description,
+    this.pin,
+  });
+}
