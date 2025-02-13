@@ -49,14 +49,13 @@ class HomeScreen extends StatelessWidget {
                           .where((e) =>
                               e.device == 0x00 &&
                               e.type == PinType.onboardPinOutput)
-                          .map((e) => IconButton(
+                          .map((e) => FloatingActionButton(
+                                heroTag: 'out-${e.number}',
                                 onPressed: () {
                                   gc.onOutTap(e.number);
                                 },
-                                icon: Icon(
-                                  Icons.check,
-                                  color: e.status ? Colors.green : null,
-                                ),
+                                backgroundColor: e.status ? Colors.green : null,
+                                child: Text('${e.number}'),
                               ))
                           .toList(),
                     ),

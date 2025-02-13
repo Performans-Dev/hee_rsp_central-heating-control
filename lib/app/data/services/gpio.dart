@@ -20,8 +20,14 @@ class GpioController extends GetxController {
 
     populatePinStatuses();
     await wait(100);
+
     resetOutputs();
     await wait(100);
+
+    //enable output
+    writeOE(true);
+    await wait(100);
+
     runGpioInputPolling();
   }
 
@@ -326,7 +332,7 @@ class GpioController extends GetxController {
     // (40) GPIO 21 - OE out
     try {
       txEnablePin = GPIO(21, GPIOdirection.gpioDirOut);
-      writeOE(true);
+      writeOE(false);
     } on Exception catch (e) {
       print('init GPIO 21: $e');
     }
@@ -479,7 +485,9 @@ class GpioController extends GetxController {
       writeSER(i == index
           ? value
           : getPinState(
-              device: 0x00, number: (0x00 + i), type: PinType.onboardPinOutput));
+              device: 0x00,
+              number: (0x00 + i),
+              type: PinType.onboardPinOutput));
       await wait(1);
       writeSRCLK(true);
       await wait(1);
