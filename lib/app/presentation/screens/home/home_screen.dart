@@ -62,6 +62,13 @@ class HomeScreen extends StatelessWidget {
                                   ))
                               .toList(),
                         ),
+                        SwitchListTile(
+                          value: gc.outOEState,
+                          onChanged: (v) {
+                            gc.writeOE(!gc.outOEState);
+                          },
+                          title: const Text('Output Enabled'),
+                        ),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           spacing: 12,

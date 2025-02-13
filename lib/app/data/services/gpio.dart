@@ -25,10 +25,10 @@ class GpioController extends GetxController {
     // await wait(100);
 
     //enable output
-    print('enabling OE');
-    writeOE(true);
-    await wait(100);
-    print('enabled OE');
+    // print('enabling OE');
+    // writeOE(true);
+    // await wait(100);
+    // print('enabled OE');
 
     runGpioInputPolling();
   }
