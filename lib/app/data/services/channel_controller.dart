@@ -84,7 +84,7 @@ class ChannelController extends GetxController {
     }
     await sendOutputPackage();
 
-    writeOE(false);
+    writeOE(true);
   }
 
   Future<void> runInitTasks() async {
@@ -98,7 +98,7 @@ class ChannelController extends GetxController {
     }
 
     await wait(10);
-    // writeOE(true);
+    // writeOE(false);
     // await wait(10);
 
     // Initialize Serial pins
@@ -940,7 +940,7 @@ class ChannelController extends GetxController {
     writeRCLK(false);
 
     await wait(1);
-    writeOE(true);
+    writeOE(false);
     final DataController dc = Get.find();
     dc.addRunnerLog('sendOutputPackage: $temp');
   }
