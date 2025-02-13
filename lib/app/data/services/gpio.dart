@@ -25,8 +25,10 @@ class GpioController extends GetxController {
     await wait(100);
 
     //enable output
+    print('enabling OE');
     writeOE(true);
     await wait(100);
+    print('enabled OE');
 
     runGpioInputPolling();
   }
@@ -471,6 +473,7 @@ class GpioController extends GetxController {
 
   //#region MARK: onOutTap
   void onOutTap(int outPinNumber) {
+    print('onOutTapped($outPinNumber)');
     // var ps = getPinStates(
     //         device: 0x00, type: PinType.onboardPinOutput, number: outPinNumber)
     //     .first;
@@ -490,6 +493,7 @@ class GpioController extends GetxController {
             e.type == PinType.onboardPinOutput)
         .status = newValue;
     update();
+    print('updated outPinState as pin: $outPinNumber,  value: $newValue');
     sendOutput2();
   }
 
@@ -500,9 +504,11 @@ class GpioController extends GetxController {
         .toSet()
         .toList();
     data.sort((a, b) => a.number - b.number);
+    String dataString = '';
 
     for (final item in data) {
       writeSER(item.status);
+      dataString += item.status ? '1' : '0';
       await wait(1);
       writeSRCLK(true);
       await wait(1);
@@ -513,6 +519,8 @@ class GpioController extends GetxController {
     await wait(1);
     writeRCLK(false);
     await wait(1);
+
+    print('wrote data $dataString');
     // writeOE(true);
   }
 
