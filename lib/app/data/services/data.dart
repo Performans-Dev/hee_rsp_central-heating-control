@@ -672,7 +672,11 @@ class DataController extends GetxController {
     _isLooping.value = false;
     update();
     _runnerLogList.insert(0, '-------------');
+    if (runnerLogList.length > 100) {
+      _runnerLogList.removeLast();
+    }
     update();
+
     Future.delayed(const Duration(milliseconds: 12000), () {
       runnerLoop();
     });
