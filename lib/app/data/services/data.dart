@@ -673,7 +673,7 @@ class DataController extends GetxController {
     update();
     _runnerLogList.insert(0, '-------------');
     if (runnerLogList.length > 100) {
-      _runnerLogList.removeLast();
+      _runnerLogList.assignAll(runnerLogList.sublist(0, 100));
     }
     update();
 

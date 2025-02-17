@@ -1304,7 +1304,6 @@ class _OSKKeyDefinition {
   String? value;
   dynamic display;
   _OSKLayoutType layoutType;
-  bool isNumber;
 
   _OSKKeyDefinition({
     required this.row,
@@ -1313,7 +1312,6 @@ class _OSKKeyDefinition {
     this.value,
     required this.display,
     required this.layoutType,
-    this.isNumber = false,
   });
 }
 
@@ -1479,15 +1477,12 @@ class _OSKController extends GetxController {
 class _KeyWidget extends StatelessWidget {
   final _OSKKeyDefinition model;
   final GestureTapCallback? onTap;
-  final GestureTapCallback? onLongTap;
   final BuildContext ctx;
 
   const _KeyWidget({
-    super.key,
     required this.model,
     this.onTap,
     required this.ctx,
-    this.onLongTap,
   });
 
   @override
@@ -1585,7 +1580,6 @@ class _OSKKeyScreen extends StatefulWidget {
   final void Function()? feedbackFunction;
 
   const _OSKKeyScreen({
-    super.key,
     required this.ctx,
     this.inputType = OSKInputType.text,
     this.label,
