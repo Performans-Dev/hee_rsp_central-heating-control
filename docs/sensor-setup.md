@@ -1,14 +1,14 @@
-# Download the sensor.zip file:
+## First create the Heethings folder if it doesn't exist.Then create the CC folder in the Heethings folder.
 
-This command downloads the `sensor.zip` file from the provided URL and saves it in the `/home/pi/Heethings/CC` directory.
-`wget -P /home/pi/Heethings/CC releases.api2.run/heethings/cc/sensor.zip`
+## Download the sensor.zip file to the CC folder:
 
-# Download the install-sensor-script.sh file:
+- wget -P /home/pi/Heethings/CC releases.api2.run/heethings/cc/sensor.zip
+##### This command downloads the `sensor.zip` file from the provided URL and saves it to the `/home/pi/Heethings/CC` directory.
 
-This command downloads the `install-sensor-script.sh` file and saves it in the `/home/pi/Heethings` directory for future execution.
-
-`wget -P /home/pi/Heethings releases.api2.run/heethings/cc/install-sensor-script.sh`
+## Then go to the Heethings folder and download the install-sensor-script.sh file:
+- wget -P /home/pi/Heethings releases.api2.run/heethings/cc/install-sensor-script.sh
+##### This command downloads the `install-sensor-script.sh` file and saves it to the `/home/pi/Heethings` directory for future execution.
 
 ## Run the installation script:
-
-`sudo ./install-sensor-script.sh`
+- sudo chmod +x install-sensor-script.sh (if it is not executable, run this command.)
+- sudo ./install-sensor-script.sh
