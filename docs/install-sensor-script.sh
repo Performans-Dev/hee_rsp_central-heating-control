@@ -4,7 +4,7 @@ set -e  # Exit immediately on error
 
 # Create necessary directories if they don't exist
 echo "Ensuring necessary directories exist..."
-runuser -l pi -c mkdir -p /home/pi/Heethings/CC 
+runuser -l pi -c "mkdir -p /home/pi/Heethings/CC"
 
 # Download the sensor.zip file
 echo "Downloading sensor.zip..."
@@ -90,6 +90,10 @@ sudo systemctl enable sensor_server.service || { echo "Failed to enable sensor_s
 
 echo "Starting the sensor_server.service..."
 sudo systemctl start sensor_server.service || { echo "Failed to start sensor_server.service"; exit 1; }
+
+echo "Clean up"
+sudo rm -rf /home/pi/Heethings/CC/__MACOSX/
+sudo rm -rf /home/pi/Heethings/CC/sensor.zip
 
 # Optional: Reboot the system
 # echo "Rebooting the system now..."
