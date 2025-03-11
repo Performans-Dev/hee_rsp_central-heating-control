@@ -1,5 +1,4 @@
 import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -103,63 +102,6 @@ class _PiInfoScreenState extends State<PiInfoScreen> {
                               label: 'OS SDK',
                               value: '${app.deviceInfo?.osVersionSdk}',
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 14,
-                      child: Container(
-                        color: Colors.white,
-                        height: double.infinity,
-                        alignment: Alignment.topCenter,
-                        padding: const EdgeInsets.all(4),
-                        margin: const EdgeInsets.all(4),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            infoLabelValueWidget(
-                              label: 'Installed Hardware',
-                              action: const IconButton(
-                                onPressed: null,
-                                icon: Icon(Icons.refresh),
-                              ),
-                              titleLevel: 2,
-                            ),
-                            Expanded(
-                              child:
-                                  GetBuilder<ChannelController>(builder: (cc) {
-                                final data = cc.hardwareList
-                                    .where((e) => e.id != 0x00)
-                                    .toList();
-                                return ListView.builder(
-                                  itemBuilder: (context, index) => Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      infoLabelValueWidget(
-                                        label: 'Model',
-                                        value: data[index].modelName,
-                                      ),
-                                      infoLabelValueWidget(
-                                        label: 'S/N',
-                                        qr: data[index].serialNumber,
-                                      ),
-                                      infoLabelValueWidget(
-                                        label: 'Firmware',
-                                        value: data[index].firmwareVersion,
-                                      ),
-                                      infoLabelValueWidget(
-                                        label: 'Hardware',
-                                        value: data[index].hardwareVersion,
-                                      ),
-                                      const Divider(),
-                                    ],
-                                  ),
-                                  itemCount: data.length,
-                                );
-                              }),
-                            )
                           ],
                         ),
                       ),
