@@ -919,12 +919,14 @@ class ChannelController extends GetxController {
   Future<void> sendOutputPackage() async {
     await wait(1);
     String temp = '';
-    for (final c in outputChannels
+    final list = outputChannels
         .where((e) =>
             e.deviceId == 0x00 &&
             e.type == PinType.onboardPinOutput &&
             e.userSelectable == true)
-        .toList()) {
+        .toList();
+    for (int i = 8; i >= 1; i--) {
+      final c = list[i];
       writeSER(c.status);
       await wait(1);
       writeSRCLK(true);
