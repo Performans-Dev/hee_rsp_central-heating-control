@@ -924,9 +924,9 @@ class ChannelController extends GetxController {
             e.deviceId == 0x00 &&
             e.type == PinType.onboardPinOutput &&
             e.userSelectable == true)
-        .toList();
-    for (int i = 8; i >= 1; i--) {
-      final c = list[i];
+        .toList()
+      ..sort((a, b) => b.pinIndex.compareTo(a.pinIndex));
+    for (final c in list) {
       writeSER(c.status);
       await wait(1);
       writeSRCLK(true);
