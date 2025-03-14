@@ -955,7 +955,7 @@ class ChannelController extends GetxController {
   }
 
   Future<void> sendOutput2(int index, bool value) async {
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 8; i >= 1; i--) {
       writeSER(i == index
           ? value
           : getPinState(
