@@ -28,13 +28,13 @@ class ZoneCardModeDisplayWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            if (desiredTemperature != null)
+            if (desiredTemperature != null && desiredTemperature != 0)
               Text(
                 'Set: ${desiredTemperature?.toStringAsFixed(1)} °C',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             const SizedBox(height: 12),
-            if (currentTemperature != null)
+            if (currentTemperature != null && currentTemperature != 0)
               Text(
                 '${currentTemperature?.toStringAsFixed(1)} °C',
                 style: Theme.of(context).textTheme.displaySmall,
