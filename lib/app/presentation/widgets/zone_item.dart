@@ -20,7 +20,11 @@ class ZoneItemWidget extends StatelessWidget {
     return GetBuilder<AppController>(builder: (app) {
       return GetBuilder<DataController>(builder: (dc) {
         final List<Heater> heaters = dc.getHeatersOfZone(zone.id);
-        final List<SensorDevice> sensors = dc.getSensorsOfZone(zone.id);
+        // final List<SensorDevice> sensors = dc.getSensorsOfZone(zone.id);
+
+        final List<SensorDeviceWithValues> sensors =
+            dc.sensorListWithValues(zone.id);
+        final double sensorAverage = dc.getSensorAverageOfZone(zone.id);
 
         return Card(
           margin: const EdgeInsets.all(10),
@@ -51,7 +55,7 @@ class ZoneItemWidget extends StatelessWidget {
                     ZoneCardModeDisplayWidget(
                       desiredMode: zone.desiredMode,
                       currentMode: zone.currentMode,
-                      currentTemperature: zone.currentTemperature,
+                      currentTemperature: sensorAverage,
                       desiredTemperature:
                           zone.hasThermostat ? zone.desiredTemperature : null,
                       planName: dc.planList
