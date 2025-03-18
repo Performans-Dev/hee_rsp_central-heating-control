@@ -38,6 +38,19 @@ class HomeScreen extends StatelessWidget {
                     itemCount: length,
                     shrinkWrap: true,
                   ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      color: Colors.yellow.withValues(alpha: 0.1),
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        spacing: 8,
+                        children:
+                            dc.sensorList.map((e) => Text('${e.id}')).toList(),
+                      ),
+                    ),
+                  ),
                   // Align(
                   //   alignment: Alignment.bottomCenter,
                   //   child: Row(
