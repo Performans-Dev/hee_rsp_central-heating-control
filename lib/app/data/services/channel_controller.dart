@@ -438,7 +438,7 @@ class ChannelController extends GetxController {
     }
   }
 
-  updateChannelValue(int id, double value) {}
+  // updateChannelValue(int id, double value) {}
 
   updateChannelState(int id, bool value) {
     try {

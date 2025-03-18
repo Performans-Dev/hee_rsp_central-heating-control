@@ -46,8 +46,9 @@ class HomeScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         spacing: 8,
-                        children:
-                            dc.sensorList.map((e) => Text('${e.id}')).toList(),
+                        children: dc.sensorList
+                            .map((e) => Text('${e.id}:${e.zone}'))
+                            .toList(),
                       ),
                     ),
                   ),
