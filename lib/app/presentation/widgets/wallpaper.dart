@@ -36,19 +36,34 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return images.isEmpty
-        ? Container()
-        : AnimatedOpacity(
-            duration: duration,
-            opacity: opacity,
-            child: Container(
-              constraints: const BoxConstraints.expand(),
-              child: Image.file(
-                images[index],
-                fit: BoxFit.cover,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        images.isEmpty
+            ? Container()
+            : AnimatedOpacity(
+                duration: duration,
+                opacity: opacity,
+                child: Container(
+                  constraints: const BoxConstraints.expand(),
+                  child: Image.file(
+                    images[index],
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: const Text(
+              'TEST',
+              style: TextStyle(color: Colors.yellow),
             ),
-          );
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _loadImages() async {
