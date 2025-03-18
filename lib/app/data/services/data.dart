@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/utils/buzz.dart';
+import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/models/function.dart';
 import 'package:central_heating_control/app/data/models/generic_response.dart';
 import 'package:central_heating_control/app/data/models/hardware.dart';
@@ -223,7 +224,8 @@ class DataController extends GetxController {
         zone: sensor.zone,
         color: sensor.color,
         name: sensor.name,
-        value: cc.getSensorValue(sensor.id),
+        value: CCUtils.sensorRawToTemperature(
+            cc.getSensorValue(sensor.id).toInt()),
       ));
     }
     return result;
