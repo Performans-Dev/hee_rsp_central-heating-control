@@ -5,6 +5,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,10 +57,20 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
           alignment: Alignment.bottomRight,
           child: Container(
             padding: const EdgeInsets.all(8),
-            child: const Text(
-              'TEST',
-              style: TextStyle(color: Colors.yellow),
-            ),
+            width: double.infinity,
+            color: Colors.black.withValues(alpha: 0.4),
+            child: GetBuilder<DataController>(builder: (dc) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 8,
+                children: [
+                  ...dc.zoneList.where((e) => e.hasThermostat).map((e) => Chip(
+                        label: Text(
+                            '${e.name}: ${dc.sensorListWithValues(e.id).first.value?.toStringAsPrecision(1)}°C'),
+                      ))
+                ],
+              );
+            }),
           ),
         ),
       ],
