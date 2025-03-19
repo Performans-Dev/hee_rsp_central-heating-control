@@ -752,35 +752,35 @@ class ChannelController extends GetxController {
   //#region MARK: SENSOR POLLING
   void readObSensorData() async {
     final now = DateTime.now().millisecondsSinceEpoch;
-    if (now - _lastSensorDataFetch >= 30000) {
+    if (now - _lastSensorDataFetch >= 4000) {
       _lastSensorDataFetch = now;
       final data = await readSensorData();
       if (data != null) {
         try {
-          final sensor1 =
+          final sensor4 =
               data.sensors.firstWhere((e) => e.sensor == 4).rawValue;
           _inputChannels
               .firstWhere((e) =>
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 1)
-              .analogValue = sensor1.toDouble();
-          final sensor2 =
+              .analogValue = sensor4.toDouble();
+          final sensor3 =
               data.sensors.firstWhere((e) => e.sensor == 5).rawValue;
           _inputChannels
               .firstWhere((e) =>
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 2)
-              .analogValue = sensor2.toDouble();
-          final sensor3 =
+              .analogValue = sensor3.toDouble();
+          final sensor2 =
               data.sensors.firstWhere((e) => e.sensor == 6).rawValue;
           _inputChannels
               .firstWhere((e) =>
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 3)
-              .analogValue = sensor3.toDouble();
-          final sensor4 =
+              .analogValue = sensor2.toDouble();
+          final sensor1 =
               data.sensors.firstWhere((e) => e.sensor == 7).rawValue;
           _inputChannels
               .firstWhere((e) =>
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
-              .analogValue = sensor4.toDouble();
+              .analogValue = sensor1.toDouble();
           update();
           Buzz.success();
         } on Exception catch (e) {
