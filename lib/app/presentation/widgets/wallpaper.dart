@@ -69,28 +69,28 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                          'Ntc1\nRaw:${cc.ntc1.toInt()}\nAI:${cc.ntc1Celcius.toStringAsFixed(1)}\nValue:${cc.ntc1Value.toStringAsFixed(1)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc1.toInt())?.toStringAsFixed(1)}'),
+                          'Ntc1\nRaw:${cc.ntc1.toInt()}\nvntc: ${cc.ntc1VntcValue.toStringAsFixed(2)}\nrntc: ${cc.ntc1RntcValue.toStringAsFixed(2)}\nValue:${cc.ntc1Value.toStringAsFixed(2)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc1.toInt())?.toStringAsFixed(1)}'),
                     ),
                   ),
                   Card(
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                          'Ntc2\nRaw:${cc.ntc2.toInt()}\nAI:${cc.ntc2Celcius.toStringAsFixed(1)}\nValue:${cc.ntc2Value.toStringAsFixed(1)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc2.toInt())?.toStringAsFixed(1)}'),
+                          'Ntc2\nRaw:${cc.ntc2.toInt()}\nvntc: ${cc.ntc2VntcValue.toStringAsFixed(2)}\nrntc: ${cc.ntc2RntcValue.toStringAsFixed(2)}\nValue:${cc.ntc2Value.toStringAsFixed(2)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc2.toInt())?.toStringAsFixed(1)}'),
                     ),
                   ),
                   Card(
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                          'Ntc3\nRaw:${cc.ntc3.toInt()}\nAI:${cc.ntc3Celcius.toStringAsFixed(1)}\nValue:${cc.ntc3Value.toStringAsFixed(1)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc3.toInt())?.toStringAsFixed(1)}'),
+                          'Ntc3\nRaw:${cc.ntc3.toInt()}\nvntc: ${cc.ntc3VntcValue.toStringAsFixed(2)}\nrntc: ${cc.ntc3RntcValue.toStringAsFixed(2)}\nValue:${cc.ntc3Value.toStringAsFixed(2)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc3.toInt())?.toStringAsFixed(1)}'),
                     ),
                   ),
                   Card(
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                          'Ntc4\nRaw:${cc.ntc4.toInt()}\nAI:${cc.ntc4Celcius.toStringAsFixed(1)}\nValue:${cc.ntc4Value.toStringAsFixed(1)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc4.toInt())?.toStringAsFixed(1)}'),
+                          'Ntc4\nRaw:${cc.ntc4.toInt()}\nvntc: ${cc.ntc4VntcValue.toStringAsFixed(2)}\nrntc: ${cc.ntc4RntcValue.toStringAsFixed(2)}\nValue:${cc.ntc4Value.toStringAsFixed(2)}\nio: ${CCUtils.sensorRawToTemperature(cc.ntc4.toInt())?.toStringAsFixed(1)}'),
                     ),
                   ),
                 ],
