@@ -831,7 +831,6 @@ class ChannelController extends GetxController {
         _ntc4.value = sensor4.toDouble();
         _ntcReadCount.value++;
         update();
-        // Buzz.success();
       } on Exception catch (e) {
         print(e);
         Buzz.error();
