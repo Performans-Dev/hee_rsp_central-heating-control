@@ -66,7 +66,7 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
                 children: [
                   ...dc.zoneList.where((e) => e.hasThermostat).map((e) => Chip(
                         label: Text(
-                            '${e.name}: ${dc.sensorListWithValues(e.id).first.value?.toStringAsPrecision(1)}°C'),
+                            '${e.name}: ${dc.sensorListWithValues(e.id).first.value?.toStringAsFixed(1)}°C'),
                       ))
                 ],
               );
