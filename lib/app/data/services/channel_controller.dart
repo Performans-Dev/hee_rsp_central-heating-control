@@ -48,7 +48,7 @@ class ChannelController extends GetxController {
   StreamSubscription<Uint8List>? messageSubscription;
   late StreamController<SerialQuery> serialQueryStreamController;
   late StreamController<String> logMessageController;
-  int _lastSensorDataFetch = 0;
+  // int _lastSensorDataFetch = 0;
   final StreamController<ChannelDefinition> _buttonStreamController =
       StreamController<ChannelDefinition>.broadcast();
   Stream<ChannelDefinition> get buttonStream => _buttonStreamController.stream;
@@ -116,9 +116,9 @@ class ChannelController extends GetxController {
 
     runGpioInputPolling();
     await wait(100);
-    readObSensorData();
+    runSensorPolling();
     await wait(100);
-    runSerialLoop();
+    runSerialPolling();
   }
   //#endregion
 
@@ -569,7 +569,7 @@ class ChannelController extends GetxController {
     logMessageController.add('turning on serial loop');
     _allowSerialLoop.value = true;
     update();
-    runSerialLoop();
+    runSerialPolling();
   }
 
   void turnOffSerialLoop() {
@@ -685,7 +685,7 @@ class ChannelController extends GetxController {
     //
   }
 
-  void runSerialLoop() async {
+  void runSerialPolling() async {
     if (processingSerialLoop) {
       // exit if already processing
       return;
@@ -757,7 +757,7 @@ class ChannelController extends GetxController {
 
     await wait(kSerialLoopDelay);
     if (allowSerialLoop) {
-      runSerialLoop();
+      runSerialPolling();
     }
   }
 
@@ -795,54 +795,51 @@ class ChannelController extends GetxController {
   //#endregion
 
   //#region MARK: SENSOR POLLING
-  Future<void> readObSensorData() async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    if (now - _lastSensorDataFetch >= temperatureRefreshDuration) {
-      _lastSensorDataFetch = now;
+  Future<void> runSensorPolling() async {
+    // final now = DateTime.now().millisecondsSinceEpoch;
+    // if (now - _lastSensorDataFetch >= temperatureRefreshDuration) {
+    //   _lastSensorDataFetch = now;
+    //   update();
 
-      final data = await readSensorData();
-      if (data != null) {
-        try {
-          final sensor4 =
-              data.sensors.firstWhere((e) => e.sensor == 4).rawValue;
-          _inputChannels
-              .firstWhere((e) =>
-                  e.type == PinType.onboardAnalogInput && e.pinIndex == 1)
-              .analogValue = sensor4.toDouble();
-          final sensor3 =
-              data.sensors.firstWhere((e) => e.sensor == 5).rawValue;
-          _inputChannels
-              .firstWhere((e) =>
-                  e.type == PinType.onboardAnalogInput && e.pinIndex == 2)
-              .analogValue = sensor3.toDouble();
-          final sensor2 =
-              data.sensors.firstWhere((e) => e.sensor == 6).rawValue;
-          _inputChannels
-              .firstWhere((e) =>
-                  e.type == PinType.onboardAnalogInput && e.pinIndex == 3)
-              .analogValue = sensor2.toDouble();
-          final sensor1 =
-              data.sensors.firstWhere((e) => e.sensor == 7).rawValue;
-          _inputChannels
-              .firstWhere((e) =>
-                  e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
-              .analogValue = sensor1.toDouble();
+    final data = await readSensorData();
+    if (data != null) {
+      try {
+        final sensor4 = data.sensors.firstWhere((e) => e.sensor == 4).rawValue;
+        _inputChannels
+            .firstWhere(
+                (e) => e.type == PinType.onboardAnalogInput && e.pinIndex == 1)
+            .analogValue = sensor4.toDouble();
+        final sensor3 = data.sensors.firstWhere((e) => e.sensor == 5).rawValue;
+        _inputChannels
+            .firstWhere(
+                (e) => e.type == PinType.onboardAnalogInput && e.pinIndex == 2)
+            .analogValue = sensor3.toDouble();
+        final sensor2 = data.sensors.firstWhere((e) => e.sensor == 6).rawValue;
+        _inputChannels
+            .firstWhere(
+                (e) => e.type == PinType.onboardAnalogInput && e.pinIndex == 3)
+            .analogValue = sensor2.toDouble();
+        final sensor1 = data.sensors.firstWhere((e) => e.sensor == 7).rawValue;
+        _inputChannels
+            .firstWhere(
+                (e) => e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
+            .analogValue = sensor1.toDouble();
 
-          _ntc1.value = sensor1.toDouble();
-          _ntc2.value = sensor2.toDouble();
-          _ntc3.value = sensor3.toDouble();
-          _ntc4.value = sensor4.toDouble();
-          _ntcReadCount.value++;
-          Buzz.success();
-        } on Exception catch (e) {
-          print(e);
-          Buzz.error();
-        }
+        _ntc1.value = sensor1.toDouble();
+        _ntc2.value = sensor2.toDouble();
+        _ntc3.value = sensor3.toDouble();
+        _ntc4.value = sensor4.toDouble();
+        _ntcReadCount.value++;
         update();
+        Buzz.success();
+      } on Exception catch (e) {
+        print(e);
+        Buzz.error();
       }
+      // }
 
-      Future.delayed(Duration(milliseconds: temperatureCheckDuration), () {
-        readObSensorData();
+      Future.delayed(Duration(milliseconds: temperatureRefreshDuration), () {
+        runSensorPolling();
       });
     }
   }
