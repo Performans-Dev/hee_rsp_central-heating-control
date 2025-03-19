@@ -65,6 +65,10 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 spacing: 8,
                 children: [
+                  Icon(Icons.sunny,
+                      color: cc.ntcReadCount % 2 == 0
+                          ? Colors.green
+                          : Colors.white),
                   Card(
                     child: Container(
                       padding: const EdgeInsets.all(8),

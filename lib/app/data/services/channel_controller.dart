@@ -22,6 +22,9 @@ import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:get/get.dart';
 
 //#region MARK: Constants
+int temperatureRefreshDuration = 5000;
+int temperatureCheckDuration = 1200;
+
 int kMainBoardButtonPinCount = 4;
 String inputChannelName = 'CHI {n}';
 String outputChannelName = 'CHO {n}';
@@ -134,6 +137,9 @@ class ChannelController extends GetxController {
   //#endregion
 
   //#region ThermometerSensors
+  final Rx<int> _ntcReadCount = 0.obs;
+  int get ntcReadCount => _ntcReadCount.value;
+
   final Rx<double> _ntc1 = 0.0.obs;
   final Rx<double> _ntc2 = 0.0.obs;
   final Rx<double> _ntc3 = 0.0.obs;
@@ -789,10 +795,11 @@ class ChannelController extends GetxController {
   //#endregion
 
   //#region MARK: SENSOR POLLING
-  void readObSensorData() async {
+  Future<void> readObSensorData() async {
     final now = DateTime.now().millisecondsSinceEpoch;
-    if (now - _lastSensorDataFetch >= 4000) {
+    if (now - _lastSensorDataFetch >= temperatureRefreshDuration) {
       _lastSensorDataFetch = now;
+
       final data = await readSensorData();
       if (data != null) {
         try {
@@ -825,13 +832,18 @@ class ChannelController extends GetxController {
           _ntc2.value = sensor2.toDouble();
           _ntc3.value = sensor3.toDouble();
           _ntc4.value = sensor4.toDouble();
-          update();
+          _ntcReadCount.value++;
           Buzz.success();
         } on Exception catch (e) {
           print(e);
           Buzz.error();
         }
+        update();
       }
+
+      Future.delayed(Duration(milliseconds: temperatureCheckDuration), () {
+        readObSensorData();
+      });
     }
   }
   //#endregion
