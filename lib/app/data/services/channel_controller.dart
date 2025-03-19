@@ -159,8 +159,8 @@ class ChannelController extends GetxController {
   }
 
   double adcReadNtc(double raw) {
-    const double vcc = 3.30;
-    const int rs = 150000;
+    const double vcc = 5.0;
+    const int rs = 10000;
     const double res = 0.0009765625;
     double adcValue = 0;
     double vNtc = 0;
