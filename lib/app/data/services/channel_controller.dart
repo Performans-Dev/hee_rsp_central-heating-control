@@ -149,17 +149,7 @@ class ChannelController extends GetxController {
   double get ntc3Value => adcReadNtc(ntc3);
   double get ntc4Value => adcReadNtc(ntc4);
 
-  double get ntc1VntcValue => adcReadNtc(ntc1, rt: 1);
-  double get ntc2VntcValue => adcReadNtc(ntc2, rt: 1);
-  double get ntc3VntcValue => adcReadNtc(ntc3, rt: 1);
-  double get ntc4VntcValue => adcReadNtc(ntc4, rt: 1);
-
-  double get ntc1RntcValue => adcReadNtc(ntc1, rt: 2);
-  double get ntc2RntcValue => adcReadNtc(ntc2, rt: 2);
-  double get ntc3RntcValue => adcReadNtc(ntc3, rt: 2);
-  double get ntc4RntcValue => adcReadNtc(ntc4, rt: 2);
-
-  double adcReadNtc(double raw, {int rt = 0}) {
+  double adcReadNtc(double raw) {
     const double vcc = 5.0;
     const int rs = 10000;
     const double res = 0.0048828125; // 0.0009765625;
@@ -177,13 +167,7 @@ class ChannelController extends GetxController {
     tNtc = log(rNtc);
     tNtc = 1 / (a + (b * tNtc) + (c * tNtc * tNtc * tNtc));
     tNtc = tNtc - 273.15;
-    return rt == 0
-        ? tNtc
-        : rt == 1
-            ? vNtc
-            : rt == 2
-                ? rNtc
-                : tNtc;
+    return tNtc;
   }
   //#endregion
 
