@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:central_heating_control/app/core/constants/enums.dart';
@@ -130,6 +131,53 @@ class ChannelController extends GetxController {
     print("Hardware devices loaded {${_hardwareList.length}}");
   }
 
+  //#endregion
+
+  //#region ThermometerSensors
+  final Rx<double> _ntc1 = 0.0.obs;
+  final Rx<double> _ntc2 = 0.0.obs;
+  final Rx<double> _ntc3 = 0.0.obs;
+  final Rx<double> _ntc4 = 0.0.obs;
+
+  double get ntc1 => _ntc1.value;
+  double get ntc2 => _ntc2.value;
+  double get ntc3 => _ntc3.value;
+  double get ntc4 => _ntc4.value;
+
+  double get ntc1Celcius => adc2ntc(ntc1);
+  double get ntc2Celcius => adc2ntc(ntc2);
+  double get ntc3Celcius => adc2ntc(ntc3);
+  double get ntc4Celcius => adc2ntc(ntc4);
+
+  double get ntc1Value => adcReadNtc(ntc1);
+  double get ntc2Value => adcReadNtc(ntc2);
+  double get ntc3Value => adcReadNtc(ntc3);
+  double get ntc4Value => adcReadNtc(ntc4);
+
+  double adc2ntc(double adc) {
+    return (1 / (1 / 298.15 + (1 / 3950) * log(1023 / (1023 - adc)))) - 273.15;
+  }
+
+  double adcReadNtc(double raw) {
+    const double vcc = 3.30;
+    const int rs = 150000;
+    const double res = 0.0009765625;
+    double adcValue = 0;
+    double vNtc = 0;
+    double rNtc = 0;
+    double tNtc = 0;
+    const double a = 0.001129148;
+    const double b = 0.000234125;
+    const double c = 0.0000000876741;
+    //
+    adcValue = raw;
+    vNtc = adcValue * res;
+    rNtc = (rs * vNtc) / (vcc - vNtc);
+    tNtc = log(rNtc);
+    tNtc = 1 / (a + (b * tNtc) + (c * tNtc * tNtc * tNtc));
+    tNtc = tNtc - 273.15;
+    return tNtc;
+  }
   //#endregion
 
   //#region MARK: GPIO Pins
@@ -781,6 +829,11 @@ class ChannelController extends GetxController {
               .firstWhere((e) =>
                   e.type == PinType.onboardAnalogInput && e.pinIndex == 4)
               .analogValue = sensor1.toDouble();
+
+          _ntc1.value = sensor1.toDouble();
+          _ntc2.value = sensor2.toDouble();
+          _ntc3.value = sensor3.toDouble();
+          _ntc4.value = sensor4.toDouble();
           update();
           Buzz.success();
         } on Exception catch (e) {

@@ -5,7 +5,7 @@ import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
-import 'package:central_heating_control/app/data/services/data.dart';
+import 'package:central_heating_control/app/data/services/channel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -59,15 +59,39 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
             padding: const EdgeInsets.all(8),
             width: double.infinity,
             color: Colors.black.withValues(alpha: 0.4),
-            child: GetBuilder<DataController>(builder: (dc) {
+            child: GetBuilder<ChannelController>(builder: (cc) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 spacing: 8,
                 children: [
-                  ...dc.zoneList.where((e) => e.hasThermostat).map((e) => Chip(
-                        label: Text(
-                            '${e.name}: ${dc.sensorListWithValues(e.id).first.value?.toStringAsFixed(1)}°C'),
-                      ))
+                  Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                          'Ntc1\nRaw:${cc.ntc1.toInt()}\nAI:${cc.ntc1Celcius.toStringAsFixed(1)}\nValue:${cc.ntc1Value.toStringAsFixed(1)}'),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                          'Ntc2\nRaw:${cc.ntc2.toInt()}\nAI:${cc.ntc2Celcius.toStringAsFixed(1)}\nValue:${cc.ntc2Value.toStringAsFixed(1)}'),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                          'Ntc3\nRaw:${cc.ntc3.toInt()}\nAI:${cc.ntc3Celcius.toStringAsFixed(1)}\nValue:${cc.ntc3Value.toStringAsFixed(1)}'),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                          'Ntc4\nRaw:${cc.ntc4.toInt()}\nAI:${cc.ntc4Celcius.toStringAsFixed(1)}\nValue:${cc.ntc4Value.toStringAsFixed(1)}'),
+                    ),
+                  ),
                 ],
               );
             }),
