@@ -2,10 +2,11 @@
 FLUTTER_ROOT=/Users/io/Development/SDK/flutter
 FLUTTER_APPLICATION_PATH=/Users/io/Development/FlutterProjects/heethings/CentralHeatingControl/CHC
 COCOAPODS_PARALLEL_CODE_SIGN=true
+FLUTTER_TARGET=/Users/io/Development/FlutterProjects/heethings/CentralHeatingControl/CHC/lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.3.2.4
 FLUTTER_BUILD_NUMBER=1302
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false
-PACKAGE_CONFIG=.dart_tool/package_config.json
+PACKAGE_CONFIG=/Users/io/Development/FlutterProjects/heethings/CentralHeatingControl/CHC/.dart_tool/package_config.json

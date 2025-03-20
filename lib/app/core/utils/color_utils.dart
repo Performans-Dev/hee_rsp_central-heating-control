@@ -16,14 +16,14 @@ class ColorUtils {
 
 enum ItemColor {
   none(''),
-  orange('#FF5733'),
-  green('#33FF57'),
-  blue('#3357FF'),
-  pink('#FF33A1'),
-  yellow('#FFDB33'),
-  cyan('#33FFF5'),
-  purple('#B833FF'),
-  lime('#A1FF33');
+  orange('#FF5733'),   // Orange
+  green('#33FF57'),    // Green
+  blue('#3357FF'),     // Blue
+  pink('#FF33A1'),     // Pink
+  yellow('#FFDB33'),   // Yellow
+  cyan('#33FFF5'),     // Cyan
+  purple('#B833FF'),   // Purple
+  lime('#A1FF33');     // Lime
 
   const ItemColor(this.value);
   final String value;
