@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/core/localization/langs/en_us.dart';
 import 'package:central_heating_control/app/core/localization/langs/tr_tr.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
@@ -39,6 +41,8 @@ class LocalizationService {
     } else {
       l = Locale(localeLang, localeCountry);
     }
+
+    print('Locale: $l');
 
     await Get.updateLocale(l);
     return l;
