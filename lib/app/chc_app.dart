@@ -5,7 +5,8 @@ import 'package:central_heating_control/app/core/theme/theme.dart';
 import 'package:central_heating_control/app/core/theme/theme_utils.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/controllers/bindings.dart';
-import 'package:central_heating_control/app/presentation/screens/developer/developer_screen.dart';
+import 'package:central_heating_control/app/data/routes/pages.dart';
+import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -32,7 +33,8 @@ class ChcApp extends StatelessWidget {
             highContrastDarkTheme: theme.darkHighContrast(),
             themeMode: getThemeMode(),
             defaultTransition: Transition.circularReveal,
-            home: const DeveloperScreen(),
+            initialRoute: Routes.home,
+            getPages: getPages,
             initialBinding: AppBindings(),
             locale: LocalizationService.locale,
             fallbackLocale: LocalizationService.fallbackLocale,
