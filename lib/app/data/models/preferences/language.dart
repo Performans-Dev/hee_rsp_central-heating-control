@@ -43,4 +43,17 @@ class Language {
 
   factory Language.fromJson(String source) =>
       Language.fromMap(json.decode(source));
+      
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is Language &&
+        other.code == code &&
+        other.country == country &&
+        other.name == name;
+  }
+
+  @override
+  int get hashCode => code.hashCode ^ country.hashCode ^ name.hashCode;
 }

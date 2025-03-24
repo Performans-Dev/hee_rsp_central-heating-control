@@ -1,5 +1,10 @@
+import 'package:central_heating_control/app/presentation/screens/developer/widgets/datetime.dart';
 import 'package:central_heating_control/app/presentation/screens/developer/widgets/language.dart';
+import 'package:central_heating_control/app/presentation/screens/developer/widgets/lock_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/developer/widgets/network.dart';
+import 'package:central_heating_control/app/presentation/screens/developer/widgets/preferences_info.dart';
 import 'package:central_heating_control/app/presentation/screens/developer/widgets/theme.dart';
+import 'package:central_heating_control/app/presentation/screens/developer/widgets/timezone.dart';
 import 'package:flutter/material.dart';
 
 class DeveloperScreen extends StatefulWidget {
@@ -20,8 +25,15 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
+            DevPreferencesInfoWidget(),
             DevThemeSwitcherWidget(),
+            DevLockScreenWidget(),
             DevLanguageSwitcherWidget(),
+            DevTimezoneSwitcherWidget(),
+            DevDateTimeFormatSwitcherWidget(),
+            Divider(),
+            DevNetworkInfoWidget(),
+            Divider(),
           ],
         ),
       ),

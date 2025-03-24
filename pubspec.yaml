@@ -26,6 +26,7 @@ dependencies:
   get_storage: ^2.1.1
   google_fonts: ^6.2.1
   intl: ^0.19.0
+  intl_translation: ^0.20.1
   network_info_plus: ^5.0.3
   on_screen_keyboard_tr:
     path: modules/on_screen_keyboard_tr/

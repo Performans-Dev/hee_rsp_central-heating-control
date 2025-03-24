@@ -76,4 +76,13 @@ const Map<String, String> trTR = {
   'Nature': 'Doğa',
   'Warmy': 'Sıcak',
   'Crimson': 'Kızıl',
+  'DarkMode': 'KoyuMod',
+  'Lock Screen': 'Kilit Ekranı',
+  'Lock Screen Timer': 'Kilitleme Süresi',
+  'Screen Saver Type': 'Ekran Koruyucu Tipi',
+  'No images in folder': 'Klasörde görsel bulunmuyor',
+  'Slide Duration': 'Kaydırma Süresi',
+  'staticPicture': 'Sabit Görsel',
+  'slidePictures': 'Slide Show',
+  'fun': 'Eğlenceli',
 };

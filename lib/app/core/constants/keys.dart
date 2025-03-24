@@ -19,4 +19,8 @@ class Keys {
   static const String themeNature = 'nature';
   static const String themeWarmy = 'warmy';
   static const String themeCrimson = 'crimson';
+
+  static const String idleTimerInSeconds = 'idleTimerInSeconds';
+  static const String slideShowDurationInSeconds = 'slideShowDurationInSeconds';
+  static const String screenSaverType = 'screenSaverType';
 }

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/core/extensions/restart.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/providers/static_provider.dart';
@@ -16,9 +17,9 @@ class DevThemeSwitcherWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              const Text('Theme'),
+              Text('Theme'.tr),
               const Spacer(),
-              const Text('DarkMode:'),
+              Text('DarkMode:'.tr),
               Switch(
                   value: app.preferences.isDark,
                   onChanged: (v) {
@@ -28,12 +29,9 @@ class DevThemeSwitcherWidget extends StatelessWidget {
                     RestartWidget.restartApp(context);
                   }),
               const SizedBox(width: 20),
-              const Text('Theme:'),
               ToggleButtons(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: UiDimens.br12,
                 constraints: const BoxConstraints(minWidth: 70, minHeight: 40),
-                children:
-                    StaticProvider.getThemeList.map((e) => Text(e)).toList(),
                 isSelected: StaticProvider.getThemeList
                     .map((e) => app.preferences.appTheme == e)
                     .toList(),
@@ -43,6 +41,8 @@ class DevThemeSwitcherWidget extends StatelessWidget {
                   ));
                   RestartWidget.restartApp(context);
                 },
+                children:
+                    StaticProvider.getThemeList.map((e) => Text(e)).toList(),
               ),
             ],
           ),

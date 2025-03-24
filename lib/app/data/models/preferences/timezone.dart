@@ -42,4 +42,17 @@ class Timezone {
 
   factory Timezone.fromJson(String source) =>
       Timezone.fromMap(json.decode(source));
+      
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is Timezone &&
+        other.zone == zone &&
+        other.gmt == gmt &&
+        other.name == name;
+  }
+
+  @override
+  int get hashCode => zone.hashCode ^ gmt.hashCode ^ name.hashCode;
 }
