@@ -35,7 +35,7 @@ Future<void> main() async {
   );
 
   // Uncomment to erase the box
-  // await box.erase();
+  await box.erase();
 
   //#endregion
 
