@@ -7,6 +7,7 @@ import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/core/utils/cc.dart';
 import 'package:central_heating_control/app/data/services/app.dart';
 import 'package:central_heating_control/app/data/services/channel_controller.dart';
+import 'package:central_heating_control/app/data/services/data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -60,45 +61,49 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
             padding: const EdgeInsets.all(8),
             width: double.infinity,
             color: Colors.black.withValues(alpha: 0.4),
-            child: GetBuilder<ChannelController>(builder: (cc) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                spacing: 8,
-                children: [
-                  Icon(Icons.sunny,
-                      color: cc.ntcReadCount % 2 == 0
-                          ? Colors.green
-                          : Colors.white),
-                  Card(
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                          'Ntc1: ${CCUtils.sensorRawToTemperature(cc.ntc1.toInt())?.toStringAsFixed(2)}'),
+            child: GetBuilder<DataController>(builder: (dc) {
+              return GetBuilder<ChannelController>(builder: (cc) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 8,
+                  children: [
+                    Text(dc.lastRunnerLoopTime),
+                    const Spacer(),
+                    Icon(Icons.sunny,
+                        color: cc.ntcReadCount % 2 == 0
+                            ? Colors.green
+                            : Colors.white),
+                    Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                            'Ntc1: ${CCUtils.sensorRawToTemperature(cc.ntc1.toInt())?.toStringAsFixed(2)}'),
+                      ),
                     ),
-                  ),
-                  Card(
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                          'Ntc2: ${CCUtils.sensorRawToTemperature(cc.ntc2.toInt())?.toStringAsFixed(2)}'),
+                    Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                            'Ntc2: ${CCUtils.sensorRawToTemperature(cc.ntc2.toInt())?.toStringAsFixed(2)}'),
+                      ),
                     ),
-                  ),
-                  Card(
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                          'Ntc3: ${CCUtils.sensorRawToTemperature(cc.ntc3.toInt())?.toStringAsFixed(2)}'),
+                    Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                            'Ntc3: ${CCUtils.sensorRawToTemperature(cc.ntc3.toInt())?.toStringAsFixed(2)}'),
+                      ),
                     ),
-                  ),
-                  Card(
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                          'Ntc4: ${CCUtils.sensorRawToTemperature(cc.ntc4.toInt())?.toStringAsFixed(2)}'),
+                    Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                            'Ntc4: ${CCUtils.sensorRawToTemperature(cc.ntc4.toInt())?.toStringAsFixed(2)}'),
+                      ),
                     ),
-                  ),
-                ],
-              );
+                  ],
+                );
+              });
             }),
           ),
         ),

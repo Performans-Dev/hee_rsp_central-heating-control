@@ -1,0 +1,12 @@
+CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES
+CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus" "${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus" "${PODS_CONFIGURATION_BUILD_DIR}/flutter_libserialport" "${PODS_CONFIGURATION_BUILD_DIR}/libserialport" "${PODS_CONFIGURATION_BUILD_DIR}/network_info_plus" "${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation" "${PODS_CONFIGURATION_BUILD_DIR}/screen_retriever" "${PODS_CONFIGURATION_BUILD_DIR}/window_manager"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus/connectivity_plus.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus/device_info_plus.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/flutter_libserialport/flutter_libserialport.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/libserialport/libserialport.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/network_info_plus/network_info_plus.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus/package_info_plus.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation/path_provider_foundation.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/screen_retriever/screen_retriever.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/window_manager/window_manager.framework/Headers"
+OTHER_LDFLAGS = $(inherited) -framework "connectivity_plus" -framework "device_info_plus" -framework "flutter_libserialport" -framework "libserialport" -framework "network_info_plus" -framework "package_info_plus" -framework "path_provider_foundation" -framework "screen_retriever" -framework "window_manager"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods
+PODS_XCFRAMEWORKS_BUILD_DIR = $(PODS_CONFIGURATION_BUILD_DIR)/XCFrameworkIntermediates
+USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

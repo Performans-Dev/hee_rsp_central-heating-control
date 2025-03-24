@@ -500,6 +500,9 @@ class DataController extends GetxController {
   final RxBool _isLooping = false.obs;
   bool get isLooping => _isLooping.value;
 
+  final RxString _lastRunnerLoopTime = DateTime.now().toIso8601String().obs;
+  String get lastRunnerLoopTime => _lastRunnerLoopTime.value;
+
   Future<void> runnerLoop() async {
     if (isLooping) {
       _runnerLogList.insert(0, 'Loop is already running.');
@@ -507,6 +510,7 @@ class DataController extends GetxController {
       return;
     }
     _isLooping.value = true;
+    _lastRunnerLoopTime.value = DateTime.now().toIso8601String();
     update();
 
     for (final zone in zoneList) {

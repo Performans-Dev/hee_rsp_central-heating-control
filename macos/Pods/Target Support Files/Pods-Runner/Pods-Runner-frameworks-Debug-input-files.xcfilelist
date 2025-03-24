@@ -1,0 +1,10 @@
+${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh
+${BUILT_PRODUCTS_DIR}/connectivity_plus/connectivity_plus.framework
+${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework
+${BUILT_PRODUCTS_DIR}/flutter_libserialport/flutter_libserialport.framework
+${BUILT_PRODUCTS_DIR}/libserialport/libserialport.framework
+${BUILT_PRODUCTS_DIR}/network_info_plus/network_info_plus.framework
+${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework
+${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework
+${BUILT_PRODUCTS_DIR}/screen_retriever/screen_retriever.framework
+${BUILT_PRODUCTS_DIR}/window_manager/window_manager.framework
