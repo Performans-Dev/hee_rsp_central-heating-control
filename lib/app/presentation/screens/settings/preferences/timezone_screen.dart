@@ -9,14 +9,15 @@ import 'package:central_heating_control/app/presentation/widgets/components/app_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class TimezoneScreen extends StatefulWidget {
-  const TimezoneScreen({super.key});
+class PreferencesTimezoneScreen extends StatefulWidget {
+  const PreferencesTimezoneScreen({super.key});
 
   @override
-  State<TimezoneScreen> createState() => _TimezoneScreenState();
+  State<PreferencesTimezoneScreen> createState() =>
+      _PreferencesTimezoneScreenState();
 }
 
-class _TimezoneScreenState extends State<TimezoneScreen> {
+class _PreferencesTimezoneScreenState extends State<PreferencesTimezoneScreen> {
   final AppController appController = Get.find();
   final List<Timezone> timezones = StaticProvider.getTimezoneList;
   late Timezone selectedTimezone;

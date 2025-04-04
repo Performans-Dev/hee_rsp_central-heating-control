@@ -1,6 +1,8 @@
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/datetime_format_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/language_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/network_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/preferences_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/saver_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/theme_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
@@ -28,18 +30,26 @@ final getPages = [
   ),
   GetPage(
     name: Routes.preferencesLanguage,
-    page: () => const LanguageScreen(),
+    page: () => const PreferencesLanguageScreen(),
   ),
   GetPage(
     name: Routes.preferencesTimezone,
-    page: () => const TimezoneScreen(),
+    page: () => const PreferencesTimezoneScreen(),
   ),
   GetPage(
     name: Routes.preferencesDatetimeFormat,
-    page: () => const DatetimeFormatScreen(),
+    page: () => const PreferencesDateTimeFormatScreen(),
   ),
   GetPage(
     name: Routes.preferencesTheme,
-    page: () => const ThemeScreen(),
+    page: () => const PreferencesThemeScreen(),
+  ),
+  GetPage(
+    name: Routes.preferencesScreenSaver,
+    page: () => const PreferencesScreenSaverScreen(),
+  ),
+  GetPage(
+    name: Routes.preferencesNetworkConnections,
+    page: () => const PreferencesNetworkConnectionsScreen(),
   ),
 ];

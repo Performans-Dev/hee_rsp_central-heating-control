@@ -7,17 +7,18 @@ import 'package:central_heating_control/app/data/providers/static_provider.dart'
 import 'package:central_heating_control/app/presentation/widgets/common/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class DatetimeFormatScreen extends StatefulWidget {
-  const DatetimeFormatScreen({super.key});
+class PreferencesDateTimeFormatScreen extends StatefulWidget {
+  const PreferencesDateTimeFormatScreen({super.key});
 
   @override
-  State<DatetimeFormatScreen> createState() => _DatetimeFormatScreenState();
+  State<PreferencesDateTimeFormatScreen> createState() =>
+      _PreferencesDateTimeFormatScreenState();
 }
 
-class _DatetimeFormatScreenState extends State<DatetimeFormatScreen> {
+class _PreferencesDateTimeFormatScreenState
+    extends State<PreferencesDateTimeFormatScreen> {
   final AppController appController = Get.find();
   final dateFormatList = StaticProvider.getDateFormatList;
   final timeFormatList = StaticProvider.getTimeFormatList;

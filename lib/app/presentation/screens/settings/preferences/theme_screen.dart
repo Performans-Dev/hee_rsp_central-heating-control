@@ -8,14 +8,14 @@ import 'package:central_heating_control/app/presentation/widgets/components/app_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ThemeScreen extends StatefulWidget {
-  const ThemeScreen({super.key});
+class PreferencesThemeScreen extends StatefulWidget {
+  const PreferencesThemeScreen({super.key});
 
   @override
-  State<ThemeScreen> createState() => _ThemeScreenState();
+  State<PreferencesThemeScreen> createState() => _PreferencesThemeScreenState();
 }
 
-class _ThemeScreenState extends State<ThemeScreen> {
+class _PreferencesThemeScreenState extends State<PreferencesThemeScreen> {
   final AppController appController = Get.find();
   late String selectedTheme;
 

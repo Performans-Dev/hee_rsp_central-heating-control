@@ -8,4 +8,7 @@ class Routes {
   static const String preferencesDatetimeFormat =
       '/preferences/datetime_format';
   static const String preferencesTheme = '/preferences/theme';
+  static const String preferencesScreenSaver = '/preferences/screen_saver';
+  static const String preferencesNetworkConnections =
+      '/preferences/network_connections';
 }

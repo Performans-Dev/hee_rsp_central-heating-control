@@ -7,14 +7,15 @@ import 'package:central_heating_control/app/presentation/widgets/components/app_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LanguageScreen extends StatefulWidget {
-  const LanguageScreen({super.key});
+class PreferencesLanguageScreen extends StatefulWidget {
+  const PreferencesLanguageScreen({super.key});
 
   @override
-  State<LanguageScreen> createState() => _LanguageScreenState();
+  State<PreferencesLanguageScreen> createState() =>
+      _PreferencesLanguageScreenState();
 }
 
-class _LanguageScreenState extends State<LanguageScreen> {
+class _PreferencesLanguageScreenState extends State<PreferencesLanguageScreen> {
   final AppController appController = Get.find();
   final List<Language> languages = StaticProvider.getLanguageList;
   late Language selectedLanguage;
