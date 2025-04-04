@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,10 +8,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: AppBar(),
       body: Center(
         child: Text('h'),
       ),
+      title: 'Home'.tr,
     );
   }
 }

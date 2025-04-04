@@ -1,3 +1,9 @@
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/datetime_format_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/language_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/preferences_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/theme_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/preferences/timezone_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
@@ -11,5 +17,29 @@ final getPages = [
   GetPage(
     name: Routes.developer,
     page: () => const DeveloperScreen(),
+  ),
+  GetPage(
+    name: Routes.settings,
+    page: () => const SettingsScreen(),
+  ),
+  GetPage(
+    name: Routes.preferences,
+    page: () => const PreferencesScreen(),
+  ),
+  GetPage(
+    name: Routes.preferencesLanguage,
+    page: () => const LanguageScreen(),
+  ),
+  GetPage(
+    name: Routes.preferencesTimezone,
+    page: () => const TimezoneScreen(),
+  ),
+  GetPage(
+    name: Routes.preferencesDatetimeFormat,
+    page: () => const DatetimeFormatScreen(),
+  ),
+  GetPage(
+    name: Routes.preferencesTheme,
+    page: () => const ThemeScreen(),
   ),
 ];

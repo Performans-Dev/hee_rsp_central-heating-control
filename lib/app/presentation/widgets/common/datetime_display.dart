@@ -7,7 +7,17 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class LiveDateTimeDisplay extends StatefulWidget {
-  const LiveDateTimeDisplay({super.key});
+  const LiveDateTimeDisplay({
+    super.key,
+    this.dateFormat,
+    this.timeFormat,
+    this.fontSize,
+    this.force2Line = false,
+  });
+  final String? dateFormat;
+  final String? timeFormat;
+  final double? fontSize;
+  final bool force2Line;
 
   @override
   State<LiveDateTimeDisplay> createState() => _LiveDateTimeDisplayState();
@@ -24,7 +34,7 @@ class _LiveDateTimeDisplayState extends State<LiveDateTimeDisplay> {
     super.initState();
     // Initialize the locale for date formatting
     _initializeLocale();
-    
+
     // Update the time every second
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -51,20 +61,30 @@ class _LiveDateTimeDisplayState extends State<LiveDateTimeDisplay> {
     _currentLocale = '${language.code}_${language.country}';
     await initializeDateFormatting(_currentLocale);
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final dateFormat = appController.preferences.dateFormat;
-    final timeFormat = appController.preferences.timeFormat;
+    final dateFormat =
+        widget.dateFormat ?? appController.preferences.dateFormat;
+    final timeFormat =
+        widget.timeFormat ?? appController.preferences.timeFormat;
     final language = appController.preferences.language;
-    
+
     // Use the current language locale for formatting
     final locale = '${language.code}_${language.country}';
-    
+
     // Format the date and time using intl package with the selected locale
-    final formattedDate = DateFormat(dateFormat, locale).format(_currentDateTime);
-    final formattedTime = DateFormat(timeFormat, locale).format(_currentDateTime);
-    
-    return Text('$formattedDate $formattedTime');
+    final formattedDate =
+        DateFormat(dateFormat, locale).format(_currentDateTime);
+    final formattedTime =
+        DateFormat(timeFormat, locale).format(_currentDateTime);
+
+    return Text(
+      widget.force2Line
+          ? '$formattedDate\n$formattedTime'
+          : '$formattedDate $formattedTime',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: widget.fontSize),
+    );
   }
 }
