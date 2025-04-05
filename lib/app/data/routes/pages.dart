@@ -1,3 +1,7 @@
+import 'package:central_heating_control/app/presentation/screens/settings/advanced/advanced_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_users/add_new_user_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/app_users/app_users_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/management_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/datetime_format_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/network_screen.dart';
@@ -51,5 +55,24 @@ final getPages = [
   GetPage(
     name: Routes.preferencesNetworkConnections,
     page: () => const PreferencesNetworkConnectionsScreen(),
+  ),
+  //
+  GetPage(
+    name: Routes.management,
+    page: () => const ManagementScreen(),
+  ),
+  //
+  GetPage(
+    name: Routes.advanced,
+    page: () => const AdvancedScreen(),
+  ),
+  //
+  GetPage(
+    name: Routes.appUsers,
+    page: () => const AppUsersScreen(),
+  ),
+  GetPage(
+    name: Routes.addNewAppUser,
+    page: () => const AddNewAppUserScreen(),
   ),
 ];

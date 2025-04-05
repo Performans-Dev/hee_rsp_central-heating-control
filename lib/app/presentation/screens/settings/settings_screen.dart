@@ -23,13 +23,17 @@ class SettingsScreen extends StatelessWidget {
             CardButtonWidget(
               title: 'Management'.tr,
               icon: Icons.device_hub,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(Routes.management);
+              },
               color: Theme.of(context).colorScheme.primary,
             ),
             CardButtonWidget(
               title: 'Users'.tr,
               icon: Icons.people,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(Routes.appUsers);
+              },
               color: Theme.of(context).colorScheme.secondary,
             ),
             CardButtonWidget(
@@ -64,7 +68,9 @@ class SettingsScreen extends StatelessWidget {
             CardButtonWidget(
               title: 'Advanced'.tr,
               icon: Icons.lock_outline,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(Routes.advanced);
+              },
               color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
               size: CardSize.small,
             ),

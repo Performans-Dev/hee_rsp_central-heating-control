@@ -11,4 +11,9 @@ class Routes {
   static const String preferencesScreenSaver = '/preferences/screen_saver';
   static const String preferencesNetworkConnections =
       '/preferences/network_connections';
+
+  static const String management = '/management';
+  static const String advanced = '/advanced';
+  static const String appUsers = '/app-users';
+  static const String addNewAppUser = '/app-users/add-new';
 }
