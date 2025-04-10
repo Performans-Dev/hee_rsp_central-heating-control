@@ -6,7 +6,14 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/data/models/app_user/app_user.dart';
+import 'package:central_heating_control/app/data/models/device/device.dart';
+import 'package:central_heating_control/app/data/models/input_outputs/analog_input.dart';
+import 'package:central_heating_control/app/data/models/input_outputs/digital_input.dart';
+import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
 import 'package:central_heating_control/app/data/models/preferences/preferences.dart';
+import 'package:central_heating_control/app/data/models/zone/zone.dart';
+import 'package:central_heating_control/app/data/providers/db_provider.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -14,10 +21,13 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class AppController extends GetxController {
+  //#region MARK: Def
   late final StreamSubscription<List<ConnectivityResult>>
       _connectivitySubscription;
   final Connectivity _connecivity = Connectivity();
+  //#endregion
 
+  //#region MARK: Super
   @override
   void onInit() {
     super.onInit();
@@ -31,6 +41,8 @@ class AppController extends GetxController {
   void onReady() {
     print('AppController onReady');
     super.onReady();
+
+    loadData();
   }
 
   @override
@@ -38,6 +50,14 @@ class AppController extends GetxController {
     _connectivitySubscription.cancel();
     super.onClose();
   }
+
+  Future<void> loadData() async {
+    await _loadInputOutputs();
+    await _loadAppUsers();
+    await _loadZones();
+    await _loadDevices();
+  }
+  //#endregion
 
   //#region MARK: Preferences
   final _preferences = Preferences.empty().obs;
@@ -191,6 +211,144 @@ class AppController extends GetxController {
     _networkIP.value = wifiIp ?? "-";
     _networkGateway.value = wifiGateway ?? "-";
     update();
+  }
+  //#endregion
+
+  //#region MARK: AppUsers
+
+  final RxList<AppUser> _appUsers = <AppUser>[].obs;
+  List<AppUser> get appUsers => _appUsers;
+
+  Future<void> _loadAppUsers() async {
+    final data = await DbProvider.db.getAppUsers();
+    _appUsers.assignAll(data);
+    update();
+  }
+
+  Future<void> saveAppUser(AppUser appUser) async {
+    final response = await DbProvider.db.saveAppUser(appUser);
+    if (response > 0) {
+      _loadAppUsers();
+    }
+  }
+
+  Future<void> insertUser(AppUser appUser) async {
+    final response = await DbProvider.db.insertUser(appUser);
+    if (response > 0) {
+      _loadAppUsers();
+    }
+  }
+
+  Future<void> deleteUser(int id) async {
+    final response = await DbProvider.db.deleteUser(id);
+    if (response > 0) {
+      _loadAppUsers();
+    }
+  }
+  //#endregion
+
+  //#region MARK: InputOutput
+
+  final RxList<AnalogInput> _analogInputs = <AnalogInput>[].obs;
+  List<AnalogInput> get analogInputs => _analogInputs;
+  final RxList<DigitalInput> _digitalInputs = <DigitalInput>[].obs;
+  List<DigitalInput> get digitalInputs => _digitalInputs;
+  final RxList<DigitalOutput> _digitalOutputs = <DigitalOutput>[].obs;
+  List<DigitalOutput> get digitalOutputs => _digitalOutputs;
+
+  Future<void> _loadInputOutputs() async {
+    final analogInputs = await DbProvider.db.getAnalogInputs();
+    final digitalInputs = await DbProvider.db.getDigitalInputs();
+    final digitalOutputs = await DbProvider.db.getDigitalOutputs();
+    _analogInputs.assignAll(analogInputs);
+    _digitalInputs.assignAll(digitalInputs);
+    _digitalOutputs.assignAll(digitalOutputs);
+    update();
+  }
+
+  Future<void> saveAnalogInput(AnalogInput analogInput) async {
+    final response = await DbProvider.db.saveAnalogInput(analogInput);
+    if (response > 0) {
+      _loadInputOutputs();
+    }
+  }
+
+  Future<void> saveDigitalInput(DigitalInput digitalInput) async {
+    final response = await DbProvider.db.saveDigitalInput(digitalInput);
+    if (response > 0) {
+      _loadInputOutputs();
+    }
+  }
+
+  Future<void> saveDigitalOutput(DigitalOutput digitalOutput) async {
+    final response = await DbProvider.db.saveDigitalOutput(digitalOutput);
+    if (response > 0) {
+      _loadInputOutputs();
+    }
+  }
+  //#endregion
+
+  //#region MARK: Zone
+  final RxList<ZoneDefinition> _zones = <ZoneDefinition>[].obs;
+  List<ZoneDefinition> get zones => _zones;
+
+  Future<void> _loadZones() async {
+    final zones = await DbProvider.db.getZones();
+    _zones.assignAll(zones);
+    update();
+  }
+
+  Future<void> saveZone(ZoneDefinition zone) async {
+    final response = await DbProvider.db.saveZone(zone);
+    if (response > 0) {
+      _loadZones();
+    }
+  }
+
+  Future<void> insertZone(ZoneDefinition zone) async {
+    final response = await DbProvider.db.insertZone(zone);
+    if (response > 0) {
+      _loadZones();
+    }
+  }
+
+  Future<void> deleteZone(int id) async {
+    final response = await DbProvider.db.deleteZone(id);
+    if (response > 0) {
+      _loadZones();
+    }
+  }
+  //#endregion
+
+  //#region MARK: Devices
+  final RxList<Device> _devices = <Device>[].obs;
+  List<Device> get devices => _devices;
+
+  Future<void> _loadDevices() async {
+    final devices = await DbProvider.db.getDevices();
+    _devices.assignAll(devices);
+    update();
+  }
+
+  Future<void> saveDevice(Device device) async {
+    final response = await DbProvider.db.saveDevice(device);
+    if (response > 0) {
+      _loadDevices();
+    }
+  }
+
+  Future<void> insertDevice(Device device) async {
+    final response = await DbProvider.db.insertDevice(device);
+    if (response > 0) {
+      _loadDevices();
+    }
+  }
+
+  Future<void> deleteDevice(int id) async {
+    final response = await DbProvider.db.deleteDevice(id);
+    if (response > 0) {
+      _loadDevices();
+    }
   }
   //#endregion
 }

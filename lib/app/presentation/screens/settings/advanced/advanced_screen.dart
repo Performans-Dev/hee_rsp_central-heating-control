@@ -1,5 +1,4 @@
-import 'package:central_heating_control/app/data/controllers/input_output.dart';
-import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
+import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/card_button_widget.dart';
 import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ class AdvancedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<IOController>(builder: (ioc) {
+    return GetBuilder<AppController>(builder: (ioc) {
       return AppScaffold(
         title: 'Advanced'.tr,
         hasBackAction: true,

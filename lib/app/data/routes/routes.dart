@@ -13,6 +13,15 @@ class Routes {
       '/preferences/network_connections';
 
   static const String management = '/management';
+
+  static const String managementZones = '/management/zones';
+  static const String managementAddZone = '/management/add-zone';
+  static const String managementEditZone = '/management/edit-zone';
+
+  static const String managementDevices = '/management/devices';
+  static const String managementAddDevice = '/management/add-device';
+  static const String managementEditDevice = '/management/edit-device';
+
   static const String advanced = '/advanced';
   static const String appUsers = '/app-users';
   static const String addNewAppUser = '/app-users/add-new';

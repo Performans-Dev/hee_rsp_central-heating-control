@@ -1,3 +1,5 @@
+import 'package:central_heating_control/app/core/utils/color_utils.dart';
+
 class Keys {
   static const String piPath = '/home/pi/Heethings/CC/';
   static const String databasePath = 'databases';
@@ -25,7 +27,7 @@ class Keys {
   static const String screenSaverType = 'screenSaverType';
 
   //#region MARK: Database
-  static const int databaseVersion = 36;
+  static const int databaseVersion = 39;
   static const int logDatabaseVersion = 19;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -122,6 +124,80 @@ class Keys {
     ('Developer', '969696', 100),
     ('Admin', '000000', 50),
     ('User', '123456', 0);
+  ''';
+  //#endregion
+
+  //#region MARK: Zone
+  static const String tableZones = 'zones';
+  static const String dropTableZones = 'DROP TABLE IF EXISTS $tableZones';
+  static const String createTableZones = '''
+    CREATE TABLE IF NOT EXISTS $tableZones(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      color TEXT NOT NULL
+    );
+  ''';
+  static final String populateTableZones = '''
+    INSERT INTO $tableZones (name, color)
+    VALUES
+    ('Zone 1', '${ItemColor.purple.value}'),
+    ('Zone 2', '${ItemColor.orange.value}');
+  ''';
+  //#endregion
+
+  //#region MARK: Devices
+  static const String tableDevices = 'devices';
+  static const String dropTableDevices = 'DROP TABLE IF EXISTS $tableDevices';
+  static const String createTableDevices = '''
+    CREATE TABLE IF NOT EXISTS $tableDevices(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      groupId INTEGER,
+      name TEXT NOT NULL,
+      icon TEXT,
+      type INTEGER NOT NULL DEFAULT 0
+    );
+  ''';
+
+  static const String tableDeviceInputs = 'deviceInputs';
+  static const String dropTableDeviceInputs =
+      'DROP TABLE IF EXISTS $tableDeviceInputs';
+  static const String createTableDeviceInputs = '''
+    CREATE TABLE IF NOT EXISTS $tableDeviceInputs(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      deviceId INTEGER NOT NULL,
+      inputId INTEGER NOT NULL,
+      priority INTEGER NOT NULL DEFAULT 0,
+      description TEXT
+    );
+  ''';
+
+  static const String tableDeviceOutputs = 'deviceOutputs';
+  static const String dropTableDeviceOutputs =
+      'DROP TABLE IF EXISTS $tableDeviceOutputs';
+  static const String createTableDeviceOutputs = '''
+    CREATE TABLE IF NOT EXISTS $tableDeviceOutputs(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      deviceId INTEGER NOT NULL,
+      outputId INTEGER NOT NULL,
+      priority INTEGER NOT NULL DEFAULT 0,
+      description TEXT
+    );
+  ''';
+
+  static const String tableDeviceStates = 'deviceStates';
+  static const String dropTableDeviceStates =
+      'DROP TABLE IF EXISTS $tableDeviceStates';
+  static const String createTableDeviceStates = '''
+    CREATE TABLE IF NOT EXISTS $tableDeviceStates(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      deviceId INTEGER NOT NULL,
+      level INTEGER NOT NULL DEFAULT 0,
+      doId INTEGER,
+      diId INTEGER,
+      value INTEGER NOT NULL DEFAULT 0,
+      isFeedback INTEGER NOT NULL DEFAULT 0,
+      name TEXT
+    );
   ''';
   //#endregion
 }

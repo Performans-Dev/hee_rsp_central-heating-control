@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/controllers/app_user.dart';
+import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ class AppUsersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppUserController>(builder: (auc) {
+    return GetBuilder<AppController>(builder: (auc) {
       return AppScaffold(
         title: 'Users'.tr,
         hasBackAction: true,

@@ -1,4 +1,4 @@
-import 'package:central_heating_control/app/data/controllers/app_user.dart';
+import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/models/app_user/app_user.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/inverted_list_tile_widget.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/user_dropdown.dart';
@@ -19,7 +19,7 @@ class _AddNewAppUserScreenState extends State<AddNewAppUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppUserController>(builder: (auc) {
+    return GetBuilder<AppController>(builder: (auc) {
       return AppScaffold(
         title: 'Add New User'.tr,
         hasBackAction: true,

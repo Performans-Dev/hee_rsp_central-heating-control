@@ -9,3 +9,14 @@ enum ScreenSaverType {
   slidePictures,
   fun,
 }
+
+enum DeviceType {
+  heater,
+  lamp,
+  outletPlug,
+  fan,
+  cooler,
+  gate,
+  door,
+  window,
+}
