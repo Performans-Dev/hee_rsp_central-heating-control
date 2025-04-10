@@ -15,11 +15,7 @@ class ManagementDeviceAddScreen extends StatefulWidget {
 
 class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
   late PageController _pageController;
-  final List<Widget> _pages = [
-    const Text('page 1'),
-    const Text('page 2'),
-    const Text('page 3'),
-  ];
+  late final List<Widget> _pages;
   int currentPage = 0;
   late Device device;
 
@@ -27,6 +23,12 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
   void initState() {
     super.initState();
     device = Device.empty();
+    _pages = [
+      buildPage1(),
+      buildPage2(),
+      buildPage3(),
+      buildPage4(),
+    ];
     _pageController = PageController()
       ..addListener(() {
         setState(() {
@@ -89,5 +91,23 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
         ),
       );
     });
+  }
+
+  Widget buildPage1() {
+    return const Text(
+        'page 1\nTextfield: name\nIconPicker: icon\nDropdown: zone/group');
+  }
+
+  Widget buildPage2() {
+    return const Text(
+        'page 2\nDropdown: levelCount\nDropdown: outputCount\nDropdown: inputCount');
+  }
+
+  Widget buildPage3() {
+    return const Text('page 3\nlevel-output-input -> state matrix');
+  }
+
+  Widget buildPage4() {
+    return const Text('page 4: Show summary');
   }
 }
