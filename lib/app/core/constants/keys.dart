@@ -27,7 +27,7 @@ class Keys {
   static const String screenSaverType = 'screenSaverType';
 
   //#region MARK: Database
-  static const int databaseVersion = 39;
+  static const int databaseVersion = 46;
   static const int logDatabaseVersion = 19;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -154,7 +154,12 @@ class Keys {
       groupId INTEGER,
       name TEXT NOT NULL,
       icon TEXT,
-      type INTEGER NOT NULL DEFAULT 0
+      type INTEGER NOT NULL DEFAULT 0,
+      levelCount INTEGER NOT NULL DEFAULT 0,
+      outputCount INTEGER NOT NULL DEFAULT 0,
+      inputCount INTEGER NOT NULL DEFAULT 0,
+      createdOn INTEGER NOT NULL DEFAULT 0,
+      modifiedOn INTEGER NOT NULL DEFAULT 0
     );
   ''';
 
@@ -167,7 +172,8 @@ class Keys {
       deviceId INTEGER NOT NULL,
       inputId INTEGER NOT NULL,
       priority INTEGER NOT NULL DEFAULT 0,
-      description TEXT
+      description TEXT,
+      FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
     );
   ''';
 
@@ -180,7 +186,8 @@ class Keys {
       deviceId INTEGER NOT NULL,
       outputId INTEGER NOT NULL,
       priority INTEGER NOT NULL DEFAULT 0,
-      description TEXT
+      description TEXT,
+      FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
     );
   ''';
 
@@ -191,13 +198,29 @@ class Keys {
     CREATE TABLE IF NOT EXISTS $tableDeviceStates(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       deviceId INTEGER NOT NULL,
-      level INTEGER NOT NULL DEFAULT 0,
+      level INTEGER NOT NULL,
       doId INTEGER,
       diId INTEGER,
       value INTEGER NOT NULL DEFAULT 0,
       isFeedback INTEGER NOT NULL DEFAULT 0,
-      name TEXT
+      FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
     );
   ''';
+
+  static const String tableDeviceLevels = 'deviceLevels';
+
+  static const String dropTableDeviceLevels =
+      'DROP TABLE IF EXISTS $tableDeviceLevels';
+
+  static const String createTableDeviceLevels = '''
+  CREATE TABLE IF NOT EXISTS $tableDeviceLevels(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    deviceId INTEGER NOT NULL,
+    level INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
+  );
+''';
+
   //#endregion
 }

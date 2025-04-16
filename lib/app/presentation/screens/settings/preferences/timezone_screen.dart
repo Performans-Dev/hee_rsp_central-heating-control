@@ -51,7 +51,7 @@ class _PreferencesTimezoneScreenState extends State<PreferencesTimezoneScreen> {
       hasBackAction: true,
       selectedMenuIndex: 1,
       body: Padding(
-        padding: EdgeInsets.only(top: 8.0),
+        padding: const EdgeInsets.only(top: 8.0),
         child: ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Container(

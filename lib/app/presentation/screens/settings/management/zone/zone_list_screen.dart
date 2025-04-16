@@ -19,7 +19,7 @@ class ManagementZoneListScreen extends StatelessWidget {
         body: app.zones.isEmpty
             ? const Center(child: Text('No zones found'))
             : ListView.separated(
-                padding: EdgeInsets.only(top: 8.0, left: 16, right: 16),
+                padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
                 itemBuilder: (context, index) => ListTile(
                   title: Text(app.zones[index].name),
                   onTap: () => Get.toNamed(

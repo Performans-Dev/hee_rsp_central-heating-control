@@ -10,6 +10,7 @@ class HtDropdown<T> extends StatefulWidget {
   final double borderWidth;
   final BorderRadius? borderRadius;
   final Color? selectedItemColor;
+  final bool dense;
 
   const HtDropdown({
     super.key,
@@ -21,6 +22,7 @@ class HtDropdown<T> extends StatefulWidget {
     this.borderWidth = 1.0,
     this.borderRadius,
     this.selectedItemColor,
+    this.dense = false,
   });
 
   @override
@@ -50,11 +52,12 @@ class _HtDropdownState<T> extends State<HtDropdown<T>> {
         borderRadius: borderRadius,
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: [
           // Display the selected value
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            padding: EdgeInsets.symmetric(horizontal: widget.dense ? 2 : 12.0),
             child: Text(
               widget.labelBuilder(selectedValue),
               style: Theme.of(context).textTheme.bodyMedium,
@@ -62,15 +65,10 @@ class _HtDropdownState<T> extends State<HtDropdown<T>> {
           ),
           // Dropdown button
           Container(
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(color: borderColor, width: widget.borderWidth),
-              ),
-            ),
+            alignment: Alignment.centerRight,
             child: PopupMenuButton<T>(
               shape: RoundedRectangleBorder(borderRadius: borderRadius),
               padding: EdgeInsets.zero,
-              icon: const Icon(Icons.arrow_drop_down),
               position: PopupMenuPosition.under,
               offset: const Offset(0, 8),
               constraints: const BoxConstraints(minWidth: 200),
@@ -105,6 +103,9 @@ class _HtDropdownState<T> extends State<HtDropdown<T>> {
                         ),
                       ))
                   .toList(),
+              child: const Center(
+                child: Icon(Icons.arrow_drop_down),
+              ),
             ),
           ),
         ],

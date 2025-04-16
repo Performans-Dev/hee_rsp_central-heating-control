@@ -158,12 +158,12 @@ class _PreferencesDateTimeFormatScreenState
                   const Divider(),
                   Card(
                     shape: RoundedRectangleBorder(borderRadius: UiDimens.br12),
-                    margin: EdgeInsets.all(8),
+                    margin: const EdgeInsets.all(8),
                     child: ClipRRect(
                       borderRadius: UiDimens.br12,
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         color: Theme.of(context).colorScheme.errorContainer,
                         child: Center(
                           child: LiveDateTimeDisplay(

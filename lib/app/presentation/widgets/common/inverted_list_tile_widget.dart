@@ -58,28 +58,31 @@ class InvertedListTileWidget extends StatelessWidget {
     final TextStyle? titleStyle = Theme.of(context).textTheme.labelSmall;
     final TextStyle? subtitleStyle = Theme.of(context).textTheme.titleMedium;
 
-    return ListTile(
-      title: DefaultTextStyle(
-        style: titleStyle ?? const TextStyle(),
-        child: title,
+    return SizedBox(
+      width: double.infinity,
+      child: ListTile(
+        title: DefaultTextStyle(
+          style: titleStyle ?? const TextStyle(),
+          child: title,
+        ),
+        subtitle: subtitle != null
+            ? DefaultTextStyle(
+                style: subtitleStyle ?? const TextStyle(),
+                child: subtitle!,
+              )
+            : null,
+        leading: leading,
+        trailing: trailing,
+        onTap: onTap,
+        tileColor: tileColor,
+        shape: shape ??
+            RoundedRectangleBorder(
+              borderRadius: UiDimens.br12,
+            ),
+        contentPadding: contentPadding,
+        dense: dense,
+        enabled: enabled,
       ),
-      subtitle: subtitle != null
-          ? DefaultTextStyle(
-              style: subtitleStyle ?? const TextStyle(),
-              child: subtitle!,
-            )
-          : null,
-      leading: leading,
-      trailing: trailing,
-      onTap: onTap,
-      tileColor: tileColor,
-      shape: shape ??
-          RoundedRectangleBorder(
-            borderRadius: UiDimens.br12,
-          ),
-      contentPadding: contentPadding,
-      dense: dense,
-      enabled: enabled,
     );
   }
 }

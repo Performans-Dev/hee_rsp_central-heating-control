@@ -30,7 +30,13 @@ class DbProvider {
     return await dbFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
+        onOpen: (db) async {
+          await db.execute('PRAGMA foreign_keys = ON');
+          final result = await db.rawQuery('PRAGMA foreign_keys');
+          print('Foreign keys enabled: ${result.first.values.first == 1}');
+        },
         onCreate: (db, version) async {
+          await db.execute('PRAGMA foreign_keys = ON');
           await createDbStructure(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
@@ -101,6 +107,10 @@ class DbProvider {
     // device states
     await db.execute(Keys.dropTableDeviceStates);
     await db.execute(Keys.createTableDeviceStates);
+
+    // device levels
+    await db.execute(Keys.dropTableDeviceLevels);
+    await db.execute(Keys.createTableDeviceLevels);
   }
   //#endregion
 
@@ -224,126 +234,212 @@ class DbProvider {
   Future<List<Device>> getDevices() async {
     final db = await database;
     if (db == null) return [];
-    final rows = await db.query(Keys.tableDevices);
-    return rows.map((row) => Device.fromMap(row)).toList();
+
+    final deviceRows = await db.query(Keys.tableDevices);
+
+    List<Device> devices = [];
+
+    for (final row in deviceRows) {
+      final deviceId = row['id'] as int;
+
+      final results = await Future.wait([
+        db.query(Keys.tableDeviceInputs,
+            where: 'deviceId = ?', whereArgs: [deviceId]),
+        db.query(Keys.tableDeviceOutputs,
+            where: 'deviceId = ?', whereArgs: [deviceId]),
+        db.query(Keys.tableDeviceStates,
+            where: 'deviceId = ?', whereArgs: [deviceId]),
+        db.query(Keys.tableDeviceLevels,
+            where: 'deviceId = ?', whereArgs: [deviceId]),
+      ]);
+
+      final inputs = results[0] as List<Map<String, dynamic>>;
+      final outputs = results[1] as List<Map<String, dynamic>>;
+      final states = results[2] as List<Map<String, dynamic>>;
+      final levels = results[3] as List<Map<String, dynamic>>;
+
+      final device = Device.fromMap(row).copyWith(
+        deviceInputs: inputs.map((e) => DeviceInput.fromMap(e)).toList(),
+        deviceOutputs: outputs.map((e) => DeviceOutput.fromMap(e)).toList(),
+        states: states.map((e) => DeviceState.fromMap(e)).toList(),
+        levels: levels.map((e) => DeviceLevel.fromMap(e)).toList(),
+      );
+
+      devices.add(device);
+    }
+
+    return devices;
   }
 
-  Future<int> saveDevice(Device device) async {
+  Future<Device?> getDevice(int id) async {
+    final db = await database;
+    if (db == null) return null;
+
+    final rows =
+        await db.query(Keys.tableDevices, where: 'id = ?', whereArgs: [id]);
+    if (rows.isEmpty) return null;
+
+    final device = Device.fromMap(rows.first);
+
+    // Optionally fetch child tables if needed:
+    final results = await Future.wait([
+      db.query(Keys.tableDeviceInputs, where: 'deviceId = ?', whereArgs: [id]),
+      db.query(Keys.tableDeviceOutputs, where: 'deviceId = ?', whereArgs: [id]),
+      db.query(Keys.tableDeviceStates, where: 'deviceId = ?', whereArgs: [id]),
+      db.query(Keys.tableDeviceLevels, where: 'deviceId = ?', whereArgs: [id]),
+    ]);
+
+    final inputs = results[0] as List<Map<String, dynamic>>;
+    final outputs = results[1] as List<Map<String, dynamic>>;
+    final states = results[2] as List<Map<String, dynamic>>;
+    final levels = results[3] as List<Map<String, dynamic>>;
+
+    return device.copyWith(
+      deviceInputs: inputs.map((e) => DeviceInput.fromMap(e)).toList(),
+      deviceOutputs: outputs.map((e) => DeviceOutput.fromMap(e)).toList(),
+      states: states.map((e) => DeviceState.fromMap(e)).toList(),
+      levels: levels.map((e) => DeviceLevel.fromMap(e)).toList(),
+    );
+  }
+
+  Future<int> updateDevice(Device device) async {
     final db = await database;
     if (db == null) return 0;
-    return await db.update(
-        Keys.tableDevices,
-        where: 'id = ?',
-        whereArgs: [device.id],
-        device.toMap());
+
+    final deviceMap = device.toMap();
+    if (device.id == -1) {
+      deviceMap.remove('id'); // Let DB auto-generate
+    }
+    deviceMap.remove('states');
+    deviceMap.remove('levels');
+    deviceMap.remove('deviceInputs');
+    deviceMap.remove('deviceOutputs');
+    deviceMap['modifiedOn'] = DateTime.now().millisecondsSinceEpoch;
+
+    // Update the main device record
+    final updatedCount = await db.update(
+      Keys.tableDevices,
+      deviceMap,
+      where: 'id = ?',
+      whereArgs: [device.id],
+    );
+
+    // Update related tables if necessary
+    if (updatedCount > 0) {
+      await _updateDeviceInputs(device.id, device.deviceInputs);
+      await _updateDeviceOutputs(device.id, device.deviceOutputs);
+      await _updateDeviceLevels(device.id, device.levels);
+      await _updateDeviceStates(device.id, device.states);
+    }
+
+    return updatedCount;
+  }
+
+  Future<void> _updateDeviceInputs(
+      int deviceId, List<DeviceInput> inputs) async {
+    final db = await database;
+    if (db == null) return;
+    await db.delete(Keys.tableDeviceInputs,
+        where: 'deviceId = ?', whereArgs: [deviceId]);
+    for (final input in inputs) {
+      await db.insert(Keys.tableDeviceInputs, {
+        ...input.toMap(),
+        'deviceId': deviceId,
+      });
+    }
+  }
+
+  Future<void> _updateDeviceOutputs(
+      int deviceId, List<DeviceOutput> outputs) async {
+    final db = await database;
+    if (db == null) return;
+    await db.delete(Keys.tableDeviceOutputs,
+        where: 'deviceId = ?', whereArgs: [deviceId]);
+    for (final output in outputs) {
+      await db.insert(Keys.tableDeviceOutputs, {
+        ...output.toMap(),
+        'deviceId': deviceId,
+      });
+    }
+  }
+
+  Future<void> _updateDeviceLevels(
+      int deviceId, List<DeviceLevel> levels) async {
+    final db = await database;
+    if (db == null) return;
+    await db.delete(Keys.tableDeviceLevels,
+        where: 'deviceId = ?', whereArgs: [deviceId]);
+    for (final level in levels) {
+      await db.insert(Keys.tableDeviceLevels, {
+        ...level.toMap(),
+        'deviceId': deviceId,
+      });
+    }
+  }
+
+  Future<void> _updateDeviceStates(
+      int deviceId, List<DeviceState> states) async {
+    final db = await database;
+    if (db == null) return;
+    await db.delete(Keys.tableDeviceStates,
+        where: 'deviceId = ?', whereArgs: [deviceId]);
+    for (final state in states) {
+      await db.insert(Keys.tableDeviceStates, {
+        ...state.toMap(),
+        'deviceId': deviceId,
+      });
+    }
   }
 
   Future<int> insertDevice(Device device) async {
     final db = await database;
     if (db == null) return 0;
-    return await db.insert(Keys.tableDevices, device.toMap());
+
+    final deviceMap = device.toMap();
+    if (device.id == -1) {
+      deviceMap.remove('id'); // Let DB auto-generate
+    }
+    deviceMap.remove('states');
+    deviceMap.remove('levels');
+    deviceMap.remove('deviceInputs');
+    deviceMap.remove('deviceOutputs');
+
+    final insertedId = await db.insert(Keys.tableDevices, deviceMap);
+
+    // Insert inputs
+    for (final input in device.deviceInputs) {
+      await db.insert(Keys.tableDeviceInputs, {
+        ...input.toMap(),
+        'deviceId': insertedId,
+      });
+    }
+
+    // Insert outputs
+    for (final output in device.deviceOutputs) {
+      await db.insert(Keys.tableDeviceOutputs, {
+        ...output.toMap(),
+        'deviceId': insertedId,
+      });
+    }
+
+    // Insert states
+    for (final state in device.states) {
+      await db.insert(Keys.tableDeviceStates, {
+        ...state.toMap(),
+        'deviceId': insertedId,
+      });
+    }
+
+    return insertedId;
   }
 
-  Future<int> deleteDevice(int id) async {
+  Future<int> deleteDevice(int deviceId) async {
     final db = await database;
     if (db == null) return 0;
-    return await db.delete(Keys.tableDevices, where: 'id = ?', whereArgs: [id]);
-  }
-  //#endregion
 
-  //#region MARK: DeviceInputs
-  Future<List<DeviceInputs>> getDeviceInputs() async {
-    final db = await database;
-    if (db == null) return [];
-    final rows = await db.query(Keys.tableDeviceInputs);
-    return rows.map((row) => DeviceInputs.fromMap(row)).toList();
-  }
-
-  Future<int> saveDeviceInput(DeviceInputs deviceInput) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db.update(
-        Keys.tableDeviceInputs,
-        where: 'id = ?',
-        whereArgs: [deviceInput.id],
-        deviceInput.toMap());
-  }
-
-  Future<int> insertDeviceInput(DeviceInputs deviceInput) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db.insert(Keys.tableDeviceInputs, deviceInput.toMap());
-  }
-
-  Future<int> deleteDeviceInput(int id) async {
-    final db = await database;
-    if (db == null) return 0;
     return await db
-        .delete(Keys.tableDeviceInputs, where: 'id = ?', whereArgs: [id]);
-  }
-  //#endregion
-
-  //#region MARK: DeviceOutputs
-  Future<List<DeviceOutputs>> getDeviceOutputs() async {
-    final db = await database;
-    if (db == null) return [];
-    final rows = await db.query(Keys.tableDeviceOutputs);
-    return rows.map((row) => DeviceOutputs.fromMap(row)).toList();
+        .delete(Keys.tableDevices, where: 'id = ?', whereArgs: [deviceId]);
   }
 
-  Future<int> saveDeviceOutput(DeviceOutputs deviceOutput) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db.update(
-        Keys.tableDeviceOutputs,
-        where: 'id = ?',
-        whereArgs: [deviceOutput.id],
-        deviceOutput.toMap());
-  }
-
-  Future<int> insertDeviceOutput(DeviceOutputs deviceOutput) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db.insert(Keys.tableDeviceOutputs, deviceOutput.toMap());
-  }
-
-  Future<int> deleteDeviceOutput(int id) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db
-        .delete(Keys.tableDeviceOutputs, where: 'id = ?', whereArgs: [id]);
-  }
-  //#endregion
-
-  //#region MARK: DeviceStates
-  Future<List<DeviceStates>> getDeviceStates() async {
-    final db = await database;
-    if (db == null) return [];
-    final rows = await db.query(Keys.tableDeviceStates);
-    return rows.map((row) => DeviceStates.fromMap(row)).toList();
-  }
-
-  Future<int> saveDeviceState(DeviceStates deviceState) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db.update(
-        Keys.tableDeviceStates,
-        where: 'id = ?',
-        whereArgs: [deviceState.id],
-        deviceState.toMap());
-  }
-
-  Future<int> insertDeviceState(DeviceStates deviceState) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db.insert(Keys.tableDeviceStates, deviceState.toMap());
-  }
-
-  Future<int> deleteDeviceState(int id) async {
-    final db = await database;
-    if (db == null) return 0;
-    return await db
-        .delete(Keys.tableDeviceStates, where: 'id = ?', whereArgs: [id]);
-  }
   //#endregion
 }

@@ -11,11 +11,14 @@ import 'package:central_heating_control/app/data/models/device/device.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/analog_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
+import 'package:central_heating_control/app/data/models/preferences/icon.dart';
 import 'package:central_heating_control/app/data/models/preferences/preferences.dart';
 import 'package:central_heating_control/app/data/models/zone/zone.dart';
+import 'package:central_heating_control/app/data/providers/api_provider.dart';
 import 'package:central_heating_control/app/data/providers/db_provider.dart';
 import 'package:central_heating_control/main.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -56,6 +59,9 @@ class AppController extends GetxController {
     await _loadAppUsers();
     await _loadZones();
     await _loadDevices();
+    Future.delayed(const Duration(seconds: 3), () {
+      loadIcons();
+    });
   }
   //#endregion
 
@@ -67,9 +73,7 @@ class AppController extends GetxController {
     update();
     savePreferencesToBox();
   }
-  //#endregion
 
-  //#region MARK: Box
   Future<void> savePreferencesToBox() async {
     await Box.setString(
       key: Keys.preferences,
@@ -83,6 +87,18 @@ class AppController extends GetxController {
       _preferences.value = Preferences.fromJson(json);
       update();
     }
+  }
+  //#endregion
+
+  //#region MARK: Icons
+  final RxList<IconDefinition> _iconList = <IconDefinition>[].obs;
+  List<IconDefinition> get iconList => _iconList;
+
+  Future<void> loadIcons() async {
+    final icons = await ApiProvider.fetchIconIndex();
+    _iconList.assignAll(icons);
+    update();
+    debugPrint('Icons loaded: ${_iconList.length}');
   }
   //#endregion
 
@@ -331,7 +347,7 @@ class AppController extends GetxController {
   }
 
   Future<void> saveDevice(Device device) async {
-    final response = await DbProvider.db.saveDevice(device);
+    final response = await DbProvider.db.updateDevice(device);
     if (response > 0) {
       _loadDevices();
     }

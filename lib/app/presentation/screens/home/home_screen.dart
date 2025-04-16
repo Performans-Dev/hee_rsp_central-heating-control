@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      body: Center(
+      body: const Center(
         child: Text('h'),
       ),
       title: 'Home'.tr,

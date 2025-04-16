@@ -18,7 +18,7 @@ class _PreferencesNetworkConnectionsScreenState
       title: 'Network Connections'.tr,
       hasBackAction: true,
       selectedMenuIndex: 1,
-      body: Center(
+      body: const Center(
         child: Text('nc'),
       ),
     );

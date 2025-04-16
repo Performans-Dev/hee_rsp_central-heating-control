@@ -143,7 +143,7 @@ class _PreferencesThemeScreenState extends State<PreferencesThemeScreen> {
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
-                                Text('Description'),
+                                const Text('Description'),
                                 ElevatedButton(
                                     onPressed: () {},
                                     child: const Text('Sample')),

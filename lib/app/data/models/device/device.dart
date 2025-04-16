@@ -6,12 +6,31 @@ class Device {
   final String? icon;
   final String name;
   final int type;
+  final int levelCount;
+  final int outputCount;
+  final int inputCount;
+  final List<DeviceInput> deviceInputs;
+  final List<DeviceOutput> deviceOutputs;
+  final List<DeviceLevel> levels;
+  final List<DeviceState> states;
+  final int createdOn;
+  final int modifiedOn;
+
   Device({
     required this.id,
     this.groupId,
     this.icon,
     required this.name,
     required this.type,
+    required this.levelCount,
+    required this.outputCount,
+    required this.inputCount,
+    required this.deviceInputs,
+    required this.deviceOutputs,
+    required this.levels,
+    required this.states,
+    this.createdOn = 0,
+    this.modifiedOn = 0,
   });
 
   Device copyWith({
@@ -20,6 +39,15 @@ class Device {
     String? icon,
     String? name,
     int? type,
+    int? levelCount,
+    int? outputCount,
+    int? inputCount,
+    List<DeviceInput>? deviceInputs,
+    List<DeviceOutput>? deviceOutputs,
+    List<DeviceLevel>? levels,
+    List<DeviceState>? states,
+    int? createdOn,
+    int? modifiedOn,
   }) {
     return Device(
       id: id ?? this.id,
@@ -27,6 +55,15 @@ class Device {
       icon: icon ?? this.icon,
       name: name ?? this.name,
       type: type ?? this.type,
+      levelCount: levelCount ?? this.levelCount,
+      outputCount: outputCount ?? this.outputCount,
+      inputCount: inputCount ?? this.inputCount,
+      deviceInputs: deviceInputs ?? this.deviceInputs,
+      deviceOutputs: deviceOutputs ?? this.deviceOutputs,
+      levels: levels ?? this.levels,
+      states: states ?? this.states,
+      createdOn: createdOn ?? this.createdOn,
+      modifiedOn: modifiedOn ?? this.modifiedOn,
     );
   }
 
@@ -38,12 +75,34 @@ class Device {
             'icon': icon,
             'name': name,
             'type': type,
+            'levelCount': levelCount,
+            'outputCount': outputCount,
+            'inputCount': inputCount,
+            'deviceInputs':
+                jsonEncode(deviceInputs.map((e) => e.toMap()).toList()),
+            'deviceOutputs':
+                jsonEncode(deviceOutputs.map((e) => e.toMap()).toList()),
+            'levels': jsonEncode(levels.map((e) => e.toMap()).toList()),
+            'states': jsonEncode(states.map((e) => e.toMap()).toList()),
+            'createdOn': createdOn,
+            'modifiedOn': modifiedOn,
           }
         : {
             'groupId': groupId,
             'icon': icon,
             'name': name,
             'type': type,
+            'levelCount': levelCount,
+            'outputCount': outputCount,
+            'inputCount': inputCount,
+            'deviceInputs':
+                jsonEncode(deviceInputs.map((e) => e.toMap()).toList()),
+            'deviceOutputs':
+                jsonEncode(deviceOutputs.map((e) => e.toMap()).toList()),
+            'levels': jsonEncode(levels.map((e) => e.toMap()).toList()),
+            'states': jsonEncode(states.map((e) => e.toMap()).toList()),
+            'createdOn': createdOn,
+            'modifiedOn': modifiedOn,
           };
   }
 
@@ -54,6 +113,27 @@ class Device {
       icon: map['icon'],
       name: map['name'] ?? '',
       type: map['type']?.toInt() ?? 0,
+      levelCount: map['levelCount']?.toInt() ?? 0,
+      outputCount: map['outputCount']?.toInt() ?? 0,
+      inputCount: map['inputCount']?.toInt() ?? 0,
+      deviceInputs: map['deviceInputs']
+              ?.map<DeviceInput>((x) => DeviceInput.fromMap(x))
+              ?.toList() ??
+          [],
+      deviceOutputs: map['deviceOutputs']
+              ?.map<DeviceOutput>((x) => DeviceOutput.fromMap(x))
+              ?.toList() ??
+          [],
+      levels: map['levels']
+              ?.map<DeviceLevel>((x) => DeviceLevel.fromMap(x))
+              ?.toList() ??
+          [],
+      states: map['states']
+              ?.map<DeviceState>((x) => DeviceState.fromMap(x))
+              ?.toList() ??
+          [],
+      createdOn: map['createdOn']?.toInt() ?? 0,
+      modifiedOn: map['modifiedOn']?.toInt() ?? 0,
     );
   }
 
@@ -63,46 +143,36 @@ class Device {
         icon: null,
         name: '',
         type: 0,
+        levelCount: 1,
+        outputCount: 1,
+        inputCount: 0,
+        deviceInputs: [
+          DeviceInput(id: -1, deviceId: -1, inputId: 0, priority: 0)
+        ],
+        deviceOutputs: [
+          DeviceOutput(id: -1, deviceId: -1, outputId: 0, priority: 0)
+        ],
+        levels: [
+          DeviceLevel(level: 0, name: 'OFF'),
+          DeviceLevel(level: 1, name: 'ON'),
+        ],
+        states: [],
+        createdOn: DateTime.now().millisecondsSinceEpoch,
+        modifiedOn: DateTime.now().millisecondsSinceEpoch,
       );
 
   String toJson() => json.encode(toMap());
 
   factory Device.fromJson(String source) => Device.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'Device(id: $id, groupId: $groupId, icon: $icon, name: $name, type: $type)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Device &&
-        other.id == id &&
-        other.groupId == groupId &&
-        other.icon == icon &&
-        other.name == name &&
-        other.type == type;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        groupId.hashCode ^
-        icon.hashCode ^
-        name.hashCode ^
-        type.hashCode;
-  }
 }
 
-class DeviceInputs {
+class DeviceInput {
   final int id;
   final int deviceId;
   final int inputId;
   final int priority;
   final String? description;
-  DeviceInputs({
+  DeviceInput({
     required this.id,
     required this.deviceId,
     required this.inputId,
@@ -110,14 +180,14 @@ class DeviceInputs {
     this.description,
   });
 
-  DeviceInputs copyWith({
+  DeviceInput copyWith({
     int? id,
     int? deviceId,
     int? inputId,
     int? priority,
     String? description,
   }) {
-    return DeviceInputs(
+    return DeviceInput(
       id: id ?? this.id,
       deviceId: deviceId ?? this.deviceId,
       inputId: inputId ?? this.inputId,
@@ -143,8 +213,8 @@ class DeviceInputs {
           };
   }
 
-  factory DeviceInputs.fromMap(Map<String, dynamic> map) {
-    return DeviceInputs(
+  factory DeviceInput.fromMap(Map<String, dynamic> map) {
+    return DeviceInput(
       id: map['id']?.toInt() ?? 0,
       deviceId: map['deviceId']?.toInt() ?? 0,
       inputId: map['inputId']?.toInt() ?? 0,
@@ -155,43 +225,18 @@ class DeviceInputs {
 
   String toJson() => json.encode(toMap());
 
-  factory DeviceInputs.fromJson(String source) =>
-      DeviceInputs.fromMap(json.decode(source));
+  factory DeviceInput.fromJson(String source) =>
+      DeviceInput.fromMap(json.decode(source));
 
-  @override
-  String toString() {
-    return 'DeviceInputs(id: $id, deviceId: $deviceId, inputId: $inputId, priority: $priority, description: $description)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is DeviceInputs &&
-        other.id == id &&
-        other.deviceId == deviceId &&
-        other.inputId == inputId &&
-        other.priority == priority &&
-        other.description == description;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        deviceId.hashCode ^
-        inputId.hashCode ^
-        priority.hashCode ^
-        description.hashCode;
-  }
 }
 
-class DeviceOutputs {
+class DeviceOutput {
   final int id;
   final int deviceId;
   final int outputId;
   final int priority;
   final String? description;
-  DeviceOutputs({
+  DeviceOutput({
     required this.id,
     required this.deviceId,
     required this.outputId,
@@ -199,14 +244,14 @@ class DeviceOutputs {
     this.description,
   });
 
-  DeviceOutputs copyWith({
+  DeviceOutput copyWith({
     int? id,
     int? deviceId,
     int? outputId,
     int? priority,
     String? description,
   }) {
-    return DeviceOutputs(
+    return DeviceOutput(
       id: id ?? this.id,
       deviceId: deviceId ?? this.deviceId,
       outputId: outputId ?? this.outputId,
@@ -232,8 +277,8 @@ class DeviceOutputs {
           };
   }
 
-  factory DeviceOutputs.fromMap(Map<String, dynamic> map) {
-    return DeviceOutputs(
+  factory DeviceOutput.fromMap(Map<String, dynamic> map) {
+    return DeviceOutput(
       id: map['id']?.toInt() ?? 0,
       deviceId: map['deviceId']?.toInt() ?? 0,
       outputId: map['outputId']?.toInt() ?? 0,
@@ -244,37 +289,12 @@ class DeviceOutputs {
 
   String toJson() => json.encode(toMap());
 
-  factory DeviceOutputs.fromJson(String source) =>
-      DeviceOutputs.fromMap(json.decode(source));
+  factory DeviceOutput.fromJson(String source) =>
+      DeviceOutput.fromMap(json.decode(source));
 
-  @override
-  String toString() {
-    return 'DeviceOutputs(id: $id, deviceId: $deviceId, outputId: $outputId, priority: $priority, description: $description)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is DeviceOutputs &&
-        other.id == id &&
-        other.deviceId == deviceId &&
-        other.outputId == outputId &&
-        other.priority == priority &&
-        other.description == description;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        deviceId.hashCode ^
-        outputId.hashCode ^
-        priority.hashCode ^
-        description.hashCode;
-  }
 }
 
-class DeviceStates {
+class DeviceState {
   final int id;
   final int deviceId;
   final int level;
@@ -282,8 +302,7 @@ class DeviceStates {
   final int? diId;
   final bool value;
   final bool isFeedback;
-  final String? name;
-  DeviceStates({
+  DeviceState({
     required this.id,
     required this.deviceId,
     required this.level,
@@ -291,10 +310,9 @@ class DeviceStates {
     this.diId,
     required this.value,
     required this.isFeedback,
-    this.name,
   });
 
-  DeviceStates copyWith({
+  DeviceState copyWith({
     int? id,
     int? deviceId,
     int? level,
@@ -302,9 +320,8 @@ class DeviceStates {
     int? diId,
     bool? value,
     bool? isFeedback,
-    String? name,
   }) {
-    return DeviceStates(
+    return DeviceState(
       id: id ?? this.id,
       deviceId: deviceId ?? this.deviceId,
       level: level ?? this.level,
@@ -312,7 +329,6 @@ class DeviceStates {
       diId: diId ?? this.diId,
       value: value ?? this.value,
       isFeedback: isFeedback ?? this.isFeedback,
-      name: name ?? this.name,
     );
   }
 
@@ -326,7 +342,6 @@ class DeviceStates {
             'diId': diId,
             'value': value ? 1 : 0,
             'isFeedback': isFeedback ? 1 : 0,
-            'name': name,
           }
         : {
             'deviceId': deviceId,
@@ -335,12 +350,11 @@ class DeviceStates {
             'diId': diId,
             'value': value ? 1 : 0,
             'isFeedback': isFeedback ? 1 : 0,
-            'name': name,
           };
   }
 
-  factory DeviceStates.fromMap(Map<String, dynamic> map) {
-    return DeviceStates(
+  factory DeviceState.fromMap(Map<String, dynamic> map) {
+    return DeviceState(
       id: map['id']?.toInt() ?? 0,
       deviceId: map['deviceId']?.toInt() ?? 0,
       level: map['level']?.toInt() ?? 0,
@@ -348,44 +362,52 @@ class DeviceStates {
       diId: map['diId']?.toInt(),
       value: map['value'] == 1 ? true : false,
       isFeedback: map['isFeedback'] == 1 ? true : false,
-      name: map['name'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory DeviceStates.fromJson(String source) =>
-      DeviceStates.fromMap(json.decode(source));
+  factory DeviceState.fromJson(String source) =>
+      DeviceState.fromMap(json.decode(source));
 
-  @override
-  String toString() {
-    return 'DeviceStates(id: $id, deviceId: $deviceId, level: $level, doId: $doId, diId: $diId, value: $value, isFeedback: $isFeedback, name: $name)';
+  
+}
+
+class DeviceLevel {
+  final int level;
+  final String name;
+  DeviceLevel({
+    required this.level,
+    required this.name,
+  });
+
+  DeviceLevel copyWith({
+    int? level,
+    String? name,
+  }) {
+    return DeviceLevel(
+      level: level ?? this.level,
+      name: name ?? this.name,
+    );
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is DeviceStates &&
-        other.id == id &&
-        other.deviceId == deviceId &&
-        other.level == level &&
-        other.doId == doId &&
-        other.diId == diId &&
-        other.value == value &&
-        other.isFeedback == isFeedback &&
-        other.name == name;
+  Map<String, dynamic> toMap() {
+    return {
+      'level': level,
+      'name': name,
+    };
   }
 
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        deviceId.hashCode ^
-        level.hashCode ^
-        doId.hashCode ^
-        diId.hashCode ^
-        value.hashCode ^
-        isFeedback.hashCode ^
-        name.hashCode;
+  factory DeviceLevel.fromMap(Map<String, dynamic> map) {
+    return DeviceLevel(
+      level: map['level']?.toInt() ?? 0,
+      name: map['name'] ?? '',
+    );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory DeviceLevel.fromJson(String source) =>
+      DeviceLevel.fromMap(json.decode(source));
+
 }

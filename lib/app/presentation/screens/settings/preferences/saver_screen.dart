@@ -18,7 +18,7 @@ class _PreferencesScreenSaverScreenState
       title: 'Screen Saver'.tr,
       hasBackAction: true,
       selectedMenuIndex: 1,
-      body: Center(
+      body: const Center(
         child: Text('ss'),
       ),
     );

@@ -4,7 +4,6 @@ class DigitalOutput {
   final int id;
   final int hwId;
   final int pinIndex;
-
   final String name;
   DigitalOutput({
     required this.id,

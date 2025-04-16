@@ -55,8 +55,8 @@ class AppScaffold extends StatelessWidget {
           actions: actions ??
               [
                 Container(
-                  margin: EdgeInsets.only(right: 12),
-                  child: LiveDateTimeDisplay(
+                  margin: const EdgeInsets.only(right: 12),
+                  child: const LiveDateTimeDisplay(
                     fontSize: 12,
                     force2Line: true,
                   ),
