@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/fab.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,10 @@ class ManagementDeviceListScreen extends StatelessWidget {
                   return ListTile(
                     title: Text(device.name),
                     subtitle: Text(device.type.toString()),
+                    leading: Text(device.id.toString()),
+                    onTap: () => Get.to(
+                      () => ManagementDeviceDetailScreen(device: device),
+                    ),
                   );
                 },
               ),

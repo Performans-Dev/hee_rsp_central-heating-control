@@ -13,7 +13,7 @@ import 'package:central_heating_control/app/data/models/input_outputs/digital_in
 import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
 import 'package:central_heating_control/app/data/models/preferences/icon.dart';
 import 'package:central_heating_control/app/data/models/preferences/preferences.dart';
-import 'package:central_heating_control/app/data/models/zone/zone.dart';
+import 'package:central_heating_control/app/data/models/group/group.dart';
 import 'package:central_heating_control/app/data/providers/api_provider.dart';
 import 'package:central_heating_control/app/data/providers/db_provider.dart';
 import 'package:central_heating_control/main.dart';
@@ -305,8 +305,8 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Zone
-  final RxList<ZoneDefinition> _zones = <ZoneDefinition>[].obs;
-  List<ZoneDefinition> get zones => _zones;
+  final RxList<GroupDefinition> _zones = <GroupDefinition>[].obs;
+  List<GroupDefinition> get zones => _zones;
 
   Future<void> _loadZones() async {
     final zones = await DbProvider.db.getZones();
@@ -314,14 +314,14 @@ class AppController extends GetxController {
     update();
   }
 
-  Future<void> saveZone(ZoneDefinition zone) async {
+  Future<void> saveZone(GroupDefinition zone) async {
     final response = await DbProvider.db.saveZone(zone);
     if (response > 0) {
       _loadZones();
     }
   }
 
-  Future<void> insertZone(ZoneDefinition zone) async {
+  Future<void> insertZone(GroupDefinition zone) async {
     final response = await DbProvider.db.insertZone(zone);
     if (response > 0) {
       _loadZones();

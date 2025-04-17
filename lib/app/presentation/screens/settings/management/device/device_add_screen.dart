@@ -134,6 +134,7 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
     });
 
     await appController.insertDevice(device);
+    Get.back();
   }
 
   void calculateStates() {
@@ -166,50 +167,46 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            child: InvertedListTileWidget(
-              title: Text('Name your device'.tr),
-              subtitle: HtTextField(
-                initialValue: device.name,
-                onTap: () async {
-                  final result = await OnScreenKeyboard.show(
-                    context: context,
-                    initialValue: device.name,
-                    hintText: 'Type a name for this device'.tr,
-                    maxLength: 20,
-                    minLength: 3,
-                    type: OSKInputType.name,
-                    label: 'Device name'.tr,
-                  );
-                  if (result != null && mounted) {
-                    setState(() {
-                      device = device.copyWith(name: result);
-                    });
-                  }
-                },
-              ),
+          InvertedListTileWidget(
+            title: Text('Name your device'.tr),
+            subtitle: HtTextField(
+              initialValue: device.name,
+              onTap: () async {
+                final result = await OnScreenKeyboard.show(
+                  context: context,
+                  initialValue: device.name,
+                  hintText: 'Type a name for this device'.tr,
+                  maxLength: 20,
+                  minLength: 3,
+                  type: OSKInputType.name,
+                  label: 'Device name'.tr,
+                );
+                if (result != null && mounted) {
+                  setState(() {
+                    device = device.copyWith(name: result);
+                  });
+                }
+              },
             ),
           ),
           GetBuilder<AppController>(builder: (app) {
-            return Container(
-              child: InvertedListTileWidget(
-                title: Text('Pick an icon'.tr),
-                subtitle: SizedBox(
-                  width: double.infinity,
-                  child: app.iconList.isEmpty
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : IconPickerWidget(
-                          iconList: app.iconList.map((e) => e.url).toList(),
-                          initialValue: device.icon,
-                          onSelected: (value) {
-                            setState(() {
-                              device = device.copyWith(icon: value);
-                            });
-                          },
-                        ),
-                ),
+            return InvertedListTileWidget(
+              title: Text('Pick an icon'.tr),
+              subtitle: SizedBox(
+                width: double.infinity,
+                child: app.iconList.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : IconPickerWidget(
+                        iconList: app.iconList.map((e) => e.url).toList(),
+                        initialValue: device.icon,
+                        onSelected: (value) {
+                          setState(() {
+                            device = device.copyWith(icon: value);
+                          });
+                        },
+                      ),
               ),
             );
           }),
@@ -659,7 +656,7 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                 ),
               ),
               const Divider(),
-              Text('${device.toMap().toString()}')
+              Text(device.toMap().toString())
             ],
           ),
         ),

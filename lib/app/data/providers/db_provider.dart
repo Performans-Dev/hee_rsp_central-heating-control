@@ -7,7 +7,7 @@ import 'package:central_heating_control/app/data/models/device/device.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/analog_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
-import 'package:central_heating_control/app/data/models/zone/zone.dart';
+import 'package:central_heating_control/app/data/models/group/group.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -200,21 +200,21 @@ class DbProvider {
   //#endregion
 
   //#region MARK: Zones
-  Future<List<ZoneDefinition>> getZones() async {
+  Future<List<GroupDefinition>> getZones() async {
     final db = await database;
     if (db == null) return [];
     final rows = await db.query(Keys.tableZones);
-    return rows.map((row) => ZoneDefinition.fromMap(row)).toList();
+    return rows.map((row) => GroupDefinition.fromMap(row)).toList();
   }
 
-  Future<int> saveZone(ZoneDefinition zone) async {
+  Future<int> saveZone(GroupDefinition zone) async {
     final db = await database;
     if (db == null) return 0;
     return await db.update(
         Keys.tableZones, where: 'id = ?', whereArgs: [zone.id], zone.toMap());
   }
 
-  Future<int> insertZone(ZoneDefinition zone) async {
+  Future<int> insertZone(GroupDefinition zone) async {
     final db = await database;
     if (db == null) return 0;
     return await db.insert(Keys.tableZones, zone.toMap());

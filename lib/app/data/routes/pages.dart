@@ -4,7 +4,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/app_us
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_add_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/management_screen.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/management/zone/zone_list_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/group/group_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/datetime_format_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/language_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/network_screen.dart';
@@ -27,10 +27,13 @@ final getPages = [
     name: Routes.developer,
     page: () => const DeveloperScreen(),
   ),
+  // MARK: Settings
   GetPage(
     name: Routes.settings,
     page: () => const SettingsScreen(),
   ),
+
+  // MARK: Preferences
   GetPage(
     name: Routes.preferences,
     page: () => const PreferencesScreen(),
@@ -59,7 +62,8 @@ final getPages = [
     name: Routes.preferencesNetworkConnections,
     page: () => const PreferencesNetworkConnectionsScreen(),
   ),
-  //
+
+  // MARK: Management
   GetPage(
     name: Routes.management,
     page: () => const ManagementScreen(),
@@ -76,12 +80,14 @@ final getPages = [
     name: Routes.managementAddDevice,
     page: () => const ManagementDeviceAddScreen(),
   ),
-  //
+
+  // MARK: Advanced
   GetPage(
     name: Routes.advanced,
     page: () => const AdvancedScreen(),
   ),
-  //
+
+  // MARK: App Users
   GetPage(
     name: Routes.appUsers,
     page: () => const AppUsersScreen(),

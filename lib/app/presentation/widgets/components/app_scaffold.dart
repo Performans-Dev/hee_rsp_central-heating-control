@@ -1,8 +1,13 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
-import 'package:central_heating_control/app/core/extensions/restart.dart';
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
+import 'package:central_heating_control/app/presentation/widgets/common/appuser_name_widget.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/datetime_display.dart';
+import 'package:central_heating_control/app/presentation/widgets/common/io_indicator_widget.dart';
+import 'package:central_heating_control/app/presentation/widgets/common/log_warning_indicator_widget.dart';
+import 'package:central_heating_control/app/presentation/widgets/common/network_indicator_widget.dart';
+import 'package:central_heating_control/app/presentation/widgets/common/version_info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -54,11 +59,17 @@ class AppScaffold extends StatelessWidget {
           centerTitle: false,
           actions: actions ??
               [
+                const LogWarningIndicatorWidget(),
+                const NetworkStatusIndicatorWidget(),
                 Container(
-                  margin: const EdgeInsets.only(right: 12),
-                  child: const LiveDateTimeDisplay(
-                    fontSize: 12,
-                    force2Line: true,
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  child: InkWell(
+                    borderRadius: UiDimens.br12,
+                    onTap: () => Get.toNamed(Routes.preferencesDatetimeFormat),
+                    child: const LiveDateTimeDisplay(
+                      fontSize: 12,
+                      force2Line: true,
+                    ),
                   ),
                 )
               ],
@@ -83,6 +94,12 @@ class AppScaffold extends StatelessWidget {
                 NavigationRailDestination(
                     icon: const Icon(Icons.dashboard), label: Text('Home'.tr)),
                 NavigationRailDestination(
+                    icon: const Icon(Icons.question_mark),
+                    label: Text('Rules'.tr)),
+                NavigationRailDestination(
+                    icon: const Icon(Icons.question_mark),
+                    label: Text('Scheme'.tr)),
+                NavigationRailDestination(
                     icon: const Icon(Icons.settings),
                     label: Text('Settings'.tr)),
                 NavigationRailDestination(
@@ -96,24 +113,26 @@ class AppScaffold extends StatelessWidget {
                   case 0:
                     Get.offAllNamed(Routes.home);
                     break;
-                  case 1:
+                  case 3:
                     Get.toNamed(Routes.settings);
                     break;
                   default:
                     break;
                 }
               },
-              trailing: Column(
+              trailing: const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Switch(
-                      value: app.preferences.isDark,
-                      onChanged: (value) {
-                        app.setPreferences(
-                            app.preferences.copyWith(isDark: value));
-                        RestartWidget.restartApp(context);
-                      }),
-                  Text('${Get.locale?.languageCode}')
+                  Divider(),
+                  AppUserNameWidget(),
+                  Divider(
+                    height: 6,
+                  ),
+                  IoIndicatorWidget(),
+                  Divider(
+                    height: 6,
+                  ),
+                  VersionInfoWidget()
                 ],
               ),
             ),

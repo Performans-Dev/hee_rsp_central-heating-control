@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-class ZoneDefinition {
+class GroupDefinition {
   final int id;
   final String name;
   final String color;
 
-  ZoneDefinition({
+  GroupDefinition({
     required this.id,
     required this.name,
     required this.color,
   });
 
-  ZoneDefinition copyWith({
+  GroupDefinition copyWith({
     int? id,
     String? name,
     String? color,
   }) {
-    return ZoneDefinition(
+    return GroupDefinition(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
@@ -31,8 +31,8 @@ class ZoneDefinition {
     };
   }
 
-  factory ZoneDefinition.fromMap(Map<String, dynamic> map) {
-    return ZoneDefinition(
+  factory GroupDefinition.fromMap(Map<String, dynamic> map) {
+    return GroupDefinition(
       id: map['id']?.toInt() ?? 0,
       name: map['name'] ?? '',
       color: map['color'] ?? '',
@@ -41,7 +41,8 @@ class ZoneDefinition {
 
   String toJson() => json.encode(toMap());
 
-  factory ZoneDefinition.fromJson(String source) => ZoneDefinition.fromMap(json.decode(source));
+  factory GroupDefinition.fromJson(String source) =>
+      GroupDefinition.fromMap(json.decode(source));
 
   @override
   String toString() => 'Zone(id: $id, name: $name, color: $color)';
@@ -49,11 +50,11 @@ class ZoneDefinition {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return other is ZoneDefinition &&
-      other.id == id &&
-      other.name == name &&
-      other.color == color;
+
+    return other is GroupDefinition &&
+        other.id == id &&
+        other.name == name &&
+        other.color == color;
   }
 
   @override

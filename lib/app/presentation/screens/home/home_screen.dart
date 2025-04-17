@@ -2,6 +2,9 @@ import 'package:central_heating_control/app/presentation/widgets/components/app_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+/// this is the dashboard
+///
+/// displays a list of groups
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
