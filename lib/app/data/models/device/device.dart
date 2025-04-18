@@ -15,6 +15,7 @@ class Device {
   final List<DeviceState> states;
   final int createdOn;
   final int modifiedOn;
+  final String? groupName;
 
   Device({
     required this.id,
@@ -31,6 +32,7 @@ class Device {
     required this.states,
     this.createdOn = 0,
     this.modifiedOn = 0,
+    this.groupName,
   });
 
   Device copyWith({
@@ -48,6 +50,7 @@ class Device {
     List<DeviceState>? states,
     int? createdOn,
     int? modifiedOn,
+    String? groupName,
   }) {
     return Device(
       id: id ?? this.id,
@@ -64,6 +67,7 @@ class Device {
       states: states ?? this.states,
       createdOn: createdOn ?? this.createdOn,
       modifiedOn: modifiedOn ?? this.modifiedOn,
+      groupName: groupName ?? this.groupName,
     );
   }
 
@@ -227,7 +231,6 @@ class DeviceInput {
 
   factory DeviceInput.fromJson(String source) =>
       DeviceInput.fromMap(json.decode(source));
-
 }
 
 class DeviceOutput {
@@ -291,7 +294,6 @@ class DeviceOutput {
 
   factory DeviceOutput.fromJson(String source) =>
       DeviceOutput.fromMap(json.decode(source));
-
 }
 
 class DeviceState {
@@ -369,8 +371,6 @@ class DeviceState {
 
   factory DeviceState.fromJson(String source) =>
       DeviceState.fromMap(json.decode(source));
-
-  
 }
 
 class DeviceLevel {
@@ -409,5 +409,4 @@ class DeviceLevel {
 
   factory DeviceLevel.fromJson(String source) =>
       DeviceLevel.fromMap(json.decode(source));
-
 }

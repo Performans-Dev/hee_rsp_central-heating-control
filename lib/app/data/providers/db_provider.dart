@@ -200,27 +200,27 @@ class DbProvider {
   //#endregion
 
   //#region MARK: Zones
-  Future<List<GroupDefinition>> getZones() async {
+  Future<List<GroupDefinition>> getGroupList() async {
     final db = await database;
     if (db == null) return [];
     final rows = await db.query(Keys.tableZones);
     return rows.map((row) => GroupDefinition.fromMap(row)).toList();
   }
 
-  Future<int> saveZone(GroupDefinition zone) async {
+  Future<int> saveGroup(GroupDefinition zone) async {
     final db = await database;
     if (db == null) return 0;
     return await db.update(
         Keys.tableZones, where: 'id = ?', whereArgs: [zone.id], zone.toMap());
   }
 
-  Future<int> insertZone(GroupDefinition zone) async {
+  Future<int> insertGroup(GroupDefinition zone) async {
     final db = await database;
     if (db == null) return 0;
     return await db.insert(Keys.tableZones, zone.toMap());
   }
 
-  Future<int> deleteZone(int id) async {
+  Future<int> deleteGroup(int id) async {
     final db = await database;
     if (db == null) return 0;
 

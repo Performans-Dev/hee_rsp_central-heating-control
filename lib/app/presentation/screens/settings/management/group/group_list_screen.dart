@@ -16,20 +16,20 @@ class ManagementZoneListScreen extends StatelessWidget {
         title: 'Zones'.tr,
         hasBackAction: true,
         selectedMenuIndex: 1,
-        body: app.zones.isEmpty
+        body: app.groups.isEmpty
             ? const Center(child: Text('No zones found'))
             : ListView.separated(
                 padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
                 itemBuilder: (context, index) => ListTile(
-                  title: Text(app.zones[index].name),
+                  title: Text(app.groups[index].name),
                   onTap: () => Get.toNamed(
-                      '/settings/management/zone/${app.zones[index].id}'),
+                      '/settings/management/zone/${app.groups[index].id}'),
                   tileColor: ColorUtils.itemColorWithValue(
-                      context, app.zones[index].color),
+                      context, app.groups[index].color),
                   shape: RoundedRectangleBorder(borderRadius: UiDimens.br12),
                 ),
                 separatorBuilder: (context, index) => const SizedBox(height: 8),
-                itemCount: app.zones.length,
+                itemCount: app.groups.length,
               ),
         floatingActionButton: FabWidget(
           onPressed: () {},

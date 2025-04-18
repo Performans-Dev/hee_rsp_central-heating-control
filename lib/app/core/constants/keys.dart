@@ -15,6 +15,9 @@ class Keys {
   static const String selectedDateFormat = 'selectedDateFormat';
   static const String selectedTimeFormat = 'selectedTimeFormat';
 
+  static const String cpuSerialNumberFilePath =
+      '/sys/firmware/devicetree/base/serial-numberl';
+
   static const String deviceId = 'deviceId';
 
   static const String themeDefault = 'default';

@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/data/middlewares/platform_middleware.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/advanced/advanced_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_users/add_new_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_users/app_users_screen.dart';
@@ -13,6 +14,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/prefer
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/theme_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/preferences/timezone_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/settings_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/splash/read_platform_info.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/screens/home/home_screen.dart';
@@ -22,6 +24,7 @@ final getPages = [
   GetPage(
     name: Routes.home,
     page: () => const HomeScreen(),
+    middlewares: [PlatformMiddleware()],
   ),
   GetPage(
     name: Routes.developer,
@@ -95,5 +98,11 @@ final getPages = [
   GetPage(
     name: Routes.addNewAppUser,
     page: () => const AddNewAppUserScreen(),
+  ),
+
+  // MARK: Splash
+  GetPage(
+    name: Routes.splashReadPlatformInfo,
+    page: () => const SplashReadPlatformInfoScreen(),
   ),
 ];

@@ -2,6 +2,7 @@ import 'package:central_heating_control/app/core/utils/color_utils.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/models/device/device.dart';
 import 'package:central_heating_control/app/data/models/device/level_state.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/device/widgets/device_icon.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/fab.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/ht_dropdown.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/icon_picker.dart';
@@ -9,7 +10,6 @@ import 'package:central_heating_control/app/presentation/widgets/common/inverted
 import 'package:central_heating_control/app/presentation/widgets/common/textfield.dart';
 import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:on_screen_keyboard_tr/on_screen_keyboard_tr.dart';
 
@@ -587,19 +587,28 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              InvertedListTileWidget(
-                title: Text('Device Name'.tr),
-                subtitle: Text(device.name),
-                leading: CircleAvatar(
-                  child: device.icon != null && device.icon!.isNotEmpty
-                      ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: SvgPicture.network(device.icon!,
-                              fit: BoxFit.contain))
-                      : const Icon(Icons.ac_unit),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Zone'.tr),
+                  HtDropdown(
+                    initialValue: device.groupId,
+                    options: app.groups.map((e) => e.id).toList(),
+                    onSelected: (value) {
+                      setState(() {
+                        device = device.copyWith(groupId: value);
+                      });
+                    },
+                    labelBuilder: (value) => value == null
+                        ? '-'
+                        : app.groups.firstWhere((e) => e.id == value).name,
+                  ),
+                ],
               ),
+              InvertedListTileWidget(
+                  title: Text('Device Name'.tr),
+                  subtitle: Text(device.name),
+                  leading: DeviceIconWidget(icon: device.icon)),
               Row(
                 children: [
                   const Expanded(child: Text('State')),
@@ -655,8 +664,6 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                   ],
                 ),
               ),
-              const Divider(),
-              Text(device.toMap().toString())
             ],
           ),
         ),

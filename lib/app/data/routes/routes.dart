@@ -53,4 +53,7 @@ class Routes {
   static const String groupControls = '/group-controls';
   static const String groupDevices = '/group-devices';
   static const String deviceControls = '/device-controls';
+
+  // MARK: Splash
+  static const String splashReadPlatformInfo = '/splash/read-platform-info';
 }

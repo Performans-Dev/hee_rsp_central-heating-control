@@ -1,7 +1,8 @@
+import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class VersionInfoWidget extends StatelessWidget {
+class VersionInfoWidget extends GetView<AppController> {
   const VersionInfoWidget({super.key});
 
   @override
@@ -14,11 +15,11 @@ class VersionInfoWidget extends StatelessWidget {
           snackPosition: SnackPosition.BOTTOM,
         );
       },
-      child: const Text(
-        '1.3.22-alpha.18', //TODO: acquire this from controller
+      child: Text(
+        '${controller.platformInfo?.appVersion}+${controller.platformInfo?.appBuild}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 9, fontWeight: FontWeight.w300),
+        style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w300),
       ),
     );
   }

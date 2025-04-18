@@ -6,11 +6,13 @@ import 'dart:io';
 import 'package:central_heating_control/app/core/constants/enums.dart';
 import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
+import 'package:central_heating_control/app/core/utils/platform_utils.dart';
 import 'package:central_heating_control/app/data/models/app_user/app_user.dart';
 import 'package:central_heating_control/app/data/models/device/device.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/analog_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
+import 'package:central_heating_control/app/data/models/platform/platform_info.dart';
 import 'package:central_heating_control/app/data/models/preferences/icon.dart';
 import 'package:central_heating_control/app/data/models/preferences/preferences.dart';
 import 'package:central_heating_control/app/data/models/group/group.dart';
@@ -57,12 +59,18 @@ class AppController extends GetxController {
   Future<void> loadData() async {
     await _loadInputOutputs();
     await _loadAppUsers();
-    await _loadZones();
+    await _loadGroups();
     await _loadDevices();
     Future.delayed(const Duration(seconds: 3), () {
       loadIcons();
     });
   }
+  //#endregion
+
+  //#region MARK: Flags
+  final RxBool _didReadPlatformInfoCompleted = false.obs;
+  bool get didReadPlatformInfoCompleted => _didReadPlatformInfoCompleted.value;
+
   //#endregion
 
   //#region MARK: Preferences
@@ -230,6 +238,18 @@ class AppController extends GetxController {
   }
   //#endregion
 
+  //#region MARK: PlatformInfo
+  final Rxn<PlatformInfo> _platformInfo = Rxn();
+  PlatformInfo? get platformInfo => _platformInfo.value;
+
+  Future<void> getPlatformInfo() async {
+    PlatformInfo platformInfo = await PlatformUtils.getPlatformInfo();
+    _platformInfo.value = platformInfo;
+    _didReadPlatformInfoCompleted.value = true;
+    update();
+  }
+  //#endregion
+
   //#region MARK: AppUsers
 
   final RxList<AppUser> _appUsers = <AppUser>[].obs;
@@ -305,33 +325,33 @@ class AppController extends GetxController {
   //#endregion
 
   //#region MARK: Zone
-  final RxList<GroupDefinition> _zones = <GroupDefinition>[].obs;
-  List<GroupDefinition> get zones => _zones;
+  final RxList<GroupDefinition> _groups = <GroupDefinition>[].obs;
+  List<GroupDefinition> get groups => _groups;
 
-  Future<void> _loadZones() async {
-    final zones = await DbProvider.db.getZones();
-    _zones.assignAll(zones);
+  Future<void> _loadGroups() async {
+    final result = await DbProvider.db.getGroupList();
+    _groups.assignAll(result);
     update();
   }
 
-  Future<void> saveZone(GroupDefinition zone) async {
-    final response = await DbProvider.db.saveZone(zone);
+  Future<void> saveGroup(GroupDefinition g) async {
+    final response = await DbProvider.db.saveGroup(g);
     if (response > 0) {
-      _loadZones();
+      _loadGroups();
     }
   }
 
-  Future<void> insertZone(GroupDefinition zone) async {
-    final response = await DbProvider.db.insertZone(zone);
+  Future<void> insertGroup(GroupDefinition g) async {
+    final response = await DbProvider.db.insertGroup(g);
     if (response > 0) {
-      _loadZones();
+      _loadGroups();
     }
   }
 
-  Future<void> deleteZone(int id) async {
-    final response = await DbProvider.db.deleteZone(id);
+  Future<void> deleteGroup(int id) async {
+    final response = await DbProvider.db.deleteGroup(id);
     if (response > 0) {
-      _loadZones();
+      _loadGroups();
     }
   }
   //#endregion
@@ -341,8 +361,16 @@ class AppController extends GetxController {
   List<Device> get devices => _devices;
 
   Future<void> _loadDevices() async {
-    final devices = await DbProvider.db.getDevices();
-    _devices.assignAll(devices);
+    final result = await DbProvider.db.getDevices();
+    List<Device> deviceList = [];
+    for (final device in result) {
+      deviceList.add(device.copyWith(
+        groupName: device.groupId == null
+            ? '-'
+            : groups.firstWhere((e) => e.id == device.groupId).name,
+      ));
+    }
+    _devices.assignAll(deviceList);
     update();
   }
 
