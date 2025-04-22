@@ -23,19 +23,22 @@ class ManagementScreen extends StatelessWidget {
             CardButtonWidget(
               title: 'Groups'.tr,
               icon: Icons.hub,
-              onTap: () {
-                Get.toNamed(Routes.managementZones);
-              },
+              onTap: () => Get.toNamed(Routes.managementZones),
               color: Theme.of(context).colorScheme.primary,
               size: CardSize.medium,
             ),
             CardButtonWidget(
               title: 'Devices'.tr,
               icon: Icons.device_hub,
-              onTap: () {
-                Get.toNamed(Routes.managementDevices);
-              },
+              onTap: () => Get.toNamed(Routes.managementDevices),
               color: Theme.of(context).colorScheme.secondary,
+              size: CardSize.medium,
+            ),
+            CardButtonWidget(
+              title: 'Sensors'.tr,
+              icon: Icons.sensors,
+              onTap: () => Get.toNamed(Routes.managementSensors),
+              color: Theme.of(context).colorScheme.tertiary,
               size: CardSize.medium,
             ),
           ],
