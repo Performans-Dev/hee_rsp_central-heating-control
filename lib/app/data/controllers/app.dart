@@ -350,8 +350,16 @@ class AppController extends GetxController {
 
   Future<void> deleteGroup(int id) async {
     final response = await DbProvider.db.deleteGroup(id);
+    // update all devices group id to null
+    final devices = await DbProvider.db.getDevices();
+    for (final device in devices) {
+      if (device.groupId == id) {
+        await DbProvider.db.updateDevice(device.copyWith(groupId: null));
+      }
+    }
     if (response > 0) {
       _loadGroups();
+      _loadDevices();
     }
   }
   //#endregion
@@ -367,7 +375,7 @@ class AppController extends GetxController {
       deviceList.add(device.copyWith(
         groupName: device.groupId == null
             ? '-'
-            : groups.firstWhere((e) => e.id == device.groupId).name,
+            : groups.firstWhereOrNull((e) => e.id == device.groupId)?.name,
       ));
     }
     _devices.assignAll(deviceList);

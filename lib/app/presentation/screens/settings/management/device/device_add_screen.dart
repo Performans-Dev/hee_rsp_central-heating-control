@@ -49,7 +49,7 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
       return AppScaffold(
         title: widget.device == null ? 'Add Device'.tr : 'Edit Device'.tr,
         hasBackAction: true,
-        selectedMenuIndex: 1,
+        selectedMenuIndex: 3,
         floatingActionButton: Row(
           spacing: 16,
           children: [
@@ -599,7 +599,10 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                     },
                     labelBuilder: (value) => value == null
                         ? '-'
-                        : app.groups.firstWhere((e) => e.id == value).name,
+                        : app.groups
+                                .firstWhereOrNull((e) => e.id == value)
+                                ?.name ??
+                            '-',
                   ),
                 ],
               ),

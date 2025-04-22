@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:central_heating_control/app/data/controllers/app.dart';
+import 'package:central_heating_control/app/core/utils/color_utils.dart';
 
 class DialogUtils {
   static Future<void> showConfirmDialog({
@@ -119,6 +120,21 @@ class DialogUtils {
       barrierDismissible: true,
     );
   }
+
+  static Future<String?> itemColorPickerDialog({
+    String? initialValue,
+    ValueChanged<String>? onSelected,
+  }) {
+    return Get.dialog<String>(
+      _ItemColorPickerDialogContent(
+        initialValue: initialValue,
+        onSelected: onSelected,
+      ),
+      barrierDismissible: true,
+    );
+  }
+
+  // TODO: Color picker
 }
 
 class _GroupPickerDialogContent extends StatefulWidget {
@@ -211,17 +227,108 @@ class _GroupPickerDialogContentState extends State<_GroupPickerDialogContent> {
   }
 }
 
+class _ItemColorPickerDialogContent extends StatefulWidget {
+  final String? initialValue;
+  final ValueChanged<String>? onSelected;
+
+  const _ItemColorPickerDialogContent({
+    required this.initialValue,
+    required this.onSelected,
+  });
+
+  @override
+  State<_ItemColorPickerDialogContent> createState() =>
+      _ItemColorPickerDialogContentState();
+}
+
+class _ItemColorPickerDialogContentState
+    extends State<_ItemColorPickerDialogContent> {
+  late String? selected;
+
+  @override
+  void initState() {
+    super.initState();
+    selected = widget.initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = ItemColor.values;
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Pick a Color',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 16),
+            GridView.count(
+              crossAxisCount: 5,
+              shrinkWrap: true,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              children: colors.map((itemColor) {
+                final isSelected = selected == itemColor.value;
+                return GestureDetector(
+                  onTap: () {
+                    final value = itemColor.value;
+                    widget.onSelected?.call(value);
+                    Get.back(result: value);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: itemColor == ItemColor.none
+                          ? Colors.transparent
+                          : ColorUtils.itemColor(context, itemColor,
+                              alpha: 0.3),
+                      border: Border.all(
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).dividerColor,
+                        width: isSelected ? 2 : 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    width: 44,
+                    height: 44,
+                    child: itemColor == ItemColor.none
+                        ? Center(
+                            child: Text(
+                              'None',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.5)),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : null,
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _IconPickerDialogContent extends StatefulWidget {
   final List<String> iconList;
   final String? initialValue;
   final ValueChanged<String>? onSelected;
 
   const _IconPickerDialogContent({
-    Key? key,
     required this.iconList,
     required this.initialValue,
     required this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<_IconPickerDialogContent> createState() =>

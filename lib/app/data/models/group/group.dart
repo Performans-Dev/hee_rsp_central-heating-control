@@ -24,11 +24,16 @@ class GroupDefinition {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'color': color,
-    };
+    return id > 0
+        ? {
+            'id': id,
+            'name': name,
+            'color': color,
+          }
+        : {
+            'name': name,
+            'color': color,
+          };
   }
 
   factory GroupDefinition.fromMap(Map<String, dynamic> map) {
@@ -43,6 +48,12 @@ class GroupDefinition {
 
   factory GroupDefinition.fromJson(String source) =>
       GroupDefinition.fromMap(json.decode(source));
+
+  factory GroupDefinition.empty() => GroupDefinition(
+        id: 0,
+        name: 'Grup',
+        color: '#FF5733',
+      );
 
   @override
   String toString() => 'Zone(id: $id, name: $name, color: $color)';
