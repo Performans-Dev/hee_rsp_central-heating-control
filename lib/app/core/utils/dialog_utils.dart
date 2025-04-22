@@ -1,3 +1,4 @@
+import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,89 @@ import 'package:get/get.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 
 class DialogUtils {
+  static Future<void> showConfirmDialog({
+    required BuildContext context,
+    required String title,
+    required String message,
+    required VoidCallback onConfirm,
+    VoidCallback? onCancel,
+    String? confirmLabel,
+    String? cancelLabel,
+  }) async {
+    await Get.dialog<void>(
+      SizedBox(
+        child: Center(
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: UiDimens.br12,
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  message,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        onCancel?.call();
+                        Get.back();
+                      },
+                      child: Text(cancelLabel ?? 'Cancel'.tr),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        onConfirm();
+                        Get.back();
+                      },
+                      child: Text(confirmLabel ?? 'Confirm'.tr),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+    );
+  }
+
+  static Future<dynamic> showContentDialog({
+    required BuildContext context,
+    required Widget content,
+  }) async {
+    return await Get.dialog<dynamic>(
+      SizedBox(
+        child: Center(
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: UiDimens.br12,
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            child: content,
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+    );
+  }
+
   static Future<String?> iconPickerDialog({
     String? initialValue,
     ValueChanged<String>? onSelected,
@@ -91,7 +175,7 @@ class _GroupPickerDialogContentState extends State<_GroupPickerDialogContent> {
             widget.groupList.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : SizedBox(
-                    height: 320,
+                    height: 300,
                     width: double.maxFinite,
                     child: ListView.separated(
                       shrinkWrap: true,

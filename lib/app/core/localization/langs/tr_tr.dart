@@ -96,4 +96,13 @@ const Map<String, String> trTR = {
   'nature': 'Doğa',
   'warmy': 'Sıcak',
   'crimson': 'Kızıl',
+  'Settings': 'Ayarlar',
+  'Level Count': 'Kademe Adedi',
+  'Output Count': 'Çıkış Adedi',
+  'Input Count': 'Giriş Adedi',
+  'Level': 'Kademe',
+  'Name': 'Adı',
+  'Devices': 'Cihazlar',
+  'Lock': 'Kilit',
+  'Groups': 'Gruplar',
 };

@@ -30,7 +30,7 @@ class Keys {
   static const String screenSaverType = 'screenSaverType';
 
   //#region MARK: Database
-  static const int databaseVersion = 46;
+  static const int databaseVersion = 50;
   static const int logDatabaseVersion = 19;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -175,6 +175,7 @@ class Keys {
       deviceId INTEGER NOT NULL,
       inputId INTEGER NOT NULL,
       priority INTEGER NOT NULL DEFAULT 0,
+      indexNumber INTEGER NOT NULL DEFAULT 0,
       description TEXT,
       FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
     );
@@ -189,6 +190,7 @@ class Keys {
       deviceId INTEGER NOT NULL,
       outputId INTEGER NOT NULL,
       priority INTEGER NOT NULL DEFAULT 0,
+      indexNumber INTEGER NOT NULL DEFAULT 0,
       description TEXT,
       FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
     );
@@ -206,6 +208,7 @@ class Keys {
       diId INTEGER,
       value INTEGER NOT NULL DEFAULT 0,
       isFeedback INTEGER NOT NULL DEFAULT 0,
+      indexNumber INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY (deviceId) REFERENCES $tableDevices(id) ON DELETE CASCADE
     );
   ''';

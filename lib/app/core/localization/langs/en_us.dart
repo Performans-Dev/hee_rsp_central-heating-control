@@ -96,4 +96,13 @@ const Map<String, String> enUS = {
   'nature': 'Nature',
   'warmy': 'Warmy',
   'crimson': 'Crimson',
-};
+  'Settings': 'Settings',
+  'Level Count': 'Level Count',
+  'Output Count': 'Output Count',
+  'Input Count': 'Input Count',
+  'Level': 'Level',
+  'Name': 'Name',
+  'Devices': 'Devices',
+  'Lock': 'Lock',
+  'Groups': 'Groups',
+  };

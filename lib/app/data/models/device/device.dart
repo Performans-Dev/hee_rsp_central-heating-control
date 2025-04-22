@@ -147,20 +147,34 @@ class Device {
         icon: null,
         name: '',
         type: 0,
-        levelCount: 1,
+        levelCount: 2,
         outputCount: 1,
         inputCount: 0,
-        deviceInputs: [
-          DeviceInput(id: -1, deviceId: -1, inputId: 0, priority: 0)
-        ],
+        deviceInputs: [],
         deviceOutputs: [
-          DeviceOutput(id: -1, deviceId: -1, outputId: 0, priority: 0)
+          DeviceOutput(
+              id: -1, deviceId: -1, outputId: 0, priority: 0, indexNumber: 0)
         ],
         levels: [
           DeviceLevel(level: 0, name: 'OFF'),
           DeviceLevel(level: 1, name: 'ON'),
         ],
-        states: [],
+        states: [
+          DeviceState(
+              id: -1,
+              deviceId: -1,
+              level: 0,
+              value: false,
+              isFeedback: false,
+              indexNumber: 0),
+          DeviceState(
+              id: -1,
+              deviceId: -1,
+              level: 1,
+              value: true,
+              isFeedback: false,
+              indexNumber: 0),
+        ],
         createdOn: DateTime.now().millisecondsSinceEpoch,
         modifiedOn: DateTime.now().millisecondsSinceEpoch,
       );
@@ -175,12 +189,14 @@ class DeviceInput {
   final int deviceId;
   final int inputId;
   final int priority;
+  final int indexNumber;
   final String? description;
   DeviceInput({
     required this.id,
     required this.deviceId,
     required this.inputId,
     required this.priority,
+    required this.indexNumber,
     this.description,
   });
 
@@ -189,6 +205,7 @@ class DeviceInput {
     int? deviceId,
     int? inputId,
     int? priority,
+    int? indexNumber,
     String? description,
   }) {
     return DeviceInput(
@@ -196,6 +213,7 @@ class DeviceInput {
       deviceId: deviceId ?? this.deviceId,
       inputId: inputId ?? this.inputId,
       priority: priority ?? this.priority,
+      indexNumber: indexNumber ?? this.indexNumber,
       description: description ?? this.description,
     );
   }
@@ -207,12 +225,14 @@ class DeviceInput {
             'deviceId': deviceId,
             'inputId': inputId,
             'priority': priority,
+            'indexNumber': indexNumber,
             'description': description,
           }
         : {
             'deviceId': deviceId,
             'inputId': inputId,
             'priority': priority,
+            'indexNumber': indexNumber,
             'description': description,
           };
   }
@@ -223,6 +243,7 @@ class DeviceInput {
       deviceId: map['deviceId']?.toInt() ?? 0,
       inputId: map['inputId']?.toInt() ?? 0,
       priority: map['priority']?.toInt() ?? 0,
+      indexNumber: map['indexNumber']?.toInt() ?? 0,
       description: map['description'],
     );
   }
@@ -238,12 +259,14 @@ class DeviceOutput {
   final int deviceId;
   final int outputId;
   final int priority;
+  final int indexNumber;
   final String? description;
   DeviceOutput({
     required this.id,
     required this.deviceId,
     required this.outputId,
     required this.priority,
+    required this.indexNumber,
     this.description,
   });
 
@@ -252,6 +275,7 @@ class DeviceOutput {
     int? deviceId,
     int? outputId,
     int? priority,
+    int? indexNumber,
     String? description,
   }) {
     return DeviceOutput(
@@ -259,6 +283,7 @@ class DeviceOutput {
       deviceId: deviceId ?? this.deviceId,
       outputId: outputId ?? this.outputId,
       priority: priority ?? this.priority,
+      indexNumber: indexNumber ?? this.indexNumber,
       description: description ?? this.description,
     );
   }
@@ -270,12 +295,14 @@ class DeviceOutput {
             'deviceId': deviceId,
             'outputId': outputId,
             'priority': priority,
+            'indexNumber': indexNumber,
             'description': description,
           }
         : {
             'deviceId': deviceId,
             'outputId': outputId,
             'priority': priority,
+            'indexNumber': indexNumber,
             'description': description,
           };
   }
@@ -286,6 +313,7 @@ class DeviceOutput {
       deviceId: map['deviceId']?.toInt() ?? 0,
       outputId: map['outputId']?.toInt() ?? 0,
       priority: map['priority']?.toInt() ?? 0,
+      indexNumber: map['indexNumber']?.toInt() ?? 0,
       description: map['description'],
     );
   }
@@ -302,6 +330,7 @@ class DeviceState {
   final int level;
   final int? doId;
   final int? diId;
+  final int indexNumber;
   final bool value;
   final bool isFeedback;
   DeviceState({
@@ -310,6 +339,7 @@ class DeviceState {
     required this.level,
     this.doId,
     this.diId,
+    required this.indexNumber,
     required this.value,
     required this.isFeedback,
   });
@@ -320,6 +350,7 @@ class DeviceState {
     int? level,
     int? doId,
     int? diId,
+    int? indexNumber,
     bool? value,
     bool? isFeedback,
   }) {
@@ -329,6 +360,7 @@ class DeviceState {
       level: level ?? this.level,
       doId: doId ?? this.doId,
       diId: diId ?? this.diId,
+      indexNumber: indexNumber ?? this.indexNumber,
       value: value ?? this.value,
       isFeedback: isFeedback ?? this.isFeedback,
     );
@@ -342,6 +374,7 @@ class DeviceState {
             'level': level,
             'doId': doId,
             'diId': diId,
+            'indexNumber': indexNumber,
             'value': value ? 1 : 0,
             'isFeedback': isFeedback ? 1 : 0,
           }
@@ -350,6 +383,7 @@ class DeviceState {
             'level': level,
             'doId': doId,
             'diId': diId,
+            'indexNumber': indexNumber,
             'value': value ? 1 : 0,
             'isFeedback': isFeedback ? 1 : 0,
           };
@@ -362,6 +396,7 @@ class DeviceState {
       level: map['level']?.toInt() ?? 0,
       doId: map['doId']?.toInt(),
       diId: map['diId']?.toInt(),
+      indexNumber: map['indexNumber']?.toInt() ?? 0,
       value: map['value'] == 1 ? true : false,
       isFeedback: map['isFeedback'] == 1 ? true : false,
     );

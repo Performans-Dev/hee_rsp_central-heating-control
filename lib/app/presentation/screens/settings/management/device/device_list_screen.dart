@@ -1,9 +1,8 @@
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_detail_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/widgets/device_list_tile.dart';
-import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/fab.dart';
+import 'package:central_heating_control/app/presentation/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +15,7 @@ class ManagementDeviceListScreen extends StatelessWidget {
       return AppScaffold(
         title: 'Devices'.tr,
         hasBackAction: true,
-        selectedMenuIndex: 1,
+        selectedMenuIndex: 3,
         floatingActionButton: FabWidget(
           onPressed: () => Get.toNamed(Routes.managementAddDevice),
           label: 'Add Device'.tr,
@@ -25,7 +24,12 @@ class ManagementDeviceListScreen extends StatelessWidget {
         ),
         body: app.devices.isEmpty
             ? Center(child: Text('No devices'.tr))
-            : ListView.builder(
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 4.4,
+                  crossAxisSpacing: 12,
+                ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: app.devices.length,
                 itemBuilder: (context, index) {

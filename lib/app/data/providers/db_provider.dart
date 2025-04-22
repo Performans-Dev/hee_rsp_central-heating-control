@@ -4,10 +4,10 @@ import 'package:central_heating_control/app/core/constants/keys.dart';
 import 'package:central_heating_control/app/core/utils/box.dart';
 import 'package:central_heating_control/app/data/models/app_user/app_user.dart';
 import 'package:central_heating_control/app/data/models/device/device.dart';
+import 'package:central_heating_control/app/data/models/group/group.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/analog_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_input.dart';
 import 'package:central_heating_control/app/data/models/input_outputs/digital_output.dart';
-import 'package:central_heating_control/app/data/models/group/group.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -426,6 +426,14 @@ class DbProvider {
     for (final state in device.states) {
       await db.insert(Keys.tableDeviceStates, {
         ...state.toMap(),
+        'deviceId': insertedId,
+      });
+    }
+
+    // Insert levels
+    for (final level in device.levels) {
+      await db.insert(Keys.tableDeviceLevels, {
+        ...level.toMap(),
         'deviceId': insertedId,
       });
     }

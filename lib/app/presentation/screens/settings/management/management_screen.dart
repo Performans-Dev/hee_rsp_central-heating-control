@@ -12,7 +12,7 @@ class ManagementScreen extends StatelessWidget {
     return AppScaffold(
       title: 'Management'.tr,
       hasBackAction: true,
-      selectedMenuIndex: 1,
+      selectedMenuIndex: 3,
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(right: 8, bottom: 8, top: 8),
         child: Wrap(
@@ -21,7 +21,7 @@ class ManagementScreen extends StatelessWidget {
           alignment: WrapAlignment.center,
           children: [
             CardButtonWidget(
-              title: 'Zones'.tr,
+              title: 'Groups'.tr,
               icon: Icons.hub,
               onTap: () {
                 Get.toNamed(Routes.managementZones);

@@ -2,10 +2,8 @@ import 'package:central_heating_control/app/core/constants/assets.dart';
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
-import 'package:central_heating_control/app/presentation/widgets/common/appuser_name_widget.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/datetime_display.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/io_indicator_widget.dart';
-import 'package:central_heating_control/app/presentation/widgets/common/log_warning_indicator_widget.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/network_indicator_widget.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/version_info_widget.dart';
 import 'package:flutter/material.dart';
@@ -59,19 +57,17 @@ class AppScaffold extends StatelessWidget {
           centerTitle: false,
           actions: actions ??
               [
-                const LogWarningIndicatorWidget(),
+                // const LogWarningIndicatorWidget(),
+                const IoIndicatorWidget(),
                 const NetworkStatusIndicatorWidget(),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  child: InkWell(
-                    borderRadius: UiDimens.br12,
-                    onTap: () => Get.toNamed(Routes.preferencesDatetimeFormat),
-                    child: const LiveDateTimeDisplay(
-                      fontSize: 12,
-                      force2Line: true,
-                    ),
+                IconButton(
+                  onPressed: () =>
+                      Get.toNamed(Routes.preferencesDatetimeFormat),
+                  icon: const LiveDateTimeDisplay(
+                    fontSize: 12,
+                    force2Line: true,
                   ),
-                )
+                ),
               ],
           leading: hasBackAction
               ? Container(
@@ -103,6 +99,8 @@ class AppScaffold extends StatelessWidget {
                     icon: const Icon(Icons.settings),
                     label: Text('Settings'.tr)),
                 NavigationRailDestination(
+                    icon: const Icon(Icons.list_alt), label: Text('Logs'.tr)),
+                NavigationRailDestination(
                     icon: const Icon(Icons.lock), label: Text('Lock'.tr)),
               ],
               selectedIndex: selectedMenuIndex,
@@ -116,6 +114,12 @@ class AppScaffold extends StatelessWidget {
                   case 3:
                     Get.toNamed(Routes.settings);
                     break;
+                  case 4:
+                    Get.toNamed(Routes.logs);
+                    break;
+                  case 5:
+                    Get.toNamed(Routes.lock);
+                    break;
                   default:
                     break;
                 }
@@ -123,15 +127,15 @@ class AppScaffold extends StatelessWidget {
               trailing: const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Divider(),
-                  AppUserNameWidget(),
-                  Divider(
-                    height: 6,
-                  ),
-                  IoIndicatorWidget(),
-                  Divider(
-                    height: 6,
-                  ),
+                  // Divider(),
+                  // AppUserNameWidget(),
+                  // Divider(
+                  //   height: 6,
+                  // ),
+                  // IoIndicatorWidget(),
+                  // Divider(
+                  //   height: 6,
+                  // ),
                   VersionInfoWidget()
                 ],
               ),

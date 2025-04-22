@@ -12,7 +12,7 @@ class FabWidget extends StatelessWidget {
     this.trailingIcon = false,
   });
 
-  final VoidCallback onPressed;
+  final Function()? onPressed;
   final String label;
   final IconData icon;
   final String heroTag;

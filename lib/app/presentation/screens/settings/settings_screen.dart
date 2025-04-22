@@ -12,7 +12,7 @@ class SettingsScreen extends StatelessWidget {
     return AppScaffold(
       title: 'Settings'.tr,
       hasBackAction: true,
-      selectedMenuIndex: 1,
+      selectedMenuIndex: 3,
       body: Padding(
         padding: const EdgeInsets.only(right: 8, bottom: 8, top: 8),
         child: Wrap(
