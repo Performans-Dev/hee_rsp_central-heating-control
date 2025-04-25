@@ -187,6 +187,18 @@ class _ManagementGroupDetailScreenState
               ? group.inputs[existingInputIndex].triggerValue
               : false;
 
+          // Find other groups using this input (excluding current group)
+          final otherGroups = app.groups
+              .where((g) => g.id != group.id &&
+                  g.inputs.any((input) => input.digitalInput.id == digitalInput.id))
+              .toList();
+
+          // Create usage text
+          String usageText = 'Digital input ID: ${digitalInput.id}';
+          if (otherGroups.isNotEmpty) {
+            usageText += '\nAlso used in: ${otherGroups.map((g) => g.name).join(', ')}';
+          }
+
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             child: ListTile(
@@ -216,7 +228,7 @@ class _ManagementGroupDetailScreenState
                 },
               ),
               title: Text(digitalInput.name),
-              subtitle: Text('Digital input ID: ${digitalInput.id}'),
+              subtitle: Text(usageText),
               // Show trigger value switch in the trailing position when input is selected
               trailing: isSelected
                   ? Row(
@@ -241,7 +253,6 @@ class _ManagementGroupDetailScreenState
                       ],
                     )
                   : null,
-              dense: true,
             ),
           );
         },
@@ -329,7 +340,10 @@ class _ManagementGroupDetailScreenState
                   return NavigationRail(
                     selectedIndex: index,
                     onDestinationSelected: (index) {
-                      selectedIndex.value = index;
+                      // Prevent selecting the Sensors tab (index 3)
+                      if (index != 3) {
+                        selectedIndex.value = index;
+                      }
                     },
                     labelType: NavigationRailLabelType.all,
                     destinations: [
@@ -344,6 +358,11 @@ class _ManagementGroupDetailScreenState
                       NavigationRailDestination(
                         icon: const Icon(Icons.people),
                         label: Text('Users'.tr),
+                      ),
+                      // Disabled Sensors tab for future implementation
+                      NavigationRailDestination(
+                        icon: Icon(Icons.sensors, color: Colors.grey.withValues(alpha: 0.5)),
+                        label: Text('Sensors'.tr, style: TextStyle(color: Colors.grey.withValues(alpha: 0.5))),
                       ),
                     ],
                   );
@@ -394,6 +413,20 @@ class _ManagementGroupDetailScreenState
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: groupUsersWidget,
+                        ),
+                        // Sensors Tab (placeholder for future implementation)
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.sensors, size: 64, color: Colors.grey.withValues(alpha: 0.5)),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Sensors feature coming soon'.tr,
+                                style: TextStyle(color: Colors.grey.withValues(alpha: 0.5)),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     );

@@ -109,8 +109,25 @@ class _DeviceStateEditorWidgetState extends State<DeviceStateEditorWidget> {
                           widget.onDeviceUpdated(device);
                           setState(() {});
                         },
-                        labelBuilder: (value) =>
-                            '${app.digitalOutputs.firstWhereOrNull((e) => e.id == value)?.name}',
+                        labelBuilder: (value) {
+                          final output = app.digitalOutputs
+                              .firstWhereOrNull((e) => e.id == value);
+                          return output?.name ?? 'Select Output';
+                        },
+                        usageInfoBuilder: (value) {
+                          if (value == null) return null;
+
+                          // Find devices using this output (excluding current device)
+                          final usingDevices = app.devices
+                              .where((d) =>
+                                  d.id != device.id &&
+                                  d.deviceOutputs.any(
+                                      (output) => output.outputId == value))
+                              .toList();
+
+                          if (usingDevices.isEmpty) return null;
+                          return 'Used in: ${usingDevices.map((d) => d.name).join(', ')}';
+                        },
                         dense: true,
                       ),
                     ),
@@ -186,9 +203,44 @@ class _DeviceStateEditorWidgetState extends State<DeviceStateEditorWidget> {
                           widget.onDeviceUpdated(device);
                           setState(() {});
                         },
-                        labelBuilder: (value) =>
-                            '${app.digitalInputs.firstWhereOrNull((e) => e.id == value)?.name}',
-                        dense: true,
+                        labelBuilder: (value) {
+                          final input = app.digitalInputs
+                              .firstWhereOrNull((e) => e.id == value);
+                          return input?.name ?? 'Select Input';
+                        },
+                        usageInfoBuilder: (value) {
+                          if (value == null) return null;
+
+                          // Find devices using this input (excluding current device)
+                          final usingDevices = app.devices
+                              .where((d) =>
+                                  d.id != device.id &&
+                                  d.deviceInputs
+                                      .any((input) => input.inputId == value))
+                              .toList();
+
+                          // Find groups using this input
+                          final usingGroups = app.groups
+                              .where((g) => g.inputs.any(
+                                  (input) => input.digitalInput.id == value))
+                              .toList();
+
+                          List<String> usageInfo = [];
+
+                          if (usingDevices.isNotEmpty) {
+                            usageInfo.add(
+                                'Used in devices: ${usingDevices.map((d) => d.name).join(', ')}');
+                          }
+
+                          if (usingGroups.isNotEmpty) {
+                            usageInfo.add(
+                                'Used in groups: ${usingGroups.map((g) => g.name).join(', ')}');
+                          }
+
+                          return usageInfo.isEmpty
+                              ? null
+                              : usageInfo.join('\n');
+                        },
                       ),
                     ),
                   ),

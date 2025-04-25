@@ -11,6 +11,8 @@ class HtDropdown<T> extends StatefulWidget {
   final BorderRadius? borderRadius;
   final Color? selectedItemColor;
   final bool dense;
+  // New parameter to indicate usage information
+  final String? Function(T)? usageInfoBuilder;
 
   const HtDropdown({
     super.key,
@@ -23,6 +25,7 @@ class HtDropdown<T> extends StatefulWidget {
     this.borderRadius,
     this.selectedItemColor,
     this.dense = false,
+    this.usageInfoBuilder,
   });
 
   @override
@@ -81,27 +84,57 @@ class _HtDropdownState<T> extends State<HtDropdown<T>> {
                 widget.onSelected(value);
               },
               itemBuilder: (context) => widget.options
-                  .map((option) => PopupMenuItem<T>(
-                        value: option,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: selectedValue == option
-                                ? selectedItemColor
-                                : Colors.transparent,
-                            borderRadius: borderRadius,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(widget.labelBuilder(option)),
-                              if (selectedValue == option)
-                                const Icon(Icons.check, size: 16),
-                            ],
-                          ),
+                  .map((option) {
+                    // Get usage info if available
+                    final usageInfo = widget.usageInfoBuilder?.call(option);
+                    final isUsed = usageInfo != null && usageInfo.isNotEmpty;
+                    
+                    return PopupMenuItem<T>(
+                      value: option,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: selectedValue == option
+                              ? selectedItemColor
+                              : Colors.transparent,
+                          borderRadius: borderRadius,
                         ),
-                      ))
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  widget.labelBuilder(option),
+                                  style: TextStyle(
+                                    fontStyle: isUsed ? FontStyle.italic : FontStyle.normal,
+                                    fontWeight: selectedValue == option ? FontWeight.bold : FontWeight.normal,
+                                  ),
+                                ),
+                                if (selectedValue == option)
+                                  const Icon(Icons.check, size: 16),
+                              ],
+                            ),
+                            if (isUsed)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Text(
+                                  usageInfo,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).textTheme.bodySmall?.color,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  })
                   .toList(),
               child: const Center(
                 child: Icon(Icons.arrow_drop_down),
