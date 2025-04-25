@@ -6,12 +6,14 @@ class AnalogInput {
   final int pinIndex;
   final int type;
   final String name;
+  final double value;
   AnalogInput({
     required this.id,
     required this.hwId,
     required this.pinIndex,
     required this.type,
     required this.name,
+    required this.value,
   });
 
   AnalogInput copyWith({
@@ -20,6 +22,7 @@ class AnalogInput {
     int? pinIndex,
     int? type,
     String? name,
+    double? value,
   }) {
     return AnalogInput(
       id: id ?? this.id,
@@ -27,6 +30,7 @@ class AnalogInput {
       pinIndex: pinIndex ?? this.pinIndex,
       type: type ?? this.type,
       name: name ?? this.name,
+      value: value ?? this.value,
     );
   }
 
@@ -37,6 +41,7 @@ class AnalogInput {
       'pinIndex': pinIndex,
       'type': type,
       'name': name,
+      'value': value,
     };
   }
 
@@ -47,6 +52,7 @@ class AnalogInput {
       pinIndex: map['pinIndex']?.toInt() ?? 0,
       type: map['type']?.toInt() ?? 0,
       name: map['name'] ?? '',
+      value: map['value']?.toDouble() ?? 0.0,
     );
   }
 
@@ -57,7 +63,7 @@ class AnalogInput {
 
   @override
   String toString() {
-    return 'AnalogInput(id: $id, hwId: $hwId, pinIndex: $pinIndex, type: $type, name: $name)';
+    return 'AnalogInput(id: $id, hwId: $hwId, pinIndex: $pinIndex, type: $type, name: $name, value: $value)';
   }
 
   @override
@@ -69,7 +75,8 @@ class AnalogInput {
         other.hwId == hwId &&
         other.pinIndex == pinIndex &&
         other.type == type &&
-        other.name == name;
+        other.name == name &&
+        other.value == value;
   }
 
   @override
@@ -78,6 +85,7 @@ class AnalogInput {
         hwId.hashCode ^
         pinIndex.hashCode ^
         type.hashCode ^
-        name.hashCode;
+        name.hashCode ^
+        value.hashCode;
   }
 }

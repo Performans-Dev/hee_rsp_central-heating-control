@@ -206,7 +206,7 @@ class _GroupPickerDialogContentState extends State<_GroupPickerDialogContent> {
                           selectedTileColor: Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.08),
+                              .withValues(alpha: 0.08),
                           onTap: () {
                             setState(() => selected = group.id as int?);
                             widget.onSelected?.call(group.id as int);
@@ -253,7 +253,7 @@ class _ItemColorPickerDialogContentState
 
   @override
   Widget build(BuildContext context) {
-    final colors = ItemColor.values;
+    const colors = ItemColor.values;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
@@ -303,7 +303,7 @@ class _ItemColorPickerDialogContentState
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSurface
-                                      .withOpacity(0.5)),
+                                      .withValues(alpha: 0.5)),
                               textAlign: TextAlign.center,
                             ),
                           )
@@ -399,7 +399,7 @@ class _IconPickerDialogContentState extends State<_IconPickerDialogContent> {
                                   ? Theme.of(context)
                                       .colorScheme
                                       .primary
-                                      .withOpacity(0.08)
+                                      .withValues(alpha: 0.08)
                                   : null,
                             ),
                             child: Center(

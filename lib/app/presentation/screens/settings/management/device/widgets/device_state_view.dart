@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:central_heating_control/app/core/utils/color_utils.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/models/device/device.dart';
@@ -249,7 +251,7 @@ class DeviceStateViewWidget extends StatelessWidget {
           color: ColorUtils.itemColor(context, ItemColor.purple),
           child: Row(
             children: [
-              Expanded(
+              const Expanded(
                 flex: 2,
                 child: Text('State/Level'),
               ),

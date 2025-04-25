@@ -5,11 +5,13 @@ class DigitalInput {
   final int hwId;
   final int pinIndex;
   final String name;
+  final bool value;
   DigitalInput({
     required this.id,
     required this.hwId,
     required this.pinIndex,
     required this.name,
+    required this.value,
   });
 
   DigitalInput copyWith({
@@ -17,12 +19,14 @@ class DigitalInput {
     int? hwId,
     int? pinIndex,
     String? name,
+    bool? value,
   }) {
     return DigitalInput(
       id: id ?? this.id,
       hwId: hwId ?? this.hwId,
       pinIndex: pinIndex ?? this.pinIndex,
       name: name ?? this.name,
+      value: value ?? this.value,
     );
   }
 
@@ -32,6 +36,7 @@ class DigitalInput {
       'hwId': hwId,
       'pinIndex': pinIndex,
       'name': name,
+      'value': value ? 1 : 0,
     };
   }
 
@@ -41,6 +46,7 @@ class DigitalInput {
       hwId: map['hwId']?.toInt() ?? 0,
       pinIndex: map['pinIndex']?.toInt() ?? 0,
       name: map['name'] ?? '',
+      value: map['value'] == 1,
     );
   }
 
@@ -62,11 +68,16 @@ class DigitalInput {
         other.id == id &&
         other.hwId == hwId &&
         other.pinIndex == pinIndex &&
-        other.name == name;
+        other.name == name &&
+        other.value == value;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ hwId.hashCode ^ pinIndex.hashCode ^ name.hashCode;
+    return id.hashCode ^
+        hwId.hashCode ^
+        pinIndex.hashCode ^
+        name.hashCode ^
+        value.hashCode;
   }
 }

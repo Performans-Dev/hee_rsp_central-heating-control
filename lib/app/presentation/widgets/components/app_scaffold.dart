@@ -1,5 +1,4 @@
 import 'package:central_heating_control/app/core/constants/assets.dart';
-import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/routes/routes.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/datetime_display.dart';

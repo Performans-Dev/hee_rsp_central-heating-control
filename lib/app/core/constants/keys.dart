@@ -30,7 +30,7 @@ class Keys {
   static const String screenSaverType = 'screenSaverType';
 
   //#region MARK: Database
-  static const int databaseVersion = 50;
+  static const int databaseVersion = 54;
   static const int logDatabaseVersion = 19;
   static const String databaseName = 'heethings_cc.db';
   static const String logDatabaseName = 'logs.db';
@@ -46,17 +46,18 @@ class Keys {
       hwId INTEGER NOT NULL,
       pinIndex INTEGER NOT NULL,
       type INTEGER NOT NULL,
-      name TEXT NOT NULL
+      name TEXT NOT NULL,
+      value INTEGER NOT NULL DEFAULT 0
     );
   ''';
 
   static const String populateTableAnalogInputs = '''
-    INSERT INTO $tableAnalogInputs (hwId, pinIndex, type, name)
+    INSERT INTO $tableAnalogInputs (hwId, pinIndex, type, name, value)
     VALUES
-    (0x00, 1, 1, 'Sensor 1'),
-    (0x00, 2, 1, 'Sensor 2'),
-    (0x00, 3, 1, 'Sensor 3'),
-    (0x00, 4, 1, 'Sensor 4');
+    (0x00, 1, 1, 'Sensor 1', 0),
+    (0x00, 2, 1, 'Sensor 2', 0),
+    (0x00, 3, 1, 'Sensor 3', 0),
+    (0x00, 4, 1, 'Sensor 4', 0);
   ''';
 
   static const String tableDigitalInputs = 'digitalInputs';
@@ -67,21 +68,22 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       hwId INTEGER NOT NULL,
       pinIndex INTEGER NOT NULL,
-      name TEXT NOT NULL
+      name TEXT NOT NULL,
+      value INTEGER NOT NULL DEFAULT 0
     );
   ''';
 
   static const String populateTableDigitalInputs = '''
-    INSERT INTO $tableDigitalInputs (hwId, pinIndex, name)
+    INSERT INTO $tableDigitalInputs (hwId, pinIndex, name, value)
     VALUES
-    (0x00, 1, 'Input 1'),
-    (0x00, 2, 'Input 2'),
-    (0x00, 3, 'Input 3'),
-    (0x00, 4, 'Input 4'),
-    (0x00, 5, 'Input 5'),
-    (0x00, 6, 'Input 6'),
-    (0x00, 7, 'Input 7'),
-    (0x00, 8, 'Input 8');
+    (0x00, 1, 'Input 1', 0),
+    (0x00, 2, 'Input 2', 0),
+    (0x00, 3, 'Input 3', 0),
+    (0x00, 4, 'Input 4', 0),
+    (0x00, 5, 'Input 5', 0),
+    (0x00, 6, 'Input 6', 0),
+    (0x00, 7, 'Input 7', 0),
+    (0x00, 8, 'Input 8', 0);
   ''';
 
   static const String tableDigitalOutputs = 'digitalOutputs';
@@ -92,21 +94,22 @@ class Keys {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       hwId INTEGER NOT NULL,
       pinIndex INTEGER NOT NULL,
-      name TEXT NOT NULL
+      name TEXT NOT NULL,
+      value INTEGER NOT NULL DEFAULT 0
     );
   ''';
 
   static const String populateTableDigitalOutputs = '''
-    INSERT INTO $tableDigitalOutputs (hwId, pinIndex, name)
+    INSERT INTO $tableDigitalOutputs (hwId, pinIndex, name, value)
     VALUES
-    (0x00, 1, 'Output 1'),
-    (0x00, 2, 'Output 2'),
-    (0x00, 3, 'Output 3'),
-    (0x00, 4, 'Output 4'),
-    (0x00, 5, 'Output 5'),
-    (0x00, 6, 'Output 6'),
-    (0x00, 7, 'Output 7'),
-    (0x00, 8, 'Output 8');
+    (0x00, 1, 'Output 1', 0),
+    (0x00, 2, 'Output 2', 0),
+    (0x00, 3, 'Output 3', 0),
+    (0x00, 4, 'Output 4', 0),
+    (0x00, 5, 'Output 5', 0),
+    (0x00, 6, 'Output 6', 0),
+    (0x00, 7, 'Output 7', 0),
+    (0x00, 8, 'Output 8', 0);
   ''';
   //#endregion
 
@@ -130,22 +133,56 @@ class Keys {
   ''';
   //#endregion
 
-  //#region MARK: Zone
-  static const String tableZones = 'zones';
-  static const String dropTableZones = 'DROP TABLE IF EXISTS $tableZones';
-  static const String createTableZones = '''
-    CREATE TABLE IF NOT EXISTS $tableZones(
+  //#region MARK: Group
+  static const String tableGroups = 'groups';
+  static const String dropTableGroups = 'DROP TABLE IF EXISTS $tableGroups';
+  static const String createTableGroups = '''
+    CREATE TABLE IF NOT EXISTS $tableGroups(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      color TEXT NOT NULL
+      color TEXT NOT NULL,
+      schedulePlan INTEGER,
+      thermostatTemperature REAL NOT NULL DEFAULT 0,
+      intervalOn INTEGER,
+      intervalOff INTEGER,
+      cooldownTime INTEGER,
+      adjustedLevel INTEGER NOT NULL DEFAULT 0
     );
   ''';
-  static final String populateTableZones = '''
-    INSERT INTO $tableZones (name, color)
+  static final String populateTableGroups = '''
+    INSERT INTO $tableGroups (name, color, adjustedLevel)
     VALUES
-    ('Zone 1', '${ItemColor.purple.value}'),
-    ('Zone 2', '${ItemColor.orange.value}');
+    ('Group 1', '${ItemColor.purple.value}', 0),
+    ('Group 2', '${ItemColor.orange.value}', 0);
   ''';
+
+  static const String tableGroupInputs = 'groupInputs';
+  static const String dropTableGroupInputs =
+      'DROP TABLE IF EXISTS $tableGroupInputs';
+  static const String createTableGroupInputs = '''
+    CREATE TABLE IF NOT EXISTS $tableGroupInputs(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      groupId INTEGER NOT NULL,
+      digitalInputId INTEGER NOT NULL,
+      triggerValue INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY (groupId) REFERENCES $tableGroups(id) ON DELETE CASCADE,
+      FOREIGN KEY (digitalInputId) REFERENCES $tableDigitalInputs(id) ON DELETE CASCADE
+    );
+  ''';
+
+  static const String tableGroupUsers = 'groupUsers';
+  static const String dropTableGroupUsers =
+      'DROP TABLE IF EXISTS $tableGroupUsers';
+  static const String createTableGroupUsers = '''
+    CREATE TABLE IF NOT EXISTS $tableGroupUsers(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      groupId INTEGER NOT NULL,
+      userId INTEGER NOT NULL,
+      FOREIGN KEY (groupId) REFERENCES $tableGroups(id) ON DELETE CASCADE,
+      FOREIGN KEY (userId) REFERENCES $tableAppUsers(id) ON DELETE CASCADE
+    );
+  ''';
+
   //#endregion
 
   //#region MARK: Devices
