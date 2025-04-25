@@ -112,14 +112,13 @@ class ButtonIndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 10,
       height: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
       decoration: BoxDecoration(
         borderRadius: UiDimens.br12,
         color: value ? Colors.greenAccent : Colors.grey.shade300,
       ),
-      child: Text(label),
+      child: Center(child: Text(label)),
     );
   }
 }
