@@ -90,9 +90,20 @@ class AppController extends GetxController {
   }
 
   void loadPreferencesFromBox() {
-    final json = Box.getString(key: Keys.preferences);
-    if (json.isNotEmpty) {
-      _preferences.value = Preferences.fromJson(json);
+    try {
+      final json = Box.getString(key: Keys.preferences);
+      if (json.isNotEmpty) {
+        _preferences.value = Preferences.fromJson(json);
+        update();
+      } else {
+        // If no preferences found, use default values
+        _preferences.value = Preferences.empty();
+        update();
+      }
+    } catch (e) {
+      print('Error loading preferences from box: $e');
+      // Fallback to default preferences
+      _preferences.value = Preferences.empty();
       update();
     }
   }
