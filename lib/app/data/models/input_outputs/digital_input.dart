@@ -5,7 +5,7 @@ class DigitalInput {
   final int hwId;
   final int pinIndex;
   final String name;
-  final bool value;
+  bool value;
   DigitalInput({
     required this.id,
     required this.hwId,
