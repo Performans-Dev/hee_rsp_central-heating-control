@@ -20,6 +20,7 @@ class IoIndicatorWidget extends StatelessWidget {
         },
         icon: Row(
           mainAxisSize: MainAxisSize.min,
+          spacing: 4,
           children: [
             ...List.generate(
                 4,
@@ -113,7 +114,7 @@ class ButtonIndicatorWidget extends StatelessWidget {
     return Container(
       width: 10,
       height: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
       decoration: BoxDecoration(
         borderRadius: UiDimens.br12,
         color: value ? Colors.greenAccent : Colors.grey.shade300,

@@ -452,10 +452,10 @@ class AppController extends GetxController {
           .firstWhere((e) => e.hwId == 0x00 && e.pinIndex == 8)
           .value = in8.read();
       // read buttons with for loop
-      _hwButtons[0].value = btn1.read();
-      _hwButtons[1].value = btn2.read();
-      _hwButtons[2].value = btn3.read();
-      _hwButtons[3].value = btn4.read();
+      _hwButtons[0].value = !btn1.read();
+      _hwButtons[1].value = !btn2.read();
+      _hwButtons[2].value = !btn3.read();
+      _hwButtons[3].value = !btn4.read();
 
       // update variables with respective states
       update();
