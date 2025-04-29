@@ -54,9 +54,43 @@ class GroupScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Expanded(
-            child: Center(
-              child: Text('asdf'),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Container(
+                      constraints: const BoxConstraints.expand(),
+                      child: const Center(
+                        child: Text('group controls'),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Container(
+                      constraints: const BoxConstraints.expand(),
+                      child: const Center(
+                        child: Text('group controls'),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Container(
+                      constraints: const BoxConstraints.expand(),
+                      child: const Center(
+                        child: Text('group controls'),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
         ],
