@@ -1,5 +1,6 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
+import 'package:central_heating_control/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,63 +9,65 @@ class IoIndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppController>(builder: (app) {
-      return IconButton(
-        onPressed: () {
-          //snackbar
-          Get.snackbar(
-            'IO Indicator',
-            'TODO: navigate to schematics',
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        },
-        icon: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 4,
-          children: [
-            ...List.generate(
-                4,
-                (index) => ButtonIndicatorWidget(
-                    value: app.hwButtons[index].value,
-                    label: (index + 1).toString())),
-            SizedBox(
-              width: kToolbarHeight,
-              height: 20,
-              child: Column(
-                spacing: 2,
-                mainAxisSize: MainAxisSize.max,
+    return !isPi
+        ? Container()
+        : GetBuilder<AppController>(builder: (app) {
+            return IconButton(
+              onPressed: () {
+                //snackbar
+                Get.snackbar(
+                  'IO Indicator',
+                  'TODO: navigate to schematics',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              },
+              icon: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 4,
                 children: [
-                  Expanded(
-                    child: Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          for (final pin in app.digitalOutputs)
-                            OutputIndicatorDotWidget(value: pin.value),
-                        ],
-                      ),
+                  ...List.generate(
+                      4,
+                      (index) => ButtonIndicatorWidget(
+                          value: app.hwButtons[index].value,
+                          label: (index + 1).toString())),
+                  SizedBox(
+                    width: kToolbarHeight,
+                    height: 20,
+                    child: Column(
+                      spacing: 2,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                for (final pin in app.digitalOutputs)
+                                  OutputIndicatorDotWidget(value: pin.value),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                for (final pin in app.digitalInputs)
+                                  InputIndicatorDotWidget(value: pin.value),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          for (final pin in app.digitalInputs)
-                            InputIndicatorDotWidget(value: pin.value),
-                        ],
-                      ),
-                    ),
-                  )
                 ],
               ),
-            ),
-          ],
-        ),
-      );
-    });
+            );
+          });
   }
 }
 

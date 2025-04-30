@@ -423,6 +423,7 @@ class AppController extends GetxController {
 
   //#region MARK: Gpio Polling
   void pollGpio() async {
+    if (!isPi) return;
     // TODO: check if any package is waiting, if so, send it with await
 
     // read inputs with for loop
@@ -467,9 +468,23 @@ class AppController extends GetxController {
   }
   //#endregion
 
-  //#region MARK: Zone
+  //#region MARK: Group
   final RxList<GroupDefinition> _groups = <GroupDefinition>[].obs;
   List<GroupDefinition> get groups => _groups;
+
+  void setGroup(GroupDefinition g) {
+    final index = groups.indexWhere((e) => e.id == g.id);
+
+    if (index == -1) {
+      return;
+    }
+    _groups[index] = g;
+    update();
+
+    for (final g in groups) {
+      print('A Group: ${g.toJson()}');
+    }
+  }
 
   Future<void> _loadGroups() async {
     final result = await DbProvider.db.getGroupList();

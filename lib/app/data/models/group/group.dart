@@ -128,15 +128,6 @@ class GroupDefinition {
       );
 
   @override
-  String toString() =>
-      'Zone(id: $id, name: $name, color: $color, inputs: $inputs, '
-      'users: $users, adjustedLevel: $adjustedLevel, '
-      'schedulePlan: $schedulePlan, '
-      'thermostatTemperature: $thermostatTemperature, '
-      'intervalOn: $intervalOn, intervalOff: $intervalOff, '
-      'cooldownTime: $cooldownTime)';
-
-  @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
