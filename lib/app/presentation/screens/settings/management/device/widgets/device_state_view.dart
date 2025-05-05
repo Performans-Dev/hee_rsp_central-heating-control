@@ -156,7 +156,7 @@ class _DeviceStateEditorWidgetState extends State<DeviceStateEditorWidget> {
                                     states[a].doId ==
                                         device.deviceOutputs[j].outputId) {
                                   states[a] = states[a].copyWith(value: value!);
-                                }
+                                } 
                               }
                               device = device.copyWith(states: states);
                               widget.onDeviceUpdated(device);
