@@ -1,7 +1,7 @@
 import 'package:central_heating_control/app/core/constants/dimens.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/models/device/device.dart';
-import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_add_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/widgets/device_icon.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/widgets/device_state_view.dart';
 import 'package:central_heating_control/app/presentation/widgets/common/fab.dart';
@@ -39,7 +39,9 @@ class _ManagementDeviceDetailScreenState
         selectedMenuIndex: 1,
         floatingActionButton: FabWidget(
           onPressed: () {
-            Get.to(() => ManagementDeviceAddScreen(device: device));
+            Get.to(() => const ManagementDeviceEditScreen(), arguments: {
+              'deviceId': device.id,
+            });
           },
           label: 'Edit Device'.tr,
           icon: Icons.edit,

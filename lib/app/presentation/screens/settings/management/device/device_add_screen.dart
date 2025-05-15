@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:central_heating_control/app/core/utils/color_utils.dart';
 import 'package:central_heating_control/app/data/controllers/app.dart';
 import 'package:central_heating_control/app/data/models/device/device.dart';
@@ -27,11 +28,17 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
   late PageController _pageController;
   int currentPage = 0;
   late Device device;
+  late int levelCount;
+  late int outputCount;
+  late int inputCount;
 
   @override
   void initState() {
     super.initState();
     device = widget.device ?? Device.empty();
+    levelCount = math.max(device.levels.length, 2);
+    outputCount = device.deviceOutputs.length;
+    inputCount = device.deviceInputs.length;
     calculateStates();
     _pageController = PageController()
       ..addListener(() {
@@ -118,38 +125,36 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
 
   // MARK: calculate states
   void calculateStates() {
-    if (device.states.isEmpty) {
-      List<DeviceState> tmpStates = [];
-      for (int i = 0; i <= device.levelCount; i++) {
-        for (int j = 0; j < device.outputCount; j++) {
-          tmpStates.add(DeviceState(
-            id: -1,
-            deviceId: -1,
-            level: i,
-            doId: 0,
-            diId: null,
-            indexNumber: j,
-            value: false,
-            isFeedback: false,
-          ));
-        }
-        for (int j = 0; j < device.inputCount; j++) {
-          tmpStates.add(DeviceState(
-            id: -1,
-            deviceId: -1,
-            level: i,
-            doId: null,
-            diId: 0,
-            indexNumber: j,
-            value: false,
-            isFeedback: true,
-          ));
-        }
+    List<DeviceState> tmpStates = [];
+    for (int i = 0; i <= levelCount; i++) {
+      for (int j = 0; j < outputCount; j++) {
+        tmpStates.add(DeviceState(
+          id: -1,
+          deviceId: -1,
+          level: i,
+          doId: 0,
+          diId: null,
+          indexNumber: j,
+          value: false,
+          isFeedback: false,
+        ));
       }
-      setState(() {
-        device = device.copyWith(states: tmpStates);
-      });
+      for (int j = 0; j < inputCount; j++) {
+        tmpStates.add(DeviceState(
+          id: -1,
+          deviceId: -1,
+          level: i,
+          doId: null,
+          diId: 0,
+          indexNumber: j,
+          value: false,
+          isFeedback: true,
+        ));
+      }
     }
+    setState(() {
+      device = device.copyWith(states: tmpStates);
+    });
   }
 
   // MARK: page 1
@@ -228,13 +233,14 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                 children: [
                   Text('Level Count'.tr),
                   HtDropdown<int>(
-                    initialValue: device.levelCount,
+                    initialValue: levelCount,
                     options: const [2, 3, 4, 5, 6, 7, 8, 9, 10],
                     onSelected: (value) {
                       setState(() {
-                        device = device.copyWith(levelCount: value);
+                        // device = device.copyWith(levelCount: value);
                         List<DeviceLevel> deviceLevels = [];
-                        for (int i = 0; i <= device.levelCount - 1; i++) {
+
+                        for (int i = 0; i <= value - 1; i++) {
                           deviceLevels.add(
                               DeviceLevel(level: i, name: i == 0 ? '0' : '$i'));
                         }
@@ -250,7 +256,7 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
             Wrap(
               spacing: 12,
               children: [
-                for (int i = 0; i <= device.levelCount - 1; i++)
+                for (int i = 0; i <= device.levels.length - 1; i++)
                   SizedBox(
                     width: 160,
                     child: InvertedListTileWidget(
@@ -298,22 +304,23 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                       children: [
                         Text('Output Relay Count'.tr),
                         HtDropdown<int>(
-                          initialValue: device.outputCount,
+                          initialValue: device.deviceOutputs.length,
                           options: const [0, 1, 2, 3, 4, 5, 6, 7, 8],
                           onSelected: (value) {
                             setState(() {
-                              device = device
-                                  .copyWith(outputCount: value, deviceOutputs: [
-                                for (int k = 0; k < value; k++)
-                                  DeviceOutput(
-                                    id: -1,
-                                    deviceId: device.id,
-                                    outputId: 0,
-                                    priority: 0,
-                                    description: '',
-                                    indexNumber: k,
-                                  ),
-                              ]);
+                              outputCount = value;
+                              // device = device
+                              //     .copyWith(outputCount: value, deviceOutputs: [
+                              //   for (int k = 0; k < value; k++)
+                              //     DeviceOutput(
+                              //       id: -1,
+                              //       deviceId: device.id,
+                              //       outputId: 0,
+                              //       priority: 0,
+                              //       description: '',
+                              //       indexNumber: k,
+                              //     ),
+                              // ]);
                               calculateStates();
                             });
                           },
@@ -333,22 +340,23 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                       children: [
                         Text('Input Relay Count'.tr),
                         HtDropdown<int>(
-                          initialValue: device.inputCount,
+                          initialValue: device.deviceInputs.length,
                           options: const [0, 1, 2, 3, 4, 5, 6, 7, 8],
                           onSelected: (value) {
                             setState(() {
-                              device = device
-                                  .copyWith(inputCount: value, deviceInputs: [
-                                for (int k = 0; k < value; k++)
-                                  DeviceInput(
-                                    id: -1,
-                                    deviceId: device.id,
-                                    inputId: 0,
-                                    priority: 0,
-                                    description: '',
-                                    indexNumber: k,
-                                  ),
-                              ]);
+                              inputCount = value;
+                              // device = device
+                              //     .copyWith(inputCount: value, deviceInputs: [
+                              //   for (int k = 0; k < value; k++)
+                              //     DeviceInput(
+                              //       id: -1,
+                              //       deviceId: device.id,
+                              //       inputId: 0,
+                              //       priority: 0,
+                              //       description: '',
+                              //       indexNumber: k,
+                              //     ),
+                              // ]);
                             });
                             calculateStates();
                           },
@@ -365,198 +373,6 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
       ),
     );
   }
-
-  // MARK: state view
-  // Widget stateView() {
-  //   return GetBuilder<AppController>(builder: (app) {
-  //     return SingleChildScrollView(
-  //       padding: const EdgeInsets.symmetric(horizontal: 16),
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         crossAxisAlignment: CrossAxisAlignment.stretch,
-  //         spacing: 1,
-  //         children: [
-  //           // title
-  //           Row(
-  //             children: [
-  //               Expanded(
-  //                 flex: 1,
-  //                 child: Container(
-  //                   padding: const EdgeInsets.all(8),
-  //                   color: ColorUtils.itemColor(context, ItemColor.lime),
-  //                   child: Center(child: Text('Level'.tr)),
-  //                 ),
-  //               ),
-  //               for (int i = 0; i < device.outputCount; i++)
-  //                 Expanded(
-  //                   flex: 2,
-  //                   child: Container(
-  //                     padding: const EdgeInsets.all(8),
-  //                     color: ColorUtils.itemColor(context, ItemColor.orange),
-  //                     child: Center(
-  //                       child: Text('Output ${i + 1}'.tr),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               for (int i = 0; i < device.inputCount; i++)
-  //                 Expanded(
-  //                   flex: 2,
-  //                   child: Container(
-  //                     padding: const EdgeInsets.all(8),
-  //                     color: ColorUtils.itemColor(context, ItemColor.purple),
-  //                     child: Center(
-  //                       child: Text('Input ${i + 1}'.tr),
-  //                     ),
-  //                   ),
-  //                 ),
-  //             ],
-  //           ),
-  //           // ports
-  //           Row(
-  //             children: [
-  //               Expanded(
-  //                 flex: 1,
-  //                 child: Container(
-  //                   padding: const EdgeInsets.all(8),
-  //                   height: kToolbarHeight,
-  //                   color: ColorUtils.itemColor(context, ItemColor.lime,
-  //                       alpha: 0.2),
-  //                   child: Center(child: Text('State'.tr)),
-  //                 ),
-  //               ),
-  //               for (int i = 0; i < device.outputCount; i++)
-  //                 Expanded(
-  //                   flex: 2,
-  //                   child: Container(
-  //                     padding: const EdgeInsets.all(8),
-  //                     height: kToolbarHeight,
-  //                     color: ColorUtils.itemColor(context, ItemColor.orange,
-  //                         alpha: 0.2),
-  //                     child: HtDropdown<int>(
-  //                       initialValue: device.deviceOutputs[i].outputId,
-  //                       options: [0, ...app.digitalOutputs.map((e) => e.id)],
-  //                       onSelected: (value) {
-  //                         List<DeviceOutput> outputs = device.deviceOutputs;
-  //                         outputs[i] = outputs[i].copyWith(outputId: value);
-  //                         setState(() {
-  //                           device = device.copyWith(deviceOutputs: outputs);
-  //                         });
-  //                       },
-  //                       labelBuilder: (value) =>
-  //                           value == 0 ? 'None'.tr : 'Output $value',
-  //                       dense: true,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               for (int i = 0; i < device.inputCount; i++)
-  //                 Expanded(
-  //                   flex: 2,
-  //                   child: Container(
-  //                     padding: const EdgeInsets.all(8),
-  //                     height: kToolbarHeight,
-  //                     color: ColorUtils.itemColor(context, ItemColor.purple,
-  //                         alpha: 0.2),
-  //                     child: HtDropdown<int>(
-  //                       initialValue: device.deviceInputs[i].inputId,
-  //                       options: [0, ...app.digitalInputs.map((e) => e.id)],
-  //                       onSelected: (value) {
-  //                         List<DeviceInput> inputs = device.deviceInputs;
-  //                         inputs[i] = inputs[i].copyWith(inputId: value);
-  //                         setState(() {
-  //                           device = device.copyWith(deviceInputs: inputs);
-  //                         });
-  //                       },
-  //                       labelBuilder: (value) =>
-  //                           value == 0 ? 'None'.tr : 'Input $value',
-  //                       dense: true,
-  //                     ),
-  //                   ),
-  //                 ),
-  //             ],
-  //           ),
-  //           for (int i = 0; i <= device.levelCount - 1; i++)
-  //             // values
-  //             Row(
-  //               children: [
-  //                 Expanded(
-  //                   flex: 1,
-  //                   child: Container(
-  //                     height: kToolbarHeight,
-  //                     padding: const EdgeInsets.all(8),
-  //                     color: ColorUtils.itemColor(context, ItemColor.lime,
-  //                         alpha: 0.1),
-  //                     child: Center(
-  //                         child: Column(
-  //                       mainAxisSize: MainAxisSize.min,
-  //                       crossAxisAlignment: CrossAxisAlignment.center,
-  //                       children: [
-  //                         Text(
-  //                           '$i',
-  //                           style: Theme.of(context).textTheme.bodyLarge,
-  //                         ),
-  //                         Text(
-  //                           device.levels[i].name,
-  //                           maxLines: 1,
-  //                           overflow: TextOverflow.ellipsis,
-  //                           style: Theme.of(context).textTheme.bodySmall,
-  //                         ),
-  //                       ],
-  //                     )),
-  //                   ),
-  //                 ),
-  //                 for (int j = 0; j < device.outputCount; j++)
-  //                   Expanded(
-  //                     flex: 2,
-  //                     child: Container(
-  //                       height: kToolbarHeight,
-  //                       padding: const EdgeInsets.all(8),
-  //                       color: ColorUtils.itemColor(context, ItemColor.orange,
-  //                           alpha: 0.1),
-  //                       child: Checkbox(
-  //                         value: outputLevelStates
-  //                             .firstWhere((e) => e.state == i && e.portId == j)
-  //                             .value,
-  //                         onChanged: (v) {
-  //                           setState(() {
-  //                             outputLevelStates
-  //                                 .firstWhere(
-  //                                     (e) => e.state == i && e.portId == j)
-  //                                 .value = v!;
-  //                           });
-  //                         },
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 for (int j = 0; j < device.inputCount; j++)
-  //                   Expanded(
-  //                     flex: 2,
-  //                     child: Container(
-  //                       height: kToolbarHeight,
-  //                       padding: const EdgeInsets.all(8),
-  //                       color: ColorUtils.itemColor(context, ItemColor.purple,
-  //                           alpha: 0.1),
-  //                       child: Checkbox(
-  //                         value: inputLevelStates
-  //                             .firstWhere((e) => e.state == i && e.portId == j)
-  //                             .value,
-  //                         onChanged: (v) {
-  //                           setState(() {
-  //                             inputLevelStates
-  //                                 .firstWhere(
-  //                                     (e) => e.state == i && e.portId == j)
-  //                                 .value = v!;
-  //                           });
-  //                         },
-  //                       ),
-  //                     ),
-  //                   ),
-  //               ],
-  //             ),
-  //         ],
-  //       ),
-  //     );
-  //   });
-  // }
 
   // MARK: page 3
   Widget buildPage3(BuildContext context) {
@@ -619,7 +435,7 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                       Expanded(child: Center(child: Text('In ${e.inputId}')))),
                 ],
               ),
-              for (int i = 0; i <= device.levelCount - 1; i++)
+              for (int i = 0; i <= device.levels.length - 1; i++)
                 Row(
                   children: [
                     Expanded(
@@ -629,7 +445,7 @@ class _ManagementDeviceAddScreenState extends State<ManagementDeviceAddScreen> {
                 ),
               const Divider(),
               InvertedListTileWidget(
-                title: Text('Levels'.tr),
+                title: Text('Test Levels'.tr),
                 subtitle: Row(
                   spacing: 8,
                   children: [

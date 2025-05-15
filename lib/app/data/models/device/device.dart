@@ -6,9 +6,9 @@ class Device {
   final String? icon;
   final String name;
   final int type;
-  final int levelCount;
-  final int outputCount;
-  final int inputCount;
+  // final int levelCount;
+  // final int outputCount;
+  // final int inputCount;
   final List<DeviceInput> deviceInputs;
   final List<DeviceOutput> deviceOutputs;
   final List<DeviceLevel> levels;
@@ -23,9 +23,9 @@ class Device {
     this.icon,
     required this.name,
     required this.type,
-    required this.levelCount,
-    required this.outputCount,
-    required this.inputCount,
+    // required this.levelCount,
+    // required this.outputCount,
+    // required this.inputCount,
     required this.deviceInputs,
     required this.deviceOutputs,
     required this.levels,
@@ -41,9 +41,9 @@ class Device {
     String? icon,
     String? name,
     int? type,
-    int? levelCount,
-    int? outputCount,
-    int? inputCount,
+    // int? levelCount,
+    // int? outputCount,
+    // int? inputCount,
     List<DeviceInput>? deviceInputs,
     List<DeviceOutput>? deviceOutputs,
     List<DeviceLevel>? levels,
@@ -58,9 +58,9 @@ class Device {
       icon: icon ?? this.icon,
       name: name ?? this.name,
       type: type ?? this.type,
-      levelCount: levelCount ?? this.levelCount,
-      outputCount: outputCount ?? this.outputCount,
-      inputCount: inputCount ?? this.inputCount,
+      // levelCount: levelCount ?? this.levelCount,
+      // outputCount: outputCount ?? this.outputCount,
+      // inputCount: inputCount ?? this.inputCount,
       deviceInputs: deviceInputs ?? this.deviceInputs,
       deviceOutputs: deviceOutputs ?? this.deviceOutputs,
       levels: levels ?? this.levels,
@@ -79,9 +79,9 @@ class Device {
             'icon': icon,
             'name': name,
             'type': type,
-            'levelCount': levelCount,
-            'outputCount': outputCount,
-            'inputCount': inputCount,
+            // 'levelCount': levelCount,
+            // 'outputCount': outputCount,
+            // 'inputCount': inputCount,
             'deviceInputs':
                 jsonEncode(deviceInputs.map((e) => e.toMap()).toList()),
             'deviceOutputs':
@@ -96,9 +96,9 @@ class Device {
             'icon': icon,
             'name': name,
             'type': type,
-            'levelCount': levelCount,
-            'outputCount': outputCount,
-            'inputCount': inputCount,
+            // 'levelCount': levelCount,
+            // 'outputCount': outputCount,
+            // 'inputCount': inputCount,
             'deviceInputs':
                 jsonEncode(deviceInputs.map((e) => e.toMap()).toList()),
             'deviceOutputs':
@@ -117,9 +117,9 @@ class Device {
       icon: map['icon'],
       name: map['name'] ?? '',
       type: map['type']?.toInt() ?? 0,
-      levelCount: map['levelCount']?.toInt() ?? 0,
-      outputCount: map['outputCount']?.toInt() ?? 0,
-      inputCount: map['inputCount']?.toInt() ?? 0,
+      // levelCount: map['levelCount']?.toInt() ?? 0,
+      // outputCount: map['outputCount']?.toInt() ?? 0,
+      // inputCount: map['inputCount']?.toInt() ?? 0,
       deviceInputs: map['deviceInputs']
               ?.map<DeviceInput>((x) => DeviceInput.fromMap(x))
               ?.toList() ??
@@ -147,9 +147,9 @@ class Device {
         icon: null,
         name: '',
         type: 0,
-        levelCount: 2,
-        outputCount: 1,
-        inputCount: 0,
+        // levelCount: 2,
+        // outputCount: 1,
+        // inputCount: 0,
         deviceInputs: [],
         deviceOutputs: [
           DeviceOutput(

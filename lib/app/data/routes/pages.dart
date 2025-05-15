@@ -3,6 +3,7 @@ import 'package:central_heating_control/app/presentation/screens/settings/advanc
 import 'package:central_heating_control/app/presentation/screens/settings/app_users/add_new_user_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/app_users/app_users_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_add_screen.dart';
+import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_edit_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/device/device_list_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/management_screen.dart';
 import 'package:central_heating_control/app/presentation/screens/settings/management/group/group_list_screen.dart';
@@ -82,6 +83,10 @@ final getPages = [
   GetPage(
     name: Routes.managementAddDevice,
     page: () => const ManagementDeviceAddScreen(),
+  ),
+  GetPage(
+    name: Routes.managementEditDevice,
+    page: () => const ManagementDeviceEditScreen(),
   ),
 
   // MARK: Advanced

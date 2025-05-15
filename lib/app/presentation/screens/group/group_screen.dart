@@ -23,9 +23,9 @@ class GroupScreen extends StatelessWidget {
       final List<Device> devices =
           app.devices.where((e) => e.groupId == g.id).toList();
       int maxLevel = 0;
-      for (final device in devices) {
-        maxLevel = maxLevel < device.levelCount ? device.levelCount : maxLevel;
-      }
+      // for (final device in devices) {
+      //   maxLevel = maxLevel < device.levelCount ? device.levelCount : maxLevel;
+      // }
 
       List<bool> levelValues =
           List.generate(maxLevel, (index) => index == g.adjustedLevel);
@@ -111,36 +111,61 @@ class GroupScreen extends StatelessWidget {
                       child: ListView.separated(
                         separatorBuilder: (context, index) =>
                             const SizedBox(height: 8),
-                        itemBuilder: (context, index) => ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: UiDimens.br12),
-                          tileColor:
-                              Theme.of(context).colorScheme.primaryContainer,
-                          title: Text(devices[index].name),
-                          subtitle: ToggleButtons(
-                            constraints: const BoxConstraints(
-                                maxHeight: 40, minWidth: 48),
-                            borderRadius: UiDimens.br12,
-                            onPressed: (index) {
-                              //
-                            },
-                            isSelected: [
-                              ...devices[index]
-                                  .levels
-                                  .map((e) => e.level == g.adjustedLevel)
-                                  .toList(),
-                              false,
-                            ],
-                            children: [
-                              ...devices[index]
-                                  .levels
-                                  .map((e) => Text(e.name))
-                                  .toList(),
-                              const Text('AUTO'),
-                            ],
-                          ),
-                          leading: DeviceIconWidget(icon: devices[index].icon),
-                        ),
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: UiDimens.br12),
+                            tileColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            title: Text(devices[index].name),
+                            subtitle: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ToggleButtons(
+                                  constraints: const BoxConstraints(
+                                      maxHeight: 40, minWidth: 48),
+                                  borderRadius: UiDimens.br12,
+                                  onPressed: (lvl) {
+                                    //
+                                    // print(devices[index]
+                                    //     .levels
+                                    //     .firstWhere((e) => e.level == lvl)
+                                    //     .toJson());
+
+                                    print(devices[index]
+                                        .states
+                                        .where((e) => e.level == lvl)
+                                        .toList()
+                                        .map((e) => e.toJson())
+                                        .join('\n'));
+                                  },
+                                  isSelected: [
+                                    ...devices[index]
+                                        .levels
+                                        .map((e) => e.level == g.adjustedLevel)
+                                        .toList(),
+                                    false,
+                                  ],
+                                  children: [
+                                    ...devices[index]
+                                        .levels
+                                        .map((e) => Text(e.name))
+                                        .toList(),
+                                    const Text('AUTO'),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    ...devices[index].deviceOutputs.map((e) => Text(
+                                        '${app.digitalOutputs.firstWhere((o) => o.pinIndex == e.outputId).value ? "1" : "0"} ${app.digitalOutputs.firstWhere((o) => o.pinIndex == e.outputId).queuedValue == null ? "-" : app.digitalOutputs.firstWhere((o) => o.pinIndex == e.outputId).queuedValue! ? "Y" : "N"} _ ')),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            leading:
+                                DeviceIconWidget(icon: devices[index].icon),
+                          );
+                        },
                         itemCount: devices.length,
                       ),
                     ),

@@ -6,12 +6,14 @@ class DigitalOutput {
   final int pinIndex;
   final String name;
   final bool value;
+  final bool? queuedValue;
   DigitalOutput({
     required this.id,
     required this.hwId,
     required this.pinIndex,
     required this.name,
     required this.value,
+    this.queuedValue,
   });
 
   DigitalOutput copyWith({
@@ -20,6 +22,7 @@ class DigitalOutput {
     int? pinIndex,
     String? name,
     bool? value,
+    bool? queuedValue,
   }) {
     return DigitalOutput(
       id: id ?? this.id,
@@ -27,6 +30,7 @@ class DigitalOutput {
       pinIndex: pinIndex ?? this.pinIndex,
       name: name ?? this.name,
       value: value ?? this.value,
+      queuedValue: queuedValue ?? this.queuedValue,
     );
   }
 
@@ -37,6 +41,7 @@ class DigitalOutput {
       'pinIndex': pinIndex,
       'name': name,
       'value': value ? 1 : 0,
+      'queuedValue': queuedValue,
     };
   }
 
@@ -47,6 +52,7 @@ class DigitalOutput {
       pinIndex: map['pinIndex']?.toInt() ?? 0,
       name: map['name'] ?? '',
       value: map['value'] == 1,
+      queuedValue: map['queuedValue'],
     );
   }
 
@@ -57,7 +63,7 @@ class DigitalOutput {
 
   @override
   String toString() {
-    return 'DigitalOutput(id: $id, hwId: $hwId, pinIndex: $pinIndex, name: $name, value: $value)';
+    return 'DigitalOutput(id: $id, hwId: $hwId, pinIndex: $pinIndex, name: $name, value: $value, queuedValue: $queuedValue)';
   }
 
   @override
@@ -69,7 +75,8 @@ class DigitalOutput {
         other.hwId == hwId &&
         other.pinIndex == pinIndex &&
         other.name == name &&
-        other.value == value;
+        other.value == value &&
+        other.queuedValue == queuedValue;
   }
 
   @override
@@ -78,6 +85,7 @@ class DigitalOutput {
         hwId.hashCode ^
         pinIndex.hashCode ^
         name.hashCode ^
-        value.hashCode;
+        value.hashCode ^
+        queuedValue.hashCode;
   }
 }
