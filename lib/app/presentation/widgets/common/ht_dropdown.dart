@@ -11,7 +11,6 @@ class HtDropdown<T> extends StatefulWidget {
   final BorderRadius? borderRadius;
   final Color? selectedItemColor;
   final bool dense;
-  // New parameter to indicate usage information
   final String? Function(T)? usageInfoBuilder;
 
   const HtDropdown({
@@ -34,6 +33,7 @@ class HtDropdown<T> extends StatefulWidget {
 
 class _HtDropdownState<T> extends State<HtDropdown<T>> {
   late T selectedValue;
+  final GlobalKey _key = GlobalKey();
 
   @override
   void initState() {
@@ -41,111 +41,119 @@ class _HtDropdownState<T> extends State<HtDropdown<T>> {
     selectedValue = widget.initialValue;
   }
 
+  void _showDropdownMenu() async {
+    final RenderBox renderBox =
+        _key.currentContext!.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final selected = await showMenu<T>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        offset.dy,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: widget.borderRadius ?? UiDimens.br12,
+      ),
+      items: widget.options.map((option) {
+        final usageInfo = widget.usageInfoBuilder?.call(option);
+        final isUsed = usageInfo != null && usageInfo.isNotEmpty;
+
+        return PopupMenuItem<T>(
+          value: option,
+          child: Container(
+            decoration: BoxDecoration(
+              color: selectedValue == option
+                  ? widget.selectedItemColor ??
+                      Theme.of(context).colorScheme.primaryContainer
+                  : Colors.transparent,
+              borderRadius: widget.borderRadius ?? UiDimens.br12,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.labelBuilder(option),
+                      style: TextStyle(
+                        fontStyle: isUsed ? FontStyle.italic : FontStyle.normal,
+                        fontWeight: selectedValue == option
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    if (selectedValue == option)
+                      const Icon(Icons.check, size: 16),
+                  ],
+                ),
+                if (isUsed)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      usageInfo,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+
+    if (selected != null && selected != selectedValue) {
+      setState(() {
+        selectedValue = selected;
+      });
+      widget.onSelected(selected);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final borderColor =
         widget.borderColor ?? Theme.of(context).colorScheme.primary;
     final borderRadius = widget.borderRadius ?? UiDimens.br12;
-    final selectedItemColor = widget.selectedItemColor ??
-        Theme.of(context).colorScheme.primaryContainer;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: borderColor, width: widget.borderWidth),
-        borderRadius: borderRadius,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Display the selected value
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: widget.dense ? 2 : 12.0),
-            child: Text(
-              widget.labelBuilder(selectedValue),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-          // Dropdown button
-          Container(
-            alignment: Alignment.centerRight,
-            child: PopupMenuButton<T>(
-              shape: RoundedRectangleBorder(borderRadius: borderRadius),
-              padding: EdgeInsets.zero,
-              position: PopupMenuPosition.under,
-              offset: const Offset(0, 8),
-              constraints: const BoxConstraints(minWidth: 200),
-              // This ensures the selected item is visible when the menu opens
-              initialValue: selectedValue,
-              onSelected: (T value) {
-                setState(() {
-                  selectedValue = value;
-                });
-                widget.onSelected(value);
-              },
-              itemBuilder: (context) => widget.options
-                  .map((option) {
-                    // Get usage info if available
-                    final usageInfo = widget.usageInfoBuilder?.call(option);
-                    final isUsed = usageInfo != null && usageInfo.isNotEmpty;
-                    
-                    return PopupMenuItem<T>(
-                      value: option,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: selectedValue == option
-                              ? selectedItemColor
-                              : Colors.transparent,
-                          borderRadius: borderRadius,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  widget.labelBuilder(option),
-                                  style: TextStyle(
-                                    fontStyle: isUsed ? FontStyle.italic : FontStyle.normal,
-                                    fontWeight: selectedValue == option ? FontWeight.bold : FontWeight.normal,
-                                  ),
-                                ),
-                                if (selectedValue == option)
-                                  const Icon(Icons.check, size: 16),
-                              ],
-                            ),
-                            if (isUsed)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
-                                child: Text(
-                                  usageInfo,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context).textTheme.bodySmall?.color,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  })
-                  .toList(),
-              child: const Center(
-                child: Icon(Icons.arrow_drop_down),
+    return InkWell(
+      key: _key,
+      onTap: _showDropdownMenu,
+      borderRadius: borderRadius,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: widget.dense ? 1.0 : 12.0,
+          vertical: widget.dense ? 1.0 : 10.0,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(color: borderColor, width: widget.borderWidth),
+          borderRadius: borderRadius,
+        ),
+        constraints: null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
+                widget.labelBuilder(selectedValue),
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.left,
               ),
             ),
-          ),
-        ],
+            SizedBox(width: widget.dense ? 2 : 4),
+            Icon(Icons.arrow_drop_down, size: widget.dense ? 16 : 24),
+          ],
+        ),
       ),
     );
   }
-
-  // We no longer need this helper method as we're using the equality operator directly
-  // which will use the overridden == operator in our model classes
 }
