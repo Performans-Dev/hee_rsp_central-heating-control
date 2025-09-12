@@ -7,43 +7,43 @@ environment:
   sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
-  connectivity_plus: ^6.0.3
-  dart_periphery: ^0.9.6
-  device_info_plus: ^10.1.0
-  dio: ^5.4.3+1
+  connectivity_plus: ^7.0.0
+  dart_periphery: ^0.9.18
+  device_info_plus: ^12.0.0
+  dio: ^5.9.0
   flutter:
     sdk: flutter
-  flutter_dotenv: ^5.1.0
+  flutter_dotenv: ^6.0.0
   flutter_guid: ^0.3.1
-  flutter_launcher_icons: ^0.13.1
-  flutter_libserialport: ^0.4.0
-  flutter_markdown: ^0.7.3+1
-  flutter_native_splash: ^2.4.0
-  flutter_smart_dialog: ^4.9.7+9
-  flutter_svg: ^2.0.10+1
-  font_awesome_flutter: ^10.8.0
-  get: ^4.6.6
+  flutter_launcher_icons: ^0.14.4
+  flutter_libserialport: ^0.6.0
+  flutter_markdown: ^0.7.7+1
+  flutter_native_splash: ^2.4.6
+  flutter_smart_dialog: ^4.9.8+9
+  flutter_svg: ^2.2.1
+  font_awesome_flutter: ^10.10.0
+  get: ^4.7.2
   get_storage: ^2.1.1
-  google_fonts: ^6.2.1
-  intl: ^0.19.0
-  network_info_plus: ^5.0.3
+  google_fonts: ^6.3.1
+  intl: ^0.20.2
+  network_info_plus: ^7.0.0
   on_screen_keyboard_tr:
     path: modules/on_screen_keyboard_tr/
-  package_info_plus: ^8.0.0
-  path: ^1.9.0
-  path_provider: ^2.1.4
-  process_run: ^1.0.0+1
+  package_info_plus: ^9.0.0
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  process_run: ^1.2.4
   qr_flutter: ^4.1.0
-  rpi_gpio: ^0.9.1
+  rpi_gpio: ^0.10.0
   screen_saver:
     path: modules/screen_saver/
-  sqflite_common_ffi: ^2.3.3
-  window_manager: ^0.3.8
+  sqflite_common_ffi: ^2.3.6
+  window_manager: ^0.5.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^6.0.0
 
 flutter_launcher_icons: 
   android: false

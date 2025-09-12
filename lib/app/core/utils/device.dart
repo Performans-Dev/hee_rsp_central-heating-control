@@ -81,7 +81,7 @@ class DeviceUtils {
       'os': 'android',
       'osVersion': build.version.release,
       'osVersionSdk': build.version.sdkInt,
-      'serialNumber': build.serialNumber,
+      'serialNumber': build.device,
     };
   }
 
