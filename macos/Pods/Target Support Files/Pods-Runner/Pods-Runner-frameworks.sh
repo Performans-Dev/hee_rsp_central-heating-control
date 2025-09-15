@@ -183,7 +183,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/network_info_plus/network_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/screen_retriever/screen_retriever.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/screen_retriever_macos/screen_retriever_macos.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/window_manager/window_manager.framework"
 fi
 if [[ "$CONFIGURATION" == "Profile" ]]; then
@@ -194,7 +194,7 @@ if [[ "$CONFIGURATION" == "Profile" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/network_info_plus/network_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/screen_retriever/screen_retriever.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/screen_retriever_macos/screen_retriever_macos.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/window_manager/window_manager.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -205,7 +205,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/network_info_plus/network_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/screen_retriever/screen_retriever.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/screen_retriever_macos/screen_retriever_macos.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/window_manager/window_manager.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then

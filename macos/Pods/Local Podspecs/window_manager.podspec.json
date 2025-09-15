@@ -1,9 +1,9 @@
 {
   "name": "window_manager",
-  "version": "0.2.0",
-  "summary": "A new flutter plugin project.",
-  "description": "A new flutter plugin project.",
-  "homepage": "https://leanflutter.org",
+  "version": "0.5.0",
+  "summary": "A new Flutter plugin project.",
+  "description": "A new Flutter plugin project.",
+  "homepage": "https://leanflutter.dev",
   "license": {
     "file": "../LICENSE"
   },
@@ -13,7 +13,7 @@
   "source": {
     "path": "."
   },
-  "source_files": "Classes/**/*",
+  "source_files": "window_manager/Sources/window_manager/**/*",
   "dependencies": {
     "FlutterMacOS": [
 

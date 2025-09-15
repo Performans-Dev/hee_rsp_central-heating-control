@@ -53,16 +53,20 @@ Future<void> main() async {
     if (oldAppPid != null && oldAppPid != pid) {
       // Avoid killing itself
       try {
-        print('Terminating previous app with PID: $oldAppPid');
+        debugPrint('Terminating previous app with PID: $oldAppPid');
         Process.killPid(oldAppPid, ProcessSignal.sigterm);
       } catch (e) {
-        print('Error terminating previous app: $e');
+        debugPrint('Error terminating previous app: $e');
       }
     }
   }
 
   // Write the current app's PID to the file
-  await pidFile.writeAsString('$pid');
+  try {
+    await pidFile.writeAsString('$pid');
+  } on Exception catch (e) {
+    debugPrint(e.toString());
+  }
 
   // await for flutter widgets bindings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

@@ -16,37 +16,22 @@
   },
   "documentation_url": "https://pub.dev/packages/connectivity_plus",
   "source_files": "connectivity_plus/Sources/connectivity_plus/**/*.swift",
-  "ios": {
-    "dependencies": {
-      "Flutter": [
+  "dependencies": {
+    "FlutterMacOS": [
 
-      ]
-    },
-    "resource_bundles": {
-      "connectivity_plus_privacy": [
-        "connectivity_plus/Sources/connectivity_plus/PrivacyInfo-ios.xcprivacy"
-      ]
-    }
-  },
-  "osx": {
-    "dependencies": {
-      "FlutterMacOS": [
-
-      ]
-    },
-    "resource_bundles": {
-      "connectivity_plus_privacy": [
-        "connectivity_plus/Sources/connectivity_plus/PrivacyInfo-osx.xcprivacy"
-      ]
-    }
+    ]
   },
   "platforms": {
-    "ios": "12.0",
     "osx": "10.14"
   },
   "swift_versions": "5.0",
   "pod_target_xcconfig": {
     "DEFINES_MODULE": "YES"
+  },
+  "resource_bundles": {
+    "connectivity_plus_privacy": [
+      "connectivity_plus/Sources/connectivity_plus/PrivacyInfo.xcprivacy"
+    ]
   },
   "swift_version": "5.0"
 }

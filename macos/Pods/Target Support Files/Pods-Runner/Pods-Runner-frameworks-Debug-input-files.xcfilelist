@@ -6,5 +6,5 @@ ${BUILT_PRODUCTS_DIR}/libserialport/libserialport.framework
 ${BUILT_PRODUCTS_DIR}/network_info_plus/network_info_plus.framework
 ${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework
 ${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework
-${BUILT_PRODUCTS_DIR}/screen_retriever/screen_retriever.framework
+${BUILT_PRODUCTS_DIR}/screen_retriever_macos/screen_retriever_macos.framework
 ${BUILT_PRODUCTS_DIR}/window_manager/window_manager.framework

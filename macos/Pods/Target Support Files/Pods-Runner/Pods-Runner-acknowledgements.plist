@@ -429,7 +429,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<key>FooterText</key>
 			<string>MIT License
 
-Copyright (c) 2022 LiJianying &lt;lijy91@foxmail.com&gt;
+Copyright (c) 2022-2024 LiJianying &lt;lijy91@foxmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -449,7 +449,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
 			<key>Title</key>
-			<string>screen_retriever</string>
+			<string>screen_retriever_macos</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
@@ -457,7 +457,7 @@ SOFTWARE.</string>
 			<key>FooterText</key>
 			<string>MIT License
 
-Copyright (c) 2022 LiJianying &lt;lijy91@foxmail.com&gt;
+Copyright (c) 2022-present LiJianying &lt;lijy91@foxmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

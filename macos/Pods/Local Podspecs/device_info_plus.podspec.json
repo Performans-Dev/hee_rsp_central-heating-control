@@ -13,8 +13,8 @@
   "source": {
     "path": "."
   },
-  "source_files": "Classes/**/*",
-  "public_header_files": "Classes/**/*.h",
+  "source_files": "device_info_plus/Sources/device_info_plus/**/*.swift",
+  "public_header_files": "device_info_plus/Sources/device_info_plus/**/*.h",
   "dependencies": {
     "FlutterMacOS": [
 
@@ -22,5 +22,10 @@
   },
   "platforms": {
     "osx": "10.14"
+  },
+  "resource_bundles": {
+    "device_info_plus_privacy": [
+      "device_info_plus/Sources/device_info_plus/PrivacyInfo.xcprivacy"
+    ]
   }
 }
